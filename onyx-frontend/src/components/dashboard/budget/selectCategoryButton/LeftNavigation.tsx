@@ -62,7 +62,7 @@ const LeftNavigation: FC<SelectCategorySectionProps> = ({
     return (
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger className="outline-none">
             <Settings />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
