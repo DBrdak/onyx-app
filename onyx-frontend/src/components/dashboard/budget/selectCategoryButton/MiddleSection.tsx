@@ -63,7 +63,7 @@ const MiddleSection: FC<SelectCategorySectionProps> = ({
         message: "Error occured. Try again.",
       });
     },
-    onSettled: async (newName, error) => {
+    onSettled: async (_newName, error) => {
       if (!error) {
         setIsEdit(false);
       }
