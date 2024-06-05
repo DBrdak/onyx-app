@@ -28,3 +28,8 @@ export const getBudgetsQueryOptions = queryOptions({
   queryKey: ["budgets"],
   queryFn: getBudgets,
 });
+
+export const createBudget = (budgetName: string) =>
+  privateApi.post("/budgets", { budgetName });
+
+export const deleteBudget = (id: string) => privateApi.delete(`/budgets/${id}`);
