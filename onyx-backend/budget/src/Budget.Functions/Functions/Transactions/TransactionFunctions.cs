@@ -24,13 +24,11 @@ public sealed class TransactionFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Get, transactionBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Get(
         string budgetId,
-        [FromQuery] string? query,
         [FromQuery] string? counterpartyId,
         [FromQuery] string? accountId,
         [FromQuery] string? subcategoryId)
     {
         var transactionsQuery = new GetTransactionsQuery(
-            query,
             counterpartyId is null ? null : Guid.Parse(counterpartyId),
             accountId is null ? null : Guid.Parse(accountId),
             subcategoryId is null ? null : Guid.Parse(subcategoryId),

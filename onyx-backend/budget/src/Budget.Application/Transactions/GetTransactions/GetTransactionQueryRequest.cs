@@ -8,11 +8,6 @@ public sealed record GetTransactionQueryRequest
 
     private GetTransactionQueryRequest(string value) => Value = value;
 
-    private static readonly Error invalidQueryError = new (
-        "GetTransactionQueryRequest.InvalidQuery",
-        "Invalid query");
-
-    public static readonly GetTransactionQueryRequest Empty = new(string.Empty);
     public static readonly GetTransactionQueryRequest All = new(nameof(All));
     public static readonly GetTransactionQueryRequest Counterparty = new(nameof(Counterparty));
     public static readonly GetTransactionQueryRequest Account = new(nameof(Account));
@@ -28,11 +23,15 @@ public sealed record GetTransactionQueryRequest
             Subcategory
         };
 
-    internal static Result<GetTransactionQueryRequest> FromString(string value) =>
-        AllValues.FirstOrDefault(
-            q => string.Equals(
-                q.Value,
-                value,
-                StringComparison.CurrentCultureIgnoreCase)) ??
-        Result.Failure<GetTransactionQueryRequest>(invalidQueryError);
+    internal static Result<GetTransactionQueryRequest> FromRequest(GetTransactionsQuery request) =>
+        request switch
+        {
+            _ when request.AccountId.HasValue &&
+                   !string.IsNullOrWhiteSpace(request.AccountId.Value.ToString()) => Account,
+            _ when request.SubcategoryId.HasValue &&
+                   !string.IsNullOrWhiteSpace(request.SubcategoryId.Value.ToString()) => Subcategory,
+            _ when request.CounterpartyId.HasValue &&
+                   !string.IsNullOrWhiteSpace(request.CounterpartyId.Value.ToString()) => Counterparty,
+            _ => All,
+        };
 }
