@@ -71,6 +71,12 @@ internal sealed class JwtService : IJwtService
 
             _ = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
             var jwtToken = (JwtSecurityToken)validatedToken;
+
+            if (IsEmailVerified(jwtToken))
+            {
+                return "Deny";
+            }
+
             principalId = jwtToken.Subject;
 
             return "Allow";
@@ -80,6 +86,11 @@ internal sealed class JwtService : IJwtService
             return "Deny";
         }
     }
+
+    private static bool IsEmailVerified(JwtSecurityToken jwtToken) =>
+        jwtToken.Claims.FirstOrDefault(
+            c => c.Type == UserRepresentationModel.EmailVerifiedClaimName &&
+                 c.Value == true.ToString()) is null;
 
     public Result<string> GenerateLongLivedToken()
     {
