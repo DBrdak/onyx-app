@@ -8,6 +8,8 @@ using Budget.Functions.Functions.Shared;
 using Budget.Functions.Functions.Transactions.Requests;
 using LambdaKernel;
 using MediatR;
+using Budget.Application.Transactions.BulkRemoveTransactions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Budget.Functions.Functions.Transactions;
 
@@ -24,9 +26,9 @@ public sealed class TransactionFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Get, transactionBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Get(
         string budgetId,
-        [FromQuery] string? counterpartyId,
-        [FromQuery] string? accountId,
-        [FromQuery] string? subcategoryId)
+        [Amazon.Lambda.Annotations.APIGateway.FromQuery] string? counterpartyId,
+        [Amazon.Lambda.Annotations.APIGateway.FromQuery] string? accountId,
+        [Amazon.Lambda.Annotations.APIGateway.FromQuery] string? subcategoryId)
     {
         var transactionsQuery = new GetTransactionsQuery(
             counterpartyId is null ? null : Guid.Parse(counterpartyId),
@@ -43,7 +45,7 @@ public sealed class TransactionFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Post, transactionBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Add(
         string budgetId,
-        [FromBody] AddTransactionRequest request)
+        [Amazon.Lambda.Annotations.APIGateway.FromBody] AddTransactionRequest request)
     {
         var command = new AddTransactionCommand(
             request.AccountId,
@@ -65,6 +67,19 @@ public sealed class TransactionFunctions : BaseFunction
         string transactionId)
     {
         var command = new RemoveTransactionCommand(Guid.Parse(transactionId), Guid.Parse(budgetId));
+
+        var result = await Sender.Send(command);
+
+        return result.ReturnAPIResponse();
+    }
+
+    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Transactions{nameof(BulkRemove)}")]
+    [HttpApi(LambdaHttpMethod.Get, $"{transactionBaseRoute}/bulk")]
+    public async Task<APIGatewayHttpApiV2ProxyResponse> BulkRemove(
+        Guid budgetId,
+        [Amazon.Lambda.Annotations.APIGateway.FromBody] Guid[] transactionIds)
+    {
+        var command = new BulkRemoveTransactionsCommand(transactionIds, budgetId);
 
         var result = await Sender.Send(command);
 
