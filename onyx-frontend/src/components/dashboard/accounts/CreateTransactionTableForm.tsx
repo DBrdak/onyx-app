@@ -50,6 +50,8 @@ const CreateTransactionTableForm: FC<CreateTransactionTableFormProps> = ({
     isPending,
     setValue,
     selectedSubcategoryName,
+    accMonth,
+    accYear,
     clearErrors,
   } = useCreateTransactionForm({ account });
 
@@ -72,10 +74,9 @@ const CreateTransactionTableForm: FC<CreateTransactionTableFormProps> = ({
             <FormItem className="w-full pl-1.5">
               <CalendarInput
                 field={field}
-                disabled={(date) =>
-                  isCurrentMonthSelected &&
-                  date.getDate() >= new Date().getDate()
-                }
+                isCurrentMonthSelected={isCurrentMonthSelected}
+                accMonth={Number(accMonth)}
+                accYear={Number(accYear)}
               />
               <FormMessage />
             </FormItem>

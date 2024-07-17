@@ -194,5 +194,7 @@ export const useCreateTransactionForm = ({ account }: Props) => {
     selectedSubcategoryName,
     setValue,
     clearErrors,
+    accMonth,
+    accYear,
   };
 };

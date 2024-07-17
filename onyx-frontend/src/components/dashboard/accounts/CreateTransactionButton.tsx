@@ -61,6 +61,8 @@ const CreateTransactionButton: FC<CreateTransactionButtonProps> = ({
     isPending,
     selectedSubcategoryName,
     setValue,
+    accMonth,
+    accYear,
   } = useCreateTransactionForm({ account });
 
   return (
@@ -156,10 +158,9 @@ const CreateTransactionButton: FC<CreateTransactionButtonProps> = ({
                       <FormLabel>Transacted at:</FormLabel>
                       <CalendarInput
                         field={field}
-                        disabled={(date) =>
-                          isCurrentMonthSelected &&
-                          date.getDate() >= new Date().getDate()
-                        }
+                        isCurrentMonthSelected={isCurrentMonthSelected}
+                        accMonth={Number(accMonth)}
+                        accYear={Number(accYear)}
                       />
                       <FormMessage />
                     </FormItem>
