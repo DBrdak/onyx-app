@@ -41,14 +41,14 @@ function Budget() {
         <h1 className="text-3xl font-bold md:text-4xl lg:text-5xl">
           All your budgets in one place.
         </h1>
-        <p className="text-sm">
+        <p className="text-sm text-muted-foreground">
           Select and manage your existing budgets as you wish or create new
           ones!
         </p>
       </header>
       <section className="space-y-4 py-20">
         <ul className="overflow-hidden rounded-lg border">
-          <li className="grid w-full grid-cols-3 gap-x-4 bg-accent p-4 text-lg font-semibold tracking-wide md:grid-cols-9">
+          <li className="grid w-full grid-cols-3 gap-x-4 bg-primary/20 p-4 text-lg font-semibold tracking-wide md:grid-cols-9">
             <p className="md:col-span-3">Name</p>
             <p className="md:col-span-2">Currency</p>
             <p className="md:col-span-4">Users</p>

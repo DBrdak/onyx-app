@@ -139,7 +139,7 @@ const TransactionsTable: FC<TransactionsTable> = ({
       </div>
       <div className="rounded-md border">
         <Table>
-          <TableHeader>
+          <TableHeader className="overflow-hidden bg-primary/20">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
