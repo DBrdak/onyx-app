@@ -60,7 +60,7 @@ internal sealed class BulkRemoveTransactionsCommandHandler : ICommandHandler<Bul
 
         if (Result.Aggregate([subcategoryGetResult ?? Result.Success(), accountGetResult]) is var result && result.IsFailure)
         {
-            return (Task.FromResult(Result.Failure(result.Error)),
+            return (Task.FromResult(Result.Failure(result.Error)), 
                 Task.FromResult(Result.Failure(result.Error)));
         }
 
