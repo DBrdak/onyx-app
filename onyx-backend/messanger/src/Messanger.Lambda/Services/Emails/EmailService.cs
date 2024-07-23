@@ -9,6 +9,7 @@ namespace Messanger.Lambda.Services.Emails;
 public sealed class EmailService
 {
     private static readonly AmazonSimpleEmailServiceClient sesClient = new ();
+    private const string sourceEmailAddress = "notify@onyxapp.tech";
 
     public static async Task<Result> SendAsync(EmailData data, CancellationToken cancellationToken = default)
     {
@@ -19,7 +20,7 @@ public sealed class EmailService
 
         var sendRequest = new SendEmailRequest
         {
-            Source = "tontav8@gmail.com", //Testing purpose
+            Source = sourceEmailAddress,
             Destination = desitnation,
             Message = message
         };

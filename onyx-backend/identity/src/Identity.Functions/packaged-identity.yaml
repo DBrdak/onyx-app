@@ -34,7 +34,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/365a19cdb593feae7c46d8d65ba7ee5d
+      CodeUri: s3://onyx-default/eeb6616f95463dcb15cb736c4927c097
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -49,7 +49,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/365a19cdb593feae7c46d8d65ba7ee5d
+      CodeUri: s3://onyx-default/eeb6616f95463dcb15cb736c4927c097
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -70,7 +70,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/365a19cdb593feae7c46d8d65ba7ee5d
+      CodeUri: s3://onyx-default/eeb6616f95463dcb15cb736c4927c097
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -91,7 +91,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/365a19cdb593feae7c46d8d65ba7ee5d
+      CodeUri: s3://onyx-default/eeb6616f95463dcb15cb736c4927c097
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -112,7 +112,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/365a19cdb593feae7c46d8d65ba7ee5d
+      CodeUri: s3://onyx-default/eeb6616f95463dcb15cb736c4927c097
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -133,7 +133,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/365a19cdb593feae7c46d8d65ba7ee5d
+      CodeUri: s3://onyx-default/eeb6616f95463dcb15cb736c4927c097
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -154,7 +154,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/365a19cdb593feae7c46d8d65ba7ee5d
+      CodeUri: s3://onyx-default/eeb6616f95463dcb15cb736c4927c097
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -175,7 +175,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/365a19cdb593feae7c46d8d65ba7ee5d
+      CodeUri: s3://onyx-default/eeb6616f95463dcb15cb736c4927c097
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -196,7 +196,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/365a19cdb593feae7c46d8d65ba7ee5d
+      CodeUri: s3://onyx-default/eeb6616f95463dcb15cb736c4927c097
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -217,7 +217,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/365a19cdb593feae7c46d8d65ba7ee5d
+      CodeUri: s3://onyx-default/eeb6616f95463dcb15cb736c4927c097
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -238,7 +238,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/365a19cdb593feae7c46d8d65ba7ee5d
+      CodeUri: s3://onyx-default/eeb6616f95463dcb15cb736c4927c097
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -259,7 +259,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/365a19cdb593feae7c46d8d65ba7ee5d
+      CodeUri: s3://onyx-default/eeb6616f95463dcb15cb736c4927c097
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -280,7 +280,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/365a19cdb593feae7c46d8d65ba7ee5d
+      CodeUri: s3://onyx-default/eeb6616f95463dcb15cb736c4927c097
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
