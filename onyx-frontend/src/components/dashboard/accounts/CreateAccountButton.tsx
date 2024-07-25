@@ -63,7 +63,8 @@ const CreateAccountButton: FC<CreateAccountButtonProps> = ({ budgetId }) => {
     },
   });
 
-  const { handleSubmit, control, reset } = form;
+  const { handleSubmit, control, reset, watch } = form;
+  const selectedCurrency = watch("currency");
 
   const onMutationSuccess = () => {
     reset();
@@ -147,7 +148,7 @@ const CreateAccountButton: FC<CreateAccountButtonProps> = ({ budgetId }) => {
                       <FormControl>
                         <AmountInput
                           field={field}
-                          currency={user!.currency}
+                          currency={selectedCurrency}
                           className="border bg-transparent text-left text-lg focus-visible:ring-0 focus-visible:ring-primary-foreground focus-visible:ring-offset-1"
                         />
                       </FormControl>

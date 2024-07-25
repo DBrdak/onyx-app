@@ -95,7 +95,7 @@ const TargetCardForm: FC<TargetCardFormProps> = ({
         year: Number(year),
       },
     };
-    console.log(target);
+
     mutate({
       budgetId: selectedBudget,
       subcategoryId,

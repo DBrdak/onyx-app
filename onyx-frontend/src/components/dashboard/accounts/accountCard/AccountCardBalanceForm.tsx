@@ -5,8 +5,8 @@ import AmountInput from "@/components/dashboard/AmountInput";
 import { Form, FormField, FormItem } from "@/components/ui/form";
 import { Money } from "@/lib/validation/base";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
-import { editBalance, getAccountsQueryOptions } from "@/lib/api/account";
-import { useParams } from "@tanstack/react-router";
+import { editBalance } from "@/lib/api/account";
+import { useParams, useSearch } from "@tanstack/react-router";
 import useAmountForm from "@/lib/hooks/useAmountForm";
 import { formatToDotDecimal } from "@/lib/utils";
 
@@ -22,11 +22,16 @@ const AccountCardBalanceForm: FC<AccountCardBalanceFormProps> = ({
   const { budgetId } = useParams({
     from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
   });
+  const { month, year } = useSearch({
+    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
+  });
   const { amount, currency } = balance;
   const { mutate, isDirty, handleSubmit, control, form } = useAmountForm({
-    defaultAmount: amount.toString(),
+    defaultAmount: amount,
     mutationFn: editBalance,
-    queryKey: getAccountsQueryOptions(budgetId).queryKey,
+    budgetId,
+    month,
+    year,
   });
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
