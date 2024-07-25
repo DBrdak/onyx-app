@@ -137,7 +137,7 @@ export const createSubcategorySelectColumn = <T extends BaseTableData>(
   ),
   cell: ({ row }) => {
     const subcategoryName = row.original.subcategoryName as string | null;
-    const amount = row.original.amount as number;
+    const amount = row.original.amount as Money;
     const index = row.index;
 
     const handleChange = (value: string, label: string) => {
@@ -156,7 +156,7 @@ export const createSubcategorySelectColumn = <T extends BaseTableData>(
           selectedSubcategoryName={subcategoryName}
           budgetId={budgetId}
           onChange={handleChange}
-          disabled={amount > 0}
+          disabled={amount.amount > 0}
         />
       </div>
     );
