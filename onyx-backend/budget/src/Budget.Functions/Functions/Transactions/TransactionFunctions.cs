@@ -61,7 +61,7 @@ public sealed class TransactionFunctions : BaseFunction
     }
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = $"Transactions{nameof(Remove)}")]
-    [HttpApi(LambdaHttpMethod.Get, $"{transactionBaseRoute}/{{transactionId}}")]
+    [HttpApi(LambdaHttpMethod.Delete, $"{transactionBaseRoute}/{{transactionId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Remove(
         string budgetId,
         string transactionId)
@@ -74,7 +74,7 @@ public sealed class TransactionFunctions : BaseFunction
     }
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = $"Transactions{nameof(BulkRemove)}")]
-    [HttpApi(LambdaHttpMethod.Get, $"{transactionBaseRoute}/bulk")]
+    [HttpApi(LambdaHttpMethod.Delete, $"{transactionBaseRoute}/bulk")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> BulkRemove(
         Guid budgetId,
         [Amazon.Lambda.Annotations.APIGateway.FromBody] Guid[] transactionIds)

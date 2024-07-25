@@ -53,6 +53,9 @@ Resources:
           Properties:
             Path: /api/v1/auth/login
             Method: POST
+            ApiId: !Ref IdentityApi
+            Auth:
+              Authorizer: NONE
   Register:
     Type: AWS::Serverless::Function
     Metadata:
@@ -73,6 +76,9 @@ Resources:
           Properties:
             Path: /api/v1/auth/register
             Method: POST
+            ApiId: !Ref IdentityApi
+            Auth:
+              Authorizer: NONE
   VerifyEmail:
     Type: AWS::Serverless::Function
     Metadata:
@@ -93,6 +99,9 @@ Resources:
           Properties:
             Path: /api/v1/auth/verify-email
             Method: PUT
+            ApiId: !Ref IdentityApi
+            Auth:
+              Authorizer: NONE
   ResendEmail:
     Type: AWS::Serverless::Function
     Metadata:
@@ -113,6 +122,9 @@ Resources:
           Properties:
             Path: /api/v1/auth/resend-email
             Method: PUT
+            ApiId: !Ref IdentityApi
+            Auth:
+              Authorizer: NONE
   Refresh:
     Type: AWS::Serverless::Function
     Metadata:
@@ -133,6 +145,9 @@ Resources:
           Properties:
             Path: /api/v1/auth/refresh
             Method: PUT
+            ApiId: !Ref IdentityApi
+            Auth:
+              Authorizer: NONE
   ForgotPassword:
     Type: AWS::Serverless::Function
     Metadata:
@@ -153,6 +168,9 @@ Resources:
           Properties:
             Path: /api/v1/auth/forgot-password/request
             Method: PUT
+            ApiId: !Ref IdentityApi
+            Auth:
+              Authorizer: NONE
   NewPassword:
     Type: AWS::Serverless::Function
     Metadata:
@@ -173,6 +191,9 @@ Resources:
           Properties:
             Path: /api/v1/auth/forgot-password/new
             Method: PUT
+            ApiId: !Ref IdentityApi
+            Auth:
+              Authorizer: NONE
   GetUser:
     Type: AWS::Serverless::Function
     Metadata:
@@ -193,6 +214,7 @@ Resources:
           Properties:
             Path: /api/v1/user
             Method: GET
+            ApiId: !Ref IdentityApi
   UpdateUser:
     Type: AWS::Serverless::Function
     Metadata:
@@ -213,6 +235,7 @@ Resources:
           Properties:
             Path: /api/v1/user
             Method: PUT
+            ApiId: !Ref IdentityApi
   RequestEmailChange:
     Type: AWS::Serverless::Function
     Metadata:
@@ -233,6 +256,7 @@ Resources:
           Properties:
             Path: /api/v1/user/change-email
             Method: PUT
+            ApiId: !Ref IdentityApi
   Logout:
     Type: AWS::Serverless::Function
     Metadata:
@@ -253,6 +277,7 @@ Resources:
           Properties:
             Path: /api/v1/user/logout
             Method: PUT
+            ApiId: !Ref IdentityApi
   RemoveUser:
     Type: AWS::Serverless::Function
     Metadata:
@@ -273,6 +298,7 @@ Resources:
           Properties:
             Path: /api/v1/user/remove
             Method: DELETE
+            ApiId: !Ref IdentityApi
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

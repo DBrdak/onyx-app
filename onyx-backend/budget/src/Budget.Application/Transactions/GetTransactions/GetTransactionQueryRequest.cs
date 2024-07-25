@@ -16,7 +16,6 @@ public sealed record GetTransactionQueryRequest
     internal static readonly IReadOnlyCollection<GetTransactionQueryRequest> AllValues =
         new List<GetTransactionQueryRequest>
         {
-            Empty,
             All,
             Counterparty,
             Account,

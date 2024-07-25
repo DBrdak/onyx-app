@@ -587,6 +587,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/transactions
             Method: GET
+            ApiId: !Ref BudgetApi
   TransactionsAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -607,12 +608,13 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/transactions
             Method: POST
+            ApiId: !Ref BudgetApi
   TransactionsRemove:
     Type: AWS::Serverless::Function
     Metadata:
       Tool: Amazon.Lambda.Annotations
       SyncedEvents:
-        - RootGet
+        - RootDelete
     Properties:
       Runtime: dotnet8
       CodeUri: .
@@ -622,17 +624,18 @@ Resources:
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Transactions.TransactionFunctions_Remove_Generated::Remove
       Events:
-        RootGet:
+        RootDelete:
           Type: HttpApi
           Properties:
             Path: /api/v1/{budgetId}/transactions/{transactionId}
-            Method: GET
+            Method: DELETE
+            ApiId: !Ref BudgetApi
   TransactionsBulkRemove:
     Type: AWS::Serverless::Function
     Metadata:
       Tool: Amazon.Lambda.Annotations
       SyncedEvents:
-        - RootGet
+        - RootDelete
     Properties:
       Runtime: dotnet8
       CodeUri: .
@@ -642,11 +645,12 @@ Resources:
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Transactions.TransactionFunctions_BulkRemove_Generated::BulkRemove
       Events:
-        RootGet:
+        RootDelete:
           Type: HttpApi
           Properties:
             Path: /api/v1/{budgetId}/transactions/bulk
-            Method: GET
+            Method: DELETE
+            ApiId: !Ref BudgetApi
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

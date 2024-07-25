@@ -132,8 +132,7 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
     private static bool IsQueryValid(GetTransactionQueryRequest query, GetTransactionsQuery request) =>
         query switch
         {
-            _ when query == GetTransactionQueryRequest.All ||
-                   query == GetTransactionQueryRequest.Empty =>
+            _ when query == GetTransactionQueryRequest.All =>
                 true,
             _ when query == GetTransactionQueryRequest.Account =>
                 request.AccountId is not null,
