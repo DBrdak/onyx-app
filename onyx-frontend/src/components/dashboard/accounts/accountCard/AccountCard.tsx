@@ -1,9 +1,9 @@
 import { FC, useMemo } from "react";
 
-import AccountCardBalanceForm from "@/components/dashboard/accounts/AccountCardBalanceForm";
-import AccountCardNameForm from "@/components/dashboard/accounts/AccountCardNameForm";
-import AccountCardDatePicker from "@/components/dashboard/accounts/AccountCardDatePicker";
-import AccountCardDeleteButton from "@/components/dashboard/accounts/AccountCardDeleteButton";
+import AccountCardBalanceForm from "@/components/dashboard/accounts/accountCard/AccountCardBalanceForm";
+import AccountCardNameForm from "@/components/dashboard/accounts/accountCard/AccountCardNameForm";
+import AccountCardDatePicker from "@/components/dashboard/accounts/accountCard/AccountCardDatePicker";
+import AccountCardDeleteButton from "@/components/dashboard/accounts/accountCard/AccountCardDeleteButton";
 
 import { Account } from "@/lib/validation/account";
 import { cn, getFormattedCurrency } from "@/lib/utils";

@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { parse, isValid } from "date-fns";
 
 import { SubcategorySchema } from "@/lib/validation/subcategory";
 import {
@@ -24,7 +25,31 @@ export const TransactionResultSchema = ResultSchema.extend({
   value: z.array(TransactionSchema),
 });
 
-const SubcategoryIdSchema = z
+const AmountSchema = RequiredString.regex(
+  /^-?\d+([.,]\d{1,2})?$/,
+  "Invalid amount",
+)
+  .transform((v) => v.replace(",", "."))
+  .refine((v) => parseFloat(v) !== 0, {
+    message: "Amount cannot be 0.",
+  });
+
+const DateSchema = RequiredString.refine(
+  (dateString) => {
+    let parsedDate = parse(dateString, "yyyy-MM-dd HH:mm:ss", new Date());
+
+    if (!isValid(parsedDate)) {
+      parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
+    }
+
+    return isValid(parsedDate);
+  },
+  {
+    message: "Invalid date. Use YYYY-MM-DD or YYYY-MM-DD HH:mm:ss format.",
+  },
+);
+
+const CreateTransactionSubcategoryIdSchema = z
   .object({
     transactionSign: z.enum(["+", "-"]),
     subcategoryId: z.string().optional(),
@@ -50,11 +75,50 @@ export const CreateTransactionSchema = z
       "Max length of counterparty name is 50 characters.",
     ),
     currency: RequiredString,
-    amount: RequiredString.refine((v) => parseFloat(v) !== 0, {
-      message: "Amount cannot be 0.",
-    }),
+    amount: AmountSchema,
     transactedAt: z.date(),
   })
-  .and(SubcategoryIdSchema);
+  .and(CreateTransactionSubcategoryIdSchema);
 
 export type TCreateTransactionSchema = z.infer<typeof CreateTransactionSchema>;
+
+export const ImportTransactionsSelectStageSchema = z.object({
+  date: DateSchema,
+  counterparty: RequiredString,
+  currency: RequiredString,
+  amount: AmountSchema,
+});
+
+export const ImportTransactionsSelectStageArraySchema = z.array(
+  ImportTransactionsSelectStageSchema,
+);
+
+export type TImportTransactionsSelectStage = z.infer<
+  typeof ImportTransactionsSelectStageSchema
+>;
+
+export const ImportTransactionsSubmitStageSchema = z
+  .object({
+    accountId: RequiredString,
+    amount: MoneySchema,
+    transactedAt: DateSchema,
+    counterpartyName: RequiredString,
+    subcategoryId: RequiredString.nullable(),
+  })
+  .refine(
+    (data) => {
+      const amount = data.amount.amount;
+      return amount >= 0 || (amount < 0 && data.subcategoryId !== null);
+    },
+    {
+      message: "Subcategory is required for negative amounts.",
+    },
+  );
+
+export type ImportTransactionsPresubmitState = z.infer<
+  typeof ImportTransactionsSubmitStageSchema
+> & { subcategoryName: string | null };
+
+export const ImportTransactionsSubmitStageArraySchema = z.array(
+  ImportTransactionsSubmitStageSchema,
+);

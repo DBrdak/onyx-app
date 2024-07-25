@@ -180,19 +180,27 @@ export const useCreateTransactionForm = ({ account }: Props) => {
     [setValue],
   );
 
+  const onSubcategoryChange = (value: string, label: string) => {
+    setValue("subcategoryId", value);
+    setValue("subcategoryName", label, { shouldValidate: true });
+  };
+
   return {
+    handlePlusMinusBtn,
+    onSubcategoryChange,
     onSubmit,
-    isPending,
-    control,
-    setFocus,
     handleSubmit,
+    setFocus,
+    clearErrors,
+    form,
+    control,
+    isPending,
     selectedCurrency,
     transactionSign,
     isCurrentMonthSelected,
-    form,
-    handlePlusMinusBtn,
     selectedSubcategoryName,
-    setValue,
-    clearErrors,
+    accMonth,
+    accYear,
+    budgetId,
   };
 };

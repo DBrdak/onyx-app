@@ -18,7 +18,7 @@ import { Target } from "@/lib/validation/base";
 import { CreateTarget } from "@/lib/validation/subcategory";
 import TargetCardFormDatePicker from "./TargetCardFormDatePicker";
 import { FormTarget } from "@/lib/api/subcategory";
-import { formatToDotDecimal } from "@/lib/utils";
+import { formatToDecimalString, formatToDotDecimal } from "@/lib/utils";
 import { useCreateTargetMutation } from "@/lib/hooks/mutations/useCreateTargetMutation";
 
 interface TargetCardFormProps {
@@ -43,7 +43,9 @@ const TargetCardForm: FC<TargetCardFormProps> = ({
   const { toast } = useToast();
 
   const isEditing = !!currentTarget;
-  const defaultAmount = currentTarget?.targetAmount.amount.toString() || "0";
+  const defaultAmount = formatToDecimalString(
+    currentTarget?.targetAmount.amount || 0,
+  );
   const defaultMonth = currentTarget
     ? currentTarget.upToMonth.month.toString()
     : searchMonth;
@@ -93,7 +95,7 @@ const TargetCardForm: FC<TargetCardFormProps> = ({
         year: Number(year),
       },
     };
-    console.log(target);
+
     mutate({
       budgetId: selectedBudget,
       subcategoryId,
@@ -137,9 +139,8 @@ const TargetCardForm: FC<TargetCardFormProps> = ({
             <Button
               type="submit"
               disabled={
-                (Number(inputAmount) === Number(defaultAmount) &&
-                  inputMonth === defaultMonth &&
-                  inputYear === defaultYear) ||
+                Number(inputAmount) === Number(defaultAmount) ||
+                (inputMonth === defaultMonth && inputYear === defaultYear) ||
                 inputAmount === "0.00" ||
                 inputAmount === "0.0" ||
                 inputAmount === "0" ||

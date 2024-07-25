@@ -5,6 +5,7 @@ import AmountInput from "@/components/dashboard/AmountInput";
 import PlusMinusButton from "@/components/dashboard/PlusMinusButton";
 import LoadingButton from "@/components/LoadingButton";
 import CalendarInput from "@/components/dashboard/CalendarInput";
+import SubcategoriesPopover from "@/components/dashboard/accounts/SubcategoriesPopover";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -35,21 +36,17 @@ import { cn } from "@/lib/utils";
 import { Account } from "@/lib/validation/account";
 import { CURRENCY } from "@/lib/constants/currency";
 import { useCreateTransactionForm } from "@/lib/hooks/useCreateTransactionForm";
-import SubcategoriesPopoverFormField, {
-  type SelectableCategories,
-} from "@/components/dashboard/accounts/SubcategoriesPopoverFormField";
 
-interface CreateTransactionButtonProps {
+interface TransactionTableCreateModalProps {
   account: Account;
-  selectableCategories: SelectableCategories[];
 }
 
-const CreateTransactionButton: FC<CreateTransactionButtonProps> = ({
+const TransactionTableCreateModal: FC<TransactionTableCreateModalProps> = ({
   account,
-  selectableCategories,
 }) => {
   const {
     handlePlusMinusBtn,
+    onSubcategoryChange,
     form,
     handleSubmit,
     onSubmit,
@@ -60,7 +57,9 @@ const CreateTransactionButton: FC<CreateTransactionButtonProps> = ({
     isCurrentMonthSelected,
     isPending,
     selectedSubcategoryName,
-    setValue,
+    accMonth,
+    accYear,
+    budgetId,
   } = useCreateTransactionForm({ account });
 
   return (
@@ -156,10 +155,9 @@ const CreateTransactionButton: FC<CreateTransactionButtonProps> = ({
                       <FormLabel>Transacted at:</FormLabel>
                       <CalendarInput
                         field={field}
-                        disabled={(date) =>
-                          isCurrentMonthSelected &&
-                          date.getDate() >= new Date().getDate()
-                        }
+                        isCurrentMonthSelected={isCurrentMonthSelected}
+                        accMonth={Number(accMonth)}
+                        accYear={Number(accYear)}
                       />
                       <FormMessage />
                     </FormItem>
@@ -176,14 +174,13 @@ const CreateTransactionButton: FC<CreateTransactionButtonProps> = ({
                   <FormField
                     control={form.control}
                     name="subcategoryId"
-                    render={({ field }) => (
+                    render={() => (
                       <FormItem>
                         <FormLabel>Subcategory:</FormLabel>
-                        <SubcategoriesPopoverFormField
-                          field={field}
-                          selectableCategories={selectableCategories}
+                        <SubcategoriesPopover
+                          budgetId={budgetId}
+                          onChange={onSubcategoryChange}
                           selectedSubcategoryName={selectedSubcategoryName}
-                          setValue={setValue}
                         />
                         <FormMessage />
                       </FormItem>
@@ -208,4 +205,4 @@ const CreateTransactionButton: FC<CreateTransactionButtonProps> = ({
   );
 };
 
-export default CreateTransactionButton;
+export default TransactionTableCreateModal;

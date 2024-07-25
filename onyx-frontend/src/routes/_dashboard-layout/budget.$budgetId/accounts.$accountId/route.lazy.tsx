@@ -2,13 +2,13 @@ import { useMemo } from "react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useSuspenseQueries } from "@tanstack/react-query";
 
-import AccountCard from "@/components/dashboard/accounts/AccountCard";
-import TransactionsTable from "@/components/dashboard/accounts/TransactionsTable";
+import AccountCard from "@/components/dashboard/accounts/accountCard/AccountCard";
+import TransactionsTable from "@/components/dashboard/accounts/transactionsTable/TransactionsTable";
 
 import { getTransactionsQueryOptions } from "@/lib/api/transaction";
 import { getAccountsQueryOptions } from "@/lib/api/account";
-import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { useAccountTransactionsData } from "@/lib/hooks/useAccountTransactionsData";
+import { getCategoriesQueryOptions } from "@/lib/api/category";
 
 export const Route = createLazyFileRoute(
   "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
@@ -19,16 +19,15 @@ export const Route = createLazyFileRoute(
 function Account() {
   const { accountId, budgetId } = Route.useParams();
   const { accMonth, accYear } = Route.useSearch();
-  const [{ data: transactions }, { data: accounts }, { data: categories }] =
-    useSuspenseQueries({
-      queries: [
-        getTransactionsQueryOptions(budgetId, accountId, {
-          accountId,
-        }),
-        getAccountsQueryOptions(budgetId),
-        getCategoriesQueryOptions(budgetId),
-      ],
-    });
+  const [{ data: transactions }, { data: accounts }] = useSuspenseQueries({
+    queries: [
+      getTransactionsQueryOptions(budgetId, accountId, {
+        accountId,
+      }),
+      getAccountsQueryOptions(budgetId),
+      getCategoriesQueryOptions(budgetId),
+    ],
+  });
 
   const selectedAccount = useMemo(
     () => accounts.find((acc) => acc.id === accountId),
@@ -54,7 +53,6 @@ function Account() {
       <TransactionsTable
         selectedAccount={selectedAccount}
         transactions={accountCardTransactionsData.selectedDateTransactions}
-        categories={categories}
       />
     </div>
   );

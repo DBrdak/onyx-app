@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ControllerRenderProps, FieldValues, Path } from "react-hook-form";
 import { format } from "date-fns";
 
@@ -19,7 +19,9 @@ interface CalendarInputProps<
   TName extends Path<TFieldValues>,
 > {
   field: ControllerRenderProps<TFieldValues, TName>;
-  disabled: (date: Date) => boolean;
+  isCurrentMonthSelected: boolean;
+  accMonth: number;
+  accYear: number;
 }
 
 const CalendarInput = <
@@ -27,9 +29,25 @@ const CalendarInput = <
   TName extends Path<TFieldValues>,
 >({
   field,
-  disabled,
+  isCurrentMonthSelected,
+  accMonth,
+  accYear,
 }: CalendarInputProps<TFieldValues, TName>) => {
   const [open, setOpen] = useState(false);
+
+  const isDateDisabled = useMemo(
+    () => (date: Date) => {
+      if (isCurrentMonthSelected) {
+        const currentDate = new Date();
+        return date > currentDate;
+      } else {
+        const isDifferentMonth =
+          date.getMonth() + 1 !== accMonth || date.getFullYear() !== accYear;
+        return isDifferentMonth;
+      }
+    },
+    [isCurrentMonthSelected, accMonth, accYear],
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -38,7 +56,7 @@ const CalendarInput = <
           <Button
             variant="outline"
             className={cn(
-              "w-full pl-3 text-left font-normal",
+              "w-full pl-3 text-left",
               !field.value && "text-muted-foreground",
             )}
             onClick={() => setOpen(true)}
@@ -60,9 +78,10 @@ const CalendarInput = <
             field.onChange(date);
             setOpen(false);
           }}
-          disabled={disabled}
+          disabled={isDateDisabled}
           initialFocus
           disableNavigation
+          defaultMonth={field.value}
         />
       </PopoverContent>
     </Popover>

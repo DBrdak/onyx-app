@@ -1,6 +1,10 @@
 import { FC } from "react";
 
 import { Plus } from "lucide-react";
+import CalendarInput from "@/components/dashboard/CalendarInput";
+import PlusMinusButton from "@/components/dashboard/PlusMinusButton";
+import AmountInput from "@/components/dashboard/AmountInput";
+import SubcategoriesPopover from "@/components/dashboard/accounts/SubcategoriesPopover";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -9,14 +13,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-
-import { Account } from "@/lib/validation/account";
-import { useCreateTransactionForm } from "@/lib/hooks/useCreateTransactionForm";
-import CalendarInput from "../CalendarInput";
 import { Input } from "@/components/ui/input";
-import SubcategoriesPopoverFormField, {
-  SelectableCategories,
-} from "./SubcategoriesPopoverFormField";
 import {
   Select,
   SelectContent,
@@ -24,19 +21,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+import { Account } from "@/lib/validation/account";
+import { useCreateTransactionForm } from "@/lib/hooks/useCreateTransactionForm";
 import { CURRENCY } from "@/lib/constants/currency";
-import PlusMinusButton from "../PlusMinusButton";
-import AmountInput from "../AmountInput";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 
-interface CreateTransactionTableFormProps {
+interface TransactionsTableCreateFormProps {
   account: Account;
-  selectableCategories: SelectableCategories[];
 }
 
-const CreateTransactionTableForm: FC<CreateTransactionTableFormProps> = ({
+const TransactionsTableCreateForm: FC<TransactionsTableCreateFormProps> = ({
   account,
-  selectableCategories,
 }) => {
   const {
     handlePlusMinusBtn,
@@ -48,9 +44,12 @@ const CreateTransactionTableForm: FC<CreateTransactionTableFormProps> = ({
     selectedCurrency,
     isCurrentMonthSelected,
     isPending,
-    setValue,
     selectedSubcategoryName,
+    accMonth,
+    accYear,
     clearErrors,
+    budgetId,
+    onSubcategoryChange,
   } = useCreateTransactionForm({ account });
 
   const formRef = useClickOutside<HTMLFormElement>(() => clearErrors());
@@ -72,10 +71,9 @@ const CreateTransactionTableForm: FC<CreateTransactionTableFormProps> = ({
             <FormItem className="w-full pl-1.5">
               <CalendarInput
                 field={field}
-                disabled={(date) =>
-                  isCurrentMonthSelected &&
-                  date.getDate() >= new Date().getDate()
-                }
+                isCurrentMonthSelected={isCurrentMonthSelected}
+                accMonth={Number(accMonth)}
+                accYear={Number(accYear)}
               />
               <FormMessage />
             </FormItem>
@@ -100,13 +98,12 @@ const CreateTransactionTableForm: FC<CreateTransactionTableFormProps> = ({
         <FormField
           control={control}
           name="subcategoryId"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
-              <SubcategoriesPopoverFormField
-                field={field}
-                selectableCategories={selectableCategories}
+              <SubcategoriesPopover
+                budgetId={budgetId}
+                onChange={onSubcategoryChange}
                 selectedSubcategoryName={selectedSubcategoryName}
-                setValue={setValue}
                 disabled={transactionSign === "+"}
               />
               <FormMessage />
@@ -167,4 +164,4 @@ const CreateTransactionTableForm: FC<CreateTransactionTableFormProps> = ({
   );
 };
 
-export default CreateTransactionTableForm;
+export default TransactionsTableCreateForm;
