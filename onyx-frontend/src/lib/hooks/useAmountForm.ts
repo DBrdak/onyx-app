@@ -2,23 +2,32 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
+import { getCategoriesQueryOptions } from "@/lib/api/category";
+import { formatToDecimalString } from "@/lib/utils";
+import { getToAssignQueryOptions } from "../api/budget";
 
 const useAmountForm = ({
   defaultAmount,
-  queryKey,
+  budgetId,
   mutationFn,
+  month,
+  year,
 }: {
-  defaultAmount: string;
-  queryKey: string[];
+  defaultAmount: number;
+  budgetId: string;
+  month: string;
+  year: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mutationFn: (args: any) => Promise<any>;
 }) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
+  const defaultAmountFormatted = formatToDecimalString(defaultAmount);
+
   const form = useForm({
     defaultValues: {
-      amount: defaultAmount,
+      amount: defaultAmountFormatted,
     },
   });
 
@@ -32,7 +41,12 @@ const useAmountForm = ({
   const { mutate, isError } = useMutation({
     mutationFn,
     onSettled: async () => {
-      return await queryClient.invalidateQueries({ queryKey });
+      return Promise.all([
+        queryClient.invalidateQueries(getCategoriesQueryOptions(budgetId)),
+        queryClient.invalidateQueries(
+          getToAssignQueryOptions({ month, year, budgetId }),
+        ),
+      ]);
     },
     onError: (error) => {
       console.error("Mutation error:", error);
@@ -45,15 +59,15 @@ const useAmountForm = ({
 
   useEffect(() => {
     reset({
-      amount: defaultAmount,
+      amount: defaultAmountFormatted,
     });
-  }, [defaultAmount, reset]);
+  }, [defaultAmountFormatted, reset]);
 
   useEffect(() => {
     if (isError) {
-      reset({ amount: defaultAmount });
+      reset({ amount: defaultAmountFormatted });
     }
-  }, [isError, reset, defaultAmount]);
+  }, [isError, reset]);
 
   return {
     form,

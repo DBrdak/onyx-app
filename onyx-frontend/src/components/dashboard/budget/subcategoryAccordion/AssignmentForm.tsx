@@ -7,7 +7,6 @@ import { Form, FormField, FormItem } from "@/components/ui/form";
 
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { FormAssignment, assign } from "@/lib/api/subcategory";
-import { getCategoriesQueryOptions } from "@/lib/api/category";
 import useAmountForm from "@/lib/hooks/useAmountForm";
 import { formatToDotDecimal } from "@/lib/utils";
 
@@ -30,9 +29,11 @@ const AssignmentForm: FC<AssignmentFormProps> = ({
   });
 
   const { control, form, handleSubmit, isDirty, mutate } = useAmountForm({
-    defaultAmount: defaultAmount?.toString() || "0",
+    defaultAmount: defaultAmount || 0,
     mutationFn: assign,
-    queryKey: getCategoriesQueryOptions(selectedBudget).queryKey,
+    budgetId: selectedBudget,
+    month,
+    year,
   });
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
