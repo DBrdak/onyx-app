@@ -1,19 +1,14 @@
-import { FC, useMemo, useState } from "react";
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-} from "@tanstack/react-table";
+import { FC, useCallback, useState } from "react";
+import { useParams } from "@tanstack/react-router";
+import { flexRender } from "@tanstack/react-table";
 
 import { Minus, Plus } from "lucide-react";
-import CreateTransactionTableForm from "@/components/dashboard/accounts/CreateTransactionTableForm";
-import { columns } from "@/components/dashboard/accounts/TransactionsTableColumns";
-import CreateTransactionButton from "@/components/dashboard/accounts/CreateTransactionButton";
-import DeleteTransactionsButton from "@/components/dashboard/accounts/DeleteTransactionsButton";
+import CreateTransactionTableForm from "@/components/dashboard/accounts/transactionsTable/TransactionsTableCreateForm";
+import { columns } from "@/components/dashboard/accounts/transactionsTable/TransactionsTableColumns";
+import CreateTransactionButton from "@/components/dashboard/accounts/transactionsTable/TransactionTableCreateModal";
+import DeleteTransactionsButton from "@/components/dashboard/accounts/transactionsTable/TransactionsTableDeleteButton";
+import ImportTransactionsButton from "@/components/dashboard/accounts/transactionsTable/TransactionsTableImportButton";
+import ImportTableSelectStage from "@/components/dashboard/accounts/transactionsTable/importTable/ImportTableSelectStage";
 import {
   Table,
   TableBody,
@@ -24,71 +19,67 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 
 import { Transaction } from "@/lib/validation/transaction";
 import { Account } from "@/lib/validation/account";
-import { Category } from "@/lib/validation/category";
-import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
+import { DataTablePagination } from "@/components/ui/table-pagination";
+import { useDataTable } from "@/lib/hooks/useDataTable";
+import { useSelectableCategories } from "@/lib/hooks/useSelectableCategories";
 
 interface TransactionsTable {
   transactions: Transaction[];
   selectedAccount: Account;
-  categories: Category[];
 }
+
+enum VARIANTS {
+  LIST = "LIST",
+  IMPORT = "IMPORT",
+}
+
+const INITIAL_IMPORT_RESULTS = {
+  data: [],
+  errors: [],
+  meta: {},
+};
 
 const TransactionsTable: FC<TransactionsTable> = ({
   transactions,
   selectedAccount,
-  categories,
 }) => {
+  const { budgetId } = useParams({
+    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
+  });
   const isLargeDevice = useMediaQuery("(min-width: 1024px)");
+  const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
+  const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
   const [isCreateFormVisible, setIsCreateFormVisible] = useState(false);
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 8,
-  });
-  const [rowSelection, setRowSelection] = useState({});
-  const [globalFilter, setGlobalFilter] = useState<string>("");
-  const debouncedGlobalFilter = useDebounce(globalFilter, 500);
+  const { table, globalFilter, setGlobalFilter, setRowSelection } =
+    useDataTable({
+      data: transactions,
+      columns,
+    });
+  const selectableCategories = useSelectableCategories({ budgetId });
 
-  const table = useReactTable({
-    data: transactions,
-    columns,
-    onSortingChange: setSorting,
-    onPaginationChange: setPagination,
-    onRowSelectionChange: setRowSelection,
-    onGlobalFilterChange: setGlobalFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    autoResetPageIndex: false,
-    state: {
-      sorting,
-      pagination,
-      globalFilter: debouncedGlobalFilter,
-      rowSelection,
-    },
-  });
+  const onUpload = useCallback((results: typeof INITIAL_IMPORT_RESULTS) => {
+    setVariant(VARIANTS.IMPORT);
+    setImportResults(results);
+  }, []);
 
-  const selectableCategories = useMemo(() => {
-    if (!categories.length) return null;
-    return categories
-      .filter((c) => c.subcategories.length > 0)
-      .map((c) => ({
-        label: c.name,
-        value: c.id,
-        subcategories: c.subcategories.map((s) => ({
-          label: s.name,
-          value: s.id,
-        })),
-      }));
-  }, [categories]);
+  const onCencel = useCallback(() => {
+    setVariant(VARIANTS.LIST);
+    setImportResults(INITIAL_IMPORT_RESULTS);
+  }, []);
 
-  if (!selectableCategories || !selectableCategories.length)
+  if (variant === VARIANTS.IMPORT) {
+    return (
+      <ImportTableSelectStage data={importResults.data} onCencel={onCencel} />
+    );
+  }
+
+  if (!selectableCategories)
     return (
       <div className="w-full pt-20 text-center">
         <h2 className="text-lg font-semibold">
@@ -118,16 +109,15 @@ const TransactionsTable: FC<TransactionsTable> = ({
               </span>
             </Button>
           ) : (
-            <CreateTransactionButton
-              account={selectedAccount}
-              selectableCategories={selectableCategories}
-            />
+            <CreateTransactionButton account={selectedAccount} />
           )}
           {table.getFilteredSelectedRowModel().rows.length > 0 && (
             <DeleteTransactionsButton
               rows={table.getFilteredSelectedRowModel().rows}
+              setRowsSelection={setRowSelection}
             />
           )}
+          <ImportTransactionsButton onUpload={onUpload} />
         </div>
         <Input
           disabled={transactions.length === 0}
@@ -137,9 +127,9 @@ const TransactionsTable: FC<TransactionsTable> = ({
           className="w-full md:max-w-xs"
         />
       </div>
-      <div className="rounded-md border">
+      <Card>
         <Table>
-          <TableHeader className="overflow-hidden bg-primary/20">
+          <TableHeader className="overflow-hidden bg-muted">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -170,10 +160,7 @@ const TransactionsTable: FC<TransactionsTable> = ({
                     )}
                   >
                     <div className="overflow-hidden">
-                      <CreateTransactionTableForm
-                        account={selectedAccount}
-                        selectableCategories={selectableCategories}
-                      />
+                      <CreateTransactionTableForm account={selectedAccount} />
                     </div>
                   </div>
                 </TableCell>
@@ -207,31 +194,8 @@ const TransactionsTable: FC<TransactionsTable> = ({
             )}
           </TableBody>
         </Table>
-      </div>
-      <div className="flex items-center justify-between py-4">
-        <div className="pl-4 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      </Card>
+      <DataTablePagination table={table} />
     </div>
   );
 };

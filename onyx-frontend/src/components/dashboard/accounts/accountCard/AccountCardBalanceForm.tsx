@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 
-import AmountInput from "../AmountInput";
+import AmountInput from "@/components/dashboard/AmountInput";
 import { Form, FormField, FormItem } from "@/components/ui/form";
 import { Money } from "@/lib/validation/base";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";

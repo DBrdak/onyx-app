@@ -11,13 +11,11 @@ import { Transaction } from "@/lib/validation/transaction";
 interface Props {
   accountId: string;
   budgetId: string;
-  onMutationError: () => void;
 }
 
 export const useDeleteTransactionsMutation = ({
   accountId,
   budgetId,
-  onMutationError,
 }: Props) => {
   const queryClient = useQueryClient();
   const transactionsQueryKey = getTransactionsQueryKey(accountId);
@@ -45,7 +43,6 @@ export const useDeleteTransactionsMutation = ({
       if (previousTransactions) {
         queryClient.setQueryData(transactionsQueryKey, previousTransactions);
       }
-      onMutationError();
     },
     onSettled: () => {
       Promise.all([
