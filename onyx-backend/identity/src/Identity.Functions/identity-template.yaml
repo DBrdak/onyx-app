@@ -21,6 +21,7 @@ Resources:
           LambdaAuthorizer:
             FunctionArn: !GetAtt LambdaAuthorizer.Arn
             AuthorizerPayloadFormatVersion: '2.0'
+            IdentitySource: $request.header.Authorization
   LambdaAuthorizer:
     Type: AWS::Serverless::Function
     Metadata:
@@ -30,9 +31,9 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Access.AccessFunction_FunctionHandler_Generated::FunctionHandler
+      Role: arn:aws:iam::975049887576:role/FullAccess
   Login:
     Type: AWS::Serverless::Function
     Metadata:

@@ -17,7 +17,7 @@ internal sealed class AccessFunction : BaseFunction
     }
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = "LambdaAuthorizer")]
-    public APIGatewayCustomAuthorizerResponse FunctionHandler(APIGatewayCustomAuthorizerRequest request, ILambdaContext context)
+    public APIGatewayCustomAuthorizerV2IamResponse FunctionHandler(APIGatewayCustomAuthorizerRequest request)
     {
         var token = request.AuthorizationToken.Replace("Bearer ", string.Empty);
 
@@ -29,9 +29,9 @@ internal sealed class AccessFunction : BaseFunction
             request.MethodArn);
     }
 
-    private static APIGatewayCustomAuthorizerResponse GeneratePolicy(string principalId, string effect, string resource)
+    private static APIGatewayCustomAuthorizerV2IamResponse GeneratePolicy(string principalId, string effect, string resource)
     {
-        return new APIGatewayCustomAuthorizerResponse
+        return new APIGatewayCustomAuthorizerV2IamResponse
         {
             PrincipalID = principalId,
             PolicyDocument = new APIGatewayCustomAuthorizerPolicy
