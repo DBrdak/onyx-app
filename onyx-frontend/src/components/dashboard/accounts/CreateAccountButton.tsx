@@ -38,9 +38,9 @@ import {
 } from "@/lib/validation/account";
 import { useCreateAccountMutation } from "@/lib/hooks/mutations/useCreateAccountMutation";
 import { CreateAccountPayload } from "@/lib/api/account";
-import { CURRENCY } from "@/lib/constants/currency";
 import { ACCOUNT_TYPES } from "@/lib/constants/account";
 import { formatToDotDecimal } from "@/lib/utils";
+import CurrencyCombobox from "../CurrencyCombobox";
 
 interface CreateAccountButtonProps {
   budgetId: string;
@@ -142,7 +142,7 @@ const CreateAccountButton: FC<CreateAccountButtonProps> = ({ budgetId }) => {
                   name="amount"
                   render={({ field }) => (
                     <FormItem className="space-y-0">
-                      <FormLabel className="text-xs font-thin">
+                      <FormLabel className="text-xs tracking-wide">
                         Balance:
                       </FormLabel>
                       <FormControl>
@@ -160,27 +160,15 @@ const CreateAccountButton: FC<CreateAccountButtonProps> = ({ budgetId }) => {
                   name="currency"
                   render={({ field }) => (
                     <FormItem className="w-1/3 space-y-0">
-                      <FormLabel className="text-xs font-thin">
+                      <FormLabel className="text-xs tracking-wide">
                         Currency:
                       </FormLabel>
                       <FormControl>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="bg-transparent text-primary-foreground focus:ring-0 focus:ring-primary-foreground focus:ring-offset-1">
-                              <SelectValue />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {CURRENCY.map(({ value, label }) => (
-                              <SelectItem key={value} value={value}>
-                                {label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <CurrencyCombobox
+                          selectedValue={field.value}
+                          onChange={field.onChange}
+                          className="bg-transparent hover:bg-transparent"
+                        />
                       </FormControl>
                     </FormItem>
                   )}

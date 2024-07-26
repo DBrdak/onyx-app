@@ -1,6 +1,7 @@
 import { FC } from "react";
 
 import { Plus } from "lucide-react";
+import CurrencyCombobox from "@/components/dashboard/CurrencyCombobox";
 import AmountInput from "@/components/dashboard/AmountInput";
 import PlusMinusButton from "@/components/dashboard/PlusMinusButton";
 import LoadingButton from "@/components/LoadingButton";
@@ -18,13 +19,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -34,7 +28,6 @@ import {
 
 import { cn } from "@/lib/utils";
 import { Account } from "@/lib/validation/account";
-import { CURRENCY } from "@/lib/constants/currency";
 import { useCreateTransactionForm } from "@/lib/hooks/useCreateTransactionForm";
 
 interface TransactionTableCreateModalProps {
@@ -95,23 +88,10 @@ const TransactionTableCreateModal: FC<TransactionTableCreateModalProps> = ({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Currency:</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {CURRENCY.map(({ value, label }) => (
-                            <SelectItem key={value} value={value}>
-                              {label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <CurrencyCombobox
+                        selectedValue={field.value}
+                        onChange={field.onChange}
+                      />
                       <FormMessage />
                     </FormItem>
                   )}

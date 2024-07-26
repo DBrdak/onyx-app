@@ -2,6 +2,7 @@ import { FC } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import CurrencyCombobox from "@/components/dashboard/CurrencyCombobox";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,17 +11,9 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 import { CreateBudget, CreateBudgetSchema } from "@/lib/validation/budget";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
-import { CURRENCY } from "@/lib/constants/currency";
 import { Input } from "@/components/ui/input";
 import { User } from "@/lib/validation/user";
 import { useCreateBudgetMutation } from "@/lib/hooks/mutations/useCreateBudgetMutation";
@@ -107,25 +100,11 @@ const CreateBudgetForm: FC<CreateBudgetFormProps> = ({
           name="currency"
           render={({ field }) => (
             <FormItem className="md:col-span-2">
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                disabled
-              >
-                <FormControl>
-                  <SelectTrigger className="h-14">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {CURRENCY.map((c) => (
-                    <SelectItem key={c.value} value={c.value}>
-                      {c.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
+              <CurrencyCombobox
+                selectedValue={field.value}
+                onChange={field.onChange}
+                className="h-full"
+              />
             </FormItem>
           )}
         />
