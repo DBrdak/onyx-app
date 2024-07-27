@@ -14,18 +14,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 import { Account } from "@/lib/validation/account";
 import { useCreateTransactionForm } from "@/lib/hooks/useCreateTransactionForm";
-import { CURRENCY } from "@/lib/constants/currency";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
+import CurrencyCombobox from "../../CurrencyCombobox";
 
 interface TransactionsTableCreateFormProps {
   account: Account;
@@ -116,20 +109,10 @@ const TransactionsTableCreateForm: FC<TransactionsTableCreateFormProps> = ({
             name="currency"
             render={({ field }) => (
               <FormItem className="mr-3">
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {CURRENCY.map(({ value, label }) => (
-                      <SelectItem key={value} value={value}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <CurrencyCombobox
+                  selectedValue={field.value}
+                  onChange={field.onChange}
+                />
                 <FormMessage />
               </FormItem>
             )}

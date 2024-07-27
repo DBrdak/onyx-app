@@ -9,6 +9,7 @@ import {
 } from "@/lib/validation/base";
 import { CounterpartySchema } from "@/lib/validation/counterparty";
 import { AccountSchema } from "@/lib/validation/account";
+import { ALL_CURRENCIES } from "@/lib/constants/currency";
 
 export const TransactionSchema = z.object({
   id: RequiredString,
@@ -97,10 +98,15 @@ export type TImportTransactionsSelectStage = z.infer<
   typeof ImportTransactionsSelectStageSchema
 >;
 
+const AmountWithValidatedCurrency = z.object({
+  amount: z.number(),
+  currency: z.enum(ALL_CURRENCIES),
+});
+
 export const ImportTransactionsSubmitStageSchema = z
   .object({
     accountId: RequiredString,
-    amount: MoneySchema,
+    amount: AmountWithValidatedCurrency,
     transactedAt: DateSchema,
     counterpartyName: RequiredString,
     subcategoryId: RequiredString.nullable(),

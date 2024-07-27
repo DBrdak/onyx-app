@@ -3,24 +3,40 @@ import { Link } from "@tanstack/react-router";
 import HeroImageBackground from "@/assets/images/hero/hero-bg.png";
 import HeroImage from "@/assets/images/hero/hero-img.svg";
 
-
 const Hero = () => {
-    return (
-        <div className="container max-w-full h-auto lg:max-w-1440px p-0 m-0 ml-0 mx-auto lg:ml-122px mt-28 z-0 relative">
-        <div className="grid grid-cols-1 h-auto lg:grid-cols-2">
-            <div className="flex justify-center flex-col lg:max-w-600px md:pt-10 lg:pt-0 max-w-full h:auto px-10 sm:px-30 lg:pl-10">
-                <h1 className="font-bold leading-snug text-4xl sm:text-6xl w-full sm:w-10/12 sm:mx-auto lg:mx-0 lg:w-498px text-foreground text-center lg:text-left">The only budget planner you'll ever need.</h1>
-                <p className="mt-10 lg:w-386px text-center text-foreground lg:text-left w-full sm:w-10/12 sm:mx-auto lg:mx-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae perferendis labore quibusdam mollitia quaerat maiores, iste reiciendis laudantium laboriosam eveniet!</p>
-                <Button className="w-56 h-16 rounded-full mt-16 font-semibold text-base mx-auto lg:mx-0">
-                    <Link to="/budget"> Get started </Link>
-                </Button>                
-            </div>
-            <div className="flex justify-center items-center w-full h-518px lg:w-990px bottom-0 lg:-bottom-20 xl:-bottom-24 lg:right-56  right-0 relative">
-                <img className="w-full sm:w-auto md:h-680px lg:h-auto sm:-bottom-6 md:-bottom-28 md:right-0 right-0 xl:w-990px absolute z-10" src={HeroImageBackground} alt="Hero image background" />
-                <img className="h-full absolute sm:-bottom-8 md:-bottom-28 right-0 lg:right-64 xl:right-40 lg:bottom-24 xl:bottom-20 lg:h-400px z-20" src={HeroImage} alt="Hero Image" />          
-            </div>
+  return (
+    <div className="lg:max-w-1440px lg:ml-122px container relative z-0 m-0 mx-auto ml-0 mt-28 h-auto max-w-full p-0">
+      <div className="grid h-auto grid-cols-1 lg:grid-cols-2">
+        <div className="lg:max-w-600px h:auto sm:px-30 flex max-w-full flex-col justify-center px-10 md:pt-10 lg:pl-10 lg:pt-0">
+          <h1 className="w-full text-center text-4xl font-bold leading-snug text-foreground sm:mx-auto sm:w-10/12 sm:text-6xl lg:mx-0 lg:w-498px lg:text-left">
+            The only budget planner you'll ever need.
+          </h1>
+          <p className="mt-10 w-full text-center text-foreground sm:mx-auto sm:w-10/12 lg:mx-0 lg:w-386px lg:text-left">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae
+            perferendis labore quibusdam mollitia quaerat maiores, iste
+            reiciendis laudantium laboriosam eveniet!
+          </p>
+          <Button
+            asChild
+            className="mx-auto mt-16 h-16 w-56 rounded-full text-base font-semibold lg:mx-0"
+          >
+            <Link to="/budget"> Get started </Link>
+          </Button>
+        </div>
+        <div className="relative bottom-0 right-0 flex h-518px w-full items-center justify-center lg:-bottom-20 lg:right-56  lg:w-990px xl:-bottom-24">
+          <img
+            className="absolute right-0 z-10 w-full sm:-bottom-6 sm:w-auto md:-bottom-28 md:right-0 md:h-680px lg:h-auto xl:w-990px"
+            src={HeroImageBackground}
+            alt="Hero image background"
+          />
+          <img
+            className="lg:h-400px absolute right-0 z-20 h-full sm:-bottom-8 md:-bottom-28 lg:bottom-24 lg:right-64 xl:bottom-20 xl:right-40"
+            src={HeroImage}
+            alt="Hero Image"
+          />
         </div>
       </div>
-    );
+    </div>
+  );
 };
 export default Hero;

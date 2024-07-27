@@ -49,7 +49,7 @@ function Layout() {
   return (
     <div className="flex h-screen bg-background">
       <aside className="sticky left-0 flex h-full w-[250px] flex-col justify-between bg-primaryDark py-10 text-primaryDark-foreground lg:w-[300px]">
-        <Link to="/budget" className="mx-auto">
+        <Link to="/" className="mx-auto">
           <Logo />
         </Link>
 
@@ -195,7 +195,7 @@ function Layout() {
         </div>
       </aside>
 
-      <main className="mx-auto flex h-screen w-full max-w-screen-xl flex-col space-y-8 px-8 pb-4 pt-8">
+      <main className="mx-auto flex h-screen w-full max-w-screen-xl flex-col space-y-8 px-12 pb-4 pt-8">
         <nav className="text-end">
           <UserDropdown />
         </nav>

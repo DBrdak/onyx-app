@@ -1,11 +1,12 @@
 import { z } from "zod";
-import { NameSchema, ResultSchema } from "@/lib/validation/base";
+import {
+  NameSchema,
+  RequiredString,
+  ResultSchema,
+} from "@/lib/validation/base";
 import { AccountSchema } from "@/lib/validation/account";
 import { CategorySchema } from "@/lib/validation/category";
 import { CounterpartySchema } from "@/lib/validation/counterparty";
-import { CURRENCY } from "@/lib/constants/currency";
-
-const currencyValues = CURRENCY.map((c) => c.value) as [string, ...string[]];
 
 export const BudgetSchema = z.object({
   id: z.string(),
@@ -21,8 +22,8 @@ export const BudgetResultSchema = ResultSchema.extend({
 
 export const CreateBudgetSchema = z.object({
   name: NameSchema,
-  currency: z.enum(currencyValues, { message: "Invalid currency" }),
-  userId: z.string(),
+  currency: RequiredString,
+  userId: RequiredString,
 });
 export type CreateBudget = z.infer<typeof CreateBudgetSchema>;
 
