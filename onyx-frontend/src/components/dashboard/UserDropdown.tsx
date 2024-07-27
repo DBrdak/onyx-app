@@ -1,8 +1,9 @@
 import { FC } from "react";
+import { useNavigate, useRouteContext } from "@tanstack/react-router";
 
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, LoaderCircle } from "lucide-react";
+import UserProfileDialogContent from "@/components/dashboard/UserProfileDialogContent";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,33 +12,63 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 interface UserDropdownProps {}
 
 const UserDropdown: FC<UserDropdownProps> = () => {
+  const {
+    auth: { user, logout },
+  } = useRouteContext({ from: "/_dashboard-layout" });
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    await navigate({ to: "/" });
+  };
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="justify-between space-x-2 rounded-full p-0"
-        >
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <ChevronDown />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent sideOffset={10} align="end">
-        <DropdownMenuLabel>My Name</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
-        <DropdownMenuItem>Team</DropdownMenuItem>
-        <DropdownMenuItem>Subscription</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Dialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="outline"
+            className="justify-between space-x-2 rounded-full bg-transparent p-0 pr-1 duration-700"
+            disabled={!user}
+          >
+            <span className="inline-flex aspect-square h-full items-center justify-center rounded-full bg-primaryDark font-bold capitalize text-primaryDark-foreground">
+              {!user?.username ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                user.username[0]
+              )}
+            </span>
+            <ChevronDown />
+          </Button>
+        </DropdownMenuTrigger>
+        {user && (
+          <>
+            <DropdownMenuContent
+              sideOffset={10}
+              align="end"
+              className="max-w-[150px]"
+            >
+              <DropdownMenuLabel className="truncate text-center capitalize">
+                {user?.username}
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DialogTrigger asChild>
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+              </DialogTrigger>
+              <DropdownMenuItem onClick={handleLogout}>
+                Sign out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+            <UserProfileDialogContent user={user} />
+          </>
+        )}
+      </DropdownMenu>
+    </Dialog>
   );
 };
 
