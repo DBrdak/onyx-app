@@ -52,7 +52,7 @@ internal sealed class JwtService : IJwtService
                 Result.Success(tokenValue);
     }
 
-    public string ValidateJwt(string token, out string principalId)
+    public string ValidateJwt(string? token, out string principalId)
     {
         principalId = string.Empty;
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -69,7 +69,10 @@ internal sealed class JwtService : IJwtService
                 IssuerSigningKey = signingKey,
             };
 
-            _ = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
+            _ = tokenHandler.ValidateToken(
+                token ?? string.Empty,
+                validationParameters,
+                out var validatedToken);
             var jwtToken = (JwtSecurityToken)validatedToken;
 
             if (IsEmailVerified(jwtToken))
