@@ -20,21 +20,22 @@ internal sealed class AccessFunction : BaseFunction
     }
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = "LambdaAuthorizer")]
-    public APIGatewayCustomAuthorizerV2IamResponse FunctionHandler(APIGatewayCustomAuthorizerRequest request, ILambdaContext context)
+    public APIGatewayCustomAuthorizerV2IamResponse FunctionHandler(APIGatewayCustomAuthorizerV2Request request, ILambdaContext context)
     {
         try
         {
-            var token = request.AuthorizationToken?.Replace("Bearer ", string.Empty) ??
-                        request.Headers.FirstOrDefault(kvp => kvp.Key.ToLower() == "authorization").Value
-                            ?.Replace("Bearer ", string.Empty);
+            var token = request.Headers
+                .FirstOrDefault(kvp => kvp.Key.ToLower() == "authorization").Value?
+                .Replace("Bearer ", string.Empty);
 
             var validationResult = _jwtService.ValidateJwt(token, out var principalId);
 
-            context.Logger.Log("wrizz");
-            return GeneratePolicy(
+            var policy = GeneratePolicy(
                 principalId,
                 validationResult,
-                request.MethodArn);
+                request.RouteArn);
+            context.Logger.Log(JsonConvert.SerializeObject(policy));
+            return policy;
         }
         catch (Exception e)
         {
