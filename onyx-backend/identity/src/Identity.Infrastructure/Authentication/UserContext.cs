@@ -8,13 +8,9 @@ internal sealed class UserContext : IUserContext
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private const string userIdClaimName = "Id";
-    private const string userCurrencyClaimName = "Currency";
     private readonly Error _userIdClaimNotFound = new(
         "UserContext.UserIdNotFound",
         "Cannot retrieve user ID");
-    private readonly Error _usercurrencyClaimNotFound = new(
-        "UserContext.CurrencyNotFound",
-        "Cannot retrieve base currency for user");
 
     public UserContext(IHttpContextAccessor httpContextAccessor)
     {

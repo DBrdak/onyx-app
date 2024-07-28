@@ -52,7 +52,7 @@ internal sealed class JwtService : IJwtService
                 Result.Success(tokenValue);
     }
 
-    public string ValidateJwt(string? token, out string principalId)
+    public bool ValidateJwt(string? token, out string principalId)
     {
         principalId = string.Empty;
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -77,16 +77,16 @@ internal sealed class JwtService : IJwtService
 
             if (IsEmailVerified(jwtToken))
             {
-                return "Deny";
+                return false;
             }
 
             principalId = jwtToken.Subject;
 
-            return "Allow";
+            return true;
         }
         catch
         {
-            return "Deny";
+            return false;
         }
     }
 

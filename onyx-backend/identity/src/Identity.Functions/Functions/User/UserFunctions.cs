@@ -25,9 +25,9 @@ public sealed class UserFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Get, $"{usersBaseRoute}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetUser()
     {
-        var command = new GetUserQuery();
+        var query = new GetUserQuery();
 
-        var result = await Sender.Send(command);
+        var result = await Sender.Send(query);
 
         return result.ReturnAPIResponse(200, 404);
     }

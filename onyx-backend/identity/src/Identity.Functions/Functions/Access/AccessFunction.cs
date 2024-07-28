@@ -20,29 +20,22 @@ internal sealed class AccessFunction : BaseFunction
     }
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = "LambdaAuthorizer")]
-    public APIGatewayCustomAuthorizerV2IamResponse FunctionHandler(APIGatewayCustomAuthorizerV2Request request, ILambdaContext context)
+    public APIGatewayCustomAuthorizerV2SimpleResponse FunctionHandler(APIGatewayCustomAuthorizerV2Request request, ILambdaContext context)
     {
-        try
-        {
-            var token = request.Headers
-                .FirstOrDefault(kvp => kvp.Key.ToLower() == "authorization").Value?
-                .Replace("Bearer ", string.Empty);
+        var token = request.Headers
+            .FirstOrDefault(kvp => kvp.Key.ToLower() == "authorization").Value?
+            .Replace("Bearer ", string.Empty);
 
-            var validationResult = _jwtService.ValidateJwt(token, out var principalId);
+        var isAuthorized = _jwtService.ValidateJwt(token, out var principalId);
 
-            var policy = GeneratePolicy(
-                principalId,
-                validationResult,
-                request.RouteArn);
-            context.Logger.Log(JsonConvert.SerializeObject(policy));
-            return policy;
-        }
-        catch (Exception e)
+        return new APIGatewayCustomAuthorizerV2SimpleResponse
         {
-            context.Logger.Log(JsonConvert.SerializeObject(e));
-            context.Logger.Log("sadge");
-            throw;
-        }
+            IsAuthorized = isAuthorized,
+            //Context =
+            //{
+            //    {"Authorization", token}
+            //}
+        };
     }
 
     private static APIGatewayCustomAuthorizerV2IamResponse GeneratePolicy(string principalId, string effect, string resource)
