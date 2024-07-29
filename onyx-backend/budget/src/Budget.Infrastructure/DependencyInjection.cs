@@ -56,9 +56,6 @@ public static class DependencyInjection
 
     private static void AddContexts(this IServiceCollection services)
     {
-        //TODO consider
-        services.AddHttpContextAccessor();
-
         services.AddScoped<IBudgetContext, BudgetContext>();
         services.AddScoped<IUserContext, UserContext>();
     }

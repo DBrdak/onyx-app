@@ -9,7 +9,6 @@ using Budget.Functions.Functions.Transactions.Requests;
 using LambdaKernel;
 using MediatR;
 using Budget.Application.Transactions.BulkRemoveTransactions;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Budget.Functions.Functions.Transactions;
 

@@ -1,5 +1,7 @@
-﻿using Amazon.Lambda.Core;
+﻿using Abstractions.Messaging;
+using Amazon.Lambda.Core;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
@@ -10,6 +12,11 @@ public abstract class BaseFunction
     protected const string FullAccessRole = "arn:aws:iam::975049887576:role/FullAccess";
     protected const string BaseRouteV1 = "/api/v1";
     protected readonly ISender Sender;
+    protected readonly IServiceProvider ServiceProvider;
 
-    protected BaseFunction(ISender sender) => Sender = sender;
+    protected BaseFunction(ISender sender, IServiceProvider serviceProvider)
+    {
+        Sender = sender;
+        ServiceProvider = serviceProvider;
+    }
 }

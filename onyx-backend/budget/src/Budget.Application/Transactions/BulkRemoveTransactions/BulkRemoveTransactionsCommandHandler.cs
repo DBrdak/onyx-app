@@ -3,7 +3,6 @@ using Budget.Domain.Accounts;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
 using Models.Responses;
-using System.Transactions;
 using Transaction = Budget.Domain.Transactions.Transaction;
 
 namespace Budget.Application.Transactions.BulkRemoveTransactions;

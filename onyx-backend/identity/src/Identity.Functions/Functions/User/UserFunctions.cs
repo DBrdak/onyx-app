@@ -1,6 +1,7 @@
 ﻿using Amazon.Lambda.Annotations;
 using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.APIGatewayEvents;
+using Amazon.Lambda.Core;
 using Identity.Application.User.GetUser;
 using Identity.Application.User.LogoutUser;
 using Identity.Application.User.RemoveUser;
@@ -10,6 +11,9 @@ using Identity.Functions.Functions.Shared;
 using Identity.Functions.Functions.User.Requests;
 using LambdaKernel;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace Identity.Functions.Functions.User;
 
@@ -17,14 +21,16 @@ public sealed class UserFunctions : BaseFunction
 {
     private const string usersBaseRoute = $"{BaseRouteV1}/user";
 
-    public UserFunctions(ISender sender) : base(sender)
-    {
-    }
+    public UserFunctions(ISender sender, IServiceProvider serviceProvider) : base(sender, serviceProvider)
+    { }
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(GetUser))]
     [HttpApi(LambdaHttpMethod.Get, $"{usersBaseRoute}")]
-    public async Task<APIGatewayHttpApiV2ProxyResponse> GetUser()
+    public async Task<APIGatewayHttpApiV2ProxyResponse> GetUser(APIGatewayHttpApiV2ProxyRequest req, ILambdaContext context)
     {
+        context.Logger.Log(JsonConvert.SerializeObject(ServiceProvider));
+        ServiceProvider.AddRequestContextAccessor(req);
+
         var query = new GetUserQuery();
 
         var result = await Sender.Send(query);

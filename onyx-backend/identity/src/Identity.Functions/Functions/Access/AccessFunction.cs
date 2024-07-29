@@ -4,9 +4,7 @@ using Amazon.Lambda.Annotations;
 using Identity.Application.Abstractions.Authentication;
 using Identity.Functions.Functions.Shared;
 using MediatR;
-using MongoDB.Bson;
-using Newtonsoft.Json;
-using Serilog;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Functions.Functions.Access;
 
@@ -14,7 +12,7 @@ internal sealed class AccessFunction : BaseFunction
 {
     private readonly IJwtService _jwtService;
 
-    public AccessFunction(IJwtService jwtService, ISender sender) : base(sender)
+    public AccessFunction(IJwtService jwtService, ISender sender, IServiceProvider serviceProvider) : base(sender, serviceProvider)
     {
         _jwtService = jwtService;
     }
@@ -30,32 +28,7 @@ internal sealed class AccessFunction : BaseFunction
 
         return new APIGatewayCustomAuthorizerV2SimpleResponse
         {
-            IsAuthorized = isAuthorized,
-            //Context =
-            //{
-            //    {"Authorization", token}
-            //}
-        };
-    }
-
-    private static APIGatewayCustomAuthorizerV2IamResponse GeneratePolicy(string principalId, string effect, string resource)
-    {
-        return new APIGatewayCustomAuthorizerV2IamResponse
-        {
-            PrincipalID = principalId,
-            PolicyDocument = new APIGatewayCustomAuthorizerPolicy
-            {
-                Version = "2012-10-17",
-                Statement =
-                [
-                    new()
-                    {
-                        Action = ["execute-api:Invoke"],
-                        Effect = effect,
-                        Resource = [resource]
-                    }
-                ]
-            }
+            IsAuthorized = isAuthorized
         };
     }
 }

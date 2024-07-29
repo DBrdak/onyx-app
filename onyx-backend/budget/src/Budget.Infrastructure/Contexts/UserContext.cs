@@ -1,4 +1,5 @@
-﻿using Budget.Application.Abstractions.Identity;
+﻿using Abstractions.Messaging;
+using Budget.Application.Abstractions.Identity;
 using Microsoft.AspNetCore.Http;
 using Models.Responses;
 
@@ -6,7 +7,7 @@ namespace Budget.Infrastructure.Contexts;
 
 internal sealed class UserContext : IUserContext
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly RequestAccessor _requestAccessor;
     private const string userIdClaimName = "Id";
     private const string userCurrencyClaimName = "Currency";
     private readonly Error _userIdClaimNotFound = new(
@@ -16,15 +17,13 @@ internal sealed class UserContext : IUserContext
         "UserContext.CurrencyNotFound",
         "Cannot retrieve base currency for user");
 
-    public UserContext(IHttpContextAccessor httpContextAccessor)
+    public UserContext(RequestAccessor requestAccessor)
     {
-        _httpContextAccessor = httpContextAccessor;
+        _requestAccessor = requestAccessor;
     }
 
     public Result<string> GetUserId() =>
-        _httpContextAccessor
-            .HttpContext
-            .User
+        _requestAccessor
             .Claims
             .FirstOrDefault(claim => claim.Type == userIdClaimName)?
             .Value is var id && !string.IsNullOrEmpty(id) ?
@@ -32,9 +31,7 @@ internal sealed class UserContext : IUserContext
             _userIdClaimNotFound;
 
     public Result<string> GetUserCurrency() =>
-        _httpContextAccessor
-            .HttpContext
-            .User
+        _requestAccessor
             .Claims
             .FirstOrDefault(claim => claim.Type == userCurrencyClaimName)?
             .Value is var currency && !string.IsNullOrEmpty(currency) ?

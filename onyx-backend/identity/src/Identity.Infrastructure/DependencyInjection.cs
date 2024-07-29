@@ -7,7 +7,6 @@ using Identity.Infrastructure.Email.Options;
 using Identity.Infrastructure.Messanger;
 using Identity.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharedDAL;
 using SharedDAL.DataModels.Abstractions;
@@ -16,7 +15,7 @@ namespace Identity.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static void InjectInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static void InjectInfrastructure(this IServiceCollection services)
     {
         services.AddPersistence();
         services.AddAuthentication();
@@ -40,9 +39,6 @@ public static class DependencyInjection
 
     private static void AddContexts(this IServiceCollection services)
     {
-        //TODO consider
-        services.AddHttpContextAccessor();
-
         services.AddScoped<IUserContext, UserContext>();
     }
 

@@ -12,6 +12,7 @@ using Identity.Functions.Functions.Auth.Requests;
 using Identity.Functions.Functions.Shared;
 using LambdaKernel;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Functions.Functions.Auth;
 
@@ -19,7 +20,7 @@ public sealed class AuthFunctions : BaseFunction
 {
     private const string authBaseRoute = $"{BaseRouteV1}/auth";
 
-    public AuthFunctions(ISender sender) : base(sender)
+    public AuthFunctions(ISender sender, IServiceProvider serviceProvider) : base(sender, serviceProvider)
     {
     }
 
