@@ -21,6 +21,10 @@ Resources:
           LambdaAuthorizer:
             FunctionArn: !GetAtt LambdaAuthorizer.Arn
             AuthorizerPayloadFormatVersion: '2.0'
+            EnableSimpleResponses: true
+            Identity: 
+              Headers:
+                - Authorization
   LambdaAuthorizer:
     Type: AWS::Serverless::Function
     Metadata:

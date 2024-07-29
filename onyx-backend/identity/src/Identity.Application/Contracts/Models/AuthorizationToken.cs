@@ -8,5 +8,6 @@ public sealed record AuthorizationToken
     public AuthorizationToken(string accessToken, string? longLivedToken = null)
     {
         AccessToken = accessToken;
+        LongLivedToken = longLivedToken;
     }
 }

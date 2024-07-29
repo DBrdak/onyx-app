@@ -7,6 +7,8 @@ public record Error(string Code, string Message)
     public static Error NullValue = new("Error.NullValue", "Null input");
     public static Error InvalidValue = new("Error.InvalidValue", "Invalid input");
     public static Error Exception = new("Error.Exception", "Internal server error");
+    public static Error NotFound(Type type) => new($"Error.{type.Name}.NotFound", $"{type.Name} not found");
+
     public static Error ValidationError(IEnumerable<string?> members) => new("Error.Validation", $"Validation failed for: {string.Join(',', members)}");
 
     /// <summary>

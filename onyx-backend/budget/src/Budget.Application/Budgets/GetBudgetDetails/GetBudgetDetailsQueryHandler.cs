@@ -1,4 +1,5 @@
 ﻿using Abstractions.Messaging;
+using Budget.Application.Abstractions.Identity;
 using Budget.Application.Accounts.Models;
 using Budget.Application.Budgets.Models;
 using Budget.Application.Categories.Models;
@@ -19,33 +20,60 @@ internal sealed class GetBudgetDetailsQueryHandler : IQueryHandler<GetBudgetDeta
     private readonly ICounterpartyRepository _counterpartyRepository;
     private readonly ICategoryRepository _categoryRepository;
     private readonly ISubcategoryRepository _subcategoryRepository;
+    private readonly IUserContext _userContext;
 
-    public GetBudgetDetailsQueryHandler(IBudgetRepository budgetRepository, ICounterpartyRepository counterpartyRepository, IAccountRepository accountRepository, ICategoryRepository categoryRepository, ISubcategoryRepository subcategoryRepository)
+    public GetBudgetDetailsQueryHandler(
+        IBudgetRepository budgetRepository,
+        ICounterpartyRepository counterpartyRepository,
+        IAccountRepository accountRepository,
+        ICategoryRepository categoryRepository,
+        ISubcategoryRepository subcategoryRepository,
+        IUserContext userContext)
     {
         _budgetRepository = budgetRepository;
         _counterpartyRepository = counterpartyRepository;
         _accountRepository = accountRepository;
         _categoryRepository = categoryRepository;
         _subcategoryRepository = subcategoryRepository;
+        _userContext = userContext;
     }
 
     public async Task<Result<BudgetModel>> Handle(GetBudgetDetailsQuery request, CancellationToken cancellationToken)
     {
+        var userIdGetResult = _userContext.GetUserId();
+
+        if (userIdGetResult.IsFailure)
+        {
+            return userIdGetResult.Error;
+        }
+
         var budgetId = new BudgetId(request.BudgetId);
 
-        var (budgetTask, accountsTask, categoriesTask, counterpartiesTask, subcategoriesTask) = (
-            _budgetRepository.GetByIdAsync(budgetId, cancellationToken),
+        var budgetGetResult = await _budgetRepository.GetBudgetsForUserAsync(userIdGetResult.Value, cancellationToken);
+
+        if (budgetGetResult.IsFailure)
+        {
+            return budgetGetResult.Error;
+        }
+
+        var budget = budgetGetResult.Value.FirstOrDefault(b => b.Id == budgetId);
+
+        if (budget is null)
+        {
+            return Error.NotFound(typeof(Domain.Budgets.Budget));
+        }
+
+        var (accountsTask, categoriesTask, counterpartiesTask, subcategoriesTask) = (
             _accountRepository.GetAllAsync(cancellationToken),
             _categoryRepository.GetAllAsync(cancellationToken),
             _counterpartyRepository.GetAllAsync(cancellationToken),
             _subcategoryRepository.GetAllAsync(cancellationToken)
         );
 
-        await Task.WhenAll(budgetTask, accountsTask, categoriesTask, counterpartiesTask, subcategoriesTask);
+        await Task.WhenAll(accountsTask, categoriesTask, counterpartiesTask, subcategoriesTask);
 
         if (Result.Aggregate(
             [
-                budgetTask.Result,
                 accountsTask.Result,
                 categoriesTask.Result,
                 counterpartiesTask.Result,
@@ -55,8 +83,7 @@ internal sealed class GetBudgetDetailsQueryHandler : IQueryHandler<GetBudgetDeta
             return result.Error;
         }
 
-        var (budget, accounts, categories, counterparties, subcategories) = (
-            budgetTask.Result.Value,
+        var (accounts, categories, counterparties, subcategories) = (
             accountsTask.Result.Value,
             categoriesTask.Result.Value,
             counterpartiesTask.Result.Value,

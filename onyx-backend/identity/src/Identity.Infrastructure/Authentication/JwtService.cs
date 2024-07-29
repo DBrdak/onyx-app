@@ -106,7 +106,8 @@ internal sealed class JwtService : IJwtService
             _options.Audience,
             null,
             null,
-            DateTime.UtcNow.AddMinutes(_options.ExpireInLongMinutes));
+            DateTime.UtcNow.AddMinutes(_options.ExpireInLongMinutes),
+            signingCredentials);
 
         var tokenValue = new JwtSecurityTokenHandler()
             .WriteToken(token);
