@@ -4,7 +4,6 @@ using Amazon.Lambda.Annotations;
 using Identity.Application.Abstractions.Authentication;
 using Identity.Functions.Functions.Shared;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Functions.Functions.Access;
 

@@ -1,6 +1,5 @@
 ﻿using Abstractions.Messaging;
 using Budget.Application.Abstractions.Identity;
-using Microsoft.AspNetCore.Http;
 using Models.Responses;
 
 namespace Budget.Infrastructure.Contexts;

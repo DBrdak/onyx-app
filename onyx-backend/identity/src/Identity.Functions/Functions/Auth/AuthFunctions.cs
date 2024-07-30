@@ -12,7 +12,6 @@ using Identity.Functions.Functions.Auth.Requests;
 using Identity.Functions.Functions.Shared;
 using LambdaKernel;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Functions.Functions.Auth;
 

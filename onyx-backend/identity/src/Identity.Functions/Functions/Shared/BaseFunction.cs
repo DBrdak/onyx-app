@@ -1,7 +1,5 @@
-﻿using Abstractions.Messaging;
-using Amazon.Lambda.Core;
+﻿using Amazon.Lambda.Core;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 

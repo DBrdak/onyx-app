@@ -1,7 +1,6 @@
 ﻿using Amazon.Lambda.Annotations;
 using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.APIGatewayEvents;
-using Amazon.Lambda.Core;
 using Identity.Application.User.GetUser;
 using Identity.Application.User.LogoutUser;
 using Identity.Application.User.RemoveUser;
@@ -11,9 +10,6 @@ using Identity.Functions.Functions.Shared;
 using Identity.Functions.Functions.User.Requests;
 using LambdaKernel;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 namespace Identity.Functions.Functions.User;
 

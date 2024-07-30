@@ -1,8 +1,6 @@
 ﻿using Amazon.Lambda.APIGatewayEvents;
-using Amazon.Lambda.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
-using System.Security.Claims;
 using Abstractions.Messaging;
 
 namespace LambdaKernel;

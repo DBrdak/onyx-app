@@ -12,7 +12,6 @@ using Budget.Functions.Functions.Budgets.Requests;
 using Budget.Functions.Functions.Shared;
 using LambdaKernel;
 using MediatR;
-using Amazon.Runtime.Internal;
 
 
 namespace Budget.Functions.Functions.Budgets;
@@ -56,8 +55,11 @@ public sealed class BudgetFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/{{budgetId}}/invitation")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetInvitation(
         string budgetId,
-        APIGatewayHttpApiV2ProxyRequest request)
+        APIGatewayHttpApiV2ProxyRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var protocol = request.Headers.TryGetValue(
             "X-Forwarded-Proto",
             out var protocolHeader) ?

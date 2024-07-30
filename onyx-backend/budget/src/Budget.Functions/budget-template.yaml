@@ -22,7 +22,7 @@ Resources:
             FunctionArn: !Ref LambdaAuthorizerArn
             AuthorizerPayloadFormatVersion: '2.0'
             EnableSimpleResponses: true
-            Identity: 
+            Identity:
               Headers:
                 - Authorization
   SubcategoriesGetToAssign:

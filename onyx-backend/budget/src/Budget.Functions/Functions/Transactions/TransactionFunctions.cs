@@ -25,10 +25,13 @@ public sealed class TransactionFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Get, transactionBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Get(
         string budgetId,
-        [Amazon.Lambda.Annotations.APIGateway.FromQuery] string? counterpartyId,
-        [Amazon.Lambda.Annotations.APIGateway.FromQuery] string? accountId,
-        [Amazon.Lambda.Annotations.APIGateway.FromQuery] string? subcategoryId)
+        [FromQuery] string? counterpartyId,
+        [FromQuery] string? accountId,
+        [FromQuery] string? subcategoryId,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var transactionsQuery = new GetTransactionsQuery(
             counterpartyId is null ? null : Guid.Parse(counterpartyId),
             accountId is null ? null : Guid.Parse(accountId),
@@ -44,8 +47,11 @@ public sealed class TransactionFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Post, transactionBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Add(
         string budgetId,
-        [Amazon.Lambda.Annotations.APIGateway.FromBody] AddTransactionRequest request)
+        [FromBody] AddTransactionRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new AddTransactionCommand(
             request.AccountId,
             request.Amount,
@@ -63,8 +69,11 @@ public sealed class TransactionFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Delete, $"{transactionBaseRoute}/{{transactionId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Remove(
         string budgetId,
-        string transactionId)
+        string transactionId,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new RemoveTransactionCommand(Guid.Parse(transactionId), Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);
@@ -76,8 +85,11 @@ public sealed class TransactionFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Delete, $"{transactionBaseRoute}/bulk")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> BulkRemove(
         Guid budgetId,
-        [Amazon.Lambda.Annotations.APIGateway.FromBody] Guid[] transactionIds)
+        [FromBody] Guid[] transactionIds,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new BulkRemoveTransactionsCommand(transactionIds, budgetId);
 
         var result = await Sender.Send(command);

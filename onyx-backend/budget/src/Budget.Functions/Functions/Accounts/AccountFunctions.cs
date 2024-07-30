@@ -25,8 +25,12 @@ public sealed class AccountFunctions : BaseFunction
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = $"Accounts{nameof(GetAll)}")]
     [HttpApi(LambdaHttpMethod.Get, accountsBaseRoute)]
-    public async Task<APIGatewayHttpApiV2ProxyResponse> GetAll(string budgetId)
+    public async Task<APIGatewayHttpApiV2ProxyResponse> GetAll(
+        string budgetId,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var query = new GetAccountsQuery(Guid.Parse(budgetId));
 
         var result = await Sender.Send(query);
@@ -38,8 +42,11 @@ public sealed class AccountFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Post, accountsBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Add(
         string budgetId,
-        [FromBody] AddAccountRequest request)
+        [FromBody] AddAccountRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new AddAccountCommand(request.Name, request.Balance, request.AccountType, Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);
@@ -52,8 +59,11 @@ public sealed class AccountFunctions : BaseFunction
     public async Task<APIGatewayHttpApiV2ProxyResponse> Update(
         string budgetId,
         string accountId,
-        [FromBody] UpdateAccountRequest request)
+        [FromBody] UpdateAccountRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new UpdateAccountCommand(Guid.Parse(accountId), request.NewName, request.NewBalance, Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);
@@ -65,8 +75,11 @@ public sealed class AccountFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Delete, $"{accountsBaseRoute}/{{accountId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Remove(
         string budgetId,
-        string accountId)
+        string accountId,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new RemoveAccountCommand(Guid.Parse(accountId), Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);

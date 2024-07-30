@@ -1,6 +1,5 @@
 ﻿using Abstractions.Messaging;
 using Identity.Application.Abstractions.Authentication;
-using Microsoft.AspNetCore.Http;
 using Models.Responses;
 
 namespace Identity.Infrastructure.Authentication;
