@@ -68,7 +68,7 @@ public class Result<TValue> : Result
         _value = value;
     }
 
-    [NotNullIfNotNull("_value")]
+    [NotNullIfNotNull(nameof(_value))]
     public TValue Value => IsSuccess
         ? _value! : default;
 

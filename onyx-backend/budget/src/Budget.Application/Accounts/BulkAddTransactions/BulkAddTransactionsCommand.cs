@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Abstractions.Messaging;
 using Budget.Application.Accounts.Models;
 using Budget.Application.Contracts.Models;

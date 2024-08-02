@@ -17,6 +17,10 @@ public interface ITransactionRepository
 
     Task<Result<Transaction>> AddAsync(Transaction transaction, CancellationToken cancellationToken = default);
 
+    Task<Result> AddRangeAsync(
+        IEnumerable<Transaction> entities,
+        CancellationToken cancellationToken = default);
+
     Task<Result<Transaction>> GetByIdAsync(TransactionId requestTransactionId, CancellationToken cancellationToken = default);
 
     Task<Result> RemoveAsync(TransactionId transactionId, CancellationToken cancellationToken = default);
