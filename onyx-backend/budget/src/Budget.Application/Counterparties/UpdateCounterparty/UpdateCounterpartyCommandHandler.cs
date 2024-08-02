@@ -37,7 +37,7 @@ internal sealed class UpdateCounterpartyCommandHandler : ICommandHandler<UpdateC
             return Result.Failure<CounterpartyModel>(changeNameResult.Error);
         }
 
-        var isCounterpartyExistsResult = await _counterpartyRepository.GetByNameAndType(
+        var isCounterpartyExistsResult = await _counterpartyRepository.GetByNameAndTypeAsync(
             counterparty.Name,
             counterparty.Type,
             cancellationToken);

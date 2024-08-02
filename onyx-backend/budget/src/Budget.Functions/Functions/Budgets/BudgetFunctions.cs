@@ -55,18 +55,17 @@ public sealed class BudgetFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/{{budgetId}}/invitation")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetInvitation(
         string budgetId,
-        APIGatewayHttpApiV2ProxyRequest request,
         APIGatewayHttpApiV2ProxyRequest requestContext)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
-        var protocol = request.Headers.TryGetValue(
+        var protocol = requestContext.Headers.TryGetValue(
             "X-Forwarded-Proto",
             out var protocolHeader) ?
             protocolHeader :
             "https";
-        var host = request.Headers["Host"];
-        var path = request.RawPath;
+        var host = requestContext.Headers["Host"];
+        var path = requestContext.RawPath;
         var baseUrl = $"{protocol}://{host}{path}";
         var command = new GetBudgetInvitationQuery(Guid.Parse(budgetId), baseUrl);
 
@@ -108,7 +107,7 @@ public sealed class BudgetFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/{{budgetId}}/join/{{token}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Join(
         string budgetId,
-        string token, 
+        string token,
         APIGatewayHttpApiV2ProxyRequest requestContext)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);

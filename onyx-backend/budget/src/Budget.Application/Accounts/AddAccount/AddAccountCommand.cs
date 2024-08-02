@@ -1,6 +1,6 @@
 ﻿using Budget.Application.Abstractions.Messaging;
 using Budget.Application.Accounts.Models;
-using Budget.Application.Shared.Models;
+using Budget.Application.Contracts.Models;
 
 namespace Budget.Application.Accounts.AddAccount;
 

@@ -21,6 +21,7 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
     public int? InvitationTokenExpirationDateMinute { get; init; }
     public int? InvitationTokenExpirationDateSecond { get; init; }
     public IEnumerable<string> UserIds { get; init; }
+    public Guid? UnknownSubcategoryId { get; init; }
 
     private BudgetDataModel(Document doc)
     {
@@ -35,6 +36,7 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
         InvitationTokenExpirationDateHour = doc[nameof(InvitationTokenExpirationDateHour)].AsNullableInt();
         InvitationTokenExpirationDateMinute = doc[nameof(InvitationTokenExpirationDateMinute)].AsNullableInt();
         InvitationTokenExpirationDateSecond = doc[nameof(InvitationTokenExpirationDateSecond)].AsNullableInt();
+        UnknownSubcategoryId = doc[nameof(UnknownSubcategoryId)].AsNullableGuid();
     }
 
 
@@ -63,6 +65,7 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
             invitationTokenExpirationDate?.Minute,
             invitationTokenExpirationDate?.Second
         );
+        UnknownSubcategoryId = budget.UnknownSubcategoryId?.Value;
     }
 
     public static BudgetDataModel FromDomainModel(Domain.Budgets.Budget budget) => new(budget);
@@ -71,6 +74,8 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
 
     public Domain.Budgets.Budget ToDomainModel()
     {
+        object? invitationToken = null;
+
         var id = new BudgetId(Id);
 
         var name = Activator.CreateInstance(
@@ -111,7 +116,7 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
                 InvitationTokenExpirationDateSecond.Value
             );
 
-            var invitationToken = Activator.CreateInstance(
+            invitationToken = Activator.CreateInstance(
                                       typeof(BudgetInvitationToken),
                                       BindingFlags.Instance | BindingFlags.NonPublic,
                                       null,
@@ -130,7 +135,7 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
                    typeof(Domain.Budgets.Budget),
                    BindingFlags.Instance | BindingFlags.NonPublic,
                    null,
-                   [name, baseCurrency, UserIds.ToList(), id],
+                   [name, baseCurrency, UserIds.ToList(), invitationToken, UnknownSubcategoryId, id],
                    null) as Domain.Budgets.Budget ??
                throw new DataModelConversionException(
                    typeof(BudgetDataModel),

@@ -1,7 +1,7 @@
 ﻿using Abstractions.Messaging;
 using Budget.Application.Accounts.AddAccount;
 using Budget.Application.Accounts.Models;
-using Budget.Application.Shared.Models;
+using Budget.Application.Contracts.Models;
 using Budget.Domain.Accounts;
 using Models.Responses;
 

@@ -1,5 +1,5 @@
 ﻿using Budget.Application.Abstractions.Messaging;
-using Budget.Application.Shared.Models;
+using Budget.Application.Contracts.Models;
 using Budget.Application.Transactions.Models;
 
 namespace Budget.Application.Transactions.AddTransaction;

@@ -114,17 +114,15 @@ internal sealed class AddTransactionCommandHandler : ICommandHandler<AddTransact
 
         var budgetAmount = budgetAmountConvertResult.Value;
 
-        var transactionFactory = new TransactionFactory(
-            account,
+        var transactionFactory = new TransactionFactory(account, new (request.BudgetId));
+
+        var transactionCreateResult = transactionFactory.CreateTransaction(
             counterparty,
             subcategory,
             request.TransactedAt,
             amount,
             convertedAmount,
-            budgetAmount,
-            new (request.BudgetId));
-
-        var transactionCreateResult = transactionFactory.CreateTransaction();
+            budgetAmount);
 
         if (transactionCreateResult.IsFailure)
         {
@@ -173,7 +171,7 @@ internal sealed class AddTransactionCommandHandler : ICommandHandler<AddTransact
         var counterpartyName = counterpartyNameCreateResult.Value;
         var isPayee = request.Amount.Amount < 0;
         var counterpartyType = isPayee ? CounterpartyType.Payee : CounterpartyType.Payer;
-        var counterpartyGetResult = await _counterpartyRepository.GetByNameAndType(
+        var counterpartyGetResult = await _counterpartyRepository.GetByNameAndTypeAsync(
             counterpartyName,
             counterpartyType,
             cancellationToken);

@@ -1,20 +1,16 @@
 ﻿using Models.DataTypes;
 using Models.Responses;
 
-namespace Budget.Application.Shared.Models;
+namespace Budget.Application.Contracts.Models;
 
 public sealed record MoneyModel
 {
     public decimal Amount { get; private set; }
     public string Currency { get; private set; }
 
-    /// <summary>
-    /// <b>DO NOT USE THIS CONSTRUCTOR!</b><br/>
-    /// <i>Only for serialization purposes</i>
-    /// </summary>
     [System.Text.Json.Serialization.JsonConstructor]
     [Newtonsoft.Json.JsonConstructor]
-    public MoneyModel(decimal amount, string currency) // Needed for json constructor bug TODO Fix after net8.0 update
+    private MoneyModel(decimal amount, string currency)
     {
         Amount = amount;
         Currency = currency;

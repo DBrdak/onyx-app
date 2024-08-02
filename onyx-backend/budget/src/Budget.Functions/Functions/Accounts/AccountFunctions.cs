@@ -2,6 +2,7 @@
 using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.APIGatewayEvents;
 using Budget.Application.Accounts.AddAccount;
+using Budget.Application.Accounts.BulkAddTransactions;
 using Budget.Application.Accounts.GetAccounts;
 using Budget.Application.Accounts.RemoveAccount;
 using Budget.Application.Accounts.UpdateAccount;
@@ -81,6 +82,31 @@ public sealed class AccountFunctions : BaseFunction
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
         var command = new RemoveAccountCommand(Guid.Parse(accountId), Guid.Parse(budgetId));
+
+        var result = await Sender.Send(command);
+
+        return result.ReturnAPIResponse();
+    }
+
+    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Accounts{nameof(BulkAddTransactions)}")]
+    [HttpApi(LambdaHttpMethod.Post, $"{accountsBaseRoute}/{{accountId}}/transactions/bulk")]
+    public async Task<APIGatewayHttpApiV2ProxyResponse> BulkAddTransactions(
+        string budgetId,
+        string accountId,
+        [FromBody] AccountBulkAddTransactionsRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
+    {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
+        var command = new BulkAddTransactionsCommand(
+            request.Transactions.Select(
+                t => new TransactionAddModel(
+                    t.Amount,
+                    t.TransactedAt,
+                    t.CounterpartyName,
+                    t.SubcategoryId)),
+            Guid.Parse(accountId),
+            Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);
 

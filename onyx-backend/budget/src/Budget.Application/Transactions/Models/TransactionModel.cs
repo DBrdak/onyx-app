@@ -1,7 +1,7 @@
 ﻿using Abstractions.Messaging;
 using Budget.Application.Accounts.Models;
+using Budget.Application.Contracts.Models;
 using Budget.Application.Counterparties.Models;
-using Budget.Application.Shared.Models;
 using Budget.Application.Subcategories.Models;
 using Budget.Domain.Accounts;
 using Budget.Domain.Counterparties;

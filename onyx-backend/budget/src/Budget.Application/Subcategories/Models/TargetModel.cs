@@ -1,6 +1,6 @@
 ﻿using Models.DataTypes;
 using System.Text.Json.Serialization;
-using Budget.Application.Shared.Models;
+using Budget.Application.Contracts.Models;
 using Budget.Domain.Subcategories;
 
 namespace Budget.Application.Subcategories.Models;

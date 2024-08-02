@@ -24,7 +24,7 @@ Resources:
             EnableSimpleResponses: true
             Identity:
               Headers:
-                - Authorization
+                - authorization
   LambdaAuthorizer:
     Type: AWS::Serverless::Function
     Metadata:
