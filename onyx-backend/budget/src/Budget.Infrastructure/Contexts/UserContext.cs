@@ -8,6 +8,8 @@ internal sealed class UserContext : IUserContext
 {
     private readonly RequestAccessor _requestAccessor;
     private const string userIdClaimName = "Id";
+    private const string userUsernameClaimName = "Username";
+    private const string userEmailClaimName = "Email";
     private const string userCurrencyClaimName = "Currency";
     private readonly Error _userIdClaimNotFound = new(
         "UserContext.UserIdNotFound",
@@ -27,6 +29,20 @@ internal sealed class UserContext : IUserContext
             .FirstOrDefault(claim => claim.Type == userIdClaimName)?
             .Value is var id && !string.IsNullOrEmpty(id) ?
             id : 
+            _userIdClaimNotFound;
+    public Result<string> GetUserUsername() =>
+        _requestAccessor
+            .Claims
+            .FirstOrDefault(claim => claim.Type == userUsernameClaimName)?
+            .Value is var username && !string.IsNullOrEmpty(username) ?
+            username : 
+            _userIdClaimNotFound;
+    public Result<string> GetUserEmail() =>
+        _requestAccessor
+            .Claims
+            .FirstOrDefault(claim => claim.Type == userEmailClaimName)?
+            .Value is var email && !string.IsNullOrEmpty(email) ?
+            email : 
             _userIdClaimNotFound;
 
     public Result<string> GetUserCurrency() =>

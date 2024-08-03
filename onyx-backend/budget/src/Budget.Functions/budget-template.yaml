@@ -361,27 +361,6 @@ Resources:
             Path: /api/v1/budgets
             Method: GET
             ApiId: !Ref BudgetApi
-  BudgetsGetDetails:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-      SyncedEvents:
-        - RootGet
-    Properties:
-      Runtime: dotnet8
-      CodeUri: .
-      MemorySize: 512
-      Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
-      PackageType: Zip
-      Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_GetDetails_Generated::GetDetails
-      Events:
-        RootGet:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/budgets/{budgetId}
-            Method: GET
-            ApiId: !Ref BudgetApi
   BudgetsGetInvitation:
     Type: AWS::Serverless::Function
     Metadata:

@@ -24,16 +24,23 @@ internal sealed class AddBudgetCommandHandler : ICommandHandler<AddBudgetCommand
     //TODO Send event that the budget is created, so identity service can add the budgetId to token
     public async Task<Result<BudgetModel>> Handle(AddBudgetCommand request, CancellationToken cancellationToken)
     {
-        var userIdGetResult = _userContext.GetUserId();
+        var (userIdGetResult, usernameGetResult, emailGetResult) = 
+            (_userContext.GetUserId(), _userContext.GetUserUsername(), _userContext.GetUserEmail());
 
-        if (userIdGetResult.IsFailure)
+        if (Result.Aggregate(
+                userIdGetResult,
+                usernameGetResult,
+                emailGetResult) is var result &&
+            result.IsFailure)
         {
-            return userIdGetResult.Error;
+            return result.Error;
         }
 
         var userId = userIdGetResult.Value;
+        var username = userIdGetResult.Value;
+        var userEmail = userIdGetResult.Value;
 
-        var budgetCreateResult = Domain.Budgets.Budget.Create(request.BudgetName, userId, request.BudgetCurrency);
+        var budgetCreateResult = Domain.Budgets.Budget.Create(request.BudgetName, userId, username, userEmail, request.BudgetCurrency);
 
         if (budgetCreateResult.IsFailure)
         {

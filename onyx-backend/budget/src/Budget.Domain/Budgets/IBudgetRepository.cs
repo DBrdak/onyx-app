@@ -14,5 +14,5 @@ public interface IBudgetRepository
 
     Task<Result<Budget>> GetCurrentBudgetAsync(CancellationToken cancellationToken);
 
-    Task<Result<IEnumerable<Budget>>> GetBudgetsForUserAsync(string userId, CancellationToken cancellationToken);
+    Task<Result<IEnumerable<Budget>>> GetBudgetsForMemberAsync(string userId, CancellationToken cancellationToken);
 }

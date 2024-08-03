@@ -20,25 +20,33 @@ internal sealed class AddUserToBudgetCommandHandler : ICommandHandler<AddUserToB
     //TODO send event to update user
     public async Task<Result<BudgetModel>> Handle(AddUserToBudgetCommand request, CancellationToken cancellationToken)
     {
-        var getUserIdResult = _userContext.GetUserId();
 
-        if (getUserIdResult.IsFailure)
+        var (userIdGetResult, usernameGetResult, emailGetResult) =
+            (_userContext.GetUserId(), _userContext.GetUserUsername(), _userContext.GetUserEmail());
+
+        if (Result.Aggregate(
+                userIdGetResult,
+                usernameGetResult,
+                emailGetResult) is var result &&
+            result.IsFailure)
         {
-            return getUserIdResult.Error;
+            return result.Error;
         }
 
-        var userId = getUserIdResult.Value;
+        var userId = userIdGetResult.Value;
+        var username = userIdGetResult.Value;
+        var userEmail = userIdGetResult.Value;
 
         var getBudgetResult = await _budgetRepository.GetByIdAsync(new(request.BudgetId), cancellationToken);
 
-        if (getUserIdResult.IsFailure)
+        if (getBudgetResult.IsFailure)
         {
             return getBudgetResult.Error;
         }
 
         var budget = getBudgetResult.Value;
 
-        var addUserResult = budget.AddUser(userId, request.Token);
+        var addUserResult = budget.AddMember(userId, username, userEmail, request.Token);
 
         if (addUserResult.IsFailure)
         {
