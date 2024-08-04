@@ -4,7 +4,7 @@ Resources:
   SendEmail:
     Type: AWS::SNS::Topic
     Properties:
-      DisplayName: SendEmail
+      TopicName: SendEmail
 
   EmailSender:
     Type: AWS::Serverless::Function

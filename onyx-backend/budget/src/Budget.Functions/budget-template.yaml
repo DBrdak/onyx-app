@@ -654,6 +654,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/accounts/{accountId}/transactions/bulk
             Method: POST
+            ApiId: !Ref BudgetApi
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

@@ -1,13 +1,4 @@
-﻿using Budget.Application.Accounts.Models;
-using Budget.Application.Categories.Models;
-using Budget.Application.Counterparties.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Budget.Application.Budgets.Models;
+﻿namespace Budget.Application.Budgets.Models;
 
 public sealed record BudgetMemberModel
 {

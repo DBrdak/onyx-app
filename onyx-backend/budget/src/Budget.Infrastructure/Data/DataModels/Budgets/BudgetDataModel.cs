@@ -1,10 +1,6 @@
-﻿using System.Linq;
-using System.Reflection;
-using System.Xml.Linq;
+﻿using System.Reflection;
 using Amazon.DynamoDBv2.DocumentModel;
 using Budget.Domain.Budgets;
-using Budget.Domain.Subcategories;
-using Budget.Infrastructure.Data.DataModels.Subcategories;
 using Models.DataTypes;
 using SharedDAL.DataModels;
 using SharedDAL.DataModels.Abstractions;

@@ -1,9 +1,9 @@
-﻿using Amazon.SimpleNotificationService.Model;
+﻿using Amazon.SimpleNotificationService;
+using Amazon.SimpleNotificationService.Model;
 using Identity.Domain;
 using Identity.Infrastructure.Email.Models;
-using Identity.Infrastructure.Email.Options;
 using Identity.Infrastructure.Messanger;
-using Microsoft.Extensions.Options;
+using Models.Constants.AWS;
 using Models.Responses;
 
 namespace Identity.Infrastructure.Email;
@@ -11,17 +11,18 @@ namespace Identity.Infrastructure.Email;
 internal sealed class EmailService : IEmailService
 {
     private readonly MessangerClient _messangerClient;
-    private const string topicArn = "arn:aws:sns:eu-central-1:975049887576:onyx-messanger-SendEmail-IW5o0b2XbfUF";
-    private readonly EmailOptions _options;
+    private readonly IAmazonSimpleNotificationService _snsService;
 
-    public EmailService(MessangerClient messangerClient, IOptions<EmailOptions> options)
+    public EmailService(MessangerClient messangerClient)
     {
         _messangerClient = messangerClient;
-        _options = options.Value;
+        _snsService = new AmazonSimpleNotificationServiceClient();
     }
 
     public async Task<Result> SendEmailAsync(string recipient, string subject, string htmlBody, string plainTextBody)
     {
+        var topicArn = await GetSendEmailTopicArnAsync();
+
         var emailMessageWriteResult = EmailMessage.Write(recipient, subject, htmlBody, plainTextBody);
 
         if (emailMessageWriteResult.IsFailure)
@@ -39,11 +40,14 @@ internal sealed class EmailService : IEmailService
             { nameof(EmailMessage.PlainTextBody), new MessageAttributeValue {DataType = "String", StringValue = message.PlainTextBody.Value} },
         };
 
-        await _messangerClient.Message(_options.TopicArn ?? topicArn, data);
+        await _messangerClient.Message(topicArn, data);
 
         return Result.Success();
     }
 
     public async Task<Result> SendEmailAsync((string recipient, string subject, string htmlBody, string plainTextBody) request, CancellationToken cancellationToken) =>
         await SendEmailAsync(request.recipient, request.subject, request.htmlBody, request.plainTextBody);
+
+    private async Task<string> GetSendEmailTopicArnAsync() =>
+        (await _snsService.FindTopicAsync(Topics.SendEmailTopicName)).TopicArn;
 }

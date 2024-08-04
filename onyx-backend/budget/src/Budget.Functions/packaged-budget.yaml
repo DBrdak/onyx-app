@@ -37,7 +37,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -60,7 +60,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -83,7 +83,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -106,7 +106,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -129,7 +129,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -152,7 +152,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -175,7 +175,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -198,7 +198,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -221,7 +221,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -244,7 +244,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -267,7 +267,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -290,7 +290,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -313,7 +313,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -336,7 +336,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -359,7 +359,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -382,7 +382,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -396,29 +396,6 @@ Resources:
             Method: GET
             ApiId:
               Ref: BudgetApi
-  BudgetsGetDetails:
-    Type: AWS::Serverless::Function
-    Metadata:
-      SamResourceId: BudgetsGetDetails
-      SyncedEvents:
-      - RootGet
-      Tool: Amazon.Lambda.Annotations
-    Properties:
-      Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
-      MemorySize: 512
-      Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
-      PackageType: Zip
-      Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_GetDetails_Generated::GetDetails
-      Events:
-        RootGet:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/budgets/{budgetId}
-            Method: GET
-            ApiId:
-              Ref: BudgetApi
   BudgetsGetInvitation:
     Type: AWS::Serverless::Function
     Metadata:
@@ -428,7 +405,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -451,7 +428,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -474,7 +451,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -497,7 +474,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -520,7 +497,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -543,7 +520,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -566,7 +543,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -589,7 +566,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -612,7 +589,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -635,7 +612,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -658,7 +635,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -681,7 +658,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -704,7 +681,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b1875d7ed781f19d156d0fff6e1a06ce
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
@@ -716,6 +693,29 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/transactions/bulk
             Method: DELETE
+            ApiId:
+              Ref: BudgetApi
+  AccountsBulkAddTransactions:
+    Type: AWS::Serverless::Function
+    Metadata:
+      SamResourceId: AccountsBulkAddTransactions
+      SyncedEvents:
+      - RootPost
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      Runtime: dotnet8
+      CodeUri: s3://onyx-default/58811de87731dfc1eac892a796a1c9b1
+      MemorySize: 512
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Budget.Functions::Budget.Functions.Functions.Accounts.AccountFunctions_BulkAddTransactions_Generated::BulkAddTransactions
+      Events:
+        RootPost:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/{budgetId}/accounts/{accountId}/transactions/bulk
+            Method: POST
             ApiId:
               Ref: BudgetApi
 Outputs:

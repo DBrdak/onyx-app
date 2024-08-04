@@ -1,5 +1,6 @@
 ﻿using Abstractions.Messaging;
 using Budget.Application.Abstractions.Identity;
+using Budget.Application.Abstractions.IntegrationEvents;
 using Budget.Application.Budgets.Models;
 using Budget.Domain.Budgets;
 using MediatR;
@@ -21,7 +22,6 @@ internal sealed class AddBudgetCommandHandler : ICommandHandler<AddBudgetCommand
         _publisher = serviceProvider.GetRequiredService<IPublisher>();
     }
 
-    //TODO Send event that the budget is created, so identity service can add the budgetId to token
     public async Task<Result<BudgetModel>> Handle(AddBudgetCommand request, CancellationToken cancellationToken)
     {
         var (userIdGetResult, usernameGetResult, emailGetResult) = 
