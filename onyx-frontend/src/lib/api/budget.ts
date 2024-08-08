@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { privateApi } from "@/lib/axios";
+import { budgetApi } from "@/lib/axios";
 import { getErrorMessage } from "@/lib/utils";
 import {
   BudgetResultSchema,
@@ -16,7 +16,7 @@ interface GetToAssign {
 
 const getBudgets = async () => {
   try {
-    const { data } = await privateApi.get("/budgets");
+    const { data } = await budgetApi.get("/budgets");
     const validatedData = BudgetResultSchema.safeParse(data);
 
     if (!validatedData.success) {
@@ -47,13 +47,13 @@ export const createBudget = ({
   budgetName: string;
   budgetCurrency: string;
   userId: string;
-}) => privateApi.post("/budgets", { budgetName, budgetCurrency, userId });
+}) => budgetApi.post("/budgets", { budgetName, budgetCurrency, userId });
 
-export const deleteBudget = (id: string) => privateApi.delete(`/budgets/${id}`);
+export const deleteBudget = (id: string) => budgetApi.delete(`/budgets/${id}`);
 
 export const getBudget = async (id: string) => {
   try {
-    const { data } = await privateApi.get(`/budgets/${id}`);
+    const { data } = await budgetApi.get(`/budgets/${id}`);
     const validatedData = BudgetWithPayloadResultSchema.safeParse(data);
 
     if (!validatedData.success) {
@@ -81,7 +81,7 @@ export const getBudgetQueryOptions = (id: string) =>
 
 export const getToAssign = async ({ month, year, budgetId }: GetToAssign) => {
   try {
-    const { data } = await privateApi.get(
+    const { data } = await budgetApi.get(
       `/${budgetId}/subcategories/to-assign?month=${month}&year=${year}`,
     );
     const validatedData = ToAssignSchema.safeParse(data);

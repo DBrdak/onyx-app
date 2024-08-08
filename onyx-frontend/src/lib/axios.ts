@@ -1,28 +1,14 @@
 import axios from "axios";
-import { userKey } from "@/components/AuthProvider";
-import { getStoredUser } from "@/lib/utils";
 
-const BASE_URL = "/api";
+const ID_URL =
+  "https://yu9x65iv7d.execute-api.eu-central-1.amazonaws.com/api/v1";
+const BUDGET_URL =
+  "https://vda327ao6h.execute-api.eu-central-1.amazonaws.com/api/v1";
 
-export const publicApi = axios.create({
-  baseURL: BASE_URL,
+export const identityApi = axios.create({
+  baseURL: ID_URL,
 });
 
-export const privateApi = axios.create({
-  baseURL: BASE_URL,
+export const budgetApi = axios.create({
+  baseURL: BUDGET_URL,
 });
-
-privateApi.interceptors.request.use(
-  function (config) {
-    const user = getStoredUser(userKey);
-
-    if (user?.accessToken) {
-      config.headers.Authorization = `Bearer ${user.accessToken}`;
-    }
-
-    return config;
-  },
-  function (error) {
-    return Promise.reject(error);
-  },
-);

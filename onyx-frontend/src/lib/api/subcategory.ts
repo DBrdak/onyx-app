@@ -1,4 +1,4 @@
-import { privateApi } from "@/lib/axios";
+import { budgetApi } from "@/lib/axios";
 import { MonthDate } from "@/lib/validation/base";
 
 interface RequestIds {
@@ -44,7 +44,7 @@ export const createSubcategory = ({
   parentCategoryId,
   subcategoryName,
 }: CreateSubcategory) =>
-  privateApi.post(`/${budgetId}/subcategories`, {
+  budgetApi.post(`/${budgetId}/subcategories`, {
     parentCategoryId,
     subcategoryName,
   });
@@ -54,12 +54,12 @@ export const editSubcategoryName = ({
   subcategoryId,
   subcategoryName,
 }: EditSubcategoryName) =>
-  privateApi.put(`/${budgetId}/subcategories/${subcategoryId}`, {
+  budgetApi.put(`/${budgetId}/subcategories/${subcategoryId}`, {
     newName: subcategoryName,
   });
 
 export const assign = ({ budgetId, subcategoryId, assignment }: Assign) =>
-  privateApi.put(
+  budgetApi.put(
     `/${budgetId}/subcategories/${subcategoryId}/assignment`,
     assignment,
   );
@@ -69,7 +69,7 @@ export const createTarget = ({
   subcategoryId,
   formTarget,
 }: CreateTargetForm) =>
-  privateApi.put(
+  budgetApi.put(
     `/${budgetId}/subcategories/${subcategoryId}/target`,
     formTarget,
   );
@@ -79,9 +79,9 @@ export const createSubcategoryDescription = ({
   subcategoryId,
   newDescription,
 }: CreateSubcategoryDescription) =>
-  privateApi.put(`/${budgetId}/subcategories/${subcategoryId}`, {
+  budgetApi.put(`/${budgetId}/subcategories/${subcategoryId}`, {
     newDescription,
   });
 
 export const deleteSubcategory = ({ budgetId, subcategoryId }: RequestIds) =>
-  privateApi.delete(`/${budgetId}/subcategories/${subcategoryId}`);
+  budgetApi.delete(`/${budgetId}/subcategories/${subcategoryId}`);

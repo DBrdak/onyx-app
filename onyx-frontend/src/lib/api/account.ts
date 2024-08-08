@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { privateApi } from "@/lib/axios";
+import { budgetApi } from "@/lib/axios";
 import { getErrorMessage } from "@/lib/utils";
 import {
   AccountResultSchema,
@@ -32,7 +32,7 @@ interface EditAccountName extends EditBase {
 
 export const getAccounts = async (budgetId: string) => {
   try {
-    const { data } = await privateApi.get(`/${budgetId}/accounts`);
+    const { data } = await budgetApi.get(`/${budgetId}/accounts`);
     const validatedData = AccountResultSchema.safeParse(data);
     if (!validatedData.success) {
       console.log(validatedData.error?.issues);
@@ -59,7 +59,7 @@ export const getAccountsQueryOptions = (budgetId: string) =>
 
 export const createAccount = async ({ budgetId, payload }: CreateAccount) => {
   try {
-    const { data } = await privateApi.post(`/${budgetId}/accounts`, payload);
+    const { data } = await budgetApi.post(`/${budgetId}/accounts`, payload);
     const validatedData = SingleAccountResultSchema.safeParse(data);
     if (!validatedData.success) {
       console.log(validatedData.error?.issues);
@@ -81,14 +81,14 @@ export const createAccount = async ({ budgetId, payload }: CreateAccount) => {
 };
 
 export const editBalance = ({ budgetId, newBalance, accountId }: EditBalance) =>
-  privateApi.put(`/${budgetId}/accounts/${accountId}`, { newBalance });
+  budgetApi.put(`/${budgetId}/accounts/${accountId}`, { newBalance });
 
 export const editAccountName = ({
   budgetId,
   newName,
   accountId,
 }: EditAccountName) =>
-  privateApi.put(`/${budgetId}/accounts/${accountId}`, { newName });
+  budgetApi.put(`/${budgetId}/accounts/${accountId}`, { newName });
 
 export const deleteAccount = ({ budgetId, accountId }: EditBase) =>
-  privateApi.delete(`/${budgetId}/accounts/${accountId}`);
+  budgetApi.delete(`/${budgetId}/accounts/${accountId}`);
