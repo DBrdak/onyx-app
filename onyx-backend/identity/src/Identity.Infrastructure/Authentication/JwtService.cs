@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using Identity.Application.Abstractions.Authentication;
 using Identity.Domain;
@@ -95,7 +96,7 @@ internal sealed class JwtService : IJwtService
             c => c.Type == UserRepresentationModel.EmailVerifiedClaimName &&
                  c.Value == true.ToString()) is null;
 
-    public Result<string> GenerateLongLivedToken()
+    public Result<string> GenerateLongLivedToken(UserId userId)
     {
         var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),
@@ -104,7 +105,7 @@ internal sealed class JwtService : IJwtService
         var token = new JwtSecurityToken(
             _options.Issuer,
             _options.Audience,
-            null,
+            [new Claim(UserRepresentationModel.IdClaimName, userId.Value.ToString())],
             null,
             DateTime.UtcNow.AddMinutes(_options.ExpireInLongMinutes),
             signingCredentials);

@@ -32,7 +32,7 @@ internal sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand
 
         var user = userGetResult.Value;
 
-        var longLivedTokenCreateResult = _jwtService.GenerateLongLivedToken();
+        var longLivedTokenCreateResult = _jwtService.GenerateLongLivedToken(user.Id);
 
         if (longLivedTokenCreateResult.IsFailure)
         {

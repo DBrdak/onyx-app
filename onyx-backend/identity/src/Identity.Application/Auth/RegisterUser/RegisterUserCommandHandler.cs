@@ -77,7 +77,7 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
 
         var accessToken = accessTokenGenerateResult.Value;
 
-        var refreshTokenGenerateResult = _jwtService.GenerateLongLivedToken();
+        var refreshTokenGenerateResult = _jwtService.GenerateLongLivedToken(user.Id);
 
         if (refreshTokenGenerateResult.IsFailure)
         {

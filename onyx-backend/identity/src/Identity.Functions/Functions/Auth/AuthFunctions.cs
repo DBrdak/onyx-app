@@ -74,10 +74,9 @@ public sealed class AuthFunctions : BaseFunction
     [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(Refresh))]
     [HttpApi(LambdaHttpMethod.Put, $"{authBaseRoute}/refresh")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Refresh(
-        [FromBody] RefreshRequest request,
-        [FromHeader(Name = "Authorization")] string expiredToken)
+        [FromBody] RefreshRequest request)
     {
-        var command = new RefreshAccessTokenCommand(request.LongLivedToken, expiredToken);
+        var command = new RefreshAccessTokenCommand(request.LongLivedToken);
 
         var result = await Sender.Send(command);
 

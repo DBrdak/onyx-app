@@ -35,7 +35,7 @@ internal sealed class VerifyEmailCommandHandler : ICommandHandler<VerifyEmailCom
 
         var user = userGetResult.Value;
 
-        var longLivedTokenCreateResult = _jwtService.GenerateLongLivedToken();
+        var longLivedTokenCreateResult = _jwtService.GenerateLongLivedToken(user.Id);
 
         if (longLivedTokenCreateResult.IsFailure)
         {

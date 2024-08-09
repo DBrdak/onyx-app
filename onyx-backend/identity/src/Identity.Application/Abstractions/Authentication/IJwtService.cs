@@ -1,4 +1,5 @@
-﻿using Models.Responses;
+﻿using Identity.Domain;
+using Models.Responses;
 
 namespace Identity.Application.Abstractions.Authentication;
 
@@ -9,5 +10,5 @@ public interface IJwtService
 
     bool ValidateJwt(string? token, out string principalId);
 
-    Result<string> GenerateLongLivedToken();
+    Result<string> GenerateLongLivedToken(UserId userId);
 }

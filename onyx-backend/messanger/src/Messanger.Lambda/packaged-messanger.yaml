@@ -12,7 +12,7 @@ Resources:
     Properties:
       Handler: Messanger.Lambda::Messanger.Lambda.Functions.Emails.EmailLambda::FunctionHandler
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/8851832671add24edee3fce88178f85f
+      CodeUri: s3://onyx-default/9bd68e0f139c114c295b328c10b09199
       MemorySize: 512
       Timeout: 30
       PackageType: Zip

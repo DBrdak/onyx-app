@@ -75,7 +75,7 @@ internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserComma
 
         var token = tokenGenerateResult.Value;
 
-        var longLivedTokenGenerateResult = _jwtService.GenerateLongLivedToken();
+        var longLivedTokenGenerateResult = _jwtService.GenerateLongLivedToken(user.Id);
 
         if (longLivedTokenGenerateResult.IsFailure)
         {

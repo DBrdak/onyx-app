@@ -3,5 +3,5 @@ using Identity.Application.Contracts.Models;
 
 namespace Identity.Application.Auth.RefreshAccessToken;
 
-public sealed record RefreshAccessTokenCommand(string LongLivedToken, string UserId)
+public sealed record RefreshAccessTokenCommand(string LongLivedToken)
     : IQuery<AuthorizationToken>;
