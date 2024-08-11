@@ -1,24 +1,41 @@
 ﻿using Amazon.Lambda.APIGatewayEvents;
 using Models.Responses;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace LambdaKernel;
 
 public static class ResponseBuilder
 {
+    private static readonly DefaultContractResolver contractResolver = new()
+    {
+        NamingStrategy = new CamelCaseNamingStrategy
+        {
+            OverrideSpecifiedNames = false
+        }
+    };
+
+    private static readonly JsonSerializerSettings serializerSettings =
+        new()
+        {
+            ContractResolver = contractResolver,
+            Formatting = Formatting.Indented
+        };
+
     private static APIGatewayHttpApiV2ProxyResponse Respond(Result result, int statusCode, Dictionary<string, string>? headers = null) =>
         new()
         {
             StatusCode = statusCode,
             Headers = headers ?? new Dictionary<string, string>(),
-            Body = JsonConvert.SerializeObject(result),
+            Body = JsonConvert.SerializeObject(result, serializerSettings)
         };
+
     private static APIGatewayHttpApiV2ProxyResponse Respond<T>(Result<T> result, int statusCode, Dictionary<string, string>? headers = null) =>
         new()
         {
             StatusCode = statusCode,
             Headers = headers ?? new Dictionary<string, string>(),
-            Body = JsonConvert.SerializeObject(result),
+            Body = JsonConvert.SerializeObject(result, serializerSettings)
         };
 
     public static APIGatewayHttpApiV2ProxyResponse ReturnAPIResponse(
