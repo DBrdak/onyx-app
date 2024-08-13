@@ -1,23 +1,27 @@
 import { z } from "zod";
-import { ResultSchema } from "./base";
+import { RequiredString, ResultSchema } from "@/lib/validation/base";
 
 export const UserSchema = z.object({
   id: z.string(),
   username: z.string(),
   email: z.string().email(),
   currency: z.string(),
-  budgetIds: z.array(z.string()),
+});
+
+export const UserResultSchema = ResultSchema.extend({
+  value: UserSchema,
 });
 
 export type User = z.infer<typeof UserSchema>;
 
-export const UserWithTokenSchema = UserSchema.extend({
-  accessToken: z.string(),
-});
-export type UserWithToken = z.infer<typeof UserWithTokenSchema>;
-
-export const UserWithTokenResultSchema = ResultSchema.extend({
-  value: UserWithTokenSchema,
+export const TokenSchema = z.object({
+  accessToken: RequiredString,
+  longLivedToken: RequiredString,
 });
 
-export type UserWithTokenResult = z.infer<typeof UserWithTokenResultSchema>;
+export const TokenResultSchema = ResultSchema.extend({
+  value: TokenSchema,
+});
+
+export type Token = z.infer<typeof TokenSchema>;
+export type TokenResult = z.infer<typeof TokenResultSchema>;

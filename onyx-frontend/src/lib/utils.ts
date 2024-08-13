@@ -1,27 +1,64 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-import type { UserWithToken } from "@/lib/validation/user";
 import { USER_LOCALE } from "./constants/locale";
+import { AxiosError } from "axios";
+import { ZodSchema } from "zod";
+import { ExtendedResult } from "./validation/base";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export const getErrorMessage = (error: unknown): string => {
-  let message: string;
+  const message = "Something went wrong";
+
+  if (error instanceof AxiosError) {
+    if (error.response?.data?.error?.message) {
+      return error.response.data.error.message;
+    } else if (error.response?.data?.message) {
+      return error.response.data.message;
+    } else if (error.message) {
+      return error.message;
+    }
+  }
 
   if (error instanceof Error) {
-    message = error.message;
-  } else if (error && typeof error === "object" && "message" in error) {
-    message = String(error.message);
-  } else if (typeof error === "string") {
-    message = error;
-  } else {
-    message = "Something went wrong";
+    return error.message;
+  }
+
+  if (typeof error === "object" && error !== null && "message" in error) {
+    const err = error as { message: unknown };
+    if (typeof err.message === "string") {
+      return err.message;
+    }
+  }
+
+  if (typeof error === "string") {
+    return error;
   }
 
   return message;
+};
+
+export const validateResponse = <T>(
+  zodSchema: ZodSchema<ExtendedResult<T>>,
+  data: T,
+) => {
+  const validatedResponse = zodSchema.safeParse(data);
+
+  if (validatedResponse.error) {
+    console.log(validatedResponse.error.errors);
+    throw new Error("Unexpected error, please try again.");
+  }
+
+  if (validatedResponse.data.isFailure) {
+    const error = validatedResponse.data.error.message;
+    console.log(error);
+    throw new Error(error);
+  }
+
+  return validatedResponse.data.value;
 };
 
 export const capitalize = (str: string) =>
@@ -29,20 +66,6 @@ export const capitalize = (str: string) =>
 
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-export function getStoredUser(key: string): UserWithToken | null {
-  return localStorage.getItem(key)
-    ? JSON.parse(localStorage.getItem(key)!)
-    : null;
-}
-
-export function setStoredUser(user: UserWithToken | null, key: string) {
-  if (user) {
-    localStorage.setItem(key, JSON.stringify(user));
-  } else {
-    localStorage.removeItem(key);
-  }
 }
 
 export const getFormattedCurrency = (amount: number, currency: string) => {
