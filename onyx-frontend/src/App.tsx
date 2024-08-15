@@ -37,5 +37,9 @@ const RouterWithAuth = () => {
   const { auth } = useAuthContext();
   const routerContext = useMemo(() => ({ queryClient, auth }), [auth]);
 
+  if (!auth.isInitialized) {
+    return <div>Initializing app...</div>;
+  }
+
   return <RouterProvider router={router} context={routerContext} />;
 };

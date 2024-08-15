@@ -1,17 +1,27 @@
-import { createContext, useCallback, useEffect, useState } from "react";
-
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+  useTransition,
+  useMemo,
+} from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useLoginMutation } from "@/lib/hooks/mutations/useLoginMutation";
 import { useRefreshTokenMutation } from "@/lib/hooks/mutations/useRefreshTokenMutation";
 import { getErrorMessage } from "@/lib/utils";
 import { useApiInterceptors } from "@/lib/hooks/useApiInterceptors";
 import { budgetApi, userApi } from "@/lib/axios";
+import { useGetUserData } from "@/lib/hooks/useGetUserData";
+import { User } from "@/lib/validation/user";
 
 export interface Auth {
   login: (email: string, password: string) => Promise<boolean>;
+  logout: () => void;
   accessToken: string | null;
-  isLoggingIn: boolean;
-  isRefreshingToken: boolean;
-  isAuthenticated: boolean;
+  user: User | undefined;
+  isInitialized: boolean;
+  isLoading: boolean;
 }
 
 export const AuthContext = createContext<{ auth: Auth } | undefined>(undefined);
@@ -19,14 +29,55 @@ export const AuthContext = createContext<{ auth: Auth } | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [isPending, startTransition] = useTransition();
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isRefreshingToken, setIsRefreshingToken] = useState<boolean>(true);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [initializationComplete, setInitializationComplete] = useState(false);
 
-  const { mutateAsync: refreshToken } = useRefreshTokenMutation(setAccessToken);
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: refreshToken, isPending: isRefreshingToken } =
+    useRefreshTokenMutation((token) => {
+      startTransition(() => {
+        setAccessToken(token);
+      });
+    });
 
   const { mutateAsync: performLogin, isPending: isLoggingIn } =
-    useLoginMutation(setAccessToken);
+    useLoginMutation((token) => {
+      startTransition(() => {
+        setAccessToken(token);
+      });
+    });
+
+  const { data: user, isLoading: isLoadingUser } = useGetUserData(accessToken);
+
+  useApiInterceptors(budgetApi, accessToken);
+  useApiInterceptors(userApi, accessToken);
+
+  const logout = useCallback(() => {
+    startTransition(() => {
+      setAccessToken(null);
+      localStorage.removeItem("longLivedToken");
+      queryClient.clear();
+      setInitializationComplete(false);
+      setIsInitialized(true);
+    });
+  }, [queryClient]);
+
+  const login = useCallback(
+    async (email: string, password: string): Promise<boolean> => {
+      try {
+        await performLogin({ email, password });
+
+        return true;
+      } catch (error) {
+        console.error("Login failed:", getErrorMessage(error));
+        return false;
+      }
+    },
+    [performLogin],
+  );
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -34,75 +85,58 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (longLivedToken) {
         try {
           await refreshToken(longLivedToken);
-          setIsAuthenticated(true);
+          startTransition(() => {
+            setInitializationComplete(true);
+          });
         } catch (error) {
           console.error("Token refresh failed:", getErrorMessage(error));
-          setIsAuthenticated(false);
+          logout();
         }
+      } else {
+        logout();
       }
-      setIsRefreshingToken(false);
     };
 
     initializeAuth();
   }, []);
 
-  useApiInterceptors(
-    budgetApi,
-    accessToken,
-    setAccessToken,
-    setIsAuthenticated,
-    setIsRefreshingToken,
-  );
+  useEffect(() => {
+    if (
+      initializationComplete &&
+      (accessToken === null || (accessToken && user))
+    ) {
+      startTransition(() => {
+        setIsInitialized(true);
+      });
+    }
+  }, [accessToken, user, initializationComplete]);
 
-  useApiInterceptors(
-    userApi,
-    accessToken,
-    setAccessToken,
-    setIsAuthenticated,
-    setIsRefreshingToken,
+  const authValue = useMemo(
+    () => ({
+      auth: {
+        accessToken,
+        login,
+        logout,
+        user,
+        isInitialized,
+        isLoading:
+          isRefreshingToken || isLoggingIn || isLoadingUser || isPending,
+      },
+    }),
+    [
+      isInitialized,
+      accessToken,
+      login,
+      logout,
+      user,
+      isRefreshingToken,
+      isLoggingIn,
+      isLoadingUser,
+      isPending,
+    ],
   );
-
-  const login = useCallback(
-    async (email: string, password: string): Promise<boolean> => {
-      try {
-        await performLogin({ email, password });
-        return new Promise<boolean>((resolve) => {
-          setAccessToken((token) => {
-            if (token) {
-              setIsAuthenticated(true);
-              resolve(true);
-            } else {
-              resolve(false);
-            }
-            return token;
-          });
-        });
-      } catch (error) {
-        console.error("Login failed:", getErrorMessage(error));
-        setIsAuthenticated(false);
-        throw new Error(getErrorMessage(error));
-      }
-    },
-    [performLogin],
-  );
-
-  if (isRefreshingToken) {
-    return <div>Loading...</div>; // or a custom loading component
-  }
 
   return (
-    <AuthContext.Provider
-      value={{
-        auth: {
-          accessToken,
-          login,
-          isLoggingIn,
-          isRefreshingToken,
-          isAuthenticated,
-        },
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>
   );
 };

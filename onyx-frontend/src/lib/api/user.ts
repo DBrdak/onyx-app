@@ -3,7 +3,7 @@ import { TokenResultSchema, UserResultSchema } from "@/lib/validation/user";
 import { validateResponse } from "@/lib/utils";
 
 export const refreshAccessToken = async (longLivedToken: string) => {
-  const response = await identityApi.post("/auth/refresh", { longLivedToken });
+  const response = await identityApi.put("/auth/refresh", { longLivedToken });
   const validatedData = TokenResultSchema.parse(response.data);
   return validatedData.value;
 };

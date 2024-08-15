@@ -5,7 +5,7 @@ const ID_URL =
 const USER_URL =
   "https://yu9x65iv7d.execute-api.eu-central-1.amazonaws.com/api/v1";
 const BUDGET_URL =
-  "https://vda327ao6h.execute-api.eu-central-1.amazonaws.com/api/v1";
+  "https://dmmk6wjyfg.execute-api.eu-central-1.amazonaws.com/api/v1";
 
 export const identityApi = axios.create({
   baseURL: ID_URL,

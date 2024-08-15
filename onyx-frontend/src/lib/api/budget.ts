@@ -17,6 +17,7 @@ interface GetToAssign {
 const getBudgets = async () => {
   try {
     const { data } = await budgetApi.get("/budgets");
+
     const validatedData = BudgetResultSchema.safeParse(data);
 
     if (!validatedData.success) {
