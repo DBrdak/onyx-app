@@ -5,6 +5,7 @@ import { routeTree } from "./routeTree.gen";
 import { AuthProvider } from "./contexts/AuthContext";
 import { useAuthContext } from "./lib/hooks/useAuthContext";
 import { useMemo } from "react";
+import DefaultLoadingSpinner from "./components/DefaultLoadingSpinner";
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -38,7 +39,7 @@ const RouterWithAuth = () => {
   const routerContext = useMemo(() => ({ queryClient, auth }), [auth]);
 
   if (!auth.isInitialized) {
-    return <div>Initializing app...</div>;
+    return <DefaultLoadingSpinner />;
   }
 
   return <RouterProvider router={router} context={routerContext} />;
