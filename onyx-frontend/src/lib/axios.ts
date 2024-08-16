@@ -1,11 +1,11 @@
 import axios from "axios";
 
 const ID_URL =
-  "https://yu9x65iv7d.execute-api.eu-central-1.amazonaws.com/api/v1";
+  "https://59pa7gxoue.execute-api.eu-central-1.amazonaws.com/api/v1";
 const USER_URL =
-  "https://yu9x65iv7d.execute-api.eu-central-1.amazonaws.com/api/v1";
+  "https://59pa7gxoue.execute-api.eu-central-1.amazonaws.com/api/v1";
 const BUDGET_URL =
-  "https://dmmk6wjyfg.execute-api.eu-central-1.amazonaws.com/api/v1";
+  "https://ayl585xpri.execute-api.eu-central-1.amazonaws.com/api/v1";
 
 export const identityApi = axios.create({
   baseURL: ID_URL,

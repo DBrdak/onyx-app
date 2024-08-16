@@ -55,6 +55,7 @@ export const deleteBudget = (id: string) => budgetApi.delete(`/budgets/${id}`);
 export const getBudget = async (id: string) => {
   try {
     const { data } = await budgetApi.get(`/budgets/${id}`);
+
     const validatedData = BudgetWithPayloadResultSchema.safeParse(data);
 
     if (!validatedData.success) {

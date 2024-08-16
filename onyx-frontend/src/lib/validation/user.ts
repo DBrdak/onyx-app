@@ -25,3 +25,6 @@ export const TokenResultSchema = ResultSchema.extend({
 
 export type Token = z.infer<typeof TokenSchema>;
 export type TokenResult = z.infer<typeof TokenResultSchema>;
+
+export const BudgetMemberSchema = UserSchema.omit({ currency: true });
+export type BudgetMember = z.infer<typeof BudgetMemberSchema>;
