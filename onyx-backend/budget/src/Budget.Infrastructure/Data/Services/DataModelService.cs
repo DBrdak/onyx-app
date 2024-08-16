@@ -1,4 +1,5 @@
-﻿using Amazon.DynamoDBv2.DocumentModel;
+﻿using System.Diagnostics.Metrics;
+using Amazon.DynamoDBv2.DocumentModel;
 using Budget.Domain.Accounts;
 using Budget.Domain.Categories;
 using Budget.Domain.Counterparties;
@@ -38,11 +39,11 @@ internal sealed class DataModelService<TEntity> : IDataModelService<TEntity>
         typeof(TEntity) switch
         {
             var type when type == typeof(Account) => AccountDataModel.FromDocument(doc) as IDataModel<TEntity>,
-            var type when type == typeof(Account) => BudgetDataModel.FromDocument(doc) as IDataModel<TEntity>,
-            var type when type == typeof(Account) => CategoryDataModel.FromDocument(doc) as IDataModel<TEntity>,
-            var type when type == typeof(Account) => CounterpartyDataModel.FromDocument(doc) as IDataModel<TEntity>,
-            var type when type == typeof(Account) => SubcategoryDataModel.FromDocument(doc) as IDataModel<TEntity>,
-            var type when type == typeof(Account) => TransactionDataModel.FromDocument(doc) as IDataModel<TEntity>,
+            var type when type == typeof(Domain.Budgets.Budget) => BudgetDataModel.FromDocument(doc) as IDataModel<TEntity>,
+            var type when type == typeof(Category) => CategoryDataModel.FromDocument(doc) as IDataModel<TEntity>,
+            var type when type == typeof(Counterparty) => CounterpartyDataModel.FromDocument(doc) as IDataModel<TEntity>,
+            var type when type == typeof(Subcategory) => SubcategoryDataModel.FromDocument(doc) as IDataModel<TEntity>,
+            var type when type == typeof(Transaction) => TransactionDataModel.FromDocument(doc) as IDataModel<TEntity>,
             _ => throw _convertDocumentToDataModelException
         } ??
         throw _convertDocumentToDataModelException;

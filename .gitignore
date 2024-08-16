@@ -485,3 +485,4 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+/onyx-backend/identity/src/Identity.Functions/appsettings.json

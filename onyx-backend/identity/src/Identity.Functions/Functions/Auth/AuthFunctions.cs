@@ -19,7 +19,7 @@ public sealed class AuthFunctions : BaseFunction
 {
     private const string authBaseRoute = $"{BaseRouteV1}/auth";
 
-    public AuthFunctions(ISender sender) : base(sender)
+    public AuthFunctions(ISender sender, IServiceProvider serviceProvider) : base(sender, serviceProvider)
     {
     }
 
@@ -74,10 +74,9 @@ public sealed class AuthFunctions : BaseFunction
     [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(Refresh))]
     [HttpApi(LambdaHttpMethod.Put, $"{authBaseRoute}/refresh")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Refresh(
-        [FromBody] RefreshRequest request,
-        [FromHeader(Name = "Authorization")] string expiredToken)
+        [FromBody] RefreshRequest request)
     {
-        var command = new RefreshAccessTokenCommand(request.LongLivedToken, expiredToken);
+        var command = new RefreshAccessTokenCommand(request.LongLivedToken);
 
         var result = await Sender.Send(command);
 
@@ -87,7 +86,7 @@ public sealed class AuthFunctions : BaseFunction
     [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(ForgotPassword))]
     [HttpApi(LambdaHttpMethod.Put, $"{authBaseRoute}/forgot-password/request")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> ForgotPassword(
-        [FromBody] NewPasswordRequest request)
+        [FromBody] RequestNewPasswordRequest request)
     {
         var command = new ForgotPasswordCommand(request.Email);
 

@@ -11,42 +11,23 @@ internal sealed class AccessFunction : BaseFunction
 {
     private readonly IJwtService _jwtService;
 
-    public AccessFunction(IJwtService jwtService, ISender sender) : base(sender)
+    public AccessFunction(IJwtService jwtService, ISender sender, IServiceProvider serviceProvider) : base(sender, serviceProvider)
     {
         _jwtService = jwtService;
     }
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = "LambdaAuthorizer")]
-    public APIGatewayCustomAuthorizerResponse FunctionHandler(APIGatewayCustomAuthorizerRequest request, ILambdaContext context)
+    public APIGatewayCustomAuthorizerV2SimpleResponse FunctionHandler(APIGatewayCustomAuthorizerV2Request request, ILambdaContext context)
     {
-        var token = request.AuthorizationToken.Replace("Bearer ", string.Empty);
+        var token = request.Headers
+            .FirstOrDefault(kvp => kvp.Key.ToLower() == "authorization").Value?
+            .Replace("Bearer ", string.Empty);
 
-        var validationResult = _jwtService.ValidateJwt(token, out var principalId);
+        var isAuthorized = _jwtService.ValidateJwt(token, out var principalId);
 
-        return GeneratePolicy(
-            principalId,
-            validationResult,
-            request.MethodArn);
-    }
-
-    private static APIGatewayCustomAuthorizerResponse GeneratePolicy(string principalId, string effect, string resource)
-    {
-        return new APIGatewayCustomAuthorizerResponse
+        return new APIGatewayCustomAuthorizerV2SimpleResponse
         {
-            PrincipalID = principalId,
-            PolicyDocument = new APIGatewayCustomAuthorizerPolicy
-            {
-                Version = "2012-10-17",
-                Statement =
-                [
-                    new()
-                    {
-                        Action = ["execute-api:Invoke"],
-                        Effect = effect,
-                        Resource = [resource]
-                    }
-                ]
-            }
+            IsAuthorized = isAuthorized
         };
     }
 }

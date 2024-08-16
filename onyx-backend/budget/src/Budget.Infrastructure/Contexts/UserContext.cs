@@ -1,13 +1,15 @@
-﻿using Budget.Application.Abstractions.Identity;
-using Microsoft.AspNetCore.Http;
+﻿using Abstractions.Messaging;
+using Budget.Application.Abstractions.Identity;
 using Models.Responses;
 
 namespace Budget.Infrastructure.Contexts;
 
 internal sealed class UserContext : IUserContext
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly RequestAccessor _requestAccessor;
     private const string userIdClaimName = "Id";
+    private const string userUsernameClaimName = "Username";
+    private const string userEmailClaimName = "Email";
     private const string userCurrencyClaimName = "Currency";
     private readonly Error _userIdClaimNotFound = new(
         "UserContext.UserIdNotFound",
@@ -16,26 +18,36 @@ internal sealed class UserContext : IUserContext
         "UserContext.CurrencyNotFound",
         "Cannot retrieve base currency for user");
 
-    public UserContext(IHttpContextAccessor httpContextAccessor)
+    public UserContext(RequestAccessor requestAccessor)
     {
-        _httpContextAccessor = httpContextAccessor;
+        _requestAccessor = requestAccessor;
     }
 
     public Result<string> GetUserId() =>
-        _httpContextAccessor
-            .HttpContext
-            .User
-            .Claims
+        _requestAccessor
+            .Claims.ToList()
             .FirstOrDefault(claim => claim.Type == userIdClaimName)?
             .Value is var id && !string.IsNullOrEmpty(id) ?
             id : 
             _userIdClaimNotFound;
+    public Result<string> GetUserUsername() =>
+        _requestAccessor
+            .Claims.ToList()
+            .FirstOrDefault(claim => claim.Type == userUsernameClaimName)?
+            .Value is var username && !string.IsNullOrEmpty(username) ?
+            username : 
+            _userIdClaimNotFound;
+    public Result<string> GetUserEmail() =>
+        _requestAccessor
+            .Claims.ToList()
+            .FirstOrDefault(claim => claim.Type == userEmailClaimName)?
+            .Value is var email && !string.IsNullOrEmpty(email) ?
+            email : 
+            _userIdClaimNotFound;
 
     public Result<string> GetUserCurrency() =>
-        _httpContextAccessor
-            .HttpContext
-            .User
-            .Claims
+        _requestAccessor
+            .Claims.ToList()
             .FirstOrDefault(claim => claim.Type == userCurrencyClaimName)?
             .Value is var currency && !string.IsNullOrEmpty(currency) ?
             currency :

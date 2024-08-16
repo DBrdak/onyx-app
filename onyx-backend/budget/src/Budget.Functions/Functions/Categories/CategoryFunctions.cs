@@ -24,8 +24,12 @@ public sealed class CategoryFunctions : BaseFunction
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = $"Categories{nameof(GetAll)}")]
     [HttpApi(LambdaHttpMethod.Get, categoriesBaseRoute)]
-    public async Task<APIGatewayHttpApiV2ProxyResponse> GetAll(string budgetId)
+    public async Task<APIGatewayHttpApiV2ProxyResponse> GetAll(
+        string budgetId,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var query = new GetCategoriesQuery(Guid.Parse(budgetId));
 
         var result = await Sender.Send(query);
@@ -37,8 +41,11 @@ public sealed class CategoryFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Post, categoriesBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Add(
         string budgetId,
-        [FromBody] AddCategoryRequest request)
+        [FromBody] AddCategoryRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new AddCategoryCommand(request.Name, Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);
@@ -51,8 +58,11 @@ public sealed class CategoryFunctions : BaseFunction
     public async Task<APIGatewayHttpApiV2ProxyResponse> Update(
         string budgetId,
         string categoryId,
-        [FromBody] UpdateCategoryRequest request)
+        [FromBody] UpdateCategoryRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new UpdateCategoryCommand(
             Guid.Parse(categoryId),
             request.NewName,
@@ -67,8 +77,11 @@ public sealed class CategoryFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Delete, $"{categoriesBaseRoute}/{{categoryId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Remove(
         string budgetId,
-        string categoryId)
+        string categoryId,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new RemoveCategoryCommand(Guid.Parse(categoryId), Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);

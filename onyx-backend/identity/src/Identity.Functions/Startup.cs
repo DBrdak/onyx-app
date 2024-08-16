@@ -1,7 +1,7 @@
 using Identity.Application;
-using Identity.Functions.Logger;
 using Identity.Functions.Middlewares;
 using Identity.Infrastructure;
+using LambdaKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,9 +14,9 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         var configuration = UseConfiguration(services);
-        services.AddLogger();
         services.InjectApplication();
-        services.InjectInfrastructure(configuration);
+        services.InjectInfrastructure();
+        services.InitRequestContextAccessor();
 
         //// Add AWS Systems Manager as a potential provider for the configuration. This is 
         //// available with the Amazon.Extensions.Configuration.SystemsManager NuGet package.

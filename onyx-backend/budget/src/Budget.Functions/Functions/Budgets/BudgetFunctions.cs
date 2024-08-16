@@ -1,9 +1,10 @@
-﻿using Amazon.Lambda.Annotations.APIGateway;
+﻿using Abstractions.Messaging;
+using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.Annotations;
 using Amazon.Lambda.APIGatewayEvents;
+using Amazon.Lambda.Core;
 using Budget.Application.Budgets.AddBudget;
 using Budget.Application.Budgets.AddUserToBudget;
-using Budget.Application.Budgets.GetBudgetDetails;
 using Budget.Application.Budgets.GetBudgetInvitation;
 using Budget.Application.Budgets.GetBudgets;
 using Budget.Application.Budgets.RemoveBudget;
@@ -12,6 +13,8 @@ using Budget.Functions.Functions.Budgets.Requests;
 using Budget.Functions.Functions.Shared;
 using LambdaKernel;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 
 namespace Budget.Functions.Functions.Budgets;
@@ -20,28 +23,18 @@ public sealed class BudgetFunctions : BaseFunction
 {
     private const string budgetBaseRoute = $"{BaseRouteV1}/budgets";
 
-    public BudgetFunctions(ISender sender) : base(sender)
+    public BudgetFunctions(ISender sender, IServiceProvider serviceProvider) : base(sender, serviceProvider)
     {
 
     }
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = $"Budgets{nameof(GetAll)}")]
     [HttpApi(LambdaHttpMethod.Get, budgetBaseRoute)]
-    public async Task<APIGatewayHttpApiV2ProxyResponse> GetAll()
+    public async Task<APIGatewayHttpApiV2ProxyResponse> GetAll(APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new GetBudgetsQuery();
-
-        var result = await Sender.Send(command);
-
-        return result.ReturnAPIResponse(200, 404);
-    }
-
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Budgets{nameof(GetDetails)}")]
-    [HttpApi(LambdaHttpMethod.Get, $"{budgetBaseRoute}/{{budgetId}}")]
-    public async Task<APIGatewayHttpApiV2ProxyResponse> GetDetails(
-        string budgetId)
-    {
-        var command = new GetBudgetDetailsQuery(Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);
 
@@ -52,15 +45,17 @@ public sealed class BudgetFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/{{budgetId}}/invitation")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetInvitation(
         string budgetId,
-        APIGatewayHttpApiV2ProxyRequest request)
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
-        var protocol = request.Headers.TryGetValue(
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
+        var protocol = requestContext.Headers.TryGetValue(
             "X-Forwarded-Proto",
             out var protocolHeader) ?
             protocolHeader :
             "https";
-        var host = request.Headers["Host"];
-        var path = request.RawPath;
+        var host = requestContext.Headers["Host"];
+        var path = requestContext.RawPath;
         var baseUrl = $"{protocol}://{host}{path}";
         var command = new GetBudgetInvitationQuery(Guid.Parse(budgetId), baseUrl);
 
@@ -71,8 +66,12 @@ public sealed class BudgetFunctions : BaseFunction
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = $"Budgets{nameof(Add)}")]
     [HttpApi(LambdaHttpMethod.Post, budgetBaseRoute)]
-    public async Task<APIGatewayHttpApiV2ProxyResponse> Add([FromBody] AddBudgetRequest request)
+    public async Task<APIGatewayHttpApiV2ProxyResponse> Add(
+        [FromBody] AddBudgetRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new AddBudgetCommand(request.BudgetName, request.BudgetCurrency);
 
         var result = await Sender.Send(command);
@@ -84,8 +83,11 @@ public sealed class BudgetFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/{{budgetId}}/remove/{{userId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> RemoveUser(
         string budgetId,
-        string userId)
+        string userId, 
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new RemoveUserFromBudgetCommand(Guid.Parse(budgetId), userId);
 
         var result = await Sender.Send(command);
@@ -97,8 +99,11 @@ public sealed class BudgetFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/{{budgetId}}/join/{{token}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Join(
         string budgetId,
-        string token)
+        string token,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new AddUserToBudgetCommand(Guid.Parse(budgetId), token);
 
         var result = await Sender.Send(command);
@@ -109,8 +114,11 @@ public sealed class BudgetFunctions : BaseFunction
     [LambdaFunction(Role = FullAccessRole, ResourceName = $"Budgets{nameof(Remove)}")]
     [HttpApi(LambdaHttpMethod.Delete, $"{budgetBaseRoute}/{{budgetId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Remove(
-        string budgetId)
+        string budgetId, 
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new RemoveBudgetCommand(Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);

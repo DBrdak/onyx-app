@@ -8,6 +8,7 @@ using Budget.Functions.Functions.Shared;
 using Budget.Functions.Functions.Transactions.Requests;
 using LambdaKernel;
 using MediatR;
+using Budget.Application.Transactions.BulkRemoveTransactions;
 
 namespace Budget.Functions.Functions.Transactions;
 
@@ -24,13 +25,14 @@ public sealed class TransactionFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Get, transactionBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Get(
         string budgetId,
-        [FromQuery] string? query,
         [FromQuery] string? counterpartyId,
         [FromQuery] string? accountId,
-        [FromQuery] string? subcategoryId)
+        [FromQuery] string? subcategoryId,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var transactionsQuery = new GetTransactionsQuery(
-            query,
             counterpartyId is null ? null : Guid.Parse(counterpartyId),
             accountId is null ? null : Guid.Parse(accountId),
             subcategoryId is null ? null : Guid.Parse(subcategoryId),
@@ -45,8 +47,11 @@ public sealed class TransactionFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Post, transactionBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Add(
         string budgetId,
-        [FromBody] AddTransactionRequest request)
+        [FromBody] AddTransactionRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new AddTransactionCommand(
             request.AccountId,
             request.Amount,
@@ -61,12 +66,31 @@ public sealed class TransactionFunctions : BaseFunction
     }
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = $"Transactions{nameof(Remove)}")]
-    [HttpApi(LambdaHttpMethod.Get, $"{transactionBaseRoute}/{{transactionId}}")]
+    [HttpApi(LambdaHttpMethod.Delete, $"{transactionBaseRoute}/{{transactionId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Remove(
         string budgetId,
-        string transactionId)
+        string transactionId,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new RemoveTransactionCommand(Guid.Parse(transactionId), Guid.Parse(budgetId));
+
+        var result = await Sender.Send(command);
+
+        return result.ReturnAPIResponse();
+    }
+
+    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Transactions{nameof(BulkRemove)}")]
+    [HttpApi(LambdaHttpMethod.Delete, $"{transactionBaseRoute}/bulk")]
+    public async Task<APIGatewayHttpApiV2ProxyResponse> BulkRemove(
+        Guid budgetId,
+        [FromBody] Guid[] transactionIds,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
+    {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
+        var command = new BulkRemoveTransactionsCommand(transactionIds, budgetId);
 
         var result = await Sender.Send(command);
 

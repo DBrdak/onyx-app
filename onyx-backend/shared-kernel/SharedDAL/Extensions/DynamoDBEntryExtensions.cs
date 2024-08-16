@@ -12,4 +12,7 @@ public static class DynamoDbEntryExtensions
 
     public static decimal? AsNullableDecimal(this DynamoDBEntry entry) =>
         Equals(entry, DynamoDBNull.Null) ? null : entry.AsDecimal();
+
+    public static Guid? AsNullableGuid(this DynamoDBEntry entry) =>
+        Equals(entry, DynamoDBNull.Null) ? null : Guid.Parse(entry.AsString());
 }

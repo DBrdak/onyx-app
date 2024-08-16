@@ -9,74 +9,76 @@ namespace Budget.Domain.Transactions;
 
 public sealed class TransactionFactory
 {
-    private readonly Account _account;
-    private readonly Counterparty _counterparty;
-    private readonly Subcategory? _subcategory;
-    private readonly DateTime _transactedAt;
-    private readonly Money _originalAmount;
-    private readonly Money? _convertedAmount;
-    private readonly Money? _budgetAmount;
-    private readonly BudgetId _budgetId;
+    private static Account account;
+    private static BudgetId budgetId;
+    private Counterparty _counterparty;
+    private Subcategory? _subcategory;
+    private DateTime _transactedAt;
+    private Money _originalAmount;
+    private Money? _convertedAmount;
+    private Money? _budgetAmount;
     private bool IsForeignTransaction => _convertedAmount is not null;
     private bool IsOutflow => _originalAmount < 0;
 
-    public TransactionFactory(
-        Account account,
+    public TransactionFactory(Account account, BudgetId budgetId)
+    {
+        TransactionFactory.account = account;
+        TransactionFactory.budgetId = budgetId;
+    }
+
+    public Result<Transaction> CreateTransaction(
         Counterparty counterparty,
         Subcategory? subcategory,
         DateTime transactedAt,
         Money originalAmount,
         Money? convertedAmount,
-        Money? budgetAmount,
-        BudgetId budgetId)
+        Money? budgetAmount)
     {
-        _account = account;
         _counterparty = counterparty;
         _subcategory = subcategory;
         _transactedAt = transactedAt;
         _originalAmount = originalAmount;
         _convertedAmount = convertedAmount;
         _budgetAmount = budgetAmount;
-        _budgetId = budgetId;
-    }
 
-    public Result<Transaction> CreateTransaction() => SwitchTransactionCreate(IsForeignTransaction, IsOutflow);
+        return SwitchTransactionCreate(IsForeignTransaction, IsOutflow);
+    }
 
     private Result<Transaction>
         SwitchTransactionCreate(bool isForeignTransaction, bool isOutflow) =>
         (isForeignTransaction, isOutflow) switch
         {
             (true, true) => Transaction.CreateForeignOutflow(
-                _account,
+                account,
                 _subcategory!,
                 _convertedAmount!,
                 _originalAmount,
                 _transactedAt,
                 _counterparty,
                 _budgetAmount,
-                _budgetId),
+                budgetId),
             (true, false) => Transaction.CreateForeignInflow(
-                _account,
+                account,
                 _convertedAmount!,
                 _originalAmount,
                 _transactedAt,
                 _counterparty,
                 _budgetAmount,
-                _budgetId),
+                budgetId),
             (false, true) => Transaction.CreatePrincipalOutflow(
-                _account,
+                account,
                 _subcategory!,
                 _originalAmount,
                 _transactedAt,
                 _counterparty,
                 _budgetAmount,
-                _budgetId),
+                budgetId),
             (false, false) => Transaction.CreatePrincipalInflow(
-                _account,
+                account,
                 _originalAmount,
                 _transactedAt,
                 _counterparty,
                 _budgetAmount,
-                _budgetId)
+                budgetId)
         };
 }

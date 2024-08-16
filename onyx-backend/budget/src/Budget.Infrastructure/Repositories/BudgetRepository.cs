@@ -36,10 +36,10 @@ internal sealed class BudgetRepository : Repository<Domain.Budgets.Budget, Budge
         return await GetByIdAsync(budgetId, cancellationToken);
     }
 
-    public async Task<Result<IEnumerable<Domain.Budgets.Budget>>> GetBudgetsForUserAsync(string userId, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<Domain.Budgets.Budget>>> GetBudgetsForMemberAsync(string memberId, CancellationToken cancellationToken)
     {
         var scanFilter = new ScanFilter();
-        scanFilter.AddCondition(nameof(BudgetDataModel.UserIds), ScanOperator.Contains, userId);
+        scanFilter.AddCondition(nameof(BudgetDataModel.BudgetMembersId), ScanOperator.Contains, memberId);
 
         return await GetWhereAsync(scanFilter, cancellationToken);
     }

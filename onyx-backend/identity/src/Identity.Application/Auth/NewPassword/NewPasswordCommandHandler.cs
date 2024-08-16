@@ -45,7 +45,7 @@ internal sealed class NewPasswordCommandHandler : ICommandHandler<NewPasswordCom
         }
 
         var (tokenCreateResult, longLivedTokenCreateResult) = 
-            (_jwtService.GenerateJwt(user), _jwtService.GenerateLongLivedToken());
+            (_jwtService.GenerateJwt(user), _jwtService.GenerateLongLivedToken(user.Id));
 
         if (Result.Aggregate(tokenCreateResult, longLivedTokenCreateResult) is var result && result.IsFailure)
         {

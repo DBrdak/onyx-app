@@ -28,7 +28,7 @@ internal sealed class GetBudgetsQueryHandler : IQueryHandler<GetBudgetsQuery, IE
 
         var userId = userIdGetResult.Value;
 
-        var budgetsGetResult = await _budgetRepository.GetBudgetsForUserAsync(userId, cancellationToken);
+        var budgetsGetResult = await _budgetRepository.GetBudgetsForMemberAsync(userId, cancellationToken);
 
         if (budgetsGetResult.IsFailure)
         {

@@ -26,12 +26,7 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
 
     public async Task<Result<IEnumerable<TransactionModel>>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
     {
-        if (request.Query is null)
-        {
-            return Result.Failure<IEnumerable<TransactionModel>>(GetTransactionErrors.QueryIsNull);
-        }
-
-        var queryCreateResult = GetTransactionQueryRequest.FromString(request.Query);
+        var queryCreateResult = GetTransactionQueryRequest.FromRequest(request);
 
         if (queryCreateResult.IsFailure)
         {
@@ -49,8 +44,7 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
 
         var transactionsGetTask = query switch
         {
-            _ when query == GetTransactionQueryRequest.All ||
-                   query == GetTransactionQueryRequest.Empty =>
+            _ when query == GetTransactionQueryRequest.All =>
                 _transactionRepository.GetAllAsync(cancellationToken),
             _ when query == GetTransactionQueryRequest.Account =>
                 _transactionRepository.GetByAccountAsync(new (request.AccountId!.Value), cancellationToken),
@@ -138,8 +132,7 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
     private static bool IsQueryValid(GetTransactionQueryRequest query, GetTransactionsQuery request) =>
         query switch
         {
-            _ when query == GetTransactionQueryRequest.All ||
-                   query == GetTransactionQueryRequest.Empty =>
+            _ when query == GetTransactionQueryRequest.All =>
                 true,
             _ when query == GetTransactionQueryRequest.Account =>
                 request.AccountId is not null,

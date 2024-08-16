@@ -25,8 +25,11 @@ public sealed class CounterpartyFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Get, counterpartyBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetAll(
         Guid budgetId,
-        [FromQuery] string type)
+        [FromQuery] string type,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var query = new GetCounterpartiesQuery(type, budgetId);
 
         var result = await Sender.Send(query);
@@ -38,8 +41,11 @@ public sealed class CounterpartyFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Post, counterpartyBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Add(
         Guid budgetId,
-        [FromBody] AddCounterpartyRequest request)
+        [FromBody] AddCounterpartyRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new AddCounterpartyCommand(
             request.CounterpartyType,
             request.CounterpartyName,
@@ -55,8 +61,11 @@ public sealed class CounterpartyFunctions : BaseFunction
     public async Task<APIGatewayHttpApiV2ProxyResponse> Update(
         string budgetId,
         string counterpartyId,
-        [FromBody] UpdateCounterpartyRequest request)
+        [FromBody] UpdateCounterpartyRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new UpdateCounterpartyCommand(
             Guid.Parse(counterpartyId),
             request.NewName,
@@ -71,8 +80,11 @@ public sealed class CounterpartyFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Delete, $"{counterpartyBaseRoute}/{{counterpartyId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Remove(
         string budgetId,
-        string counterpartyId)
+        string counterpartyId,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new RemoveCounterpartyCommand(Guid.Parse(counterpartyId), Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);

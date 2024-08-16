@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using Identity.Application.Abstractions.Authentication;
 using Identity.Domain;
@@ -52,7 +53,7 @@ internal sealed class JwtService : IJwtService
                 Result.Success(tokenValue);
     }
 
-    public string ValidateJwt(string token, out string principalId)
+    public bool ValidateJwt(string? token, out string principalId)
     {
         principalId = string.Empty;
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -69,19 +70,33 @@ internal sealed class JwtService : IJwtService
                 IssuerSigningKey = signingKey,
             };
 
-            _ = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
+            _ = tokenHandler.ValidateToken(
+                token ?? string.Empty,
+                validationParameters,
+                out var validatedToken);
             var jwtToken = (JwtSecurityToken)validatedToken;
+
+            if (IsEmailVerified(jwtToken))
+            {
+                return false;
+            }
+
             principalId = jwtToken.Subject;
 
-            return "Allow";
+            return true;
         }
         catch
         {
-            return "Deny";
+            return false;
         }
     }
 
-    public Result<string> GenerateLongLivedToken()
+    private static bool IsEmailVerified(JwtSecurityToken jwtToken) =>
+        jwtToken.Claims.FirstOrDefault(
+            c => c.Type == UserRepresentationModel.EmailVerifiedClaimName &&
+                 c.Value == true.ToString()) is null;
+
+    public Result<string> GenerateLongLivedToken(UserId userId)
     {
         var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),
@@ -90,9 +105,10 @@ internal sealed class JwtService : IJwtService
         var token = new JwtSecurityToken(
             _options.Issuer,
             _options.Audience,
+            [new Claim(UserRepresentationModel.IdClaimName, userId.Value.ToString())],
             null,
-            null,
-            DateTime.UtcNow.AddMinutes(_options.ExpireInLongMinutes));
+            DateTime.UtcNow.AddMinutes(_options.ExpireInLongMinutes),
+            signingCredentials);
 
         var tokenValue = new JwtSecurityTokenHandler()
             .WriteToken(token);

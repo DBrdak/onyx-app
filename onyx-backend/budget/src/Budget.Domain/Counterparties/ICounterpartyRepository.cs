@@ -1,4 +1,5 @@
-﻿using Models.Responses;
+﻿using Budget.Domain.Budgets;
+using Models.Responses;
 
 namespace Budget.Domain.Counterparties;
 
@@ -18,7 +19,9 @@ public interface ICounterpartyRepository
 
     Task<Result<IEnumerable<Counterparty>>> GetAllAsync(CancellationToken cancellationToken);
 
-    Task<Result<Counterparty>> GetByNameAndType(CounterpartyName counterpartyName, CounterpartyType counterpartyType, CancellationToken cancellationToken);
+    Task<Result<Counterparty>> GetByNameAndTypeAsync(CounterpartyName counterpartyName, CounterpartyType counterpartyType, CancellationToken cancellationToken);
 
-    Task<Result<IEnumerable<Counterparty>>> GetByType(CounterpartyType counterpartyType, CancellationToken cancellationToken);
+    Task<Result<IEnumerable<Counterparty>>> GetManyByTypeAsync(CounterpartyType counterpartyType, CancellationToken cancellationToken);
+
+    Task<Result<Counterparty>> GetByNameAndTypeOrAddAsync(CounterpartyName name, CounterpartyType type, BudgetId budgetId, CancellationToken cancellationToken);
 }

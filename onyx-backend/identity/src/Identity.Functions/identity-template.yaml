@@ -6,25 +6,23 @@ Parameters:
     Type: String
     Description: ARN of the Send Email topic
 Resources:
-  LambdaAuthorizer:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-    Properties:
-      Runtime: dotnet8
-      CodeUri: .
-      MemorySize: 512
-      Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
-      PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.Access.AccessFunction_FunctionHandler_Generated::FunctionHandler
   IdentityApi:
     Type: AWS::Serverless::HttpApi
     Properties:
       CorsConfiguration:
-        AllowOrigins: "'*'"
-        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
-        AllowHeaders: "'Content-Type,Authorization'"
+        AllowOrigins:
+          - "http://localhost:5173"
+        AllowHeaders:
+          - authorization
+          - content-type
+          - host
+        AllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+        MaxAge: 600
+        AllowCredentials: true
       DefaultRouteSettings:
         DetailedMetricsEnabled: true
       Auth:
@@ -33,6 +31,10 @@ Resources:
           LambdaAuthorizer:
             FunctionArn: !GetAtt LambdaAuthorizer.Arn
             AuthorizerPayloadFormatVersion: '2.0'
+            EnableSimpleResponses: true
+            Identity:
+              Headers:
+                - authorization
   Login:
     Type: AWS::Serverless::Function
     Metadata:
@@ -42,14 +44,13 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_Login_Generated::Login
-      Environment:
-        Variables:
-          SendEmailTopicArn: !Ref SendEmailTopicArn
       Events:
         RootPost:
           Type: HttpApi
@@ -68,14 +69,13 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_Register_Generated::Register
-      Environment:
-        Variables:
-          SendEmailTopicArn: !Ref SendEmailTopicArn
       Events:
         RootPost:
           Type: HttpApi
@@ -85,126 +85,6 @@ Resources:
             ApiId: !Ref IdentityApi
             Auth:
               Authorizer: NONE
-  GetUser:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-      SyncedEvents:
-        - RootGet
-    Properties:
-      Runtime: dotnet8
-      CodeUri: .
-      MemorySize: 512
-      Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
-      PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_GetUser_Generated::GetUser
-      Environment:
-        Variables:
-          SendEmailTopicArn: !Ref SendEmailTopicArn
-      Events:
-        RootGet:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/user
-            Method: GET
-            ApiId: !Ref IdentityApi
-  UpdateUser:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-      SyncedEvents:
-        - RootPut
-    Properties:
-      Runtime: dotnet8
-      CodeUri: .
-      MemorySize: 512
-      Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
-      PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_UpdateUser_Generated::UpdateUser
-      Environment:
-        Variables:
-          SendEmailTopicArn: !Ref SendEmailTopicArn
-      Events:
-        RootPut:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/user
-            Method: PUT
-            ApiId: !Ref IdentityApi
-  RequestEmailChange:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-      SyncedEvents:
-        - RootPut
-    Properties:
-      Runtime: dotnet8
-      CodeUri: .
-      MemorySize: 512
-      Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
-      PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RequestEmailChange_Generated::RequestEmailChange
-      Environment:
-        Variables:
-          SendEmailTopicArn: !Ref SendEmailTopicArn
-      Events:
-        RootPut:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/user/change-email
-            Method: PUT
-            ApiId: !Ref IdentityApi
-  Logout:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-      SyncedEvents:
-        - RootPut
-    Properties:
-      Runtime: dotnet8
-      CodeUri: .
-      MemorySize: 512
-      Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
-      PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_Logout_Generated::Logout
-      Environment:
-        Variables:
-          SendEmailTopicArn: !Ref SendEmailTopicArn
-      Events:
-        RootPut:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/user/logout
-            Method: PUT
-            ApiId: !Ref IdentityApi
-  RemoveUser:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-      SyncedEvents:
-        - RootDelete
-    Properties:
-      Runtime: dotnet8
-      CodeUri: .
-      MemorySize: 512
-      Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
-      PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RemoveUser_Generated::RemoveUser
-      Environment:
-        Variables:
-          SendEmailTopicArn: !Ref SendEmailTopicArn
-      Events:
-        RootDelete:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/user/remove
-            Method: DELETE
-            ApiId: !Ref IdentityApi
   VerifyEmail:
     Type: AWS::Serverless::Function
     Metadata:
@@ -214,45 +94,18 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_VerifyEmail_Generated::VerifyEmail
-      Environment:
-        Variables:
-          SendEmailTopicArn: !Ref SendEmailTopicArn
       Events:
         RootPut:
           Type: HttpApi
           Properties:
             Path: /api/v1/auth/verify-email
-            Method: PUT
-            ApiId: !Ref IdentityApi
-            Auth:
-              Authorizer: NONE
-  Refresh:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-      SyncedEvents:
-        - RootPut
-    Properties:
-      Runtime: dotnet8
-      CodeUri: .
-      MemorySize: 512
-      Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
-      PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_Refresh_Generated::Refresh
-      Environment:
-        Variables:
-          SendEmailTopicArn: !Ref SendEmailTopicArn
-      Events:
-        RootPut:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/auth/refresh
             Method: PUT
             ApiId: !Ref IdentityApi
             Auth:
@@ -266,19 +119,43 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_ResendEmail_Generated::ResendEmail
-      Environment:
-        Variables:
-          SendEmailTopicArn: !Ref SendEmailTopicArn
       Events:
         RootPut:
           Type: HttpApi
           Properties:
             Path: /api/v1/auth/resend-email
+            Method: PUT
+            ApiId: !Ref IdentityApi
+            Auth:
+              Authorizer: NONE
+  Refresh:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootPut
+    Properties:
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_Refresh_Generated::Refresh
+      Events:
+        RootPut:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/auth/refresh
             Method: PUT
             ApiId: !Ref IdentityApi
             Auth:
@@ -292,14 +169,13 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_ForgotPassword_Generated::ForgotPassword
-      Environment:
-        Variables:
-          SendEmailTopicArn: !Ref SendEmailTopicArn
       Events:
         RootPut:
           Type: HttpApi
@@ -318,7 +194,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -329,6 +207,136 @@ Resources:
           Properties:
             Path: /api/v1/auth/forgot-password/new
             Method: PUT
+            ApiId: !Ref IdentityApi
+            Auth:
+              Authorizer: NONE
+  GetUser:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootGet
+    Properties:
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_GetUser_Generated::GetUser
+      Events:
+        RootGet:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/user
+            Method: GET
+            ApiId: !Ref IdentityApi
+  UpdateUser:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootPut
+    Properties:
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_UpdateUser_Generated::UpdateUser
+      Events:
+        RootPut:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/user
+            Method: PUT
+            ApiId: !Ref IdentityApi
+  RequestEmailChange:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootPut
+    Properties:
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RequestEmailChange_Generated::RequestEmailChange
+      Events:
+        RootPut:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/user/change-email
+            Method: PUT
+            ApiId: !Ref IdentityApi
+  Logout:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootPut
+    Properties:
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_Logout_Generated::Logout
+      Events:
+        RootPut:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/user/logout
+            Method: PUT
+            ApiId: !Ref IdentityApi
+  RemoveUser:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootDelete
+    Properties:
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RemoveUser_Generated::RemoveUser
+      Events:
+        RootDelete:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/user/remove
+            Method: DELETE
+            ApiId: !Ref IdentityApi
+  LambdaAuthorizer:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 512
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.Access.AccessFunction_FunctionHandler_Generated::FunctionHandler
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

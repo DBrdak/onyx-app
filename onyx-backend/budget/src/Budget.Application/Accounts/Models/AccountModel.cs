@@ -1,5 +1,5 @@
 ﻿using Abstractions.Messaging;
-using Budget.Application.Shared.Models;
+using Budget.Application.Contracts.Models;
 using Budget.Domain.Accounts;
 
 namespace Budget.Application.Accounts.Models;

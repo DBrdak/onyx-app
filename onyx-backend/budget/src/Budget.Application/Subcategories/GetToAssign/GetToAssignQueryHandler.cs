@@ -1,7 +1,7 @@
 ﻿using Abstractions.Messaging;
 using Budget.Application.Abstractions.Currency;
 using Budget.Application.Abstractions.Identity;
-using Budget.Application.Shared.Models;
+using Budget.Application.Contracts.Models;
 using Budget.Domain.Accounts;
 using Budget.Domain.Budgets;
 using Budget.Domain.Subcategories;

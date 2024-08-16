@@ -17,25 +17,30 @@ public sealed class UserFunctions : BaseFunction
 {
     private const string usersBaseRoute = $"{BaseRouteV1}/user";
 
-    public UserFunctions(ISender sender) : base(sender)
-    {
-    }
+    public UserFunctions(ISender sender, IServiceProvider serviceProvider) : base(sender, serviceProvider)
+    { }
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(GetUser))]
     [HttpApi(LambdaHttpMethod.Get, $"{usersBaseRoute}")]
-    public async Task<APIGatewayHttpApiV2ProxyResponse> GetUser()
+    public async Task<APIGatewayHttpApiV2ProxyResponse> GetUser(APIGatewayHttpApiV2ProxyRequest requestContext)
     {
-        var command = new GetUserQuery();
+        ServiceProvider.AddRequestContextAccessor(requestContext);
 
-        var result = await Sender.Send(command);
+        var query = new GetUserQuery();
+
+        var result = await Sender.Send(query);
 
         return result.ReturnAPIResponse(200, 404);
     }
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(UpdateUser))]
     [HttpApi(LambdaHttpMethod.Put, $"{usersBaseRoute}")]
-    public async Task<APIGatewayHttpApiV2ProxyResponse> UpdateUser([FromBody] UpdateUserRequest request)
+    public async Task<APIGatewayHttpApiV2ProxyResponse> UpdateUser(
+        [FromBody] UpdateUserRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider.AddRequestContextAccessor(requestContext);
+
         var command = new UpdateUserCommand(
             request.NewEmail,
             request.NewUsername,
@@ -49,8 +54,10 @@ public sealed class UserFunctions : BaseFunction
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(RequestEmailChange))]
     [HttpApi(LambdaHttpMethod.Put, $"{usersBaseRoute}/change-email")]
-    public async Task<APIGatewayHttpApiV2ProxyResponse> RequestEmailChange()
+    public async Task<APIGatewayHttpApiV2ProxyResponse> RequestEmailChange(APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider.AddRequestContextAccessor(requestContext);
+
         var command = new RequestEmailChangeCommand();
 
         var result = await Sender.Send(command);
@@ -60,8 +67,10 @@ public sealed class UserFunctions : BaseFunction
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(Logout))]
     [HttpApi(LambdaHttpMethod.Put, $"{usersBaseRoute}/logout")]
-    public async Task<APIGatewayHttpApiV2ProxyResponse> Logout()
+    public async Task<APIGatewayHttpApiV2ProxyResponse> Logout(APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider.AddRequestContextAccessor(requestContext);
+
         var command = new LogoutUserCommand();
 
         var result = await Sender.Send(command);
@@ -71,8 +80,12 @@ public sealed class UserFunctions : BaseFunction
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(RemoveUser))]
     [HttpApi(LambdaHttpMethod.Delete, $"{usersBaseRoute}/remove")]
-    public async Task<APIGatewayHttpApiV2ProxyResponse> RemoveUser([FromBody] RemoveUserRequest request)
+    public async Task<APIGatewayHttpApiV2ProxyResponse> RemoveUser(
+        [FromBody] RemoveUserRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider.AddRequestContextAccessor(requestContext);
+
         var command = new RemoveUserCommand(request.Password);
 
         var result = await Sender.Send(command);

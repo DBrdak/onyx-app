@@ -63,6 +63,7 @@ public sealed record Currency
     public static readonly Currency Gnf = new("GNF");
     public static readonly Currency Gtq = new("GTQ");
     public static readonly Currency Gyd = new("GYD");
+    public static readonly Currency Gbp = new("GBP");
     public static readonly Currency Xau = new("XAU");
     public static readonly Currency Hkd = new("HKD");
     public static readonly Currency Hnl = new("HNL");

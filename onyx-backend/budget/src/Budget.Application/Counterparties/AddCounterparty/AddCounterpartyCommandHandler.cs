@@ -25,7 +25,7 @@ internal sealed class AddCounterpartyCommandHandler : ICommandHandler<AddCounter
 
         var counterparty = counterpartyCreateResult.Value;
 
-        var isCounterpartyExistsResult = await _counterpartyRepository.GetByNameAndType(
+        var isCounterpartyExistsResult = await _counterpartyRepository.GetByNameAndTypeAsync(
             counterparty.Name,
             counterparty.Type,
             cancellationToken);

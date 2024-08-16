@@ -68,6 +68,28 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
 
         user = userAddResult.Value;
 
-        return UserModel.FromDomainModel(user);
+        var accessTokenGenerateResult = _jwtService.GenerateJwt(user);
+
+        if (accessTokenGenerateResult.IsFailure)
+        {
+            return accessTokenGenerateResult.Error;
+        }
+
+        var accessToken = accessTokenGenerateResult.Value;
+
+        var refreshTokenGenerateResult = _jwtService.GenerateLongLivedToken(user.Id);
+
+        if (refreshTokenGenerateResult.IsFailure)
+        {
+            return refreshTokenGenerateResult.Error;
+        }
+
+        var longLivedToken = refreshTokenGenerateResult.Value;
+
+        user.SetLongLivedToken(longLivedToken);
+
+        await _userRepository.UpdateAsync(user, cancellationToken);
+
+        return UserModel.FromDomainModel(user, new AuthorizationToken(accessToken, longLivedToken));
     }
 }

@@ -7,26 +7,23 @@ Parameters:
     Type: String
     Description: ARN of the Send Email topic
 Resources:
-  LambdaAuthorizer:
-    Type: AWS::Serverless::Function
-    Metadata:
-      SamResourceId: LambdaAuthorizer
-      Tool: Amazon.Lambda.Annotations
-    Properties:
-      Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ae9a6d9f256b51772d0c84c7c9ad717
-      MemorySize: 512
-      Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
-      PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.Access.AccessFunction_FunctionHandler_Generated::FunctionHandler
   IdentityApi:
     Type: AWS::Serverless::HttpApi
     Properties:
       CorsConfiguration:
-        AllowOrigins: '''*'''
-        AllowMethods: '''GET,POST,PUT,DELETE,OPTIONS'''
-        AllowHeaders: '''Content-Type,Authorization'''
+        AllowOrigins:
+        - http://localhost:5173
+        AllowHeaders:
+        - authorization
+        - content-type
+        - host
+        AllowMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        MaxAge: 600
+        AllowCredentials: true
       DefaultRouteSettings:
         DetailedMetricsEnabled: true
       Auth:
@@ -38,6 +35,10 @@ Resources:
               - LambdaAuthorizer
               - Arn
             AuthorizerPayloadFormatVersion: '2.0'
+            EnableSimpleResponses: true
+            Identity:
+              Headers:
+              - authorization
     Metadata:
       SamResourceId: IdentityApi
   Login:
@@ -49,16 +50,14 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ae9a6d9f256b51772d0c84c7c9ad717
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_Login_Generated::Login
-      Environment:
-        Variables:
-          SendEmailTopicArn:
-            Ref: SendEmailTopicArn
       Events:
         RootPost:
           Type: HttpApi
@@ -78,22 +77,155 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ae9a6d9f256b51772d0c84c7c9ad717
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_Register_Generated::Register
-      Environment:
-        Variables:
-          SendEmailTopicArn:
-            Ref: SendEmailTopicArn
       Events:
         RootPost:
           Type: HttpApi
           Properties:
             Path: /api/v1/auth/register
             Method: POST
+            ApiId:
+              Ref: IdentityApi
+            Auth:
+              Authorizer: NONE
+  VerifyEmail:
+    Type: AWS::Serverless::Function
+    Metadata:
+      SamResourceId: VerifyEmail
+      SyncedEvents:
+      - RootPut
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      Runtime: dotnet8
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_VerifyEmail_Generated::VerifyEmail
+      Events:
+        RootPut:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/auth/verify-email
+            Method: PUT
+            ApiId:
+              Ref: IdentityApi
+            Auth:
+              Authorizer: NONE
+  ResendEmail:
+    Type: AWS::Serverless::Function
+    Metadata:
+      SamResourceId: ResendEmail
+      SyncedEvents:
+      - RootPut
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      Runtime: dotnet8
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_ResendEmail_Generated::ResendEmail
+      Events:
+        RootPut:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/auth/resend-email
+            Method: PUT
+            ApiId:
+              Ref: IdentityApi
+            Auth:
+              Authorizer: NONE
+  Refresh:
+    Type: AWS::Serverless::Function
+    Metadata:
+      SamResourceId: Refresh
+      SyncedEvents:
+      - RootPut
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      Runtime: dotnet8
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_Refresh_Generated::Refresh
+      Events:
+        RootPut:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/auth/refresh
+            Method: PUT
+            ApiId:
+              Ref: IdentityApi
+            Auth:
+              Authorizer: NONE
+  ForgotPassword:
+    Type: AWS::Serverless::Function
+    Metadata:
+      SamResourceId: ForgotPassword
+      SyncedEvents:
+      - RootPut
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      Runtime: dotnet8
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_ForgotPassword_Generated::ForgotPassword
+      Events:
+        RootPut:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/auth/forgot-password/request
+            Method: PUT
+            ApiId:
+              Ref: IdentityApi
+            Auth:
+              Authorizer: NONE
+  NewPassword:
+    Type: AWS::Serverless::Function
+    Metadata:
+      SamResourceId: NewPassword
+      SyncedEvents:
+      - RootPut
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      Runtime: dotnet8
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_NewPassword_Generated::NewPassword
+      Events:
+        RootPut:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/auth/forgot-password/new
+            Method: PUT
             ApiId:
               Ref: IdentityApi
             Auth:
@@ -107,16 +239,14 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ae9a6d9f256b51772d0c84c7c9ad717
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_GetUser_Generated::GetUser
-      Environment:
-        Variables:
-          SendEmailTopicArn:
-            Ref: SendEmailTopicArn
       Events:
         RootGet:
           Type: HttpApi
@@ -134,16 +264,14 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ae9a6d9f256b51772d0c84c7c9ad717
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_UpdateUser_Generated::UpdateUser
-      Environment:
-        Variables:
-          SendEmailTopicArn:
-            Ref: SendEmailTopicArn
       Events:
         RootPut:
           Type: HttpApi
@@ -161,16 +289,14 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ae9a6d9f256b51772d0c84c7c9ad717
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RequestEmailChange_Generated::RequestEmailChange
-      Environment:
-        Variables:
-          SendEmailTopicArn:
-            Ref: SendEmailTopicArn
       Events:
         RootPut:
           Type: HttpApi
@@ -188,16 +314,14 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ae9a6d9f256b51772d0c84c7c9ad717
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_Logout_Generated::Logout
-      Environment:
-        Variables:
-          SendEmailTopicArn:
-            Ref: SendEmailTopicArn
       Events:
         RootPut:
           Type: HttpApi
@@ -215,16 +339,14 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ae9a6d9f256b51772d0c84c7c9ad717
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RemoveUser_Generated::RemoveUser
-      Environment:
-        Variables:
-          SendEmailTopicArn:
-            Ref: SendEmailTopicArn
       Events:
         RootDelete:
           Type: HttpApi
@@ -233,116 +355,19 @@ Resources:
             Method: DELETE
             ApiId:
               Ref: IdentityApi
-  VerifyEmail:
+  LambdaAuthorizer:
     Type: AWS::Serverless::Function
     Metadata:
-      SamResourceId: VerifyEmail
-      SyncedEvents:
-      - RootPut
+      SamResourceId: LambdaAuthorizer
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ae9a6d9f256b51772d0c84c7c9ad717
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
       MemorySize: 512
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_VerifyEmail_Generated::VerifyEmail
-      Environment:
-        Variables:
-          SendEmailTopicArn:
-            Ref: SendEmailTopicArn
-      Events:
-        RootPut:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/auth/verify-email
-            Method: PUT
-            ApiId:
-              Ref: IdentityApi
-  Refresh:
-    Type: AWS::Serverless::Function
-    Metadata:
-      SamResourceId: Refresh
-      SyncedEvents:
-      - RootPut
-      Tool: Amazon.Lambda.Annotations
-    Properties:
-      Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ae9a6d9f256b51772d0c84c7c9ad717
-      MemorySize: 512
-      Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
-      PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_Refresh_Generated::Refresh
-      Environment:
-        Variables:
-          SendEmailTopicArn:
-            Ref: SendEmailTopicArn
-      Events:
-        RootPut:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/auth/refresh
-            Method: PUT
-            ApiId:
-              Ref: IdentityApi
-            Auth:
-              Authorizer: NONE
-  ResendEmail:
-    Type: AWS::Serverless::Function
-    Metadata:
-      SamResourceId: ResendEmail
-      SyncedEvents:
-      - RootPut
-      Tool: Amazon.Lambda.Annotations
-    Properties:
-      Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ae9a6d9f256b51772d0c84c7c9ad717
-      MemorySize: 512
-      Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
-      PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_ResendEmail_Generated::ResendEmail
-      Environment:
-        Variables:
-          SendEmailTopicArn:
-            Ref: SendEmailTopicArn
-      Events:
-        RootPut:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/auth/resend-email
-            Method: PUT
-            ApiId:
-              Ref: IdentityApi
-  ForgotPassword:
-    Type: AWS::Serverless::Function
-    Metadata:
-      SamResourceId: ForgotPassword
-      SyncedEvents:
-      - RootPut
-      Tool: Amazon.Lambda.Annotations
-    Properties:
-      Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ae9a6d9f256b51772d0c84c7c9ad717
-      MemorySize: 512
-      Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
-      PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_ForgotPassword_Generated::ForgotPassword
-      Environment:
-        Variables:
-          SendEmailTopicArn:
-            Ref: SendEmailTopicArn
-      Events:
-        RootPut:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/auth/forgot-password
-            Method: PUT
-            ApiId:
-              Ref: IdentityApi
+      Handler: Identity.Functions::Identity.Functions.Functions.Access.AccessFunction_FunctionHandler_Generated::FunctionHandler
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

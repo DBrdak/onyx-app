@@ -76,7 +76,7 @@ internal class BudgetMemberAuthorizationHandler : AuthorizationHandler<BudgetMem
 
         var userId = userIdGetResult.Value;
 
-        var userBudgetsGetResult = await _budgetRepository.GetBudgetsForUserAsync(userId, cancellationToken);
+        var userBudgetsGetResult = await _budgetRepository.GetBudgetsForMemberAsync(userId, cancellationToken);
 
         if (userBudgetsGetResult.IsFailure)
         {

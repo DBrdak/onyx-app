@@ -1,4 +1,7 @@
 ﻿using Abstractions.DomainBaseTypes;
+using Budget.Domain.Budgets.DomainEvents;
+using Budget.Domain.Categories;
+using Budget.Domain.Subcategories;
 using Models.DataTypes;
 using Models.Responses;
 
@@ -8,29 +11,32 @@ public sealed class Budget : Entity<BudgetId>
 {
     public BudgetName Name { get; private set; }
     public Currency BaseCurrency { get; private set; }
-    private readonly List<string> _userIds;
-    public IReadOnlyCollection<string> UserIds => _userIds.AsReadOnly();
+    private readonly List<BudgetMember> _budgetMembers;
+    public IReadOnlyCollection<BudgetMember> BudgetMembers => _budgetMembers.AsReadOnly();
     public BudgetInvitationToken? InvitationToken { get; private set; }
+    public SubcategoryId? UnknownSubcategoryId { get; private set; }
     private const int maxUsers = 10;
-    public int MaxAccounts => 8 + 2 * (_userIds.Count - 1);
-    public int MaxCategories => 15 + 5 * (_userIds.Count - 1);
+    public int MaxAccounts => 8 + 2 * (_budgetMembers.Count - 1);
+    public int MaxCategories => 15 + 5 * (_budgetMembers.Count - 1);
 
     [Newtonsoft.Json.JsonConstructor]
     [System.Text.Json.Serialization.JsonConstructor]
     private Budget(
         BudgetName name,
         Currency baseCurrency,
-        List<string> userIds,
+        List<BudgetMember> budgetMembers,
         BudgetInvitationToken? invitationToken,
+        SubcategoryId? unknownSubcategoryId,
         BudgetId? id = null) : base(id ?? new BudgetId())
     {
         Name = name;
         BaseCurrency = baseCurrency;
         InvitationToken = invitationToken;
-        _userIds = userIds;
+        UnknownSubcategoryId = unknownSubcategoryId;
+        _budgetMembers = budgetMembers;
     }
 
-    public static Result<Budget> Create(string budgetName, string userId, string currencyCode)
+    public static Result<Budget> Create(string budgetName, string userId, string username, string email, string currencyCode)
     {
         var budgetNameCreateResult = BudgetName.Create(budgetName);
 
@@ -46,17 +52,31 @@ public sealed class Budget : Entity<BudgetId>
             return currencyCreateResult.Error;
         }
 
-        return new Budget(budgetNameCreateResult.Value, currencyCreateResult.Value, [userId], null);
+        var budget = new Budget(
+            budgetNameCreateResult.Value,
+            currencyCreateResult.Value,
+            [
+                BudgetMember.Create(
+                    userId,
+                    username,
+                    email)
+            ],
+            null,
+            null);
+
+        budget.RaiseDomainEvent(new BudgetCreatedDomainEvent(budget));
+
+        return budget;
     }
 
-    public Result AddUser(string userId, string token)
+    public Result AddMember(string userId, string username, string email, string token)
     {
-        if (_userIds.Count >= maxUsers)
+        if (_budgetMembers.Count >= maxUsers)
         {
             return Result.Failure(BudgetErrors.MaxUserNumberReached);
         }
 
-        if (_userIds.Any(id => id == userId))
+        if (_budgetMembers.Any(member => member.Id == userId))
         {
             return BudgetErrors.UserAlreadyAdded;
         }
@@ -73,19 +93,21 @@ public sealed class Budget : Entity<BudgetId>
             return validationResult.Error;
         }
 
-        _userIds.Add(userId);
+        _budgetMembers.Add(BudgetMember.Create(userId, username, email));
 
         return Result.Success();
     }
 
-    public Result ExcludeUser(string userId)
+    public Result ExcludeUser(string memberId)
     {
-        if (_userIds.Count == 1)
+        if (_budgetMembers.Count == 1)
         {
             return BudgetErrors.UserRemoveError;
         }
 
-        var isFound = _userIds.Remove(userId);
+        var isFound = _budgetMembers.FirstOrDefault(member => member.Id == memberId) is var member &&
+                      member is not null &&
+                      _budgetMembers.Remove(member);
 
         if (!isFound)
         {
@@ -97,4 +119,9 @@ public sealed class Budget : Entity<BudgetId>
 
     public BudgetInvitationToken GetInvitationToken() => 
         InvitationToken ??= BudgetInvitationToken.Generate();
+
+    public void Setup(Category initialCategory, Subcategory initialSubcategory)
+    {
+        UnknownSubcategoryId = initialSubcategory.Id;
+    }
 }

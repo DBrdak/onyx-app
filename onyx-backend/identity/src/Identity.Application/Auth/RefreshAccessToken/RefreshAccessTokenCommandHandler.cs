@@ -19,7 +19,7 @@ internal sealed class RefreshAccessTokenCommandHandler : IQueryHandler<RefreshAc
 
     public async Task<Result<AuthorizationToken>> Handle(RefreshAccessTokenCommand request, CancellationToken cancellationToken)
     {
-        var userIdGetResult = _jwtService.GetUserIdFromToken(request.ExpiredToken);
+        var userIdGetResult = _jwtService.GetUserIdFromToken(request.LongLivedToken);
 
         if (userIdGetResult.IsFailure)
         {
@@ -46,6 +46,19 @@ internal sealed class RefreshAccessTokenCommandHandler : IQueryHandler<RefreshAc
 
         var accessToken = accessTokenGenerateResult.Value;
 
-        return new AuthorizationToken(accessToken);
+        var refreshTokenGenerateResult = _jwtService.GenerateLongLivedToken(user.Id);
+
+        if (refreshTokenGenerateResult.IsFailure)
+        {
+            return refreshTokenGenerateResult.Error;
+        }
+
+        var longLivedToken = refreshTokenGenerateResult.Value;
+
+        user.SetLongLivedToken(longLivedToken);
+
+        await _userRepository.UpdateAsync(user, cancellationToken);
+
+        return new AuthorizationToken(accessToken, longLivedToken);
     }
 }

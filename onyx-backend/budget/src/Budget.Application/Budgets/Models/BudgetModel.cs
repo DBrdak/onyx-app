@@ -9,7 +9,7 @@ public sealed record BudgetModel
     public Guid Id { get; init; }
     public string Name { get; init; }
     public string Currency { get; init; }
-    public IEnumerable<string> UserIds { get; init; }
+    public IEnumerable<BudgetMemberModel> BudgetMembers { get; init; }
     public IEnumerable<AccountModel>? Accounts { get; init; }
     public IEnumerable<CategoryModel>? Categories { get; init; }
     public IEnumerable<CounterpartyModel>? Counterparties { get; init; }
@@ -18,7 +18,7 @@ public sealed record BudgetModel
         Guid id,
         string name,
         string currency,
-        IEnumerable<string> userIds,
+        IEnumerable<BudgetMemberModel> budgetMembers,
         IEnumerable<AccountModel>? accounts,
         IEnumerable<CategoryModel>? categories,
         IEnumerable<CounterpartyModel>? counterparties)
@@ -26,7 +26,7 @@ public sealed record BudgetModel
         Id = id;
         Name = name;
         Currency = currency;
-        UserIds = userIds;
+        BudgetMembers = budgetMembers;
         Accounts = accounts;
         Categories = categories;
         Counterparties = counterparties;
@@ -41,7 +41,7 @@ public sealed record BudgetModel
             domainModel.Id.Value,
             domainModel.Name.Value,
             domainModel.BaseCurrency.Code,
-            domainModel.UserIds,
+            domainModel.BudgetMembers.Select(BudgetMemberModel.FromDomainModel),
             accountModels,
             categoryModels,
             counterpartyModels);

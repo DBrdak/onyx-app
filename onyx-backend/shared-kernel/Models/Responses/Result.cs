@@ -48,6 +48,11 @@ public class Result
         return results.FirstOrDefault(x => x.IsFailure) ?? Success();
     }
 
+    public static Task<Result> CreateVoidTask<TValue>(
+        Task<Result<TValue>> updateAsync) =>
+        updateAsync as Task<Result> ??
+        throw new InvalidCastException($"Cannot convert result of type {typeof(TValue).Name} to void result");
+
     public static Result Aggregate(params Result[] results) => Aggregate(results);
 }
 
@@ -63,7 +68,7 @@ public class Result<TValue> : Result
         _value = value;
     }
 
-    [NotNullIfNotNull("_value")]
+    [NotNullIfNotNull(nameof(_value))]
     public TValue Value => IsSuccess
         ? _value! : default;
 

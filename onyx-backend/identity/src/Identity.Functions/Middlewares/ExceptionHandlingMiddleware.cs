@@ -1,21 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Amazon.Lambda.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Exceptions;
 using Models.Responses;
-using Serilog;
-using Serilog.Context;
 
 namespace Identity.Functions.Middlewares;
 
 public sealed class ExceptionMiddleware
 {
-    private readonly ILogger _logger;
+    private readonly ILambdaLogger _logger;
     private readonly RequestDelegate _next;
 
     public ExceptionMiddleware(
         RequestDelegate next,
-        ILogger logger)
+        ILambdaLogger logger)
     {
         _next = next;
         _logger = logger;
@@ -90,10 +89,7 @@ public sealed class ExceptionMiddleware
 
     private void LogException(ExceptionDetails details, Exception exception)
     {
-        using (LogContext.PushProperty("Exception", details.Type, true))
-        {
-            _logger.Error(exception, "{Exception} occurred: {Message}", details.Title, exception.Message);
-        }
+        _logger.LogError($"{details.Title} occurred: {exception.Message}");
     }
 
     internal record ExceptionDetails(

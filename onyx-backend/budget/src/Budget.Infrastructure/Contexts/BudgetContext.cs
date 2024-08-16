@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
+using Abstractions.Messaging;
 using Budget.Application.Abstractions.Identity;
-using Microsoft.AspNetCore.Http;
 using Models.Responses;
 
 namespace Budget.Infrastructure.Contexts;
@@ -12,20 +12,16 @@ internal sealed class BudgetContext : IBudgetContext
         new(@"^/api/v1/(?<budgetId>[^/]+)(/.*)?$", RegexOptions.Compiled),
         new(@"^/api/v1/budgets/(?<budgetId>[^/]+)(/.*)?$", RegexOptions.Compiled),
     ];
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly RequestAccessor _requestAccessor;
 
-    public BudgetContext(IHttpContextAccessor httpContextAccessor)
+    public BudgetContext(RequestAccessor requestAccessor)
     {
-        _httpContextAccessor = httpContextAccessor;
+        _requestAccessor = requestAccessor;
     }
 
     public Result<Guid> GetBudgetId()
     {
-        var path = _httpContextAccessor
-            .HttpContext?
-            .Request
-            .Path
-            .Value;
+        var path = _requestAccessor.Path;
 
         var budgetId = string.IsNullOrWhiteSpace(path) ?
             null :

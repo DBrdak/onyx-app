@@ -29,8 +29,11 @@ public sealed class SubcategoryFunctions : BaseFunction
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetToAssign(
         string budgetId,
         [FromQuery] int month,
-        [FromQuery] int year)
+        [FromQuery] int year,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new GetToAssignQuery(month, year);
 
         var result = await Sender.Send(command);
@@ -42,8 +45,11 @@ public sealed class SubcategoryFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Post, subcategoryBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Add(
         string budgetId,
-        [FromBody] AddSubcategoryRequest request)
+        [FromBody] AddSubcategoryRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new AddSubcategoryCommand(
             request.ParentCategoryId,
             request.SubcategoryName,
@@ -59,8 +65,11 @@ public sealed class SubcategoryFunctions : BaseFunction
     public async Task<APIGatewayHttpApiV2ProxyResponse> Update(
         string budgetId,
         string subcategoryId,
-        [FromBody] UpdateSubcategoryRequest request)
+        [FromBody] UpdateSubcategoryRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new UpdateSubcategoryCommand(
             Guid.Parse(subcategoryId),
             request.NewName,
@@ -76,8 +85,11 @@ public sealed class SubcategoryFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Delete, $"{subcategoryBaseRoute}/{{subcategoryId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Remove(
         string budgetId,
-        string subcategoryId)
+        string subcategoryId,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new RemoveSubcategoryCommand(Guid.Parse(subcategoryId), Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);
@@ -90,8 +102,11 @@ public sealed class SubcategoryFunctions : BaseFunction
     public async Task<APIGatewayHttpApiV2ProxyResponse> UpdateAssignment(
         string budgetId,
         string subcategoryId,
-        [FromBody] UpdateAssignmentRequest request)
+        [FromBody] UpdateAssignmentRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new UpdateAssignmentCommand(
             Guid.Parse(subcategoryId),
             request.AssignmentMonth,
@@ -108,8 +123,11 @@ public sealed class SubcategoryFunctions : BaseFunction
     public async Task<APIGatewayHttpApiV2ProxyResponse> UpdateTarget(
         string budgetId,
         string subcategoryId,
-        [FromBody] UpdateTargetRequest request)
+        [FromBody] UpdateTargetRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new UpdateTargetCommand(
             Guid.Parse(subcategoryId),
             request.StartedAt,
@@ -126,8 +144,11 @@ public sealed class SubcategoryFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Put, $"{subcategoryBaseRoute}/{{subcategoryId}}/target/remove")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> RemoveTarget(
         string budgetId,
-        string subcategoryId)
+        string subcategoryId,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
     {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
         var command = new RemoveTargetCommand(Guid.Parse(subcategoryId), Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);

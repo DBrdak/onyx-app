@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Amazon.DynamoDBv2.DocumentModel;
 using Budget.Domain.Budgets;
+using Budget.Domain.Subcategories;
 using Models.DataTypes;
 using SharedDAL.DataModels;
 using SharedDAL.DataModels.Abstractions;
@@ -20,14 +21,18 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
     public int? InvitationTokenExpirationDateHour { get; init; }
     public int? InvitationTokenExpirationDateMinute { get; init; }
     public int? InvitationTokenExpirationDateSecond { get; init; }
-    public IEnumerable<string> UserIds { get; init; }
+    public IEnumerable<string> BudgetMembersId { get; init; }
+    public IEnumerable<BudgetMemberDataModel> BudgetMembers { get; init; }
+    public Guid? UnknownSubcategoryId { get; init; }
 
     private BudgetDataModel(Document doc)
     {
-        Id = doc[nameof(Id)].AsGuid();
+        Id = Guid.Parse(doc[nameof(Id)].AsString());
         Name = doc[nameof(Name)];
         BaseCurrency = doc[nameof(BaseCurrency)];
-        UserIds = doc[nameof(UserIds)].AsArrayOfString();
+        BudgetMembers = doc[nameof(BudgetMembers)]
+            .AsDynamoDBList().Entries
+            .Select(entry => BudgetMemberDataModel.FromDocument(entry.AsDocument()));
         InvitationTokenValue = doc[nameof(InvitationTokenValue)].AsNullableString();
         InvitationTokenExpirationDateDay = doc[nameof(InvitationTokenExpirationDateDay)].AsNullableInt();
         InvitationTokenExpirationDateMonth = doc[nameof(InvitationTokenExpirationDateMonth)].AsNullableInt();
@@ -35,6 +40,8 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
         InvitationTokenExpirationDateHour = doc[nameof(InvitationTokenExpirationDateHour)].AsNullableInt();
         InvitationTokenExpirationDateMinute = doc[nameof(InvitationTokenExpirationDateMinute)].AsNullableInt();
         InvitationTokenExpirationDateSecond = doc[nameof(InvitationTokenExpirationDateSecond)].AsNullableInt();
+        UnknownSubcategoryId = doc[nameof(UnknownSubcategoryId)].AsNullableGuid();
+        BudgetMembersId = doc[nameof(BudgetMembersId)].AsArrayOfString();
     }
 
 
@@ -45,7 +52,7 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
         Id = budget.Id.Value;
         Name = budget.Name.Value;
         BaseCurrency = budget.BaseCurrency.Code;
-        UserIds = budget.UserIds;
+        BudgetMembers = budget.BudgetMembers.Select(BudgetMemberDataModel.FromDomainModel);
         InvitationTokenValue = budget.InvitationToken?.Value;
         (
             InvitationTokenExpirationDateDay,
@@ -63,6 +70,8 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
             invitationTokenExpirationDate?.Minute,
             invitationTokenExpirationDate?.Second
         );
+        UnknownSubcategoryId = budget.UnknownSubcategoryId?.Value;
+        BudgetMembersId = budget.BudgetMembers.Select(bm => bm.Id);
     }
 
     public static BudgetDataModel FromDomainModel(Domain.Budgets.Budget budget) => new(budget);
@@ -71,6 +80,8 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
 
     public Domain.Budgets.Budget ToDomainModel()
     {
+        object? invitationToken = null;
+
         var id = new BudgetId(Id);
 
         var name = Activator.CreateInstance(
@@ -111,7 +122,7 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
                 InvitationTokenExpirationDateSecond.Value
             );
 
-            var invitationToken = Activator.CreateInstance(
+            invitationToken = Activator.CreateInstance(
                                       typeof(BudgetInvitationToken),
                                       BindingFlags.Instance | BindingFlags.NonPublic,
                                       null,
@@ -126,11 +137,23 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
                                       typeof(BudgetDataModel));
         }
 
+        var budgetMembers = BudgetMembers.Select(bm => bm.ToDomainModel()).ToList();
+
+        var unkownSubcategoryId =
+            UnknownSubcategoryId is null ? null : new SubcategoryId(UnknownSubcategoryId.Value);
+
         return Activator.CreateInstance(
                    typeof(Domain.Budgets.Budget),
                    BindingFlags.Instance | BindingFlags.NonPublic,
                    null,
-                   [name, baseCurrency, UserIds.ToList(), id],
+                   [
+                       name,
+                       baseCurrency,
+                       budgetMembers,
+                       invitationToken,
+                       unkownSubcategoryId,
+                       id
+                   ],
                    null) as Domain.Budgets.Budget ??
                throw new DataModelConversionException(
                    typeof(BudgetDataModel),

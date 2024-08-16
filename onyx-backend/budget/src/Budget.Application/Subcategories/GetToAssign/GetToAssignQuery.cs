@@ -1,5 +1,5 @@
 ﻿using Abstractions.Messaging;
-using Budget.Application.Shared.Models;
+using Budget.Application.Contracts.Models;
 
 namespace Budget.Application.Subcategories.GetToAssign;
 

@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.IdentityManagement" Version="3.7.401" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.7.400.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
   </ItemGroup>
