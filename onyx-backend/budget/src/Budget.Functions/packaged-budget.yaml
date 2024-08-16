@@ -47,7 +47,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -72,7 +72,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -97,7 +97,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -122,7 +122,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -147,7 +147,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -172,7 +172,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -197,7 +197,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -222,7 +222,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -247,7 +247,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -272,7 +272,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -297,7 +297,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -322,7 +322,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -347,7 +347,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -372,7 +372,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -397,7 +397,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -422,7 +422,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -447,7 +447,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -472,7 +472,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -497,7 +497,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -522,7 +522,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -547,7 +547,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -572,7 +572,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -597,7 +597,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -622,7 +622,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -647,7 +647,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -672,7 +672,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -697,7 +697,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -722,7 +722,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -747,7 +747,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -772,7 +772,7 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/24be8611745750c66e6e91e334b7c02c
+      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008

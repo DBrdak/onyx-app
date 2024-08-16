@@ -94,7 +94,7 @@ internal sealed class SubcategoryDataModel : IDataModel<Subcategory>
                        typeof(SubcategoryDescription),
                        this);
 
-        var assignments = Assignments.Select(_ => ToDomainModel());
+        var assignments = Assignments.Select(a => a.ToDomainModel());
         Target? target = null;
 
         if (TargetCollectedAmount is not null &&

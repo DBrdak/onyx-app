@@ -19,11 +19,13 @@ public static class RequestAccessorInjector
         var authorizationToken = request.Headers.FirstOrDefault(kvp => kvp.Key.ToLower() == "authorization").Value?
             .Replace("Bearer ", string.Empty);
         var claims = authorizationToken is null ? [] : new JsonWebToken(authorizationToken).Claims;
+
         var path = request.RawPath;
         var method = request.RequestContext.Http.Method;
 
         requestAccessor.SetUp(authorizationToken, claims, path, method);
     }
+
     public static IServiceCollection InitRequestContextAccessor(this IServiceCollection services)
     {
         services.AddSingleton(new RequestAccessor());

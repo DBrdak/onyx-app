@@ -380,29 +380,6 @@ Resources:
             Path: /api/v1/{budgetId}/categories/{categoryId}
             Method: DELETE
             ApiId: !Ref BudgetApi
-  CounterpartiesGetAll:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-      SyncedEvents:
-        - RootGet
-    Properties:
-      Runtime: dotnet8
-      CodeUri: .
-      MemorySize: 3008
-      EphemeralStorage:
-        Size: 3008
-      Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
-      PackageType: Zip
-      Handler: Budget.Functions::Budget.Functions.Functions.Counterparties.CounterpartyFunctions_GetAll_Generated::GetAll
-      Events:
-        RootGet:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/{budgetId}/counterparties
-            Method: GET
-            ApiId: !Ref BudgetApi
   CounterpartiesAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -725,6 +702,26 @@ Resources:
             Path: /api/v1/{budgetId}/subcategories/{subcategoryId}/target/remove
             Method: PUT
             ApiId: !Ref BudgetApi
+  CounterpartiesGetAll:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootGet
+    Properties:
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 512
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Budget.Functions::Budget.Functions.Functions.Counterparties.CounterpartyFunctions_GetAll_Generated::GetAll
+      Events:
+        RootGet:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/{budgetId}/counterparties
+            Method: GET
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

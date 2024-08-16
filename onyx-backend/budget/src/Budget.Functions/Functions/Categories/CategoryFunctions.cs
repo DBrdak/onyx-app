@@ -1,4 +1,5 @@
-﻿using Amazon.Lambda.Annotations.APIGateway;
+﻿using Abstractions.Messaging;
+using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.Annotations;
 using Budget.Application.Categories.AddCategory;
 using Budget.Application.Categories.GetCategories;
@@ -8,7 +9,10 @@ using Budget.Functions.Functions.Categories.Requests;
 using Budget.Functions.Functions.Shared;
 using MediatR;
 using Amazon.Lambda.APIGatewayEvents;
+using Amazon.Lambda.Core;
 using LambdaKernel;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 
 namespace Budget.Functions.Functions.Categories;
@@ -18,7 +22,7 @@ public sealed class CategoryFunctions : BaseFunction
 {
     private const string categoriesBaseRoute = $"{BaseRouteV1}/{{budgetId}}/categories";
 
-    public CategoryFunctions(ISender sender) : base(sender)
+    public CategoryFunctions(ISender sender, IServiceProvider serviceProvider) : base(sender, serviceProvider)
     {
     }
 
@@ -26,9 +30,10 @@ public sealed class CategoryFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Get, categoriesBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetAll(
         string budgetId,
-        APIGatewayHttpApiV2ProxyRequest requestContext)
+        APIGatewayHttpApiV2ProxyRequest requestContext,
+        ILambdaContext lambdaContext)
     {
-        ServiceProvider?.AddRequestContextAccessor(requestContext);
+        ServiceProvider?.AddRequestContextAccessor(requestContext, lambdaContext);
 
         var query = new GetCategoriesQuery(Guid.Parse(budgetId));
 

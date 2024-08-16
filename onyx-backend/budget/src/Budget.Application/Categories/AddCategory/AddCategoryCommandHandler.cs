@@ -21,7 +21,6 @@ internal sealed class AddCategoryCommandHandler : ICommandHandler<AddCategoryCom
     // TODO: Add max categories validation (20 per budget (increased by 3 for each budget member))
     public async Task<Result<CategoryModel>> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
     {
-
         var budgetGetResult = await _budgetRepository.GetCurrentBudgetAsync(cancellationToken);
 
         if (budgetGetResult.IsFailure)
@@ -31,6 +30,22 @@ internal sealed class AddCategoryCommandHandler : ICommandHandler<AddCategoryCom
 
         var budget = budgetGetResult.Value;
 
+        var categoriesGetResult = await _categoryRepository.GetAllAsync(cancellationToken);
+
+        if (categoriesGetResult.IsFailure)
+        {
+            return categoriesGetResult.Error;
+        }
+
+        var categories = categoriesGetResult.Value.ToList();
+
+        var isMaxCategoriesCountReached = categories.Count >= budget.MaxCategories;
+
+        if (isMaxCategoriesCountReached)
+        {
+            return AddCategoryErrors.MaxCategoryNumberReached;
+        }
+        
         var categoryCreateResult = Category.Create(request.Name, new(request.BudgetId));
 
         if (categoryCreateResult.IsFailure)
@@ -39,22 +54,23 @@ internal sealed class AddCategoryCommandHandler : ICommandHandler<AddCategoryCom
         }
 
         var category = categoryCreateResult.Value;
-        var categoryIsNotUniqueResult = await _categoryRepository.GetByNameAsync(category.Name, cancellationToken);
 
-        if (categoryIsNotUniqueResult.IsSuccess)
+        var categoryIsNotUniqueResult = categories.Any(c => c.Name == category.Name);
+
+        if (categoryIsNotUniqueResult)
         {
-            return Result.Failure<CategoryModel>(AddCategoryErrors.CategoryAlreadyExistsError);
+            return AddCategoryErrors.CategoryAlreadyExistsError;
         }
 
         var categoryAddResult = await _categoryRepository.AddAsync(category, cancellationToken);
 
         if (categoryAddResult.IsFailure)
         {
-            return Result.Failure<CategoryModel>(categoryAddResult.Error);
+            return categoryAddResult.Error;
         }
 
         category = categoryAddResult.Value;
 
-        return CategoryModel.FromDomainModel(category, Array.Empty<Subcategory>());
+        return CategoryModel.FromDomainModel(category, []);
     }
 }

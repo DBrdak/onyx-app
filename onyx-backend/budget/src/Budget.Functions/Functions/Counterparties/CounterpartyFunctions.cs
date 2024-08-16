@@ -17,20 +17,24 @@ public sealed class CounterpartyFunctions : BaseFunction
 {
     private const string counterpartyBaseRoute = $"{BaseRouteV1}/{{budgetId}}/counterparties";
 
-    public CounterpartyFunctions(ISender sender) : base(sender)
+    public CounterpartyFunctions(
+        ISender sender,
+        IServiceProvider serviceProvider) : base(
+        sender,
+        serviceProvider)
     {
     }
 
     [LambdaFunction(Role = FullAccessRole, ResourceName = $"Counterparties{nameof(GetAll)}")]
     [HttpApi(LambdaHttpMethod.Get, counterpartyBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetAll(
-        Guid budgetId,
+        string budgetId,
         [FromQuery] string type,
         APIGatewayHttpApiV2ProxyRequest requestContext)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
-        var query = new GetCounterpartiesQuery(type, budgetId);
+        var query = new GetCounterpartiesQuery(type, Guid.Parse(budgetId));
 
         var result = await Sender.Send(query);
 
@@ -40,7 +44,7 @@ public sealed class CounterpartyFunctions : BaseFunction
     [LambdaFunction(Role = FullAccessRole, ResourceName = $"Counterparties{nameof(Add)}")]
     [HttpApi(LambdaHttpMethod.Post, counterpartyBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Add(
-        Guid budgetId,
+        string budgetId,
         [FromBody] AddCounterpartyRequest request,
         APIGatewayHttpApiV2ProxyRequest requestContext)
     {
@@ -49,7 +53,7 @@ public sealed class CounterpartyFunctions : BaseFunction
         var command = new AddCounterpartyCommand(
             request.CounterpartyType,
             request.CounterpartyName,
-            budgetId);
+            Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);
 

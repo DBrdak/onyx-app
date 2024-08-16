@@ -19,7 +19,7 @@ public sealed class AccountFunctions : BaseFunction
 {
     private const string accountsBaseRoute = $"{BaseRouteV1}/{{budgetId}}/accounts";
 
-    public AccountFunctions(ISender sender) : base(sender)
+    public AccountFunctions(ISender sender, IServiceProvider serviceProvider) : base(sender, serviceProvider)
     {
         
     }

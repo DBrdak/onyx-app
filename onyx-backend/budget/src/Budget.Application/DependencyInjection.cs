@@ -1,4 +1,5 @@
 ﻿using Budget.Application.Behaviors;
+using Budget.Application.Subcategories.Validator;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Budget.Application;
@@ -13,5 +14,7 @@ public static class DependencyInjection
                 config.RegisterServicesFromAssemblyContaining<ApplicationAssemblyReference>();
                 config.AddOpenBehavior(typeof(LoggingBehavior<,>));
             });
+
+        services.AddTransient<SubcategoryGlobalValidator>();
     }
 }

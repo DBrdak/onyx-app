@@ -16,7 +16,7 @@ public sealed class TransactionFunctions : BaseFunction
 {
     private const string transactionBaseRoute = $"{BaseRouteV1}/{{budgetId}}/transactions";
 
-    public TransactionFunctions(ISender sender) : base(sender)
+    public TransactionFunctions(ISender sender, IServiceProvider serviceProvider) : base(sender, serviceProvider)
     {
         
     }

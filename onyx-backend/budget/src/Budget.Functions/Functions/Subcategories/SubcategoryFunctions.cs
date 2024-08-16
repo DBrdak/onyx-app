@@ -19,7 +19,7 @@ public sealed class SubcategoryFunctions : BaseFunction
 {
     private const string subcategoryBaseRoute = $"{BaseRouteV1}/{{budgetId}}/subcategories";
 
-    public SubcategoryFunctions(ISender sender) : base(sender)
+    public SubcategoryFunctions(ISender sender, IServiceProvider serviceProvider) : base(sender, serviceProvider)
     {
 
     }
