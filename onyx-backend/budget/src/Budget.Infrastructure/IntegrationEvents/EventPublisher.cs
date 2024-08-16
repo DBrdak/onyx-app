@@ -1,9 +1,7 @@
-﻿using Amazon.IdentityManagement;
-using Amazon.SQS;
+﻿using Amazon.SQS;
 using Amazon.SQS.Model;
 using Budget.Application.Abstractions.IntegrationEvents;
 using Extensions.Http;
-using Models.Constants.AWS;
 using Models.Responses;
 using Newtonsoft.Json;
 

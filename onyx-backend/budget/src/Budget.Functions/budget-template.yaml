@@ -10,9 +10,19 @@ Resources:
     Type: AWS::Serverless::HttpApi
     Properties:
       CorsConfiguration:
-        AllowOrigins: "'*'"
-        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
-        AllowHeaders: "'Content-Type,Authorization'"
+        AllowOrigins:
+          - "http://localhost:5173"
+        AllowHeaders:
+          - authorization
+          - content-type
+          - host
+        AllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+        MaxAge: 600
+        AllowCredentials: true
       DefaultRouteSettings:
         DetailedMetricsEnabled: true
       Auth:
@@ -34,7 +44,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -45,6 +57,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/accounts
             Method: GET
+            ApiId: !Ref BudgetApi
   AccountsAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -54,7 +67,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -65,6 +80,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/accounts
             Method: POST
+            ApiId: !Ref BudgetApi
   AccountsUpdate:
     Type: AWS::Serverless::Function
     Metadata:
@@ -74,7 +90,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -85,6 +103,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/accounts/{accountId}
             Method: PUT
+            ApiId: !Ref BudgetApi
   AccountsRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -94,7 +113,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -105,6 +126,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/accounts/{accountId}
             Method: DELETE
+            ApiId: !Ref BudgetApi
   AccountsBulkAddTransactions:
     Type: AWS::Serverless::Function
     Metadata:
@@ -114,7 +136,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -125,6 +149,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/accounts/{accountId}/transactions/bulk
             Method: POST
+            ApiId: !Ref BudgetApi
   BudgetsGetAll:
     Type: AWS::Serverless::Function
     Metadata:
@@ -134,7 +159,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -145,6 +172,7 @@ Resources:
           Properties:
             Path: /api/v1/budgets
             Method: GET
+            ApiId: !Ref BudgetApi
   BudgetsGetInvitation:
     Type: AWS::Serverless::Function
     Metadata:
@@ -154,7 +182,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -165,6 +195,7 @@ Resources:
           Properties:
             Path: /api/v1/budgets/{budgetId}/invitation
             Method: PUT
+            ApiId: !Ref BudgetApi
   BudgetsAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -174,7 +205,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -185,6 +218,7 @@ Resources:
           Properties:
             Path: /api/v1/budgets
             Method: POST
+            ApiId: !Ref BudgetApi
   BudgetsRemoveUser:
     Type: AWS::Serverless::Function
     Metadata:
@@ -194,7 +228,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -205,6 +241,7 @@ Resources:
           Properties:
             Path: /api/v1/budgets/{budgetId}/remove/{userId}
             Method: PUT
+            ApiId: !Ref BudgetApi
   BudgetsJoin:
     Type: AWS::Serverless::Function
     Metadata:
@@ -214,7 +251,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -225,6 +264,7 @@ Resources:
           Properties:
             Path: /api/v1/budgets/{budgetId}/join/{token}
             Method: PUT
+            ApiId: !Ref BudgetApi
   BudgetsRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -234,7 +274,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -245,6 +287,7 @@ Resources:
           Properties:
             Path: /api/v1/budgets/{budgetId}
             Method: DELETE
+            ApiId: !Ref BudgetApi
   CategoriesGetAll:
     Type: AWS::Serverless::Function
     Metadata:
@@ -254,7 +297,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -265,6 +310,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/categories
             Method: GET
+            ApiId: !Ref BudgetApi
   CategoriesAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -274,7 +320,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -285,6 +333,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/categories
             Method: POST
+            ApiId: !Ref BudgetApi
   CategoriesUpdate:
     Type: AWS::Serverless::Function
     Metadata:
@@ -294,7 +343,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -305,6 +356,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/categories/{categoryId}
             Method: PUT
+            ApiId: !Ref BudgetApi
   CategoriesRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -314,7 +366,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -325,6 +379,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/categories/{categoryId}
             Method: DELETE
+            ApiId: !Ref BudgetApi
   CounterpartiesGetAll:
     Type: AWS::Serverless::Function
     Metadata:
@@ -334,7 +389,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -345,6 +402,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/counterparties
             Method: GET
+            ApiId: !Ref BudgetApi
   CounterpartiesAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -354,7 +412,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -365,6 +425,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/counterparties
             Method: POST
+            ApiId: !Ref BudgetApi
   CounterpartiesUpdate:
     Type: AWS::Serverless::Function
     Metadata:
@@ -374,7 +435,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -385,6 +448,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/counterparties/{counterpartyId}
             Method: PUT
+            ApiId: !Ref BudgetApi
   CounterpartiesRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -394,7 +458,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -405,6 +471,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/counterparties/{counterpartyId}
             Method: DELETE
+            ApiId: !Ref BudgetApi
   TransactionsGet:
     Type: AWS::Serverless::Function
     Metadata:
@@ -414,7 +481,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -425,6 +494,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/transactions
             Method: GET
+            ApiId: !Ref BudgetApi
   TransactionsAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -434,7 +504,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -445,6 +517,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/transactions
             Method: POST
+            ApiId: !Ref BudgetApi
   TransactionsRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -454,7 +527,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -465,6 +540,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/transactions/{transactionId}
             Method: DELETE
+            ApiId: !Ref BudgetApi
   TransactionsBulkRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -474,7 +550,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -485,6 +563,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/transactions/bulk
             Method: DELETE
+            ApiId: !Ref BudgetApi
   SubcategoriesGetToAssign:
     Type: AWS::Serverless::Function
     Metadata:
@@ -494,7 +573,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -505,6 +586,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/subcategories/to-assign
             Method: GET
+            ApiId: !Ref BudgetApi
   SubcategoriesAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -514,7 +596,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -525,6 +609,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/subcategories
             Method: POST
+            ApiId: !Ref BudgetApi
   SubcategoriesUpdate:
     Type: AWS::Serverless::Function
     Metadata:
@@ -534,7 +619,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -545,6 +632,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/subcategories/{subcategoryId}
             Method: PUT
+            ApiId: !Ref BudgetApi
   SubcategoriesRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -554,7 +642,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -565,6 +655,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/subcategories/{subcategoryId}
             Method: DELETE
+            ApiId: !Ref BudgetApi
   SubcategoriesUpdateAssignment:
     Type: AWS::Serverless::Function
     Metadata:
@@ -574,7 +665,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -585,6 +678,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/subcategories/{subcategoryId}/assignment
             Method: PUT
+            ApiId: !Ref BudgetApi
   SubcategoriesUpdateTarget:
     Type: AWS::Serverless::Function
     Metadata:
@@ -594,7 +688,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -605,6 +701,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/subcategories/{subcategoryId}/target
             Method: PUT
+            ApiId: !Ref BudgetApi
   SubcategoriesRemoveTarget:
     Type: AWS::Serverless::Function
     Metadata:
@@ -614,7 +711,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -625,6 +724,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/subcategories/{subcategoryId}/target/remove
             Method: PUT
+            ApiId: !Ref BudgetApi
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

@@ -25,21 +25,21 @@ internal sealed class UserContext : IUserContext
 
     public Result<string> GetUserId() =>
         _requestAccessor
-            .Claims
+            .Claims.ToList()
             .FirstOrDefault(claim => claim.Type == userIdClaimName)?
             .Value is var id && !string.IsNullOrEmpty(id) ?
             id : 
             _userIdClaimNotFound;
     public Result<string> GetUserUsername() =>
         _requestAccessor
-            .Claims
+            .Claims.ToList()
             .FirstOrDefault(claim => claim.Type == userUsernameClaimName)?
             .Value is var username && !string.IsNullOrEmpty(username) ?
             username : 
             _userIdClaimNotFound;
     public Result<string> GetUserEmail() =>
         _requestAccessor
-            .Claims
+            .Claims.ToList()
             .FirstOrDefault(claim => claim.Type == userEmailClaimName)?
             .Value is var email && !string.IsNullOrEmpty(email) ?
             email : 
@@ -47,7 +47,7 @@ internal sealed class UserContext : IUserContext
 
     public Result<string> GetUserCurrency() =>
         _requestAccessor
-            .Claims
+            .Claims.ToList()
             .FirstOrDefault(claim => claim.Type == userCurrencyClaimName)?
             .Value is var currency && !string.IsNullOrEmpty(currency) ?
             currency :

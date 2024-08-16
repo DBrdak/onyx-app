@@ -1,11 +1,11 @@
 ﻿using Abstractions.Messaging;
 using Budget.Application.Abstractions.Identity;
-using Budget.Application.Abstractions.IntegrationEvents;
 using Budget.Application.Budgets.Models;
 using Budget.Domain.Budgets;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Models.Responses;
+using Newtonsoft.Json;
 
 namespace Budget.Application.Budgets.AddBudget;
 
@@ -27,18 +27,24 @@ internal sealed class AddBudgetCommandHandler : ICommandHandler<AddBudgetCommand
         var (userIdGetResult, usernameGetResult, emailGetResult) = 
             (_userContext.GetUserId(), _userContext.GetUserUsername(), _userContext.GetUserEmail());
 
-        if (Result.Aggregate(
-                userIdGetResult,
-                usernameGetResult,
-                emailGetResult) is var result &&
-            result.IsFailure)
+        if (userIdGetResult.IsFailure)
         {
-            return result.Error;
+            return userIdGetResult.Error;
+        }
+
+        if (usernameGetResult.IsFailure)
+        {
+            return usernameGetResult.Error;
+        }
+
+        if (emailGetResult.IsFailure)
+        {
+            return emailGetResult.Error;
         }
 
         var userId = userIdGetResult.Value;
-        var username = userIdGetResult.Value;
-        var userEmail = userIdGetResult.Value;
+        var username = usernameGetResult.Value;
+        var userEmail = emailGetResult.Value;
 
         var budgetCreateResult = Domain.Budgets.Budget.Create(request.BudgetName, userId, username, userEmail, request.BudgetCurrency);
 
@@ -48,6 +54,7 @@ internal sealed class AddBudgetCommandHandler : ICommandHandler<AddBudgetCommand
         }
 
         var budget = budgetCreateResult.Value;
+
 
         var budgetAddResult = await _budgetRepository.AddAsync(budget, cancellationToken);
 

@@ -50,7 +50,7 @@ public sealed record UserRepresentationModel
             user.Email.Value,
             user.IsEmailVerified,
             user.Id.Value.ToString(),
-            user.Email.Value,
+            user.Username.Value,
             user.Currency.Code,
             ""/*string.Join(',', user.BudgetIds)*/);
 

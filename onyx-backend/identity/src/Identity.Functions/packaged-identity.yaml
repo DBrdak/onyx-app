@@ -11,9 +11,19 @@ Resources:
     Type: AWS::Serverless::HttpApi
     Properties:
       CorsConfiguration:
-        AllowOrigins: '''*'''
-        AllowMethods: '''GET,POST,PUT,DELETE,OPTIONS'''
-        AllowHeaders: '''Content-Type,Authorization'''
+        AllowOrigins:
+        - http://localhost:5173
+        AllowHeaders:
+        - authorization
+        - content-type
+        - host
+        AllowMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        MaxAge: 600
+        AllowCredentials: true
       DefaultRouteSettings:
         DetailedMetricsEnabled: true
       Auth:
@@ -31,19 +41,6 @@ Resources:
               - authorization
     Metadata:
       SamResourceId: IdentityApi
-  LambdaAuthorizer:
-    Type: AWS::Serverless::Function
-    Metadata:
-      SamResourceId: LambdaAuthorizer
-      Tool: Amazon.Lambda.Annotations
-    Properties:
-      Runtime: dotnet8
-      CodeUri: s3://onyx-default/6625d55fbc00ecd25775ab8312292a9b
-      MemorySize: 512
-      Timeout: 30
-      PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.Access.AccessFunction_FunctionHandler_Generated::FunctionHandler
-      Role: arn:aws:iam::975049887576:role/FullAccess
   Login:
     Type: AWS::Serverless::Function
     Metadata:
@@ -53,8 +50,10 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/6625d55fbc00ecd25775ab8312292a9b
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -78,8 +77,10 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/6625d55fbc00ecd25775ab8312292a9b
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -103,8 +104,10 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/6625d55fbc00ecd25775ab8312292a9b
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -128,8 +131,10 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/6625d55fbc00ecd25775ab8312292a9b
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -153,8 +158,10 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/6625d55fbc00ecd25775ab8312292a9b
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -178,8 +185,10 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/6625d55fbc00ecd25775ab8312292a9b
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -203,8 +212,10 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/6625d55fbc00ecd25775ab8312292a9b
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -228,8 +239,10 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/6625d55fbc00ecd25775ab8312292a9b
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -251,8 +264,10 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/6625d55fbc00ecd25775ab8312292a9b
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -274,8 +289,10 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/6625d55fbc00ecd25775ab8312292a9b
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -297,8 +314,10 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/6625d55fbc00ecd25775ab8312292a9b
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -320,8 +339,10 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/6625d55fbc00ecd25775ab8312292a9b
-      MemorySize: 512
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -334,6 +355,19 @@ Resources:
             Method: DELETE
             ApiId:
               Ref: IdentityApi
+  LambdaAuthorizer:
+    Type: AWS::Serverless::Function
+    Metadata:
+      SamResourceId: LambdaAuthorizer
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      Runtime: dotnet8
+      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      MemorySize: 512
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.Access.AccessFunction_FunctionHandler_Generated::FunctionHandler
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

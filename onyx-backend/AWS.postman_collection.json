@@ -19,10 +19,10 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"const token = pm.response.json().Value\r",
+											"const token = pm.response.json().value\r",
 											"\r",
-											"pm.environment.set(\"TOKEN\", token.AccessToken);\r",
-											"pm.environment.set(\"REFRESH_TOKEN\", token.LongLivedToken);"
+											"pm.collectionVariables.set(\"TOKEN\", token.accessToken);\r",
+											"pm.collectionVariables.set(\"REFRESH_TOKEN\", token.longLivedToken);"
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -72,10 +72,10 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"const token = pm.response.json().Value\r",
+											"const token = pm.response.json().value\r",
 											"\r",
-											"pm.environment.set(\"TOKEN\", token.AccessToken);\r",
-											"pm.environment.set(\"REFRESH_TOKEN\", token.LongLivedToken);"
+											"pm.collectionVariables.set(\"TOKEN\", token.accessToken);\r",
+											"pm.collectionVariables.set(\"REFRESH_TOKEN\", token.longLivedToken);"
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -84,8 +84,11 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"exec": [],
-										"type": "text/javascript"
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -151,10 +154,10 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"const token = pm.response.json().Value\r",
+											"const token = pm.response.json().value\r",
 											"\r",
-											"pm.environment.set(\"TOKEN\", token.AccessToken);\r",
-											"pm.environment.set(\"REFRESH_TOKEN\", token.LongLivedToken);"
+											"pm.collectionVariables.set(\"TOKEN\", token.accessToken);\r",
+											"pm.collectionVariables.set(\"REFRESH_TOKEN\", token.longLivedToken);"
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -163,8 +166,11 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"exec": [],
-										"type": "text/javascript"
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -230,10 +236,10 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"const token = pm.response.json().Value\r",
+											"const token = pm.response.json().value\r",
 											"\r",
-											"pm.environment.set(\"TOKEN\", token.AccessToken);\r",
-											"pm.environment.set(\"REFRESH_TOKEN\", token.LongLivedToken);"
+											"pm.collectionVariables.set(\"TOKEN\", token.accessToken);\r",
+											"pm.collectionVariables.set(\"REFRESH_TOKEN\", token.longLivedToken);"
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -242,8 +248,11 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"exec": [],
-										"type": "text/javascript"
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -280,10 +289,10 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"const token = pm.response.json().Value\r",
+											"const token = pm.response.json().value\r",
 											"\r",
-											"pm.environment.set(\"TOKEN\", token.AccessToken);\r",
-											"pm.environment.set(\"REFRESH_TOKEN\", token.LongLivedToken);"
+											"pm.collectionVariables.set(\"TOKEN\", token.accessToken);\r",
+											"pm.collectionVariables.set(\"REFRESH_TOKEN\", token.longLivedToken);"
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -292,8 +301,11 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"exec": [],
-										"type": "text/javascript"
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -441,13 +453,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/accounts",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/accounts",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"accounts"
 									],
@@ -477,13 +489,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts"
 											],
@@ -522,13 +534,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts"
 											],
@@ -567,13 +579,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts"
 											],
@@ -612,13 +624,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts"
 											],
@@ -668,13 +680,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/accounts",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/accounts",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"accounts"
 									],
@@ -718,13 +730,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts"
 											],
@@ -777,13 +789,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts"
 											],
@@ -836,13 +848,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts"
 											],
@@ -895,13 +907,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts"
 											],
@@ -951,13 +963,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/accounts/:accountId",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/accounts/:accountId",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"accounts",
 										":accountId"
@@ -1007,13 +1019,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts/:accountId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts/:accountId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts",
 												":accountId"
@@ -1070,13 +1082,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts/:accountId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts/:accountId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts",
 												":accountId"
@@ -1133,13 +1145,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts/:accountId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts/:accountId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts",
 												":accountId"
@@ -1196,13 +1208,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts/:accountId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts/:accountId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts",
 												":accountId"
@@ -1242,13 +1254,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/accounts/:accountId",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/accounts/:accountId",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"accounts",
 										":accountId"
@@ -1284,13 +1296,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts/:accountId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts/:accountId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts",
 												":accountId"
@@ -1333,13 +1345,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts/:accountId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts/:accountId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts",
 												":accountId"
@@ -1382,13 +1394,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts/:accountId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts/:accountId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts",
 												":accountId"
@@ -1431,13 +1443,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/accounts/:accountId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/accounts/:accountId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"accounts",
 												":accountId"
@@ -1481,13 +1493,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/accounts/:accountId/transactions/bulk",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/accounts/:accountId/transactions/bulk",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"accounts",
 										":accountId",
@@ -1524,13 +1536,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/categories",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/categories",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"categories"
 									],
@@ -1560,13 +1572,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories"
 											],
@@ -1605,13 +1617,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories"
 											],
@@ -1650,13 +1662,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories"
 											],
@@ -1695,13 +1707,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories"
 											],
@@ -1751,13 +1763,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/categories",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/categories",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"categories"
 									],
@@ -1801,13 +1813,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories"
 											],
@@ -1860,13 +1872,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories"
 											],
@@ -1919,13 +1931,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories"
 											],
@@ -1978,13 +1990,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories"
 											],
@@ -2034,13 +2046,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/categories/:categoryId",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/categories/:categoryId",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"categories",
 										":categoryId"
@@ -2090,13 +2102,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories/:categoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories/:categoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories",
 												":categoryId"
@@ -2153,13 +2165,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories/:categoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories/:categoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories",
 												":categoryId"
@@ -2216,13 +2228,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories/:categoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories/:categoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories",
 												":categoryId"
@@ -2279,13 +2291,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories/:categoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories/:categoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories",
 												":categoryId"
@@ -2325,13 +2337,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/categories/:categoryId",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/categories/:categoryId",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"categories",
 										":categoryId"
@@ -2367,13 +2379,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories/:categoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories/:categoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories",
 												":categoryId"
@@ -2416,13 +2428,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories/:categoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories/:categoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories",
 												":categoryId"
@@ -2465,13 +2477,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories/:categoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories/:categoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories",
 												":categoryId"
@@ -2514,13 +2526,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/categories/:categoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/categories/:categoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"categories",
 												":categoryId"
@@ -2565,13 +2577,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/counterparties?type=<string>",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/counterparties?type=<string>",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"counterparties"
 									],
@@ -2607,13 +2619,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties?type=<string>",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties?type=<string>",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties"
 											],
@@ -2658,13 +2670,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties?type=<string>",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties?type=<string>",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties"
 											],
@@ -2709,13 +2721,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties?type=<string>",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties?type=<string>",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties"
 											],
@@ -2760,13 +2772,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties?type=<string>",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties?type=<string>",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties"
 											],
@@ -2822,13 +2834,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/counterparties",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/counterparties",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"counterparties"
 									],
@@ -2872,13 +2884,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties"
 											],
@@ -2931,13 +2943,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties"
 											],
@@ -2990,13 +3002,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties"
 											],
@@ -3049,13 +3061,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties"
 											],
@@ -3105,13 +3117,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/counterparties/:counterpartyId",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/counterparties/:counterpartyId",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"counterparties",
 										":counterpartyId"
@@ -3161,13 +3173,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties/:counterpartyId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties/:counterpartyId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties",
 												":counterpartyId"
@@ -3224,13 +3236,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties/:counterpartyId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties/:counterpartyId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties",
 												":counterpartyId"
@@ -3287,13 +3299,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties/:counterpartyId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties/:counterpartyId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties",
 												":counterpartyId"
@@ -3350,13 +3362,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties/:counterpartyId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties/:counterpartyId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties",
 												":counterpartyId"
@@ -3396,13 +3408,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/counterparties/:counterpartyId",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/counterparties/:counterpartyId",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"counterparties",
 										":counterpartyId"
@@ -3438,13 +3450,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties/:counterpartyId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties/:counterpartyId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties",
 												":counterpartyId"
@@ -3487,13 +3499,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties/:counterpartyId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties/:counterpartyId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties",
 												":counterpartyId"
@@ -3536,13 +3548,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties/:counterpartyId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties/:counterpartyId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties",
 												":counterpartyId"
@@ -3585,13 +3597,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/counterparties/:counterpartyId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/counterparties/:counterpartyId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"counterparties",
 												":counterpartyId"
@@ -3650,13 +3662,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/subcategories",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/subcategories",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"subcategories"
 									],
@@ -3700,13 +3712,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories"
 											],
@@ -3759,13 +3771,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories"
 											],
@@ -3818,13 +3830,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories"
 											],
@@ -3877,13 +3889,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories"
 											],
@@ -3919,13 +3931,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/subcategories/to-assign?month=<integer>&year=<integer>",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/subcategories/to-assign?month=<integer>&year=<integer>",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"subcategories",
 										"to-assign"
@@ -3966,13 +3978,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/to-assign?month=<integer>&year=<integer>",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/to-assign?month=<integer>&year=<integer>",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												"to-assign"
@@ -4022,13 +4034,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/to-assign?month=<integer>&year=<integer>",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/to-assign?month=<integer>&year=<integer>",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												"to-assign"
@@ -4078,13 +4090,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/to-assign?month=<integer>&year=<integer>",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/to-assign?month=<integer>&year=<integer>",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												"to-assign"
@@ -4134,13 +4146,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/to-assign?month=<integer>&year=<integer>",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/to-assign?month=<integer>&year=<integer>",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												"to-assign"
@@ -4201,13 +4213,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/subcategories/:subcategoryId",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/subcategories/:subcategoryId",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"subcategories",
 										":subcategoryId"
@@ -4257,13 +4269,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId"
@@ -4320,13 +4332,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId"
@@ -4383,13 +4395,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId"
@@ -4446,13 +4458,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId"
@@ -4506,13 +4518,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/subcategories/:subcategoryId/assignment",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/subcategories/:subcategoryId/assignment",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"subcategories",
 										":subcategoryId",
@@ -4563,13 +4575,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/assignment",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/assignment",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -4627,13 +4639,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/assignment",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/assignment",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -4691,13 +4703,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/assignment",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/assignment",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -4755,13 +4767,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/assignment",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/assignment",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -4816,13 +4828,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/subcategories/:subcategoryId/assignment/remove",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/subcategories/:subcategoryId/assignment/remove",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"subcategories",
 										":subcategoryId",
@@ -4874,13 +4886,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/assignment/remove",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/assignment/remove",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -4939,13 +4951,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/assignment/remove",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/assignment/remove",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -5004,13 +5016,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/assignment/remove",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/assignment/remove",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -5069,13 +5081,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/assignment/remove",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/assignment/remove",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -5131,13 +5143,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/subcategories/:subcategoryId/target",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/subcategories/:subcategoryId/target",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"subcategories",
 										":subcategoryId",
@@ -5188,13 +5200,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/target",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/target",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -5252,13 +5264,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/target",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/target",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -5316,13 +5328,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/target",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/target",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -5380,13 +5392,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/target",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/target",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -5427,13 +5439,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/subcategories/:subcategoryId/target/remove",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/subcategories/:subcategoryId/target/remove",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"subcategories",
 										":subcategoryId",
@@ -5471,13 +5483,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/target/remove",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/target/remove",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -5522,13 +5534,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/target/remove",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/target/remove",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -5573,13 +5585,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/target/remove",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/target/remove",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -5624,13 +5636,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId/target/remove",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId/target/remove",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId",
@@ -5672,13 +5684,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/subcategories/:subcategoryId",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/subcategories/:subcategoryId",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"subcategories",
 										":subcategoryId"
@@ -5714,13 +5726,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId"
@@ -5763,13 +5775,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId"
@@ -5812,13 +5824,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId"
@@ -5861,13 +5873,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/subcategories/:subcategoryId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/subcategories/:subcategoryId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"subcategories",
 												":subcategoryId"
@@ -5912,13 +5924,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/transactions?counterpartyId=<uuid>&accountId=<uuid>&subcategoryId=<uuid>",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/transactions?counterpartyId=<uuid>&accountId=<uuid>&subcategoryId=<uuid>",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"transactions"
 									],
@@ -5962,13 +5974,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/transactions?counterpartyId=<uuid>&accountId=<uuid>&subcategoryId=<uuid>",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/transactions?counterpartyId=<uuid>&accountId=<uuid>&subcategoryId=<uuid>",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"transactions"
 											],
@@ -6021,13 +6033,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/transactions?counterpartyId=<uuid>&accountId=<uuid>&subcategoryId=<uuid>",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/transactions?counterpartyId=<uuid>&accountId=<uuid>&subcategoryId=<uuid>",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"transactions"
 											],
@@ -6080,13 +6092,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/transactions?counterpartyId=<uuid>&accountId=<uuid>&subcategoryId=<uuid>",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/transactions?counterpartyId=<uuid>&accountId=<uuid>&subcategoryId=<uuid>",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"transactions"
 											],
@@ -6139,13 +6151,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/transactions?counterpartyId=<uuid>&accountId=<uuid>&subcategoryId=<uuid>",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/transactions?counterpartyId=<uuid>&accountId=<uuid>&subcategoryId=<uuid>",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"transactions"
 											],
@@ -6209,13 +6221,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/transactions",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/transactions",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"transactions"
 									],
@@ -6259,13 +6271,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/transactions",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/transactions",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"transactions"
 											],
@@ -6318,13 +6330,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/transactions",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/transactions",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"transactions"
 											],
@@ -6377,13 +6389,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/transactions",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/transactions",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"transactions"
 											],
@@ -6436,13 +6448,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/transactions",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/transactions",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"transactions"
 											],
@@ -6719,13 +6731,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/:budgetId/transactions/:transactionId",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/transactions/:transactionId",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										":budgetId",
 										"transactions",
 										":transactionId"
@@ -6761,13 +6773,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/transactions/:transactionId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/transactions/:transactionId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"transactions",
 												":transactionId"
@@ -6810,13 +6822,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/transactions/:transactionId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/transactions/:transactionId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"transactions",
 												":transactionId"
@@ -6859,13 +6871,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/transactions/:transactionId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/transactions/:transactionId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"transactions",
 												":transactionId"
@@ -6908,13 +6920,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/:budgetId/transactions/:transactionId",
+											"raw": "{{baseUrl}}/api/v1/:budgetId/transactions/:transactionId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												":budgetId",
 												"transactions",
 												":transactionId"
@@ -6959,13 +6971,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/budgets",
+									"raw": "{{BUDGET_URL}}/api/v1/budgets",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										"budgets"
 									]
 								}
@@ -6987,13 +6999,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/budgets",
+											"raw": "{{baseUrl}}/api/v1/budgets",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets"
 											]
 										}
@@ -7026,13 +7038,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/budgets",
+											"raw": "{{baseUrl}}/api/v1/budgets",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets"
 											]
 										}
@@ -7065,13 +7077,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/budgets",
+											"raw": "{{baseUrl}}/api/v1/budgets",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets"
 											]
 										}
@@ -7104,13 +7116,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/budgets",
+											"raw": "{{baseUrl}}/api/v1/budgets",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets"
 											]
 										}
@@ -7154,13 +7166,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/budgets",
+									"raw": "{{BUDGET_URL}}/api/v1/budgets",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										"budgets"
 									]
 								}
@@ -7196,13 +7208,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/budgets",
+											"raw": "{{baseUrl}}/api/v1/budgets",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets"
 											]
 										}
@@ -7249,13 +7261,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/budgets",
+											"raw": "{{baseUrl}}/api/v1/budgets",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets"
 											]
 										}
@@ -7302,13 +7314,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/budgets",
+											"raw": "{{baseUrl}}/api/v1/budgets",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets"
 											]
 										}
@@ -7348,13 +7360,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/budgets/:budgetId/invitation",
+									"raw": "{{BUDGET_URL}}/api/v1/budgets/:budgetId/invitation",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										"budgets",
 										":budgetId",
 										"invitation"
@@ -7399,13 +7411,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],
@@ -7458,13 +7470,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],
@@ -7517,13 +7529,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],
@@ -7576,13 +7588,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],
@@ -7632,13 +7644,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/budgets/:budgetId/join/:token",
+									"raw": "{{BUDGET_URL}}/api/v1/budgets/:budgetId/join/:token",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										"budgets",
 										":budgetId",
 										"join",
@@ -7689,13 +7701,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],
@@ -7748,13 +7760,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],
@@ -7807,13 +7819,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],
@@ -7866,13 +7878,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],
@@ -7922,13 +7934,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/budgets/:budgetId/remove/:userId",
+									"raw": "{{BUDGET_URL}}/api/v1/budgets/:budgetId/remove/:userId",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										"budgets",
 										":budgetId",
 										"remove",
@@ -7979,13 +7991,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],
@@ -8038,13 +8050,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],
@@ -8097,13 +8109,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],
@@ -8156,13 +8168,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],
@@ -8198,13 +8210,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/budgets/:budgetId",
+									"raw": "{{BUDGET_URL}}/api/v1/budgets/:budgetId",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
 									"path": [
-										
-										
+										"api",
+										"v1",
 										"budgets",
 										":budgetId"
 									],
@@ -8234,13 +8246,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],
@@ -8279,13 +8291,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],
@@ -8324,13 +8336,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],
@@ -8369,13 +8381,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/budgets/:budgetId",
+											"raw": "{{baseUrl}}/api/v1/budgets/:budgetId",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												
-												
+												"api",
+												"v1",
 												"budgets",
 												":budgetId"
 											],

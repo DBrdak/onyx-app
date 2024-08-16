@@ -32,6 +32,10 @@ internal sealed class BudgetCreatedDomainEventHandler : IDomainEventHandler<Budg
         var initialSubcategory = initialCategory.NewSubcategory(initSubcategoryName).Value;
         budget.Setup(initialCategory, initialSubcategory);
 
+        await _categoryRepository.AddAsync(initialCategory, cancellationToken);
+        await _subcategoryRepository.AddAsync(initialSubcategory, cancellationToken);
+        await _budgetRepository.UpdateAsync(budget, cancellationToken);
+
         await Task.WhenAll(
         [
             _categoryRepository.AddAsync(initialCategory, cancellationToken),

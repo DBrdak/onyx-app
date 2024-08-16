@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Amazon.DynamoDBv2.DocumentModel;
 using Budget.Domain.Budgets;
+using Budget.Domain.Subcategories;
 using Models.DataTypes;
 using SharedDAL.DataModels;
 using SharedDAL.DataModels.Abstractions;
@@ -26,11 +27,11 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
 
     private BudgetDataModel(Document doc)
     {
-        Id = doc[nameof(Id)].AsGuid();
+        Id = Guid.Parse(doc[nameof(Id)].AsString());
         Name = doc[nameof(Name)];
         BaseCurrency = doc[nameof(BaseCurrency)];
         BudgetMembers = doc[nameof(BudgetMembers)]
-            .AsArrayOfDynamoDBEntry()
+            .AsDynamoDBList().Entries
             .Select(entry => BudgetMemberDataModel.FromDocument(entry.AsDocument()));
         InvitationTokenValue = doc[nameof(InvitationTokenValue)].AsNullableString();
         InvitationTokenExpirationDateDay = doc[nameof(InvitationTokenExpirationDateDay)].AsNullableInt();
@@ -136,13 +137,23 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
                                       typeof(BudgetDataModel));
         }
 
-        var budgetMembers = BudgetMembers.Select(bm => bm.ToDomainModel());
+        var budgetMembers = BudgetMembers.Select(bm => bm.ToDomainModel()).ToList();
+
+        var unkownSubcategoryId =
+            UnknownSubcategoryId is null ? null : new SubcategoryId(UnknownSubcategoryId.Value);
 
         return Activator.CreateInstance(
                    typeof(Domain.Budgets.Budget),
                    BindingFlags.Instance | BindingFlags.NonPublic,
                    null,
-                   [name, baseCurrency, budgetMembers, invitationToken, UnknownSubcategoryId, id],
+                   [
+                       name,
+                       baseCurrency,
+                       budgetMembers,
+                       invitationToken,
+                       unkownSubcategoryId,
+                       id
+                   ],
                    null) as Domain.Budgets.Budget ??
                throw new DataModelConversionException(
                    typeof(BudgetDataModel),

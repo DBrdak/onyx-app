@@ -10,9 +10,19 @@ Resources:
     Type: AWS::Serverless::HttpApi
     Properties:
       CorsConfiguration:
-        AllowOrigins: "'*'"
-        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
-        AllowHeaders: "'Content-Type,Authorization'"
+        AllowOrigins:
+          - "http://localhost:5173"
+        AllowHeaders:
+          - authorization
+          - content-type
+          - host
+        AllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+        MaxAge: 600
+        AllowCredentials: true
       DefaultRouteSettings:
         DetailedMetricsEnabled: true
       Auth:
@@ -25,18 +35,6 @@ Resources:
             Identity:
               Headers:
                 - authorization
-  LambdaAuthorizer:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-    Properties:
-      Runtime: dotnet8
-      CodeUri: .
-      MemorySize: 512
-      Timeout: 30
-      PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.Access.AccessFunction_FunctionHandler_Generated::FunctionHandler
-      Role: arn:aws:iam::975049887576:role/FullAccess
   Login:
     Type: AWS::Serverless::Function
     Metadata:
@@ -46,7 +44,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -69,7 +69,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -92,7 +94,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -115,7 +119,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -138,7 +144,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -161,7 +169,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -184,7 +194,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -207,7 +219,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -228,7 +242,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -249,7 +265,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -270,7 +288,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -291,7 +311,9 @@ Resources:
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Role: arn:aws:iam::975049887576:role/FullAccess
       PackageType: Zip
@@ -303,6 +325,18 @@ Resources:
             Path: /api/v1/user/remove
             Method: DELETE
             ApiId: !Ref IdentityApi
+  LambdaAuthorizer:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 512
+      Timeout: 30
+      Role: arn:aws:iam::975049887576:role/FullAccess
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.Access.AccessFunction_FunctionHandler_Generated::FunctionHandler
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment
