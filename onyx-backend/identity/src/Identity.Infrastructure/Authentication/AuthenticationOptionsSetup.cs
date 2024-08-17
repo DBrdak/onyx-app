@@ -1,6 +1,6 @@
-﻿using Identity.Infrastructure.SecretsManager;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using SharedDAL.SecretsManager;
 
 namespace Identity.Infrastructure.Authentication;
 

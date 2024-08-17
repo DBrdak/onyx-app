@@ -75,13 +75,6 @@ internal sealed class ResendEmailCommandHandler : ICommandHandler<ResendEmailCom
             return sendResult.Error;
         }
 
-        var userUpdateResult = await _userRepository.UpdateAsync(user, cancellationToken);
-
-        if (userUpdateResult.IsFailure)
-        {
-            return userUpdateResult.Error;
-        }
-
-        return Result.Success();
+        return await _userRepository.UpdateAsync(user, cancellationToken);
     }
 }

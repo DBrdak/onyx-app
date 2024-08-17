@@ -28,7 +28,7 @@ public sealed record VerificationCode
 
         return new VerificationCode(
             codeBuilder.ToString(),
-            DateTime.UtcNow.AddMinutes(5));
+            DateTime.UtcNow.AddMinutes(60));
     }
 
     internal bool Verify(string code)

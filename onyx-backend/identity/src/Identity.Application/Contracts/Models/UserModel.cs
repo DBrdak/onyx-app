@@ -8,17 +8,19 @@ public sealed record UserModel
     public string Email { get; init; }
     public string Username { get; init; }
     public string Currency { get; init; }
+    public bool IsEmailVerified { get; init; }
     public AuthorizationToken? AuthorizationToken { get; init; }
 
     [JsonConstructor]
     [System.Text.Json.Serialization.JsonConstructor]
-    private UserModel(Guid id, string email, string username, string currency, AuthorizationToken? authorizationToken)
+    private UserModel(Guid id, string email, string username, string currency, bool isEmailVerified, AuthorizationToken? authorizationToken)
     {
         Id = id;
         Email = email;
         Username = username;
         Currency = currency;
         AuthorizationToken = authorizationToken;
+        IsEmailVerified = isEmailVerified;
     }
 
     public static UserModel FromDomainModel(Domain.User domainModel, AuthorizationToken? authorizationToken = null) =>
@@ -27,5 +29,6 @@ public sealed record UserModel
             domainModel.Email.Value,
             domainModel.Username.Value,
             domainModel.Currency.Code,
+            domainModel.IsEmailVerified,
             authorizationToken);
 }

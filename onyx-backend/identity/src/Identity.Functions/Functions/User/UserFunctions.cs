@@ -20,7 +20,7 @@ public sealed class UserFunctions : BaseFunction
     public UserFunctions(ISender sender, IServiceProvider serviceProvider) : base(sender, serviceProvider)
     { }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(GetUser))]
+    [LambdaFunction(ResourceName = nameof(GetUser))]
     [HttpApi(LambdaHttpMethod.Get, $"{usersBaseRoute}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetUser(APIGatewayHttpApiV2ProxyRequest requestContext)
     {
@@ -33,7 +33,7 @@ public sealed class UserFunctions : BaseFunction
         return result.ReturnAPIResponse(200, 404);
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(UpdateUser))]
+    [LambdaFunction(ResourceName = nameof(UpdateUser))]
     [HttpApi(LambdaHttpMethod.Put, $"{usersBaseRoute}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> UpdateUser(
         [FromBody] UpdateUserRequest request,
@@ -52,7 +52,7 @@ public sealed class UserFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(RequestEmailChange))]
+    [LambdaFunction(ResourceName = nameof(RequestEmailChange))]
     [HttpApi(LambdaHttpMethod.Put, $"{usersBaseRoute}/change-email")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> RequestEmailChange(APIGatewayHttpApiV2ProxyRequest requestContext)
     {
@@ -65,7 +65,7 @@ public sealed class UserFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(Logout))]
+    [LambdaFunction(ResourceName = nameof(Logout))]
     [HttpApi(LambdaHttpMethod.Put, $"{usersBaseRoute}/logout")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Logout(APIGatewayHttpApiV2ProxyRequest requestContext)
     {
@@ -78,7 +78,7 @@ public sealed class UserFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(RemoveUser))]
+    [LambdaFunction(ResourceName = nameof(RemoveUser))]
     [HttpApi(LambdaHttpMethod.Delete, $"{usersBaseRoute}/remove")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> RemoveUser(
         [FromBody] RemoveUserRequest request,

@@ -17,30 +17,34 @@ public sealed class CounterpartyFunctions : BaseFunction
 {
     private const string counterpartyBaseRoute = $"{BaseRouteV1}/{{budgetId}}/counterparties";
 
-    public CounterpartyFunctions(ISender sender) : base(sender)
+    public CounterpartyFunctions(
+        ISender sender,
+        IServiceProvider serviceProvider) : base(
+        sender,
+        serviceProvider)
     {
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Counterparties{nameof(GetAll)}")]
+    [LambdaFunction(ResourceName = $"Counterparties{nameof(GetAll)}")]
     [HttpApi(LambdaHttpMethod.Get, counterpartyBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetAll(
-        Guid budgetId,
+        string budgetId,
         [FromQuery] string type,
         APIGatewayHttpApiV2ProxyRequest requestContext)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
-        var query = new GetCounterpartiesQuery(type, budgetId);
+        var query = new GetCounterpartiesQuery(type, Guid.Parse(budgetId));
 
         var result = await Sender.Send(query);
 
         return result.ReturnAPIResponse(200, 404);
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Counterparties{nameof(Add)}")]
+    [LambdaFunction(ResourceName = $"Counterparties{nameof(Add)}")]
     [HttpApi(LambdaHttpMethod.Post, counterpartyBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Add(
-        Guid budgetId,
+        string budgetId,
         [FromBody] AddCounterpartyRequest request,
         APIGatewayHttpApiV2ProxyRequest requestContext)
     {
@@ -49,14 +53,14 @@ public sealed class CounterpartyFunctions : BaseFunction
         var command = new AddCounterpartyCommand(
             request.CounterpartyType,
             request.CounterpartyName,
-            budgetId);
+            Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);
 
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Counterparties{nameof(Update)}")]
+    [LambdaFunction(ResourceName = $"Counterparties{nameof(Update)}")]
     [HttpApi(LambdaHttpMethod.Put, $"{counterpartyBaseRoute}/{{counterpartyId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Update(
         string budgetId,
@@ -76,7 +80,7 @@ public sealed class CounterpartyFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Counterparties{nameof(Remove)}")]
+    [LambdaFunction(ResourceName = $"Counterparties{nameof(Remove)}")]
     [HttpApi(LambdaHttpMethod.Delete, $"{counterpartyBaseRoute}/{{counterpartyId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Remove(
         string budgetId,

@@ -19,12 +19,12 @@ public sealed class AccountFunctions : BaseFunction
 {
     private const string accountsBaseRoute = $"{BaseRouteV1}/{{budgetId}}/accounts";
 
-    public AccountFunctions(ISender sender) : base(sender)
+    public AccountFunctions(ISender sender, IServiceProvider serviceProvider) : base(sender, serviceProvider)
     {
         
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Accounts{nameof(GetAll)}")]
+    [LambdaFunction(ResourceName = $"Accounts{nameof(GetAll)}")]
     [HttpApi(LambdaHttpMethod.Get, accountsBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetAll(
         string budgetId,
@@ -39,7 +39,7 @@ public sealed class AccountFunctions : BaseFunction
         return result.ReturnAPIResponse(200, 404);
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Accounts{nameof(Add)}")]
+    [LambdaFunction(ResourceName = $"Accounts{nameof(Add)}")]
     [HttpApi(LambdaHttpMethod.Post, accountsBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Add(
         string budgetId,
@@ -55,7 +55,7 @@ public sealed class AccountFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Accounts{nameof(Update)}")]
+    [LambdaFunction(ResourceName = $"Accounts{nameof(Update)}")]
     [HttpApi(LambdaHttpMethod.Put, $"{accountsBaseRoute}/{{accountId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Update(
         string budgetId,
@@ -72,7 +72,7 @@ public sealed class AccountFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Accounts{nameof(Remove)}")]
+    [LambdaFunction(ResourceName = $"Accounts{nameof(Remove)}")]
     [HttpApi(LambdaHttpMethod.Delete, $"{accountsBaseRoute}/{{accountId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Remove(
         string budgetId,
@@ -88,7 +88,7 @@ public sealed class AccountFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Accounts{nameof(BulkAddTransactions)}")]
+    [LambdaFunction(ResourceName = $"Accounts{nameof(BulkAddTransactions)}")]
     [HttpApi(LambdaHttpMethod.Post, $"{accountsBaseRoute}/{{accountId}}/transactions/bulk")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> BulkAddTransactions(
         string budgetId,

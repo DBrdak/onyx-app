@@ -11,24 +11,24 @@ internal sealed class EmailWriter
         _username = username;
     }
 
-    internal (string recipient, string subject, string htmlBody, string plainTextBody) WriteEmailVerification(string code)
+    internal (string recipient, string subject, string htmlBody) WriteEmailVerification(string code)
     {
-        var (subject, htmlBody, plainTextBody) = EmailTemplates.EmailVerificationBodyTemplate(code, _username);
+        var (subject, htmlBody) = EmailTemplates.EmailVerificationBodyTemplate(code, _username);
 
-        return (_recipientEmail, subject, htmlBody, plainTextBody);
+        return (_recipientEmail, subject, htmlBody);
     }
 
-    internal (string recipient, string subject, string htmlBody, string plainTextBody) WriteForgotPassword(string code)
+    internal (string recipient, string subject, string htmlBody) WriteForgotPassword(string code)
     {
-        var (subject, htmlBody, plainTextBody) = EmailTemplates.ForgotPasswordBodyTemplate(code);
+        var (subject, htmlBody) = EmailTemplates.ForgotPasswordBodyTemplate(code, _username);
 
-        return (_recipientEmail, subject, htmlBody, plainTextBody);
+        return (_recipientEmail, subject, htmlBody);
     }
 
-    internal (string recipient, string subject, string htmlBody, string plainTextBody) WriteChangeEmail(string code)
+    internal (string recipient, string subject, string htmlBody) WriteChangeEmail(string code)
     {
-        var (subject, htmlBody, plainTextBody) = EmailTemplates.EmailChangeBodyTemplate(code, _username);
+        var (subject, htmlBody) = EmailTemplates.EmailChangeBodyTemplate(code, _username);
 
-        return (_recipientEmail, subject, htmlBody, plainTextBody);
+        return (_recipientEmail, subject, htmlBody);
     }
 }

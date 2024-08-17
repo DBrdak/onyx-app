@@ -54,6 +54,8 @@ public class Result
         throw new InvalidCastException($"Cannot convert result of type {typeof(TValue).Name} to void result");
 
     public static Result Aggregate(params Result[] results) => Aggregate(results);
+
+    public static Result FromBool(bool value, Error callbackError) => value ? Success() : callbackError;
 }
 
 public class Result<TValue> : Result

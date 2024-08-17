@@ -6,6 +6,9 @@ Parameters:
   SendEmailTopicArn:
     Type: String
     Description: ARN of the Send Email topic
+  FullAccessRoleArn:
+    Type: String
+    Description: ARN of the FullAccess IAM role
 Resources:
   IdentityApi:
     Type: AWS::Serverless::HttpApi
@@ -49,13 +52,15 @@ Resources:
       - RootPost
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: Login
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_Login_Generated::Login
       Events:
@@ -76,13 +81,15 @@ Resources:
       - RootPost
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: Register
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_Register_Generated::Register
       Events:
@@ -103,13 +110,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: VerifyEmail
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_VerifyEmail_Generated::VerifyEmail
       Events:
@@ -130,13 +139,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: ResendEmail
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_ResendEmail_Generated::ResendEmail
       Events:
@@ -157,13 +168,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: Refresh
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_Refresh_Generated::Refresh
       Events:
@@ -184,13 +197,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: ForgotPassword
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_ForgotPassword_Generated::ForgotPassword
       Events:
@@ -211,13 +226,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: NewPassword
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_NewPassword_Generated::NewPassword
       Events:
@@ -238,13 +255,15 @@ Resources:
       - RootGet
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: GetUser
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_GetUser_Generated::GetUser
       Events:
@@ -263,13 +282,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: UpdateUser
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_UpdateUser_Generated::UpdateUser
       Events:
@@ -288,13 +309,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: RequestEmailChange
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RequestEmailChange_Generated::RequestEmailChange
       Events:
@@ -313,13 +336,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: Logout
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_Logout_Generated::Logout
       Events:
@@ -338,13 +363,15 @@ Resources:
       - RootDelete
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: RemoveUser
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
+      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RemoveUser_Generated::RemoveUser
       Events:
@@ -361,11 +388,15 @@ Resources:
       SamResourceId: LambdaAuthorizer
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: LambdaAuthorizer
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/16f6552c076f6c2223930964e145c7e2
-      MemorySize: 512
+      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Access.AccessFunction_FunctionHandler_Generated::FunctionHandler
 Outputs:

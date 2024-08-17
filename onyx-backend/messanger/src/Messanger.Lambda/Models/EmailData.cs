@@ -1,28 +1,47 @@
-﻿using Amazon.Lambda.SNSEvents;
+﻿using System.Text.Json.Serialization;
+using Amazon.Lambda.SNSEvents;
 
 namespace Messanger.Lambda.Models;
 
 public sealed record EmailData
 {
-    public string Recipient { get; init; }
-    public string Subject { get; init; }
-    public string HtmlBody { get; init; }
-    public string PlainTextBody { get; init; }
+    private const string baseSender = "Onyx <notify@onyxapp.tech>";
 
-    private EmailData(string recipient, string subject, string htmlBody, string plainTextBody)
+    [JsonPropertyName("from")]
+    public string From { get; init; }
+    [JsonPropertyName("to")]
+    public string[] To { get; init; }
+    [JsonPropertyName("subject")]
+    public string Subject { get; init; }
+    [JsonPropertyName("html")]
+    public string Html { get; init; }
+
+    private const string toMapName = "Recipient";
+    private const string subjectMapName = "Subject";
+    private const string htmlMapName = "HtmlBody";
+
+    private EmailData(string[] to, string subject, string html)
     {
-        Recipient = recipient;
+        From = baseSender;
+        To = to;
         Subject = subject;
-        HtmlBody = htmlBody;
-        PlainTextBody = plainTextBody;
+        Html = html;
+    }
+
+    [JsonConstructor]
+    private EmailData(string from, string[] to, string subject, string html)
+    {
+        From = from;
+        To = to;
+        Subject = subject;
+        Html = html;
     }
 
     public static EmailData FromMessageAttributes(IDictionary<string, SNSEvent.MessageAttribute> messageAttributes)
     {
         return new(
-            messageAttributes[nameof(Recipient)].Value,
-            messageAttributes[nameof(Subject)].Value,
-            messageAttributes[nameof(HtmlBody)].Value,
-            messageAttributes[nameof(PlainTextBody)].Value);
+            [messageAttributes[toMapName].Value],
+            messageAttributes[subjectMapName].Value,
+            messageAttributes[htmlMapName].Value);
     }
 }

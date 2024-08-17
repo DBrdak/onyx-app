@@ -16,7 +16,7 @@ internal sealed class AccessFunction : BaseFunction
         _jwtService = jwtService;
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = "LambdaAuthorizer")]
+    [LambdaFunction(ResourceName = "LambdaAuthorizer")]
     public APIGatewayCustomAuthorizerV2SimpleResponse FunctionHandler(APIGatewayCustomAuthorizerV2Request request, ILambdaContext context)
     {
         var token = request.Headers

@@ -34,6 +34,25 @@ internal sealed class AddSubcategoryCommandHandler : ICommandHandler<AddSubcateg
 
         var category = categoryGetResult.Value;
 
+        var categorySubcategoriesGetResult = await _subcategoryRepository.GetManyByIdAsync(
+            category.SubcategoriesId.ToList(),
+            cancellationToken);
+
+        if (categorySubcategoriesGetResult.IsFailure)
+        {
+            return categorySubcategoriesGetResult.Error;
+        }
+
+        var categorySubcategories = categorySubcategoriesGetResult.Value;
+
+        var isDuplicated = categorySubcategories.Any(
+            s => string.Equals(s.Name.Value, request.Name, StringComparison.CurrentCultureIgnoreCase));
+
+        if (isDuplicated)
+        {
+            return SubcategoryAddErrors.SubcategoryAlreadyExist;
+        }
+
         var subcategoryAddResult = category.NewSubcategory(request.Name);
 
         if (subcategoryAddResult.IsFailure)
@@ -61,4 +80,5 @@ internal sealed class AddSubcategoryCommandHandler : ICommandHandler<AddSubcateg
 
         return SubcategoryModel.FromDomainModel(subcategory);
     }
+
 }

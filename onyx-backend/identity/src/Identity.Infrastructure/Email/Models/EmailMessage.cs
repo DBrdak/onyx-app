@@ -7,17 +7,15 @@ internal sealed record EmailMessage
     public Domain.Email Recipient { get; init; }
     public EmailMessageSubject Subject { get; init; }
     public EmailMessageBody HtmlBody { get; init; }
-    public EmailMessageBody PlainTextBody { get; init; }
 
-    private EmailMessage(Domain.Email recipient, EmailMessageSubject subject, EmailMessageBody plainTextBody, EmailMessageBody htmlBody)
+    private EmailMessage(Domain.Email recipient, EmailMessageSubject subject, EmailMessageBody htmlBody)
     {
         Recipient = recipient;
         Subject = subject;
-        PlainTextBody = plainTextBody;
         HtmlBody = htmlBody;
     }
 
-    public static Result<EmailMessage> Write(string recipient, string subject, string htmlBody, string plainTextBody)
+    public static Result<EmailMessage> Write(string recipient, string subject, string htmlBody)
     {
         var recipientEmailCreateResult = Domain.Email.Create(recipient);
 
@@ -40,12 +38,9 @@ internal sealed record EmailMessage
             return htmlBodyCreateResult.Error;
         }
 
-        var plainTextBodyCreateResult = EmailMessageBody.CreatePlainText(plainTextBody);
-
         return new EmailMessage(
             recipientEmailCreateResult.Value,
             messageSubjectCreateResult.Value,
-            htmlBodyCreateResult.Value,
-            plainTextBodyCreateResult.Value);
+            htmlBodyCreateResult.Value);
     }
 }

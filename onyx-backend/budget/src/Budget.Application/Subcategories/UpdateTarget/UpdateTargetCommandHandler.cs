@@ -1,6 +1,7 @@
 ﻿using Abstractions.Messaging;
 using Budget.Application.Abstractions.Identity;
 using Budget.Application.Subcategories.Models;
+using Budget.Application.Subcategories.Validator;
 using Budget.Domain.Budgets;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
@@ -15,18 +16,32 @@ internal sealed class UpdateTargetCommandHandler : ICommandHandler<UpdateTargetC
     private readonly ITransactionRepository _transactionRepository;
     private readonly IBudgetRepository _budgetRepository;
     private readonly IBudgetContext _budgetContext;
+    private readonly SubcategoryGlobalValidator _validator;
 
-    public UpdateTargetCommandHandler(ISubcategoryRepository subcategoryRepository, ITransactionRepository transactionRepository, IBudgetRepository budgetRepository, IBudgetContext budgetContext)
+    public UpdateTargetCommandHandler(
+        ISubcategoryRepository subcategoryRepository,
+        ITransactionRepository transactionRepository,
+        IBudgetRepository budgetRepository,
+        IBudgetContext budgetContext,
+        SubcategoryGlobalValidator validator)
     {
         _subcategoryRepository = subcategoryRepository;
         _transactionRepository = transactionRepository;
         _budgetRepository = budgetRepository;
         _budgetContext = budgetContext;
+        _validator = validator;
     }
 
     public async Task<Result<SubcategoryModel>> Handle(UpdateTargetCommand request, CancellationToken cancellationToken)
     {
         var subcategoryId = new SubcategoryId(request.SubcategoryId);
+
+        var validationResult = await _validator.Validate(subcategoryId, cancellationToken);
+
+        if (validationResult.IsFailure)
+        {
+            return validationResult.Error;
+        }
 
         var budgetIdGetResult = _budgetContext.GetBudgetId();
 

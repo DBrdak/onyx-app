@@ -1,5 +1,4 @@
 ﻿using Abstractions.Messaging;
-using Budget.Application.Abstractions.Currency;
 using Budget.Application.Abstractions.Identity;
 using Budget.Application.Subcategories.Models;
 using Budget.Domain.Budgets;
@@ -7,6 +6,7 @@ using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
 using Models.DataTypes;
 using Models.Responses;
+using Budget.Application.Subcategories.Validator;
 
 namespace Budget.Application.Subcategories.UpdateAssignment;
 
@@ -14,22 +14,34 @@ internal sealed class UpdateAssignmentCommandHandler : ICommandHandler<UpdateAss
 {
     private readonly ISubcategoryRepository _subcategoryRepository;
     private readonly ITransactionRepository _transactionRepository;
-    private readonly ICurrencyConverter _currencyConverter;
     private readonly IBudgetContext _budgetContext;
     private readonly IBudgetRepository _budgetRepository;
+    private readonly SubcategoryGlobalValidator _validator;
 
-    public UpdateAssignmentCommandHandler(ISubcategoryRepository subcategoryRepository, ITransactionRepository transactionRepository, ICurrencyConverter currencyConverter, IBudgetContext budgetContext, IBudgetRepository budgetRepository)
+    public UpdateAssignmentCommandHandler(
+        ISubcategoryRepository subcategoryRepository,
+        ITransactionRepository transactionRepository,
+        IBudgetContext budgetContext,
+        IBudgetRepository budgetRepository,
+        SubcategoryGlobalValidator validator)
     {
         _subcategoryRepository = subcategoryRepository;
         _transactionRepository = transactionRepository;
-        _currencyConverter = currencyConverter;
         _budgetContext = budgetContext;
         _budgetRepository = budgetRepository;
+        _validator = validator;
     }
 
     public async Task<Result<SubcategoryModel>> Handle(UpdateAssignmentCommand request, CancellationToken cancellationToken)
     {
         var subcategoryId = new SubcategoryId(request.SubcategoryId);
+
+        var validationResult = await _validator.Validate(subcategoryId, cancellationToken);
+
+        if (validationResult.IsFailure)
+        {
+            return validationResult.Error;
+        }
 
         var bugdetIdGetResult = _budgetContext.GetBudgetId();
 

@@ -56,6 +56,13 @@ internal sealed class VerifyEmailCommandHandler : ICommandHandler<VerifyEmailCom
             return tokenCreateResult.Error;
         }
 
+        var updateResult = await _userRepository.UpdateAsync(user, cancellationToken);
+
+        if (updateResult.IsFailure)
+        {
+            return updateResult.Error;
+        }
+
         return new AuthorizationToken(tokenCreateResult.Value, user.LongLivedToken);
     }
 }
