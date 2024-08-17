@@ -15,31 +15,26 @@ public sealed record EmailData
     public string Subject { get; init; }
     [JsonPropertyName("html")]
     public string Html { get; init; }
-    [JsonIgnore]
-    public string PlainTextBody { get; init; }
 
     private const string toMapName = "Recipient";
     private const string subjectMapName = "Subject";
     private const string htmlMapName = "HtmlBody";
-    private const string plainTextBodyMapName = "PlainTextBody";
 
-    private EmailData(string[] to, string subject, string html, string plainTextBody)
+    private EmailData(string[] to, string subject, string html)
     {
         From = baseSender;
         To = to;
         Subject = subject;
         Html = html;
-        PlainTextBody = plainTextBody;
     }
 
     [JsonConstructor]
-    private EmailData(string from, string[] to, string subject, string html, string plainTextBody)
+    private EmailData(string from, string[] to, string subject, string html)
     {
         From = from;
         To = to;
         Subject = subject;
         Html = html;
-        PlainTextBody = plainTextBody;
     }
 
     public static EmailData FromMessageAttributes(IDictionary<string, SNSEvent.MessageAttribute> messageAttributes)
@@ -47,7 +42,6 @@ public sealed record EmailData
         return new(
             [messageAttributes[toMapName].Value],
             messageAttributes[subjectMapName].Value,
-            messageAttributes[htmlMapName].Value,
-            messageAttributes[plainTextBodyMapName].Value);
+            messageAttributes[htmlMapName].Value);
     }
 }

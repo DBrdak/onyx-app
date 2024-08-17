@@ -54,7 +54,7 @@ Resources:
     Properties:
       FunctionName: Login
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/739beca55a82460a5149f7a4d703db4b
+      CodeUri: s3://onyx-default/544b74b8e069899b733e7e4968482363
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -83,7 +83,7 @@ Resources:
     Properties:
       FunctionName: Register
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/739beca55a82460a5149f7a4d703db4b
+      CodeUri: s3://onyx-default/544b74b8e069899b733e7e4968482363
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -112,7 +112,7 @@ Resources:
     Properties:
       FunctionName: VerifyEmail
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/739beca55a82460a5149f7a4d703db4b
+      CodeUri: s3://onyx-default/544b74b8e069899b733e7e4968482363
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -141,7 +141,7 @@ Resources:
     Properties:
       FunctionName: ResendEmail
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/739beca55a82460a5149f7a4d703db4b
+      CodeUri: s3://onyx-default/544b74b8e069899b733e7e4968482363
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -170,7 +170,7 @@ Resources:
     Properties:
       FunctionName: Refresh
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/739beca55a82460a5149f7a4d703db4b
+      CodeUri: s3://onyx-default/544b74b8e069899b733e7e4968482363
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -199,7 +199,7 @@ Resources:
     Properties:
       FunctionName: ForgotPassword
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/739beca55a82460a5149f7a4d703db4b
+      CodeUri: s3://onyx-default/544b74b8e069899b733e7e4968482363
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -228,7 +228,7 @@ Resources:
     Properties:
       FunctionName: NewPassword
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/739beca55a82460a5149f7a4d703db4b
+      CodeUri: s3://onyx-default/544b74b8e069899b733e7e4968482363
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -257,7 +257,7 @@ Resources:
     Properties:
       FunctionName: GetUser
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/739beca55a82460a5149f7a4d703db4b
+      CodeUri: s3://onyx-default/544b74b8e069899b733e7e4968482363
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -284,7 +284,7 @@ Resources:
     Properties:
       FunctionName: UpdateUser
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/739beca55a82460a5149f7a4d703db4b
+      CodeUri: s3://onyx-default/544b74b8e069899b733e7e4968482363
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -311,7 +311,7 @@ Resources:
     Properties:
       FunctionName: RequestEmailChange
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/739beca55a82460a5149f7a4d703db4b
+      CodeUri: s3://onyx-default/544b74b8e069899b733e7e4968482363
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -338,7 +338,7 @@ Resources:
     Properties:
       FunctionName: Logout
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/739beca55a82460a5149f7a4d703db4b
+      CodeUri: s3://onyx-default/544b74b8e069899b733e7e4968482363
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -365,7 +365,7 @@ Resources:
     Properties:
       FunctionName: RemoveUser
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/739beca55a82460a5149f7a4d703db4b
+      CodeUri: s3://onyx-default/544b74b8e069899b733e7e4968482363
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -390,7 +390,7 @@ Resources:
     Properties:
       FunctionName: LambdaAuthorizer
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/739beca55a82460a5149f7a4d703db4b
+      CodeUri: s3://onyx-default/544b74b8e069899b733e7e4968482363
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
