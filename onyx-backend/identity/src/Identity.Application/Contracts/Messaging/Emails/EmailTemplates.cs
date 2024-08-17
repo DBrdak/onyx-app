@@ -27,7 +27,7 @@ internal static class EmailTemplates
                         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                     }
                     .header {
-                        background-color: #4CAF50;
+                        background-color:  #34554A;
                         color: #ffffff;
                         padding: 10px 20px;
                         text-align: center;
@@ -63,7 +63,7 @@ internal static class EmailTemplates
                         <h1>Email Verification</h1>
                     </div>
                     <div class="content">
-                        <p>Hello [User],</p>
+                        <p>Hello {{username}},</p>
                         <p>Thank you for registering with us. Please use the verification code below to verify your email address.</p>
                         <div class="verification-code">
                             {{code}}
@@ -103,7 +103,7 @@ internal static class EmailTemplates
                     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                 }
                 .header {
-                    background-color: #4CAF50;
+                    background-color:  #34554A;
                     color: #ffffff;
                     padding: 10px 20px;
                     text-align: center;
@@ -154,7 +154,7 @@ internal static class EmailTemplates
         </body>
         </html>
         """);
-    internal static (string subject, string htmlBody) ForgotPasswordBodyTemplate(string code) => (
+    internal static (string subject, string htmlBody) ForgotPasswordBodyTemplate(string code, string username) => (
         "",
         $$"""
         <!DOCTYPE html>
@@ -179,7 +179,7 @@ internal static class EmailTemplates
                     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                 }
                 .header {
-                    background-color: #4CAF50;
+                    background-color:  #34554A;
                     color: #ffffff;
                     padding: 10px 20px;
                     text-align: center;
@@ -215,7 +215,7 @@ internal static class EmailTemplates
                     <h1>New Password Verification</h1>
                 </div>
                 <div class="content">
-                    <p>Hello [User],</p>
+                    <p>Hello {{username}},</p>
                     <p>We are sorry to hear that you forgot your password, but don't worry! Here is your verification code to set your brand new password</p>
                     <div class="verification-code">
                         {{code}}

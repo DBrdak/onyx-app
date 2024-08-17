@@ -20,7 +20,7 @@ internal sealed class EmailWriter
 
     internal (string recipient, string subject, string htmlBody) WriteForgotPassword(string code)
     {
-        var (subject, htmlBody) = EmailTemplates.ForgotPasswordBodyTemplate(code);
+        var (subject, htmlBody) = EmailTemplates.ForgotPasswordBodyTemplate(code, _username);
 
         return (_recipientEmail, subject, htmlBody);
     }
