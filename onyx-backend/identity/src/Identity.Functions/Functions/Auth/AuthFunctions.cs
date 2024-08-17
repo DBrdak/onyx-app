@@ -23,7 +23,7 @@ public sealed class AuthFunctions : BaseFunction
     {
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(Login))]
+    [LambdaFunction(ResourceName = nameof(Login))]
     [HttpApi(LambdaHttpMethod.Post, $"{authBaseRoute}/login")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Login(
         [FromBody] LoginRequest request)
@@ -35,7 +35,7 @@ public sealed class AuthFunctions : BaseFunction
         return result.ReturnAPIResponse(200, 401);
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(Register))]
+    [LambdaFunction(ResourceName = nameof(Register))]
     [HttpApi(LambdaHttpMethod.Post, $"{authBaseRoute}/register")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Register(
         [FromBody] RegisterRequest request)
@@ -47,7 +47,7 @@ public sealed class AuthFunctions : BaseFunction
         return result.ReturnAPIResponse(200, 400);
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(VerifyEmail))]
+    [LambdaFunction(ResourceName = nameof(VerifyEmail))]
     [HttpApi(LambdaHttpMethod.Put, $"{authBaseRoute}/verify-email")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> VerifyEmail(
         [FromBody] VerifyEmailRequest request)
@@ -59,7 +59,7 @@ public sealed class AuthFunctions : BaseFunction
         return result.ReturnAPIResponse(200, 401);
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(ResendEmail))]
+    [LambdaFunction(ResourceName = nameof(ResendEmail))]
     [HttpApi(LambdaHttpMethod.Put, $"{authBaseRoute}/resend-email")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> ResendEmail(
         [FromBody] ResendEmailRequest request)
@@ -71,7 +71,7 @@ public sealed class AuthFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(Refresh))]
+    [LambdaFunction(ResourceName = nameof(Refresh))]
     [HttpApi(LambdaHttpMethod.Put, $"{authBaseRoute}/refresh")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Refresh(
         [FromBody] RefreshRequest request)
@@ -83,7 +83,7 @@ public sealed class AuthFunctions : BaseFunction
         return result.ReturnAPIResponse(200, 401);
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(ForgotPassword))]
+    [LambdaFunction(ResourceName = nameof(ForgotPassword))]
     [HttpApi(LambdaHttpMethod.Put, $"{authBaseRoute}/forgot-password/request")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> ForgotPassword(
         [FromBody] RequestNewPasswordRequest request)
@@ -95,7 +95,7 @@ public sealed class AuthFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = nameof(NewPassword))]
+    [LambdaFunction(ResourceName = nameof(NewPassword))]
     [HttpApi(LambdaHttpMethod.Put, $"{authBaseRoute}/forgot-password/new")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> NewPassword(
         [FromBody] NewPasswordRequest request)

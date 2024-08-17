@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Abstractions.Messaging;
 using Amazon.Lambda.Core;
-using Newtonsoft.Json;
 
 namespace LambdaKernel;
 

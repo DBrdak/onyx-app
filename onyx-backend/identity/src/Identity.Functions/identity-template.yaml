@@ -5,6 +5,9 @@ Parameters:
   SendEmailTopicArn:
     Type: String
     Description: ARN of the Send Email topic
+  FullAccessRoleArn:
+    Type: String
+    Description: ARN of the FullAccess IAM role
 Resources:
   IdentityApi:
     Type: AWS::Serverless::HttpApi
@@ -42,13 +45,14 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
+      FunctionName: Login
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_Login_Generated::Login
       Events:
@@ -67,13 +71,14 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
+      FunctionName: Register
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_Register_Generated::Register
       Events:
@@ -92,13 +97,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: VerifyEmail
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_VerifyEmail_Generated::VerifyEmail
       Events:
@@ -117,13 +123,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: ResendEmail
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_ResendEmail_Generated::ResendEmail
       Events:
@@ -142,13 +149,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: Refresh
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_Refresh_Generated::Refresh
       Events:
@@ -167,13 +175,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: ForgotPassword
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_ForgotPassword_Generated::ForgotPassword
       Events:
@@ -192,13 +201,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: NewPassword
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_NewPassword_Generated::NewPassword
       Events:
@@ -217,13 +227,14 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
+      FunctionName: GetUser
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_GetUser_Generated::GetUser
       Events:
@@ -240,13 +251,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: UpdateUser
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_UpdateUser_Generated::UpdateUser
       Events:
@@ -263,13 +275,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: RequestEmailChange
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RequestEmailChange_Generated::RequestEmailChange
       Events:
@@ -286,13 +299,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: Logout
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_Logout_Generated::Logout
       Events:
@@ -309,13 +323,14 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
+      FunctionName: RemoveUser
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RemoveUser_Generated::RemoveUser
       Events:
@@ -330,11 +345,14 @@ Resources:
     Metadata:
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: LambdaAuthorizer
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Access.AccessFunction_FunctionHandler_Generated::FunctionHandler
 Outputs:

@@ -1,8 +1,6 @@
-﻿using Abstractions.Messaging;
-using Amazon.Lambda.Annotations.APIGateway;
+﻿using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.Annotations;
 using Amazon.Lambda.APIGatewayEvents;
-using Amazon.Lambda.Core;
 using Budget.Application.Budgets.AddBudget;
 using Budget.Application.Budgets.AddUserToBudget;
 using Budget.Application.Budgets.GetBudgetInvitation;
@@ -13,8 +11,6 @@ using Budget.Functions.Functions.Budgets.Requests;
 using Budget.Functions.Functions.Shared;
 using LambdaKernel;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 
 namespace Budget.Functions.Functions.Budgets;
@@ -28,7 +24,7 @@ public sealed class BudgetFunctions : BaseFunction
 
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Budgets{nameof(GetAll)}")]
+    [LambdaFunction(ResourceName = $"Budgets{nameof(GetAll)}")]
     [HttpApi(LambdaHttpMethod.Get, budgetBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetAll(APIGatewayHttpApiV2ProxyRequest requestContext)
     {
@@ -41,7 +37,7 @@ public sealed class BudgetFunctions : BaseFunction
         return result.ReturnAPIResponse(200, 404);
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Budgets{nameof(GetInvitation)}")]
+    [LambdaFunction(ResourceName = $"Budgets{nameof(GetInvitation)}")]
     [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/{{budgetId}}/invitation")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetInvitation(
         string budgetId,
@@ -64,7 +60,7 @@ public sealed class BudgetFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Budgets{nameof(Add)}")]
+    [LambdaFunction(ResourceName = $"Budgets{nameof(Add)}")]
     [HttpApi(LambdaHttpMethod.Post, budgetBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Add(
         [FromBody] AddBudgetRequest request,
@@ -79,7 +75,7 @@ public sealed class BudgetFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Budgets{nameof(RemoveUser)}")]
+    [LambdaFunction(ResourceName = $"Budgets{nameof(RemoveUser)}")]
     [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/{{budgetId}}/remove/{{userId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> RemoveUser(
         string budgetId,
@@ -95,7 +91,7 @@ public sealed class BudgetFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Budgets{nameof(Join)}")]
+    [LambdaFunction(ResourceName = $"Budgets{nameof(Join)}")]
     [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/{{budgetId}}/join/{{token}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Join(
         string budgetId,
@@ -111,7 +107,7 @@ public sealed class BudgetFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Budgets{nameof(Remove)}")]
+    [LambdaFunction(ResourceName = $"Budgets{nameof(Remove)}")]
     [HttpApi(LambdaHttpMethod.Delete, $"{budgetBaseRoute}/{{budgetId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Remove(
         string budgetId, 

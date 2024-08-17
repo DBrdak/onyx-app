@@ -24,7 +24,7 @@ public sealed class SubcategoryFunctions : BaseFunction
 
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Subcategories{nameof(GetToAssign)}")]
+    [LambdaFunction(ResourceName = $"Subcategories{nameof(GetToAssign)}")]
     [HttpApi(LambdaHttpMethod.Get, $"{subcategoryBaseRoute}/to-assign")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetToAssign(
         string budgetId,
@@ -41,7 +41,7 @@ public sealed class SubcategoryFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Subcategories{nameof(Add)}")]
+    [LambdaFunction(ResourceName = $"Subcategories{nameof(Add)}")]
     [HttpApi(LambdaHttpMethod.Post, subcategoryBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Add(
         string budgetId,
@@ -60,7 +60,7 @@ public sealed class SubcategoryFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Subcategories{nameof(Update)}")]
+    [LambdaFunction(ResourceName = $"Subcategories{nameof(Update)}")]
     [HttpApi(LambdaHttpMethod.Put, $"{subcategoryBaseRoute}/{{subcategoryId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Update(
         string budgetId,
@@ -81,7 +81,7 @@ public sealed class SubcategoryFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Subcategories{nameof(Remove)}")]
+    [LambdaFunction(ResourceName = $"Subcategories{nameof(Remove)}")]
     [HttpApi(LambdaHttpMethod.Delete, $"{subcategoryBaseRoute}/{{subcategoryId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Remove(
         string budgetId,
@@ -97,7 +97,7 @@ public sealed class SubcategoryFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Subcategories{nameof(UpdateAssignment)}")]
+    [LambdaFunction(ResourceName = $"Subcategories{nameof(UpdateAssignment)}")]
     [HttpApi(LambdaHttpMethod.Put, $"{subcategoryBaseRoute}/{{subcategoryId}}/assignment")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> UpdateAssignment(
         string budgetId,
@@ -118,7 +118,7 @@ public sealed class SubcategoryFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Subcategories{nameof(UpdateTarget)}")]
+    [LambdaFunction(ResourceName = $"Subcategories{nameof(UpdateTarget)}")]
     [HttpApi(LambdaHttpMethod.Put, $"{subcategoryBaseRoute}/{{subcategoryId}}/target")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> UpdateTarget(
         string budgetId,
@@ -140,7 +140,7 @@ public sealed class SubcategoryFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Subcategories{nameof(RemoveTarget)}")]
+    [LambdaFunction(ResourceName = $"Subcategories{nameof(RemoveTarget)}")]
     [HttpApi(LambdaHttpMethod.Put, $"{subcategoryBaseRoute}/{{subcategoryId}}/target/remove")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> RemoveTarget(
         string budgetId,

@@ -1,6 +1,7 @@
 $identityStackName = "onyx-identity"
 $budgetStackName = "onyx-budget"
 $messangerStackName = "onyx-messanger"
+$baseStackName = "onyx"
 $region = "eu-central-1"
 
 Write-Host "Deleting Identity service stack..."
@@ -23,3 +24,10 @@ aws cloudformation delete-stack --stack-name $messangerStackName --region $regio
 Write-Host "Waiting for Messanger service stack to be deleted..."
 aws cloudformation wait stack-delete-complete --stack-name $messangerStackName --region $region
 Write-Host "Messanger service stack deleted."
+
+Write-Host "Deleting Messanger service stack..."
+aws cloudformation delete-stack --stack-name $baseStackName --region $region
+
+Write-Host "Waiting for base service stack to be deleted..."
+aws cloudformation wait stack-delete-complete --stack-name $baseStackName --region $region
+Write-Host "Base service stack deleted."

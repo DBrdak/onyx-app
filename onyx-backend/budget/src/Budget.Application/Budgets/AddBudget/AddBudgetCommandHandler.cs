@@ -5,7 +5,6 @@ using Budget.Domain.Budgets;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Models.Responses;
-using Newtonsoft.Json;
 
 namespace Budget.Application.Budgets.AddBudget;
 

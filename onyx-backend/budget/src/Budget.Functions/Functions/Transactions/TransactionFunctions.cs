@@ -21,7 +21,7 @@ public sealed class TransactionFunctions : BaseFunction
         
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Transactions{nameof(Get)}")]
+    [LambdaFunction(ResourceName = $"Transactions{nameof(Get)}")]
     [HttpApi(LambdaHttpMethod.Get, transactionBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Get(
         string budgetId,
@@ -43,7 +43,7 @@ public sealed class TransactionFunctions : BaseFunction
         return result.ReturnAPIResponse(200, 404);
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Transactions{nameof(Add)}")]
+    [LambdaFunction(ResourceName = $"Transactions{nameof(Add)}")]
     [HttpApi(LambdaHttpMethod.Post, transactionBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Add(
         string budgetId,
@@ -65,7 +65,7 @@ public sealed class TransactionFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Transactions{nameof(Remove)}")]
+    [LambdaFunction(ResourceName = $"Transactions{nameof(Remove)}")]
     [HttpApi(LambdaHttpMethod.Delete, $"{transactionBaseRoute}/{{transactionId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Remove(
         string budgetId,
@@ -81,7 +81,7 @@ public sealed class TransactionFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Transactions{nameof(BulkRemove)}")]
+    [LambdaFunction(ResourceName = $"Transactions{nameof(BulkRemove)}")]
     [HttpApi(LambdaHttpMethod.Delete, $"{transactionBaseRoute}/bulk")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> BulkRemove(
         Guid budgetId,

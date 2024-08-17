@@ -5,6 +5,9 @@ Parameters:
   LambdaAuthorizerArn:
     Type: String
     Description: ARN of the Lambda authorizer function
+  FullAccessRoleArn:
+    Type: String
+    Description: ARN of the FullAccess IAM role
 Resources:
   BudgetApi:
     Type: AWS::Serverless::HttpApi
@@ -42,13 +45,14 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
+      FunctionName: AccountsGetAll
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Accounts.AccountFunctions_GetAll_Generated::GetAll
       Events:
@@ -65,13 +69,14 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
+      FunctionName: AccountsAdd
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Accounts.AccountFunctions_Add_Generated::Add
       Events:
@@ -88,13 +93,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: AccountsUpdate
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Accounts.AccountFunctions_Update_Generated::Update
       Events:
@@ -111,13 +117,14 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
+      FunctionName: AccountsRemove
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Accounts.AccountFunctions_Remove_Generated::Remove
       Events:
@@ -134,13 +141,14 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
+      FunctionName: AccountsBulkAddTransactions
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Accounts.AccountFunctions_BulkAddTransactions_Generated::BulkAddTransactions
       Events:
@@ -157,13 +165,14 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
+      FunctionName: BudgetsGetAll
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_GetAll_Generated::GetAll
       Events:
@@ -180,13 +189,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: BudgetsGetInvitation
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_GetInvitation_Generated::GetInvitation
       Events:
@@ -203,13 +213,14 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
+      FunctionName: BudgetsAdd
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_Add_Generated::Add
       Events:
@@ -226,13 +237,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: BudgetsRemoveUser
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_RemoveUser_Generated::RemoveUser
       Events:
@@ -249,13 +261,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: BudgetsJoin
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_Join_Generated::Join
       Events:
@@ -272,13 +285,14 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
+      FunctionName: BudgetsRemove
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_Remove_Generated::Remove
       Events:
@@ -295,13 +309,14 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
+      FunctionName: CategoriesGetAll
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Categories.CategoryFunctions_GetAll_Generated::GetAll
       Events:
@@ -318,13 +333,14 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
+      FunctionName: CategoriesAdd
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Categories.CategoryFunctions_Add_Generated::Add
       Events:
@@ -341,13 +357,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: CategoriesUpdate
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Categories.CategoryFunctions_Update_Generated::Update
       Events:
@@ -364,13 +381,14 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
+      FunctionName: CategoriesRemove
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Categories.CategoryFunctions_Remove_Generated::Remove
       Events:
@@ -387,13 +405,14 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
+      FunctionName: CounterpartiesAdd
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Counterparties.CounterpartyFunctions_Add_Generated::Add
       Events:
@@ -410,13 +429,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: CounterpartiesUpdate
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Counterparties.CounterpartyFunctions_Update_Generated::Update
       Events:
@@ -433,13 +453,14 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
+      FunctionName: CounterpartiesRemove
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Counterparties.CounterpartyFunctions_Remove_Generated::Remove
       Events:
@@ -456,13 +477,14 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
+      FunctionName: TransactionsGet
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Transactions.TransactionFunctions_Get_Generated::Get
       Events:
@@ -479,13 +501,14 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
+      FunctionName: TransactionsAdd
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Transactions.TransactionFunctions_Add_Generated::Add
       Events:
@@ -502,13 +525,14 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
+      FunctionName: TransactionsRemove
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Transactions.TransactionFunctions_Remove_Generated::Remove
       Events:
@@ -525,13 +549,14 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
+      FunctionName: TransactionsBulkRemove
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Transactions.TransactionFunctions_BulkRemove_Generated::BulkRemove
       Events:
@@ -548,13 +573,14 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
+      FunctionName: SubcategoriesGetToAssign
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Subcategories.SubcategoryFunctions_GetToAssign_Generated::GetToAssign
       Events:
@@ -571,13 +597,14 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
+      FunctionName: SubcategoriesAdd
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Subcategories.SubcategoryFunctions_Add_Generated::Add
       Events:
@@ -594,13 +621,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: SubcategoriesUpdate
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Subcategories.SubcategoryFunctions_Update_Generated::Update
       Events:
@@ -617,13 +645,14 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
+      FunctionName: SubcategoriesRemove
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Subcategories.SubcategoryFunctions_Remove_Generated::Remove
       Events:
@@ -640,13 +669,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: SubcategoriesUpdateAssignment
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Subcategories.SubcategoryFunctions_UpdateAssignment_Generated::UpdateAssignment
       Events:
@@ -663,13 +693,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: SubcategoriesUpdateTarget
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Subcategories.SubcategoryFunctions_UpdateTarget_Generated::UpdateTarget
       Events:
@@ -686,13 +717,14 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
+      FunctionName: SubcategoriesRemoveTarget
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Subcategories.SubcategoryFunctions_RemoveTarget_Generated::RemoveTarget
       Events:
@@ -709,11 +741,14 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
+      FunctionName: CounterpartiesGetAll
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Counterparties.CounterpartyFunctions_GetAll_Generated::GetAll
       Events:
@@ -722,6 +757,7 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/counterparties
             Method: GET
+            ApiId: !Ref BudgetApi
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

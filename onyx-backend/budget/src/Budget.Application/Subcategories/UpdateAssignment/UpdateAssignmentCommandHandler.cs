@@ -6,7 +6,6 @@ using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
 using Models.DataTypes;
 using Models.Responses;
-using System.ComponentModel.DataAnnotations;
 using Budget.Application.Subcategories.Validator;
 
 namespace Budget.Application.Subcategories.UpdateAssignment;

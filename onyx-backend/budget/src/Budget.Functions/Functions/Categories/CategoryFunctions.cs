@@ -1,5 +1,4 @@
-﻿using Abstractions.Messaging;
-using Amazon.Lambda.Annotations.APIGateway;
+﻿using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.Annotations;
 using Budget.Application.Categories.AddCategory;
 using Budget.Application.Categories.GetCategories;
@@ -11,8 +10,6 @@ using MediatR;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using LambdaKernel;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 
 namespace Budget.Functions.Functions.Categories;
@@ -26,7 +23,7 @@ public sealed class CategoryFunctions : BaseFunction
     {
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Categories{nameof(GetAll)}")]
+    [LambdaFunction(ResourceName = $"Categories{nameof(GetAll)}")]
     [HttpApi(LambdaHttpMethod.Get, categoriesBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetAll(
         string budgetId,
@@ -42,7 +39,7 @@ public sealed class CategoryFunctions : BaseFunction
         return result.ReturnAPIResponse(200, 404);
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Categories{nameof(Add)}")]
+    [LambdaFunction(ResourceName = $"Categories{nameof(Add)}")]
     [HttpApi(LambdaHttpMethod.Post, categoriesBaseRoute)]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Add(
         string budgetId,
@@ -58,7 +55,7 @@ public sealed class CategoryFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Categories{nameof(Update)}")]
+    [LambdaFunction(ResourceName = $"Categories{nameof(Update)}")]
     [HttpApi(LambdaHttpMethod.Put, $"{categoriesBaseRoute}/{{categoryId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Update(
         string budgetId,
@@ -78,7 +75,7 @@ public sealed class CategoryFunctions : BaseFunction
         return result.ReturnAPIResponse();
     }
 
-    [LambdaFunction(Role = FullAccessRole, ResourceName = $"Categories{nameof(Remove)}")]
+    [LambdaFunction(ResourceName = $"Categories{nameof(Remove)}")]
     [HttpApi(LambdaHttpMethod.Delete, $"{categoriesBaseRoute}/{{categoryId}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Remove(
         string budgetId,

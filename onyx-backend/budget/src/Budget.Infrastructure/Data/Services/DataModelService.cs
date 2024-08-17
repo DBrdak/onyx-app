@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Metrics;
-using Amazon.DynamoDBv2.DocumentModel;
+﻿using Amazon.DynamoDBv2.DocumentModel;
 using Budget.Domain.Accounts;
 using Budget.Domain.Categories;
 using Budget.Domain.Counterparties;

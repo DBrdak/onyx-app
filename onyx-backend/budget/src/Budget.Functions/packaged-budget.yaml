@@ -5,6 +5,9 @@ Parameters:
   LambdaAuthorizerArn:
     Type: String
     Description: ARN of the Lambda authorizer function
+  FullAccessRoleArn:
+    Type: String
+    Description: ARN of the FullAccess IAM role
 Resources:
   BudgetApi:
     Type: AWS::Serverless::HttpApi
@@ -46,13 +49,15 @@ Resources:
       - RootGet
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: AccountsGetAll
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Accounts.AccountFunctions_GetAll_Generated::GetAll
       Events:
@@ -71,13 +76,15 @@ Resources:
       - RootPost
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: AccountsAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Accounts.AccountFunctions_Add_Generated::Add
       Events:
@@ -96,13 +103,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: AccountsUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Accounts.AccountFunctions_Update_Generated::Update
       Events:
@@ -121,13 +130,15 @@ Resources:
       - RootDelete
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: AccountsRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Accounts.AccountFunctions_Remove_Generated::Remove
       Events:
@@ -146,13 +157,15 @@ Resources:
       - RootPost
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: AccountsBulkAddTransactions
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Accounts.AccountFunctions_BulkAddTransactions_Generated::BulkAddTransactions
       Events:
@@ -171,13 +184,15 @@ Resources:
       - RootGet
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: BudgetsGetAll
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_GetAll_Generated::GetAll
       Events:
@@ -196,13 +211,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: BudgetsGetInvitation
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_GetInvitation_Generated::GetInvitation
       Events:
@@ -221,13 +238,15 @@ Resources:
       - RootPost
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: BudgetsAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_Add_Generated::Add
       Events:
@@ -246,13 +265,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: BudgetsRemoveUser
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_RemoveUser_Generated::RemoveUser
       Events:
@@ -271,13 +292,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: BudgetsJoin
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_Join_Generated::Join
       Events:
@@ -296,13 +319,15 @@ Resources:
       - RootDelete
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: BudgetsRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_Remove_Generated::Remove
       Events:
@@ -321,13 +346,15 @@ Resources:
       - RootGet
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: CategoriesGetAll
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Categories.CategoryFunctions_GetAll_Generated::GetAll
       Events:
@@ -346,13 +373,15 @@ Resources:
       - RootPost
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: CategoriesAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Categories.CategoryFunctions_Add_Generated::Add
       Events:
@@ -371,13 +400,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: CategoriesUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Categories.CategoryFunctions_Update_Generated::Update
       Events:
@@ -396,13 +427,15 @@ Resources:
       - RootDelete
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: CategoriesRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Categories.CategoryFunctions_Remove_Generated::Remove
       Events:
@@ -413,31 +446,6 @@ Resources:
             Method: DELETE
             ApiId:
               Ref: BudgetApi
-  CounterpartiesGetAll:
-    Type: AWS::Serverless::Function
-    Metadata:
-      SamResourceId: CounterpartiesGetAll
-      SyncedEvents:
-      - RootGet
-      Tool: Amazon.Lambda.Annotations
-    Properties:
-      Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
-      MemorySize: 3008
-      EphemeralStorage:
-        Size: 3008
-      Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
-      PackageType: Zip
-      Handler: Budget.Functions::Budget.Functions.Functions.Counterparties.CounterpartyFunctions_GetAll_Generated::GetAll
-      Events:
-        RootGet:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/{budgetId}/counterparties
-            Method: GET
-            ApiId:
-              Ref: BudgetApi
   CounterpartiesAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -446,13 +454,15 @@ Resources:
       - RootPost
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: CounterpartiesAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Counterparties.CounterpartyFunctions_Add_Generated::Add
       Events:
@@ -471,13 +481,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: CounterpartiesUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Counterparties.CounterpartyFunctions_Update_Generated::Update
       Events:
@@ -496,13 +508,15 @@ Resources:
       - RootDelete
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: CounterpartiesRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Counterparties.CounterpartyFunctions_Remove_Generated::Remove
       Events:
@@ -521,13 +535,15 @@ Resources:
       - RootGet
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: TransactionsGet
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Transactions.TransactionFunctions_Get_Generated::Get
       Events:
@@ -546,13 +562,15 @@ Resources:
       - RootPost
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: TransactionsAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Transactions.TransactionFunctions_Add_Generated::Add
       Events:
@@ -571,13 +589,15 @@ Resources:
       - RootDelete
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: TransactionsRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Transactions.TransactionFunctions_Remove_Generated::Remove
       Events:
@@ -596,13 +616,15 @@ Resources:
       - RootDelete
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: TransactionsBulkRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Transactions.TransactionFunctions_BulkRemove_Generated::BulkRemove
       Events:
@@ -621,13 +643,15 @@ Resources:
       - RootGet
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: SubcategoriesGetToAssign
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Subcategories.SubcategoryFunctions_GetToAssign_Generated::GetToAssign
       Events:
@@ -646,13 +670,15 @@ Resources:
       - RootPost
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: SubcategoriesAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Subcategories.SubcategoryFunctions_Add_Generated::Add
       Events:
@@ -671,13 +697,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: SubcategoriesUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Subcategories.SubcategoryFunctions_Update_Generated::Update
       Events:
@@ -696,13 +724,15 @@ Resources:
       - RootDelete
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: SubcategoriesRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Subcategories.SubcategoryFunctions_Remove_Generated::Remove
       Events:
@@ -721,13 +751,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: SubcategoriesUpdateAssignment
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Subcategories.SubcategoryFunctions_UpdateAssignment_Generated::UpdateAssignment
       Events:
@@ -746,13 +778,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: SubcategoriesUpdateTarget
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Subcategories.SubcategoryFunctions_UpdateTarget_Generated::UpdateTarget
       Events:
@@ -771,13 +805,15 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
+      FunctionName: SubcategoriesRemoveTarget
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/cc6600646fa0cd7d2f6b96532af2a33a
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Role: arn:aws:iam::975049887576:role/FullAccess
+      Role:
+        Ref: FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Subcategories.SubcategoryFunctions_RemoveTarget_Generated::RemoveTarget
       Events:
@@ -786,6 +822,33 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/subcategories/{subcategoryId}/target/remove
             Method: PUT
+            ApiId:
+              Ref: BudgetApi
+  CounterpartiesGetAll:
+    Type: AWS::Serverless::Function
+    Metadata:
+      SamResourceId: CounterpartiesGetAll
+      SyncedEvents:
+      - RootGet
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      FunctionName: CounterpartiesGetAll
+      Runtime: dotnet8
+      CodeUri: s3://onyx-default/2392c4a0b0c5b06292fce1d5771c9052
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role:
+        Ref: FullAccessRoleArn
+      PackageType: Zip
+      Handler: Budget.Functions::Budget.Functions.Functions.Counterparties.CounterpartyFunctions_GetAll_Generated::GetAll
+      Events:
+        RootGet:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/{budgetId}/counterparties
+            Method: GET
             ApiId:
               Ref: BudgetApi
 Outputs:
