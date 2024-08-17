@@ -63,8 +63,6 @@ internal sealed class NewPasswordCommandHandler : ICommandHandler<NewPasswordCom
             return updateResult.Error;
         }
 
-        user = updateResult.Value;
-
         return new AuthorizationToken(token, longLivedToken);
     }
 }

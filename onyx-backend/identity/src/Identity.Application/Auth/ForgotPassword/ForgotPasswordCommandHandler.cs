@@ -51,13 +51,6 @@ internal sealed record ForgotPasswordCommandHandler : ICommandHandler<ForgotPass
             emailWriter.WriteForgotPassword(verificationCode.Code),
             cancellationToken);
 
-        var userUpdateResult = await _userRepository.UpdateAsync(user, cancellationToken);
-
-        if (userUpdateResult.IsFailure)
-        {
-            return userUpdateResult.Error;
-        }
-
-        return Result.Success();
+        return await _userRepository.UpdateAsync(user, cancellationToken);
     }
 }
