@@ -11,9 +11,6 @@ namespace Messanger.Lambda.Functions.Emails;
 
 public sealed class EmailLambda
 {
-    private readonly JsonSerializationException _invalidEventException =
-        new($"The provided event message was invalid for type {nameof(EmailData)}");
-
     public EmailLambda()
     { }
 
@@ -21,13 +18,14 @@ public sealed class EmailLambda
     public async Task FunctionHandler(SNSEvent snsEvent, ILambdaContext context)
     {
         List<Result> results = [];
+        var emailSerivce = new EmailService();
 
         foreach (var record in snsEvent.Records)
         {
             var messageAttributes = record.Sns.MessageAttributes;
             var data = EmailData.FromMessageAttributes(messageAttributes);
 
-            results.Add(await new EmailService().SendAsync(data));
+            results.Add(await emailSerivce.SendAsync(data));
         }
 
         results.Where(r => r.IsFailure).ToList()

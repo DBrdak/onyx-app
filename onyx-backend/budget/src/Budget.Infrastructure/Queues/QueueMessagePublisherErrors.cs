@@ -1,14 +1,14 @@
 ﻿using Models.Responses;
 
-namespace Budget.Infrastructure.IntegrationEvents;
+namespace Budget.Infrastructure.Queues;
 
-internal static class EventPublisherErrors
+internal static class QueueMessagePublisherErrors
 {
     public static readonly Error ConnectionError = new(
-        "EventPublisher.ConnectionFailed",
+        "QueueMessagePublisher.ConnectionFailed",
         "Error occured when trying to establish the connection with SQS service");
 
     public static readonly Error UnknownError = new(
-        "EventPublisher.Unknown",
+        "QueueMessagePublisher.Unknown",
         "Unknown error has occured when trying to communicate with SQS service");
 }

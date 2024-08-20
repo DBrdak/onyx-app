@@ -22,13 +22,13 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: |
-        cd ../onyx-backend/
+        cd ../../onyx-backend/
         dotnet restore
     - name: Build
       run: |
-        cd ../onyx-backend/
+        cd ../../onyx-backend/
         dotnet build --no-restore
     - name: Test
       run: |
-        cd ../onyx-backend/
+        cd ../../onyx-backend/
         dotnet test --no-build --verbosity normal

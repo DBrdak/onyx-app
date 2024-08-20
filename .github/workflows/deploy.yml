@@ -32,4 +32,6 @@ jobs:
 
     - name: Run AWS Deploy Script
       shell: pwsh
-      run: ./aws-deploy.ps1
+      run: |
+      cd ../../onyx-backend
+      ./aws-deploy.ps1

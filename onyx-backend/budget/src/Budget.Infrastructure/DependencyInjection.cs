@@ -7,13 +7,11 @@ using Budget.Domain.Categories;
 using Budget.Domain.Counterparties;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
-using Budget.Infrastructure.Authorization;
-using Budget.Infrastructure.Authorization.BudgetMember;
 using Budget.Infrastructure.Contexts;
 using Budget.Infrastructure.CurrencyServices;
 using Budget.Infrastructure.CurrencyServices.NbpClient;
 using Budget.Infrastructure.Data.Services;
-using Budget.Infrastructure.IntegrationEvents;
+using Budget.Infrastructure.Queues;
 using Budget.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
@@ -25,12 +23,13 @@ namespace Budget.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static void InjectInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    private const string currencyConverterUrl = "http://api.nbp.pl/api/exchangerates/rates/A/";
+
+    public static void InjectInfrastructure(this IServiceCollection services)
     {
         services.AddPersistence();
-        services.AddCurrencyConverter(configuration);
+        services.AddCurrencyConverter();
         services.AddContexts();
-        services.AddAuthorization();
         services.AddIntegrationEvents();
     }
 
@@ -46,12 +45,11 @@ public static class DependencyInjection
         services.AddScoped<IBudgetRepository, BudgetRepository>();
     }
 
-    private static void AddCurrencyConverter(this IServiceCollection services, IConfiguration configuration)
+    private static void AddCurrencyConverter(this IServiceCollection services)
     {
         services.AddHttpClient<NbpClient>(client =>
         {
-            client.BaseAddress = new Uri(configuration["CurrencyConverterBaseUrl"] 
-                                         ?? throw new MissingFieldException("BalanceCurrency converter base url is missing"));
+            client.BaseAddress = new Uri(currencyConverterUrl);
         });
 
         services.AddTransient<ICurrencyConverter, CurrencyConverter>();
@@ -64,15 +62,6 @@ public static class DependencyInjection
     }
     private static void AddIntegrationEvents(this IServiceCollection services)
     {
-        services.AddScoped<IEventPublisher, EventPublisher>();
-    }
-
-    private static void AddAuthorization(this IServiceCollection services)
-    {
-        services.AddAuthorizationCore(AuthorizationPolicyProvider.Configure);
-
-        services.AddTransient<AuthorizationErrorWriter>();
-        services.AddTransient<IAuthorizationRequirement, BudgetMemberRequirement>();
-        services.AddTransient<IAuthorizationHandler, BudgetMemberAuthorizationHandler>();
+        services.AddScoped<IQueueMessagePublisher, QueueMessagePublisher>();
     }
 }

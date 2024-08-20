@@ -52,7 +52,7 @@ public sealed record UserRepresentationModel
             user.Id.Value.ToString(),
             user.Username.Value,
             user.Currency.Code,
-            ""/*string.Join(',', user.BudgetIds)*/);
+            string.Join(',', user.BudgetsIds));
 
     internal Claim[] ToClaims()
     {

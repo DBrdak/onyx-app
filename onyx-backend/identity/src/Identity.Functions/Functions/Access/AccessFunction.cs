@@ -17,7 +17,9 @@ internal sealed class AccessFunction : BaseFunction
     }
 
     [LambdaFunction(ResourceName = "LambdaAuthorizer")]
-    public APIGatewayCustomAuthorizerV2SimpleResponse FunctionHandler(APIGatewayCustomAuthorizerV2Request request, ILambdaContext context)
+    public APIGatewayCustomAuthorizerV2SimpleResponse FunctionHandler(
+        APIGatewayCustomAuthorizerV2Request request,
+        ILambdaContext context)
     {
         var token = request.Headers
             .FirstOrDefault(kvp => kvp.Key.ToLower() == "authorization").Value?

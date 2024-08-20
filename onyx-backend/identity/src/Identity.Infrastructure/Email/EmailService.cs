@@ -3,7 +3,7 @@ using Amazon.SimpleNotificationService.Model;
 using Identity.Domain;
 using Identity.Infrastructure.Email.Models;
 using Identity.Infrastructure.Messanger;
-using Models.Constants.AWS;
+using Microsoft.Extensions.Configuration;
 using Models.Responses;
 
 namespace Identity.Infrastructure.Email;
@@ -12,10 +12,12 @@ internal sealed class EmailService : IEmailService
 {
     private readonly MessangerClient _messangerClient;
     private readonly IAmazonSimpleNotificationService _snsService;
+    private readonly IConfiguration _config;
 
-    public EmailService(MessangerClient messangerClient)
+    public EmailService(MessangerClient messangerClient, IConfiguration config)
     {
         _messangerClient = messangerClient;
+        _config = config;
         _snsService = new AmazonSimpleNotificationServiceClient();
     }
 
@@ -48,5 +50,5 @@ internal sealed class EmailService : IEmailService
         await SendEmailAsync(request.recipient, request.subject, request.htmlBody);
 
     private async Task<string> GetSendEmailTopicArnAsync() =>
-        (await _snsService.FindTopicAsync(Topics.SendEmailTopicName)).TopicArn;
+        (await _snsService.FindTopicAsync(_config["sendEmailTopicName"])).TopicArn;
 }

@@ -2,12 +2,12 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: An AWS Serverless Application. This template is partially managed by Amazon.Lambda.Annotations (v1.3.0.0).
 Parameters:
-  SendEmailTopicArn:
-    Type: String
-    Description: ARN of the Send Email topic
   FullAccessRoleArn:
     Type: String
     Description: ARN of the FullAccess IAM role
+  DeadLetterQueueArn:
+    Type: String
+    Description: ARN of the global dead letter queue
 Resources:
   IdentityApi:
     Type: AWS::Serverless::HttpApi
@@ -38,6 +38,20 @@ Resources:
             Identity:
               Headers:
                 - authorization
+  RemoveUserFromBudgetQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: RemoveUserFromBudgetQueue
+      RedriveAllowPolicy:
+        deadLetterTargetArn: !Ref DeadLetterQueueArn
+        maxReceiveCount: 5
+  AddBudgetForUserQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: AddBudgetForUserQueue
+      RedriveAllowPolicy:
+        deadLetterTargetArn: !Ref DeadLetterQueueArn
+        maxReceiveCount: 5
   Login:
     Type: AWS::Serverless::Function
     Metadata:
@@ -333,13 +347,7 @@ Resources:
       Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RemoveUser_Generated::RemoveUser
-      Events:
-        RootDelete:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/user/remove
-            Method: DELETE
-            ApiId: !Ref IdentityApi
+      Events: {RootDelete: {Type: HttpApi, Properties: {Path: /api/v1/user/remove, Method: DELETE}}}
   LambdaAuthorizer:
     Type: AWS::Serverless::Function
     Metadata:
@@ -355,6 +363,39 @@ Resources:
       Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Access.AccessFunction_FunctionHandler_Generated::FunctionHandler
+  AddBudgetIdForUser:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_AddBudgetIdForUser_Generated::AddBudgetIdForUser
+      Events:
+        SnsEvent:
+          Type: SQS
+          Properties:
+            Topic: !Ref AddBudgetForUserQueue
+  RemoveBudgetIdForUser:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 512
+      Timeout: 30
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RemoveBudgetIdForUser_Generated::RemoveBudgetIdForUser
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment
@@ -363,3 +404,9 @@ Outputs:
   LambdaAuthorizerArn:
     Description: "The ARN of the Lambda Authorizer"
     Value: !GetAtt LambdaAuthorizer.Arn
+  RemoveUserFromBudgetQueueName:
+    Description: RemoveUserFromBudgetQueueName Queue Name
+    Value: !GetAtt RemoveUserFromBudgetQueue.QueueName
+  AddBudgetForUserQueue:
+    Description: AddBudgetForUserQueue Queue Name
+    Value: !GetAtt AddBudgetForUserQueue.QueueName

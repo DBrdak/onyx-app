@@ -1,5 +1,6 @@
 ﻿using Abstractions.Messaging;
 using Budget.Application.Abstractions.Identity;
+using Budget.Application.Abstractions.IntegrationEvents;
 using Budget.Application.Budgets.Models;
 using Budget.Domain.Budgets;
 using Models.Responses;
@@ -10,14 +11,18 @@ internal sealed class AddUserToBudgetCommandHandler : ICommandHandler<AddUserToB
 {
     private readonly IUserContext _userContext;
     private readonly IBudgetRepository _budgetRepository;
+    private readonly IQueueMessagePublisher _queueMessagePublisher;
 
-    public AddUserToBudgetCommandHandler(IUserContext userContext, IBudgetRepository budgetRepository)
+    public AddUserToBudgetCommandHandler(
+        IUserContext userContext,
+        IBudgetRepository budgetRepository,
+        IQueueMessagePublisher queueMessagePublisher)
     {
         _userContext = userContext;
         _budgetRepository = budgetRepository;
+        _queueMessagePublisher = queueMessagePublisher;
     }
 
-    //TODO send event to update user
     public async Task<Result<BudgetModel>> Handle(AddUserToBudgetCommand request, CancellationToken cancellationToken)
     {
 
@@ -61,6 +66,16 @@ internal sealed class AddUserToBudgetCommandHandler : ICommandHandler<AddUserToB
         }
 
         budget = updateResult.Value;
+
+        var messagePublishResult = await _queueMessagePublisher.PublishBudgetMemberJoinedAsync(
+            userId,
+            budget.Id,
+            cancellationToken);
+
+        if (messagePublishResult.IsFailure)
+        {
+            return messagePublishResult.Error;
+        }
 
         return BudgetModel.FromDomainModel(budget);
     }

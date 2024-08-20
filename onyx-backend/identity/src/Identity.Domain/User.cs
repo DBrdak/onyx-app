@@ -22,6 +22,8 @@ public sealed class User : Entity<UserId>
     public bool IsPasswordForgotten { get; private set; }
     public bool IsEmailChangeRequested { get; private set; }
     public VerificationCode? VerificationCode { get; private set; }
+    private readonly List<Guid> _budgetsIds;
+    public IReadOnlyCollection<Guid> BudgetsIds => _budgetsIds;
     
 
     [JsonConstructor]
@@ -39,6 +41,7 @@ public sealed class User : Entity<UserId>
         VerificationCode? verificationCode,
         LoggingGuard guard,
         string? longLivedToken,
+        List<Guid> budgetsIds,
         UserId? userId = null) : base(userId ?? new UserId())
     {
         Email = email;
@@ -53,6 +56,7 @@ public sealed class User : Entity<UserId>
         VerificationCode = verificationCode;
         Guard = guard;
         LongLivedToken = longLivedToken;
+        _budgetsIds = budgetsIds;
     }
 
     public static Result<User> Register(
@@ -101,7 +105,8 @@ public sealed class User : Entity<UserId>
             false,
             null,
             LoggingGuard.Create(),
-            null);
+            null,
+            []);
 
         var verificationCode = user.GenerateVerificationCode();
 
@@ -328,4 +333,8 @@ public sealed class User : Entity<UserId>
     }
 
     private void SetVerificationCode(VerificationCode code) => VerificationCode = code;
+
+    public void JoinBudget(Guid budgetId) => _budgetsIds.Add(budgetId);
+
+    public void LeaveBudget(Guid budgetId) => _budgetsIds.Remove(budgetId);
 }

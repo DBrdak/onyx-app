@@ -1,8 +1,13 @@
 ﻿using Amazon.Lambda.Annotations;
 using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.APIGatewayEvents;
+using Amazon.Lambda.Core;
+using Amazon.Lambda.SQSEvents;
+using Amazon.Sqs;
+using Identity.Application.User.AddBudgetIdForUser;
 using Identity.Application.User.GetUser;
 using Identity.Application.User.LogoutUser;
+using Identity.Application.User.RemoveBudgetIdForUser;
 using Identity.Application.User.RemoveUser;
 using Identity.Application.User.RequestEmailChange;
 using Identity.Application.User.UpdateUser;
@@ -10,6 +15,7 @@ using Identity.Functions.Functions.Shared;
 using Identity.Functions.Functions.User.Requests;
 using LambdaKernel;
 using MediatR;
+using Newtonsoft.Json;
 
 namespace Identity.Functions.Functions.User;
 
@@ -91,5 +97,49 @@ public sealed class UserFunctions : BaseFunction
         var result = await Sender.Send(command);
 
         return result.ReturnAPIResponse();
+    }
+
+    [LambdaFunction(ResourceName = nameof(RemoveBudgetIdForUser))]
+    public async Task RemoveBudgetIdForUser(SQSEvent evnt, ILambdaContext lambdaContext)
+    {
+        try
+        {
+            foreach (var message in evnt.Records)
+            {
+                var command = JsonConvert.DeserializeObject<RemoveBudgetIdForUserCommand>(message.Body) ??
+                              throw new ArgumentException(
+                                  $"Invalid message body for {nameof(RemoveBudgetIdForUser)} Lambda queue handler");
+
+                await Sender.Send(command);
+            }
+        }
+        catch (Exception e)
+        {
+            lambdaContext.Logger.LogError(
+                $"Problem occured when trying to execute {nameof(RemoveBudgetIdForUser)} Lambda queue handler\n" +
+                $"Details: {e.Message}");
+        }
+    }
+
+    [LambdaFunction(ResourceName = nameof(AddBudgetIdForUser))]
+    public async Task AddBudgetIdForUser(SQSEvent evnt, ILambdaContext lambdaContext)
+    {
+        try
+        {
+            foreach (var message in evnt.Records)
+            {
+                var command = JsonConvert.DeserializeObject<AddBudgetIdForUserCommand>(message.Body) ??
+                              throw new ArgumentException(
+                                  $"Invalid message body for {nameof(AddBudgetIdForUser)} Lambda queue handler");
+
+                await Sender.Send(command);
+            }
+        }
+        catch (Exception e)
+        {
+            lambdaContext.Logger.LogError(
+                $"Problem occured when trying to execute {nameof(AddBudgetIdForUser)} Lambda queue handler\n" +
+                $"Details: {e.Message}");
+        }
     }
 }

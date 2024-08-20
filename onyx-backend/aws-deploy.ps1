@@ -9,6 +9,8 @@ $messangerTemplate = ".\messanger\src\Messanger.Lambda\messanger-template.yaml"
 $messangerPackagedTemplate = ".\messanger\src\Messanger.Lambda\packaged-messanger.yaml"
 $baseStackName = "onyx-base"
 $baseTemplate = ".\base-template.yaml"
+$configStackName = "onyx-config"
+$configTemplate = ".\config-template.yaml"
 $region = "eu-central-1"
 $s3bucket = "onyx-default"
 
@@ -49,6 +51,12 @@ if (-not $fullAccessRoleArn) {
         Write-Host "Error: Could not retrieve the ARN of the newly created role. Exiting."
         exit 1
     }
+    
+    $deadLetterQueueArn = (aws cloudformation describe-stacks `
+        --stack-name $baseStackName `
+        --query "Stacks[0].Outputs[?OutputKey=='DeadLetterQueueArn'].OutputValue" `
+        --output text `
+        --region $region)
 }
 
 Write-Host "Packaging Messanger service..."
@@ -62,13 +70,6 @@ sam deploy --template-file $messangerPackagedTemplate `
     --parameter-overrides "FullAccessRoleArn=$fullAccessRoleArn" `
     --region $region
 
-$sendEmailTopicArn = (aws cloudformation describe-stacks --stack-name $messangerStackName --query "Stacks[0].Outputs[?OutputKey=='SendEmailTopicArn'].OutputValue" --output text --region $region)
-
-if (-not $sendEmailTopicArn) {
-    Write-Host "Error: Send Email topic Arn could not be retrieved. Exiting."
-    exit 1
-}
-
 # Identity service
 Write-Host "Packaging Identity service..."
 sam build --template $identityTemplate
@@ -78,7 +79,7 @@ Write-Host "Deploying Identity service..."
 sam deploy --template-file $identityPackagedTemplate `
     --stack-name $identityStackName `
     --capabilities CAPABILITY_IAM `
-    --parameter-overrides "SendEmailTopicArn=$sendEmailTopicArn FullAccessRoleArn=$fullAccessRoleArn" `
+    --parameter-overrides "DeadLetterQueueArn=$deadLetterQueueArn FullAccessRoleArn=$fullAccessRoleArn" `
     --region $region
 
 $lambdaAuthorizerArn = (aws cloudformation describe-stacks --stack-name $identityStackName --query "Stacks[0].Outputs[?OutputKey=='LambdaAuthorizerArn'].OutputValue" --output text --region $region)
@@ -101,3 +102,20 @@ sam deploy --template-file $budgetPackagedTemplate `
     --region $region
 
 Write-Host "Deployment complete."
+
+$addBudgetForUserQueueName = (aws cloudformation describe-stacks --stack-name $identityStackName --query "Stacks[0].Outputs[?OutputKey=='AddBudgetForUserQueueName'].OutputValue" --output text --region $region)
+$removeUserFromBudgetQueueName = (aws cloudformation describe-stacks --stack-name $identityStackName --query "Stacks[0].Outputs[?OutputKey=='RemoveUserFromBudgetQueueName'].OutputValue" --output text --region $region)
+$sendEmailTopicName = (aws cloudformation describe-stacks --stack-name $messangerStackName --query "Stacks[0].Outputs[?OutputKey=='SendEmailTopicName'].OutputValue" --output text --region $region)
+
+Write-Host "Deploying Configuration service..."
+
+sam deploy --template-file $configTemplate `
+    --stack-name $configStackName `
+    --capabilities CAPABILITY_IAM `
+    --parameter-overrides `
+        "AddBudgetForUserQueueName=$addBudgetForUserQueueName" `
+        "RemoveUserFromBudgetQueueName=$removeUserFromBudgetQueueName" `
+        "SendEmailTopicName=$sendEmailTopicName" `
+    --region $region
+
+Write-Host "Configuration deployment complete."

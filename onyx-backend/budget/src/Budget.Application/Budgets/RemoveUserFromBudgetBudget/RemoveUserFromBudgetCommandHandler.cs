@@ -1,4 +1,5 @@
 ﻿using Abstractions.Messaging;
+using Budget.Application.Abstractions.IntegrationEvents;
 using Budget.Application.Budgets.Models;
 using Budget.Domain.Budgets;
 using Models.Responses;
@@ -8,17 +9,16 @@ namespace Budget.Application.Budgets.RemoveUserFromBudgetBudget;
 internal sealed class RemoveUserFromBudgetCommandHandler : ICommandHandler<RemoveUserFromBudgetCommand, BudgetModel>
 {
     private readonly IBudgetRepository _repository;
-    private static readonly Error _invalidInputError = new Error(
-        "UpdateBudget.InvalidInput", 
-        "Specify either user to add or user to remove"
-        );
+    private readonly IQueueMessagePublisher _queueMessagePublisher;
 
-    public RemoveUserFromBudgetCommandHandler(IBudgetRepository repository)
+    public RemoveUserFromBudgetCommandHandler(
+        IBudgetRepository repository,
+        IQueueMessagePublisher queueMessagePublisher)
     {
         _repository = repository;
+        _queueMessagePublisher = queueMessagePublisher;
     }
 
-    //TODO Send event when user added or removed
     public async Task<Result<BudgetModel>> Handle(RemoveUserFromBudgetCommand request, CancellationToken cancellationToken)
     {
         var budgetId = new BudgetId(request.BudgetId);
@@ -44,8 +44,17 @@ internal sealed class RemoveUserFromBudgetCommandHandler : ICommandHandler<Remov
         {
             return updateResult.Error;
         }
-
         budget = updateResult.Value;
+
+        var messagePublishResult = await _queueMessagePublisher.PublishBudgetMemberJoinedAsync(
+            request.UserIdToRemove,
+            budget.Id,
+            cancellationToken);
+
+        if (messagePublishResult.IsFailure)
+        {
+            return messagePublishResult.Error;
+        }
 
         return BudgetModel.FromDomainModel(budget);
     }
