@@ -1,9 +1,11 @@
-﻿using Amazon.SQS;
+﻿using Abstractions.Messaging;
+using Amazon.SQS;
 using Amazon.SQS.Model;
 using Budget.Application.Abstractions.IntegrationEvents;
 using Budget.Domain.Budgets;
 using Extensions.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Models.Responses;
 using Newtonsoft.Json;
 
@@ -13,10 +15,12 @@ internal sealed class QueueMessagePublisher : IQueueMessagePublisher
 {
     private readonly IAmazonSQS _sqsClient;
     private readonly IConfiguration _configuration;
+    private readonly IServiceProvider _serviceProvider;
 
-    public QueueMessagePublisher(IConfiguration configuration)
+    public QueueMessagePublisher(IConfiguration configuration, IServiceProvider serviceProvider)
     {
         _configuration = configuration;
+        _serviceProvider = serviceProvider;
         _sqsClient = new AmazonSQSClient();
     }
 
@@ -66,7 +70,7 @@ internal sealed class QueueMessagePublisher : IQueueMessagePublisher
 
         var response = await _sqsClient.SendMessageAsync(queueUrl, messageJson, cancellationToken);
 
-        if (response.HttpStatusCode.IsSuccessful())
+        if (!response.HttpStatusCode.IsSuccessful())
         {
             return QueueMessagePublisherErrors.ConnectionError;
         }
@@ -78,7 +82,7 @@ internal sealed class QueueMessagePublisher : IQueueMessagePublisher
     {
         var queueGetRespone = await _sqsClient.GetQueueUrlAsync(queueName, cancellationToken);
 
-        if (queueGetRespone.HttpStatusCode.IsSuccessful())
+        if (!queueGetRespone.HttpStatusCode.IsSuccessful())
         {
             return QueueMessagePublisherErrors.ConnectionError;
         }

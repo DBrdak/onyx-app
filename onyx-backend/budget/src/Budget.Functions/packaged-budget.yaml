@@ -61,7 +61,7 @@ Resources:
     Properties:
       FunctionName: AccountsGetAll
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -78,6 +78,8 @@ Resources:
             Method: GET
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   AccountsAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -88,7 +90,7 @@ Resources:
     Properties:
       FunctionName: AccountsAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -105,6 +107,8 @@ Resources:
             Method: POST
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   AccountsUpdate:
     Type: AWS::Serverless::Function
     Metadata:
@@ -115,7 +119,7 @@ Resources:
     Properties:
       FunctionName: AccountsUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -132,6 +136,8 @@ Resources:
             Method: PUT
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   AccountsRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -142,7 +148,7 @@ Resources:
     Properties:
       FunctionName: AccountsRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -159,6 +165,8 @@ Resources:
             Method: DELETE
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   AccountsBulkAddTransactions:
     Type: AWS::Serverless::Function
     Metadata:
@@ -169,7 +177,7 @@ Resources:
     Properties:
       FunctionName: AccountsBulkAddTransactions
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -186,6 +194,8 @@ Resources:
             Method: POST
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   BudgetsGetAll:
     Type: AWS::Serverless::Function
     Metadata:
@@ -196,7 +206,7 @@ Resources:
     Properties:
       FunctionName: BudgetsGetAll
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -213,8 +223,6 @@ Resources:
             Method: GET
             ApiId:
               Ref: BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   BudgetsGetInvitation:
     Type: AWS::Serverless::Function
     Metadata:
@@ -225,7 +233,7 @@ Resources:
     Properties:
       FunctionName: BudgetsGetInvitation
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -242,6 +250,8 @@ Resources:
             Method: PUT
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   BudgetsAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -252,7 +262,7 @@ Resources:
     Properties:
       FunctionName: BudgetsAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -279,7 +289,7 @@ Resources:
     Properties:
       FunctionName: BudgetsRemoveUser
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -296,6 +306,8 @@ Resources:
             Method: PUT
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   BudgetsJoin:
     Type: AWS::Serverless::Function
     Metadata:
@@ -306,7 +318,7 @@ Resources:
     Properties:
       FunctionName: BudgetsJoin
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -333,7 +345,7 @@ Resources:
     Properties:
       FunctionName: BudgetsRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -350,6 +362,8 @@ Resources:
             Method: DELETE
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   CategoriesGetAll:
     Type: AWS::Serverless::Function
     Metadata:
@@ -360,7 +374,7 @@ Resources:
     Properties:
       FunctionName: CategoriesGetAll
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -377,6 +391,8 @@ Resources:
             Method: GET
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   CategoriesAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -387,7 +403,7 @@ Resources:
     Properties:
       FunctionName: CategoriesAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -404,6 +420,8 @@ Resources:
             Method: POST
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   CategoriesUpdate:
     Type: AWS::Serverless::Function
     Metadata:
@@ -414,7 +432,7 @@ Resources:
     Properties:
       FunctionName: CategoriesUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -431,6 +449,8 @@ Resources:
             Method: PUT
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   CategoriesRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -441,7 +461,7 @@ Resources:
     Properties:
       FunctionName: CategoriesRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -458,6 +478,8 @@ Resources:
             Method: DELETE
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   CounterpartiesAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -468,7 +490,7 @@ Resources:
     Properties:
       FunctionName: CounterpartiesAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -485,6 +507,8 @@ Resources:
             Method: POST
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   CounterpartiesUpdate:
     Type: AWS::Serverless::Function
     Metadata:
@@ -495,7 +519,7 @@ Resources:
     Properties:
       FunctionName: CounterpartiesUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -512,6 +536,8 @@ Resources:
             Method: PUT
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   CounterpartiesRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -522,7 +548,7 @@ Resources:
     Properties:
       FunctionName: CounterpartiesRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -539,6 +565,8 @@ Resources:
             Method: DELETE
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   TransactionsGet:
     Type: AWS::Serverless::Function
     Metadata:
@@ -549,7 +577,7 @@ Resources:
     Properties:
       FunctionName: TransactionsGet
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -566,6 +594,8 @@ Resources:
             Method: GET
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   TransactionsAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -576,7 +606,7 @@ Resources:
     Properties:
       FunctionName: TransactionsAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -593,6 +623,8 @@ Resources:
             Method: POST
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   TransactionsRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -603,7 +635,7 @@ Resources:
     Properties:
       FunctionName: TransactionsRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -620,6 +652,8 @@ Resources:
             Method: DELETE
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   TransactionsBulkRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -630,7 +664,7 @@ Resources:
     Properties:
       FunctionName: TransactionsBulkRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -647,6 +681,8 @@ Resources:
             Method: DELETE
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   SubcategoriesGetToAssign:
     Type: AWS::Serverless::Function
     Metadata:
@@ -657,7 +693,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesGetToAssign
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -674,6 +710,8 @@ Resources:
             Method: GET
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   SubcategoriesAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -684,7 +722,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -701,6 +739,8 @@ Resources:
             Method: POST
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   SubcategoriesUpdate:
     Type: AWS::Serverless::Function
     Metadata:
@@ -711,7 +751,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -728,6 +768,8 @@ Resources:
             Method: PUT
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   SubcategoriesRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -738,7 +780,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -755,6 +797,8 @@ Resources:
             Method: DELETE
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   SubcategoriesUpdateAssignment:
     Type: AWS::Serverless::Function
     Metadata:
@@ -765,7 +809,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesUpdateAssignment
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -782,6 +826,8 @@ Resources:
             Method: PUT
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   SubcategoriesUpdateTarget:
     Type: AWS::Serverless::Function
     Metadata:
@@ -792,7 +838,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesUpdateTarget
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -809,6 +855,8 @@ Resources:
             Method: PUT
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   SubcategoriesRemoveTarget:
     Type: AWS::Serverless::Function
     Metadata:
@@ -819,7 +867,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesRemoveTarget
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -836,6 +884,8 @@ Resources:
             Method: PUT
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   CounterpartiesGetAll:
     Type: AWS::Serverless::Function
     Metadata:
@@ -846,7 +896,7 @@ Resources:
     Properties:
       FunctionName: CounterpartiesGetAll
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -863,6 +913,8 @@ Resources:
             Method: GET
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   BudgetMemberLambdaAuthorizer:
     Type: AWS::Serverless::Function
     Metadata:
@@ -871,7 +923,7 @@ Resources:
     Properties:
       FunctionName: BudgetMemberLambdaAuthorizer
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/d9afc8dc7e7696453da072c87a9e72a5
+      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008

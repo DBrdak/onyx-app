@@ -12,6 +12,7 @@ public static class RequestAccessorInjector
         IServiceProvider serviceProvider,
         IDictionary<string, string> headers,
         string rawPath,
+        IDictionary<string, string>? pathParams,
         string method,
         ILambdaContext? lambdaContext = null)
     {
@@ -23,7 +24,7 @@ public static class RequestAccessorInjector
 
         var path = rawPath;
 
-        requestAccessor.SetUp(authorizationToken, claims, path, method);
+        requestAccessor.SetUp(authorizationToken, claims, pathParams?.ToDictionary() ?? [], path, method);
     }
 
     public static void AddRequestContextAccessor(
@@ -34,6 +35,7 @@ public static class RequestAccessorInjector
             serviceProvider,
             request.Headers,
             request.RawPath,
+            request.PathParameters,
             request.RequestContext.Http.Method);
 
     public static void AddRequestContextAccessor(
@@ -44,6 +46,7 @@ public static class RequestAccessorInjector
             serviceProvider,
             request.Headers,
             request.RawPath,
+            request.PathParameters,
             request.RequestContext.Http.Method);
 
     public static IServiceCollection InitRequestContextAccessor(this IServiceCollection services)

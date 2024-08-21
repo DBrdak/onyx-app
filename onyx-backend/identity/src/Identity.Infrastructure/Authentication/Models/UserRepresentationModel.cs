@@ -23,8 +23,8 @@ public sealed record UserRepresentationModel
     public static readonly string CurrencyClaimName = nameof(Currency);
     public string Currency { get; init; }
 
-    public static readonly string BudgetIdsClaimName = nameof(BudgetIdsClaimName);
-    public string BudgetIds { get; init; }
+    public static readonly string BudgetIdsClaimName = nameof(BudgetsIds);
+    public string BudgetsIds { get; init; }
 
     private UserRepresentationModel(
         long tokenCreatedTimestamp,
@@ -33,7 +33,7 @@ public sealed record UserRepresentationModel
         string id,
         string username,
         string currency,
-        string budgetIds)
+        string budgetsIds)
     {
         TokenCreatedTimestamp = tokenCreatedTimestamp;
         Email = email;
@@ -41,7 +41,7 @@ public sealed record UserRepresentationModel
         Id = id;
         Username = username;
         Currency = currency;
-        BudgetIds = budgetIds;
+        BudgetsIds = budgetsIds;
     }
 
     internal static UserRepresentationModel FromUser(User user) =>
@@ -64,7 +64,7 @@ public sealed record UserRepresentationModel
             new Claim(IdClaimName, Id),
             new Claim(UsernameClaimName, Username),
             new Claim(CurrencyClaimName, Currency),
-            new Claim(BudgetIdsClaimName, BudgetIds),
+            new Claim(BudgetIdsClaimName, BudgetsIds),
         };
     }
 }

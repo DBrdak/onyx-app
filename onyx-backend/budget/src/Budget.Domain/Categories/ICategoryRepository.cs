@@ -1,4 +1,5 @@
-﻿using Budget.Domain.Subcategories;
+﻿using Budget.Domain.Accounts;
+using Budget.Domain.Subcategories;
 using Models.Responses;
 
 namespace Budget.Domain.Categories;
@@ -18,4 +19,5 @@ public interface ICategoryRepository
     Task<Result<Category>> UpdateAsync(Category category, CancellationToken cancellationToken);
 
     Task<Result<Category>> GetCategoryWithSubcategory(SubcategoryId subcategoryId, CancellationToken cancellationToken);
+    Task<Result> RemoveRangeAsync(IEnumerable<CategoryId> entitiesId, CancellationToken cancellationToken = default);
 }

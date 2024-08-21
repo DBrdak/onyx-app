@@ -22,10 +22,18 @@ internal sealed class BudgetContext : IBudgetContext
     public Result<Guid> GetBudgetId()
     {
         var path = _requestAccessor.Path;
+        _requestAccessor.PathParams.TryGetValue("budgetId", out var budgetIdString);
 
-        var budgetId = string.IsNullOrWhiteSpace(path) ?
-            null :
-            MatchPath(path);
+        var parseResult = Guid.TryParse(budgetIdString, out var budgetIdGuid);
+
+        var budgetId = new Guid?(budgetIdGuid);
+
+        if (!parseResult)
+        {
+            budgetId = string.IsNullOrWhiteSpace(path) ?
+                Guid.Empty : 
+                MatchPath(path);
+        }
 
         return budgetId is null ?
             new Error(
