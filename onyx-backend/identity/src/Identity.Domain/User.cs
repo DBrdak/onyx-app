@@ -334,7 +334,13 @@ public sealed class User : Entity<UserId>
 
     private void SetVerificationCode(VerificationCode code) => VerificationCode = code;
 
-    public void JoinBudget(Guid budgetId) => _budgetsIds.Add(budgetId);
+    public void JoinBudget(Guid budgetId)
+    {
+        if (_budgetsIds.All(id => id != budgetId))
+        {
+            _budgetsIds.Add(budgetId);
+        }
+    }
 
     public void LeaveBudget(Guid budgetId) => _budgetsIds.Remove(budgetId);
 }
