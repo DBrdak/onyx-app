@@ -61,7 +61,7 @@ internal sealed class RemoveBudgetCommandHandler : ICommandHandler<RemoveBudgetC
 
         var results = await Task.WhenAll([removeAllRelativesTask, .. messagePublishTasks]);
 
-        if (results.FirstOrDefault(result => result.IsFailure) is var removeResult && removeResult.IsFailure)
+        if (Result.Aggregate(results) is var removeResult && removeResult.IsFailure)
         {
             return removeResult.Error;
         }
@@ -78,12 +78,12 @@ internal sealed class RemoveBudgetCommandHandler : ICommandHandler<RemoveBudgetC
             await _subcategoryRepository.GetAllAsync(cancellationToken),
             await _transactionRepository.GetAllAsync(cancellationToken));
 
-        if (Result.Aggregate(
+        if (Result.Aggregate([
                 accountsGetResult,
                 categoriesGetResult,
                 counterpartiesGetResult,
                 subcategoriesGetResult,
-                transactionsGetResult) is var result &&
+                transactionsGetResult]) is var result &&
             result.IsFailure)
         {
             return result.Error;

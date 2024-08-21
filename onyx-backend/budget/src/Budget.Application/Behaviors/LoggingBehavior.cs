@@ -1,6 +1,9 @@
-﻿using MediatR;
+﻿using Abstractions.Messaging;
+using Amazon.Lambda.Core;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Models.Responses;
+using Newtonsoft.Json;
 
 namespace Budget.Application.Behaviors;
 
@@ -9,20 +12,21 @@ public sealed class LoggingBehavior<TRequest, TResponse>
     where TRequest : IBaseRequest
     where TResponse : Result
 {
-    private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
+    private readonly RequestAccessor _requestAccessor;
 
-    public LoggingBehavior(ILogger<LoggingBehavior<TRequest, TResponse>> logger)
+    public LoggingBehavior(RequestAccessor requestAccessor)
     {
-        _logger = logger;
+        _requestAccessor = requestAccessor;
     }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        //using (LogContext.PushProperty("RequestHandler", typeof(TRequest).FullName))
-        //{
-            LogHandleStart();
+        LogHandleStart();
+        TResponse? response = null;
 
-            var response = await next();
+        try
+        {
+            response = await next();
 
             if (response.IsSuccess)
             {
@@ -33,21 +37,34 @@ public sealed class LoggingBehavior<TRequest, TResponse>
             LogHandleFailure(response);
 
             return response;
-        //}
+        }
+        catch (Exception e)
+        {
+            LogHandleException(e);
+            return response ?? (TResponse)Error.Exception;
+        }
+    }
+
+    private void LogHandleException(Exception e)
+    {
+        LambdaLogger.Log(
+            $"Exception occured when executing {typeof(TRequest).Name}: {JsonConvert.SerializeObject(e)}");
     }
 
     private void LogHandleFailure(TResponse response)
     {
-        _logger.LogWarning("Failed to handle {request}: {error}", typeof(TRequest).Name, response.Error);
+        LambdaLogger.Log(
+            $"Failed to handle {typeof(TRequest).Name}: {JsonConvert.SerializeObject(response.Error)}");
     }
 
     private void LogHandleSuccess()
     {
-        _logger.LogInformation($"Successfully handled {typeof(TRequest).Name}");
+        LambdaLogger.Log($"Successfully handled {typeof(TRequest).Name}");
     }
 
     private void LogHandleStart()
     {
-        _logger.LogInformation($"Handling {typeof(TRequest).Name}");
+        LambdaLogger.Log(
+            $"{JsonConvert.SerializeObject(_requestAccessor.Claims)} requested {typeof(TRequest).Name}");
     }
 }

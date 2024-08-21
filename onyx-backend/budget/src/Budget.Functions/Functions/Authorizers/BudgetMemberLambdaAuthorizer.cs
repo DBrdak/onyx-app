@@ -30,7 +30,6 @@ public class BudgetMemberLambdaAuthorizer : BaseFunction
         var query = new IsBudgetMemberQuery();
 
         var result = await Sender.Send(query);
-        context.Logger.Log(JsonConvert.SerializeObject(result));
 
         return new APIGatewayCustomAuthorizerV2SimpleResponse
         {

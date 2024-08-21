@@ -52,7 +52,7 @@ public static class RequestAccessorInjector
     public static IServiceCollection InitRequestContextAccessor(this IServiceCollection services)
     {
         services.AddSingleton(new RequestAccessor());
-
+        
         return services;
     }
 }

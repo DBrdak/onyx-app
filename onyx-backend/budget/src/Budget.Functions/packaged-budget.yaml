@@ -61,7 +61,7 @@ Resources:
     Properties:
       FunctionName: AccountsGetAll
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -90,7 +90,7 @@ Resources:
     Properties:
       FunctionName: AccountsAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -119,7 +119,7 @@ Resources:
     Properties:
       FunctionName: AccountsUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -148,7 +148,7 @@ Resources:
     Properties:
       FunctionName: AccountsRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -177,7 +177,7 @@ Resources:
     Properties:
       FunctionName: AccountsBulkAddTransactions
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -206,7 +206,7 @@ Resources:
     Properties:
       FunctionName: BudgetsGetAll
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -233,7 +233,7 @@ Resources:
     Properties:
       FunctionName: BudgetsGetInvitation
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -262,7 +262,7 @@ Resources:
     Properties:
       FunctionName: BudgetsAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -289,7 +289,7 @@ Resources:
     Properties:
       FunctionName: BudgetsRemoveUser
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -318,7 +318,7 @@ Resources:
     Properties:
       FunctionName: BudgetsJoin
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -345,7 +345,7 @@ Resources:
     Properties:
       FunctionName: BudgetsRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -374,7 +374,7 @@ Resources:
     Properties:
       FunctionName: CategoriesGetAll
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -403,7 +403,7 @@ Resources:
     Properties:
       FunctionName: CategoriesAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -432,7 +432,7 @@ Resources:
     Properties:
       FunctionName: CategoriesUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -461,7 +461,7 @@ Resources:
     Properties:
       FunctionName: CategoriesRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -490,7 +490,7 @@ Resources:
     Properties:
       FunctionName: CounterpartiesAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -519,7 +519,7 @@ Resources:
     Properties:
       FunctionName: CounterpartiesUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -548,7 +548,7 @@ Resources:
     Properties:
       FunctionName: CounterpartiesRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -577,7 +577,7 @@ Resources:
     Properties:
       FunctionName: TransactionsGet
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -606,7 +606,7 @@ Resources:
     Properties:
       FunctionName: TransactionsAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -635,7 +635,7 @@ Resources:
     Properties:
       FunctionName: TransactionsRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -664,7 +664,7 @@ Resources:
     Properties:
       FunctionName: TransactionsBulkRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -693,7 +693,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesGetToAssign
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -722,7 +722,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -751,7 +751,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -780,7 +780,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -809,7 +809,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesUpdateAssignment
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -838,7 +838,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesUpdateTarget
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -867,7 +867,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesRemoveTarget
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -896,7 +896,7 @@ Resources:
     Properties:
       FunctionName: CounterpartiesGetAll
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -923,7 +923,7 @@ Resources:
     Properties:
       FunctionName: BudgetMemberLambdaAuthorizer
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/b48b08e0db07dbf70a91b47f435fa7e8
+      CodeUri: s3://onyx-default/de59a443c6acf07a107578b09e4b7ce0
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008

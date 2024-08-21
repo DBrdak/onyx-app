@@ -29,10 +29,10 @@ internal sealed class AddUserToBudgetCommandHandler : ICommandHandler<AddUserToB
         var (userIdGetResult, usernameGetResult, emailGetResult) =
             (_userContext.GetUserId(), _userContext.GetUserUsername(), _userContext.GetUserEmail());
 
-        if (Result.Aggregate(
+        if (Result.Aggregate([
                 userIdGetResult,
                 usernameGetResult,
-                emailGetResult) is var result &&
+                emailGetResult]) is var result &&
             result.IsFailure)
         {
             return result.Error;

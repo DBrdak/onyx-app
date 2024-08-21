@@ -27,7 +27,7 @@ internal sealed class SubcategoryGlobalValidator
         var isUnknownSubcategory = budget.UnknownSubcategoryId == subcategoryId;
 
         return Result.FromBool(
-            isUnknownSubcategory,
+            !isUnknownSubcategory,
             SubcategoryValidationErrors.IsUnknownSubcategoryError);
     }
 }
