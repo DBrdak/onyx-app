@@ -1,7 +1,6 @@
 ﻿using Abstractions.Messaging;
 using Amazon.Lambda.Core;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Models.Responses;
 using Newtonsoft.Json;
 
@@ -65,6 +64,6 @@ public sealed class LoggingBehavior<TRequest, TResponse>
     private void LogHandleStart()
     {
         LambdaLogger.Log(
-            $"{JsonConvert.SerializeObject(_requestAccessor.Claims)} requested {typeof(TRequest).Name}");
+            $"{JsonConvert.SerializeObject(_requestAccessor.Claims.Select(c => c.Value))} requested {typeof(TRequest).Name}");
     }
 }

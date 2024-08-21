@@ -9,6 +9,7 @@ using Budget.Functions.Functions.Transactions.Requests;
 using LambdaKernel;
 using MediatR;
 using Budget.Application.Transactions.BulkRemoveTransactions;
+using Budget.Application.Transactions.SetSubcategory;
 
 namespace Budget.Functions.Functions.Transactions;
 
@@ -84,13 +85,33 @@ public sealed class TransactionFunctions : BaseFunction
     [LambdaFunction(ResourceName = $"Transactions{nameof(BulkRemove)}")]
     [HttpApi(LambdaHttpMethod.Delete, $"{transactionBaseRoute}/bulk")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> BulkRemove(
-        Guid budgetId,
-        [FromBody] Guid[] transactionIds,
+        string budgetId,
+        [FromBody] string[] transactionIds,
         APIGatewayHttpApiV2ProxyRequest requestContext)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
-        var command = new BulkRemoveTransactionsCommand(transactionIds, budgetId);
+        var command = new BulkRemoveTransactionsCommand(
+            transactionIds.Select(Guid.Parse).ToArray(),
+            Guid.Parse(budgetId));
+
+        var result = await Sender.Send(command);
+
+        return result.ReturnAPIResponse();
+    }
+
+    [LambdaFunction(ResourceName = $"Transactions{nameof(SetSubcategory)}")]
+    [HttpApi(LambdaHttpMethod.Put, $"{transactionBaseRoute}/subcategory")]
+    public async Task<APIGatewayHttpApiV2ProxyResponse> SetSubcategory(
+        string budgetId,
+        [FromBody] SetSubcategoryRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
+    {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
+        var command = new SetSubcategoryCommand(
+            Guid.Parse(request.TransactionId),
+            Guid.Parse(request.SubcategoryId));
 
         var result = await Sender.Send(command);
 

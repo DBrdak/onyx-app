@@ -19,4 +19,13 @@ public sealed class TransactionService
 
         return results.FirstOrDefault(r => r is { IsFailure: true }) ?? Result.Success();
     }
+
+    public static Result SetSubcategory(
+        Transaction transaction,
+        Subcategory subcategory,
+        Subcategory unknownSubcategory) =>
+        Result.Aggregate([
+            subcategory.Transact(transaction), 
+            unknownSubcategory.RemoveTransaction(transaction)
+        ]);
 }

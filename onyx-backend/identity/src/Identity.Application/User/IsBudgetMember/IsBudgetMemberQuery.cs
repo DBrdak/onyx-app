@@ -1,5 +1,5 @@
 using Abstractions.Messaging;
 
-namespace Budget.Application.Budgets.IsBudgetMember;
+namespace Identity.Application.User.IsBudgetMember;
 
 public sealed record IsBudgetMemberQuery() : IQuery<bool>;

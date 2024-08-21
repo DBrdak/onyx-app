@@ -1,4 +1,3 @@
-using Amazon.DynamoDBv2.Model;
 using Identity.Application;
 using Identity.Functions.Middlewares;
 using Identity.Infrastructure;
@@ -6,7 +5,6 @@ using LambdaKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SharedDAL.S3;
 
 namespace Identity.Functions;
 

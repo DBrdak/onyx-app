@@ -1,5 +1,4 @@
-﻿using Abstractions.DomainBaseTypes;
-using Models.Responses;
+﻿using Models.Responses;
 
 namespace Budget.Domain.Accounts;
 

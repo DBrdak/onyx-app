@@ -1,5 +1,4 @@
-﻿using Budget.Domain.Accounts;
-using Budget.Domain.Subcategories;
+﻿using Budget.Domain.Subcategories;
 using Models.Responses;
 
 namespace Budget.Domain.Categories;

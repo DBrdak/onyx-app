@@ -3,6 +3,7 @@ using Amazon.Lambda.Annotations;
 using Amazon.Lambda.APIGatewayEvents;
 using Budget.Application.Budgets.AddBudget;
 using Budget.Application.Budgets.AddUserToBudget;
+using Budget.Application.Budgets.EditBudget;
 using Budget.Application.Budgets.GetBudgetInvitation;
 using Budget.Application.Budgets.GetBudgets;
 using Budget.Application.Budgets.RemoveBudget;
@@ -116,6 +117,22 @@ public sealed class BudgetFunctions : BaseFunction
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
         var command = new RemoveBudgetCommand(Guid.Parse(budgetId));
+
+        var result = await Sender.Send(command);
+
+        return result.ReturnAPIResponse();
+    }
+
+    [LambdaFunction(ResourceName = $"Budgets{nameof(Edit)}")]
+    [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/{{budgetId}}/edit")]
+    public async Task<APIGatewayHttpApiV2ProxyResponse> Edit(
+        string budgetId,
+        [FromBody] BudgetEditRequest request,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
+    {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
+        var command = new EditBudgetCommand(request.NewBudgetName);
 
         var result = await Sender.Send(command);
 

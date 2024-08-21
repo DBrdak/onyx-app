@@ -270,9 +270,9 @@ public sealed class Transaction : BudgetOwnedEntity<TransactionId>
         return Result.Success();
     }
 
-    public Result RemoveSubcategory()
+    public Result RemoveSubcategory(Subcategory unknownSubcategory)
     {
-        SubcategoryId = null;
+        SubcategoryId = unknownSubcategory.Id;
 
         return Result.Success();
     }

@@ -1,11 +1,8 @@
-﻿using Abstractions.Messaging;
-using Amazon.SQS;
-using Amazon.SQS.Model;
+﻿using Amazon.SQS;
 using Budget.Application.Abstractions.IntegrationEvents;
 using Budget.Domain.Budgets;
 using Extensions.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Models.Responses;
 using Newtonsoft.Json;
 

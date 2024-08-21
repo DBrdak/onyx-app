@@ -1,16 +1,20 @@
-﻿using Amazon.Lambda.APIGatewayEvents;
+﻿using Abstractions.Messaging;
+using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Annotations;
 using Identity.Application.Abstractions.Authentication;
-using Identity.Application.Auth.ServiceSpecific.Budget.IsBudgetMember;
+using Identity.Application.User.IsBudgetMember;
 using Identity.Functions.Functions.Shared;
+using LambdaKernel;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Functions.Functions.Access;
 
 internal sealed class AccessFunction : BaseFunction
 {
     private readonly IJwtService _jwtService;
+    private readonly RequestAccessor _requestAccessor;
 
     public AccessFunction(IJwtService jwtService, ISender sender, IServiceProvider serviceProvider) : base(sender, serviceProvider)
     {
@@ -18,28 +22,30 @@ internal sealed class AccessFunction : BaseFunction
     }
 
     [LambdaFunction(ResourceName = "LambdaAuthorizer")]
-    public APIGatewayCustomAuthorizerV2SimpleResponse FunctionHandler(
+    public async Task<APIGatewayCustomAuthorizerV2SimpleResponse> FunctionHandler(
         APIGatewayCustomAuthorizerV2Request request,
         ILambdaContext context)
     {
+        ServiceProvider.AddRequestContextAccessor(request);
+
         var token = request.Headers
             .FirstOrDefault(kvp => kvp.Key.ToLower() == "authorization").Value?
             .Replace("Bearer ", string.Empty);
 
         var isAuthorized = _jwtService.ValidateJwt(token, out var principalId);
-        context.Logger.Log("Hello");
-        //if (pathParams.TryGetValue("budgetId", out var budgetId) && !string.IsNullOrWhiteSpace(budgetId))
-        //{
-        //    return new APIGatewayCustomAuthorizerV2SimpleResponse
-        //    {
-        //        IsAuthorized = await Sender.Send(
-        //                           new IsBudgetMemberQuery(
-        //                               token,
-        //                               budgetId)) is var result &&
-        //                       result.IsSuccess &&
-        //                       result.Value
-        //    };
-        //}
+
+        if (request.PathParameters.TryGetValue(
+                "budgetId", out var budgetId) &&
+            !string.IsNullOrWhiteSpace(budgetId) &&
+            isAuthorized)
+        {
+            return new APIGatewayCustomAuthorizerV2SimpleResponse
+            {
+                IsAuthorized = await Sender.Send(new IsBudgetMemberQuery()) is var result &&
+                                                 result.IsSuccess &&
+                                                 result.Value
+            };
+        }
 
         return new APIGatewayCustomAuthorizerV2SimpleResponse
         {

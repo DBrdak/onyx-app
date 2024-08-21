@@ -64,6 +64,6 @@ public sealed class LoggingBehavior<TRequest, TResponse>
     private void LogHandleStart()
     {
         LambdaLogger.Log(
-            $"{JsonConvert.SerializeObject(_requestAccessor.Claims)} requested {typeof(TRequest).Name}");
+            $"{JsonConvert.SerializeObject(_requestAccessor.Claims.Select(c => c.Value))} requested {typeof(TRequest).Name}");
     }
 }

@@ -32,7 +32,6 @@ internal sealed class AddTransactionCommandHandler : ICommandHandler<AddTransact
         _budgetRepository = budgetRepository;
     }
 
-    // TODO Money Echange
     public async Task<Result<TransactionModel>> Handle(AddTransactionCommand request, CancellationToken cancellationToken)
     {
         var amountCreateResult = request.Amount.ToDomainModel();

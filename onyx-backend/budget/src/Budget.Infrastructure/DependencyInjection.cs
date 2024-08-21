@@ -13,8 +13,6 @@ using Budget.Infrastructure.CurrencyServices.NbpClient;
 using Budget.Infrastructure.Data.Services;
 using Budget.Infrastructure.Queues;
 using Budget.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharedDAL;
 using SharedDAL.DataModels.Abstractions;

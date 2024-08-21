@@ -1,4 +1,3 @@
-using Amazon.Extensions.Configuration.SystemsManager;
 using Budget.Application;
 using Budget.Functions.Middlewares;
 using Budget.Infrastructure;
@@ -6,7 +5,7 @@ using LambdaKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SharedDAL.S3;
+
 #pragma warning disable CS1591
 
 namespace Budget.Functions;

@@ -1,5 +1,4 @@
 ﻿using Budget.Domain.Budgets;
-using Budget.Domain.Categories;
 using Models.Responses;
 
 namespace Budget.Domain.Counterparties;

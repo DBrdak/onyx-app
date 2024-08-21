@@ -5,7 +5,6 @@ using Budget.Infrastructure.Data.DataModels.Budgets;
 using Models.Responses;
 using SharedDAL;
 using SharedDAL.DataModels.Abstractions;
-using static MongoDB.Bson.Serialization.Serializers.SerializerHelper;
 
 namespace Budget.Infrastructure.Repositories;
 
