@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import { useAuthContext } from "@/lib/hooks/useAuthContext";
 import { useNavigate } from "@tanstack/react-router";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,7 +30,7 @@ function Login() {
   const navigate = useNavigate();
 
   const {
-    auth: { login, user, accessToken, isLoading },
+    auth: { login, isLoading },
   } = useAuthContext();
 
   const form = useForm<LoginFormValues>({
@@ -44,21 +43,12 @@ function Login() {
 
   const { control, handleSubmit, setError } = form;
 
-  useEffect(() => {
-    if (user && accessToken && !isLoading) {
-      navigate({ to: "/budget" });
-    }
-  }, [user, accessToken, navigate, isLoading]);
-
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     try {
       const isLoggedIn = await login(data.email, data.password);
 
-      if (!isLoggedIn) {
-        setError("root", {
-          type: "manual",
-          message: "Invalid email or password",
-        });
+      if (isLoggedIn) {
+        await navigate({ to: "/budget" });
       }
     } catch (error) {
       console.error("Login error:", error);

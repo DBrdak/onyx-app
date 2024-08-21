@@ -70,7 +70,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         await performLogin({ email, password });
 
-        return true;
+        return new Promise((resolve) => {
+          startTransition(() => {
+            // After the state is updated, resolve the promise
+            resolve(true);
+          });
+        });
       } catch (error) {
         console.error("Login failed:", getErrorMessage(error));
         return false;

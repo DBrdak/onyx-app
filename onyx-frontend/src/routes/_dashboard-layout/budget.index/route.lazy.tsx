@@ -6,8 +6,10 @@ import { Minus, Plus } from "lucide-react";
 import BudgetTableRow from "@/components/dashboard/budget/BudgetTableRow";
 import CreateBudgetForm from "@/components/dashboard/budget/CreateBudgetForm";
 import { Button } from "@/components/ui/button";
+
 import { getBudgetsQueryOptions } from "@/lib/api/budget";
 import { cn } from "@/lib/utils";
+import { useAuthContext } from "@/lib/hooks/useAuthContext";
 
 export const Route = createLazyFileRoute("/_dashboard-layout/budget/")({
   component: Budget,
@@ -16,7 +18,7 @@ export const Route = createLazyFileRoute("/_dashboard-layout/budget/")({
 function Budget() {
   const {
     auth: { user },
-  } = Route.useRouteContext();
+  } = useAuthContext();
   const [isCreating, setIsCreating] = useState(false);
 
   const budgetsQuery = useSuspenseQuery(getBudgetsQueryOptions);
@@ -63,9 +65,11 @@ function Budget() {
               isCreating && user && "grid-rows-[1fr] border-t",
             )}
           >
-            <div className="overflow-hidden">
-              <CreateBudgetForm setIsCreating={setIsCreating} user={user!} />
-            </div>
+            {user && (
+              <div className="overflow-hidden">
+                <CreateBudgetForm setIsCreating={setIsCreating} user={user} />
+              </div>
+            )}
           </li>
         </ul>
         <div className="flex justify-center">
