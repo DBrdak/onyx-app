@@ -1,5 +1,4 @@
-﻿using Abstractions.Messaging;
-using Amazon.Lambda.APIGatewayEvents;
+﻿using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Annotations;
 using Identity.Application.Abstractions.Authentication;
@@ -14,9 +13,13 @@ namespace Identity.Functions.Functions.Access;
 internal sealed class AccessFunction : BaseFunction
 {
     private readonly IJwtService _jwtService;
-    private readonly RequestAccessor _requestAccessor;
 
-    public AccessFunction(IJwtService jwtService, ISender sender, IServiceProvider serviceProvider) : base(sender, serviceProvider)
+    public AccessFunction(
+        IJwtService jwtService,
+        ISender sender,
+        IServiceProvider serviceProvider) : base(
+        sender,
+        serviceProvider)
     {
         _jwtService = jwtService;
     }
