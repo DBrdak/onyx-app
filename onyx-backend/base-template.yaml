@@ -59,6 +59,6 @@ Outputs:
   FullAccessRoleArn:
     Description: Arn of FullAccessRole
     Value: !GetAtt FullAccessRole.Arn
-  DLQueueArn:
+  DeadLetterQueueArn:
     Description: Dead letter queue arn
     Value: !GetAtt DeadLetterQueue.Arn

@@ -42,14 +42,14 @@ Resources:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: RemoveUserFromBudgetQueue
-      RedriveAllowPolicy:
+      RedrivePolicy:
         deadLetterTargetArn: !Ref DeadLetterQueueArn
         maxReceiveCount: 5
   AddBudgetForUserQueue:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: AddBudgetForUserQueue
-      RedriveAllowPolicy:
+      RedrivePolicy:
         deadLetterTargetArn: !Ref DeadLetterQueueArn
         maxReceiveCount: 5
   Login:
@@ -347,7 +347,53 @@ Resources:
       Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RemoveUser_Generated::RemoveUser
-      Events: {RootDelete: {Type: HttpApi, Properties: {Path: /api/v1/user/remove, Method: DELETE}}}
+      Events:
+        RootDelete:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/user/remove
+            Method: DELETE
+            ApiId: !Ref IdentityApi
+  AddBudgetIdForUser:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      FunctionName: AddBudgetIdForUser
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: !Ref FullAccessRoleArn
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_AddBudgetIdForUser_Generated::AddBudgetIdForUser
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt AddBudgetForUserQueue.Arn
+  RemoveBudgetIdForUser:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      FunctionName: RemoveBudgetIdForUser
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: !Ref FullAccessRoleArn
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RemoveBudgetIdForUser_Generated::RemoveBudgetIdForUser
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt RemoveUserFromBudgetQueue.Arn
   LambdaAuthorizer:
     Type: AWS::Serverless::Function
     Metadata:
@@ -363,39 +409,6 @@ Resources:
       Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Access.AccessFunction_FunctionHandler_Generated::FunctionHandler
-  AddBudgetIdForUser:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-    Properties:
-      Runtime: dotnet8
-      CodeUri: .
-      MemorySize: 3008
-      EphemeralStorage:
-        Size: 3008
-      Timeout: 30
-      Policies:
-        - AWSLambdaBasicExecutionRole
-      PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_AddBudgetIdForUser_Generated::AddBudgetIdForUser
-      Events:
-        SnsEvent:
-          Type: SQS
-          Properties:
-            Topic: !Ref AddBudgetForUserQueue
-  RemoveBudgetIdForUser:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-    Properties:
-      Runtime: dotnet8
-      CodeUri: .
-      MemorySize: 512
-      Timeout: 30
-      Policies:
-        - AWSLambdaBasicExecutionRole
-      PackageType: Zip
-      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RemoveBudgetIdForUser_Generated::RemoveBudgetIdForUser
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment
@@ -407,6 +420,6 @@ Outputs:
   RemoveUserFromBudgetQueueName:
     Description: RemoveUserFromBudgetQueueName Queue Name
     Value: !GetAtt RemoveUserFromBudgetQueue.QueueName
-  AddBudgetForUserQueue:
+  AddBudgetForUserQueueName:
     Description: AddBudgetForUserQueue Queue Name
     Value: !GetAtt AddBudgetForUserQueue.QueueName

@@ -2,6 +2,7 @@
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Annotations;
 using Identity.Application.Abstractions.Authentication;
+using Identity.Application.Auth.ServiceSpecific.Budget.IsBudgetMember;
 using Identity.Functions.Functions.Shared;
 using MediatR;
 
@@ -26,6 +27,19 @@ internal sealed class AccessFunction : BaseFunction
             .Replace("Bearer ", string.Empty);
 
         var isAuthorized = _jwtService.ValidateJwt(token, out var principalId);
+        context.Logger.Log("Hello");
+        //if (pathParams.TryGetValue("budgetId", out var budgetId) && !string.IsNullOrWhiteSpace(budgetId))
+        //{
+        //    return new APIGatewayCustomAuthorizerV2SimpleResponse
+        //    {
+        //        IsAuthorized = await Sender.Send(
+        //                           new IsBudgetMemberQuery(
+        //                               token,
+        //                               budgetId)) is var result &&
+        //                       result.IsSuccess &&
+        //                       result.Value
+        //    };
+        //}
 
         return new APIGatewayCustomAuthorizerV2SimpleResponse
         {

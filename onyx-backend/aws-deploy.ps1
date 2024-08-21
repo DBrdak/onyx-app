@@ -107,6 +107,19 @@ $addBudgetForUserQueueName = (aws cloudformation describe-stacks --stack-name $i
 $removeUserFromBudgetQueueName = (aws cloudformation describe-stacks --stack-name $identityStackName --query "Stacks[0].Outputs[?OutputKey=='RemoveUserFromBudgetQueueName'].OutputValue" --output text --region $region)
 $sendEmailTopicName = (aws cloudformation describe-stacks --stack-name $messangerStackName --query "Stacks[0].Outputs[?OutputKey=='SendEmailTopicName'].OutputValue" --output text --region $region)
 
+if (-not $addBudgetForUserQueueName) {
+    Write-Host "Error: AddBudgetForUserQueueName could not be retrieved. Exiting."
+    exit 1
+}
+if (-not $removeUserFromBudgetQueueName) {
+    Write-Host "Error: RemoveUserFromBudgetQueueName could not be retrieved. Exiting."
+    exit 1
+}
+if (-not $sendEmailTopicName) {
+    Write-Host "Error: SendEmailTopicName could not be retrieved. Exiting."
+    exit 1
+}
+
 Write-Host "Deploying Configuration service..."
 
 sam deploy --template-file $configTemplate `
@@ -119,3 +132,9 @@ sam deploy --template-file $configTemplate `
     --region $region
 
 Write-Host "Configuration deployment complete."
+
+$identityUrl =(aws cloudformation describe-stacks --stack-name $identityStackName --query "Stacks[0].Outputs[?OutputKey=='ApiURL'].OutputValue" --output text --region $region)
+$budgetUrl = (aws cloudformation describe-stacks --stack-name $budgetStackName --query "Stacks[0].Outputs[?OutputKey=='ApiURL'].OutputValue" --output text --region $region)
+
+Write-Host "Identity URL: $identityUrl" -ForegroundColor Green
+Write-Host "Budget URL: $budgetUrl" -ForegroundColor Green

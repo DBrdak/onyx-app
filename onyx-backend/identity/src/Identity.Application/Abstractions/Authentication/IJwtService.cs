@@ -11,4 +11,6 @@ public interface IJwtService
     bool ValidateJwt(string? token, out string principalId);
 
     Result<string> GenerateLongLivedToken(UserId userId);
+
+    Result<string> GetBudgetsIdsFromToken(string token);
 }

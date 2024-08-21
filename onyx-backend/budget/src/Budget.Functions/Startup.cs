@@ -1,3 +1,4 @@
+using Amazon.Extensions.Configuration.SystemsManager;
 using Budget.Application;
 using Budget.Functions.Middlewares;
 using Budget.Infrastructure;
@@ -31,7 +32,7 @@ public class Startup
     private static IConfiguration UseConfiguration(IServiceCollection services)
     {
         var configuration = new ConfigurationBuilder()
-            //.AddSystemsManager("/onyx-budget")
+            .AddSystemsManager("/onyx-budget")
             .Build();
 
         services.AddSingleton<IConfiguration>(configuration);

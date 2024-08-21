@@ -3,7 +3,6 @@ using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
-using Amazon.Sqs;
 using Identity.Application.User.AddBudgetIdForUser;
 using Identity.Application.User.GetUser;
 using Identity.Application.User.LogoutUser;

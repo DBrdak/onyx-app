@@ -39,6 +39,16 @@ Resources:
             Identity:
               Headers:
               - authorization
+          BudgetMemberAuthorizer:
+            FunctionArn:
+              Fn::GetAtt:
+              - BudgetMemberLambdaAuthorizer
+              - Arn
+            AuthorizerPayloadFormatVersion: '2.0'
+            EnableSimpleResponses: true
+            Identity:
+              Headers:
+              - authorization
     Metadata:
       SamResourceId: BudgetApi
   AccountsGetAll:
@@ -51,7 +61,7 @@ Resources:
     Properties:
       FunctionName: AccountsGetAll
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -78,7 +88,7 @@ Resources:
     Properties:
       FunctionName: AccountsAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -105,7 +115,7 @@ Resources:
     Properties:
       FunctionName: AccountsUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -132,7 +142,7 @@ Resources:
     Properties:
       FunctionName: AccountsRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -159,7 +169,7 @@ Resources:
     Properties:
       FunctionName: AccountsBulkAddTransactions
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -186,7 +196,7 @@ Resources:
     Properties:
       FunctionName: BudgetsGetAll
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -203,6 +213,8 @@ Resources:
             Method: GET
             ApiId:
               Ref: BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   BudgetsGetInvitation:
     Type: AWS::Serverless::Function
     Metadata:
@@ -213,7 +225,7 @@ Resources:
     Properties:
       FunctionName: BudgetsGetInvitation
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -240,7 +252,7 @@ Resources:
     Properties:
       FunctionName: BudgetsAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -267,7 +279,7 @@ Resources:
     Properties:
       FunctionName: BudgetsRemoveUser
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -294,7 +306,7 @@ Resources:
     Properties:
       FunctionName: BudgetsJoin
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -321,7 +333,7 @@ Resources:
     Properties:
       FunctionName: BudgetsRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -348,7 +360,7 @@ Resources:
     Properties:
       FunctionName: CategoriesGetAll
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -375,7 +387,7 @@ Resources:
     Properties:
       FunctionName: CategoriesAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -402,7 +414,7 @@ Resources:
     Properties:
       FunctionName: CategoriesUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -429,7 +441,7 @@ Resources:
     Properties:
       FunctionName: CategoriesRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -456,7 +468,7 @@ Resources:
     Properties:
       FunctionName: CounterpartiesAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -483,7 +495,7 @@ Resources:
     Properties:
       FunctionName: CounterpartiesUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -510,7 +522,7 @@ Resources:
     Properties:
       FunctionName: CounterpartiesRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -537,7 +549,7 @@ Resources:
     Properties:
       FunctionName: TransactionsGet
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -564,7 +576,7 @@ Resources:
     Properties:
       FunctionName: TransactionsAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -591,7 +603,7 @@ Resources:
     Properties:
       FunctionName: TransactionsRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -618,7 +630,7 @@ Resources:
     Properties:
       FunctionName: TransactionsBulkRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -645,7 +657,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesGetToAssign
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -672,7 +684,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesAdd
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -699,7 +711,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesUpdate
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -726,7 +738,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesRemove
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -753,7 +765,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesUpdateAssignment
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -780,7 +792,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesUpdateTarget
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -807,7 +819,7 @@ Resources:
     Properties:
       FunctionName: SubcategoriesRemoveTarget
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -834,7 +846,7 @@ Resources:
     Properties:
       FunctionName: CounterpartiesGetAll
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/ed2020d5f1d8b4a337bf8aa3daaf95fa
+      CodeUri: s3://onyx-default/9c1cb4053332299d449e36009d3e9012
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -851,6 +863,23 @@ Resources:
             Method: GET
             ApiId:
               Ref: BudgetApi
+  BudgetMemberLambdaAuthorizer:
+    Type: AWS::Serverless::Function
+    Metadata:
+      SamResourceId: BudgetMemberLambdaAuthorizer
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      FunctionName: BudgetMemberLambdaAuthorizer
+      Runtime: dotnet8
+      CodeUri: s3://onyx-default/d9afc8dc7e7696453da072c87a9e72a5
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role:
+        Ref: FullAccessRoleArn
+      PackageType: Zip
+      Handler: Budget.Functions::Budget.Functions.Functions.Authorizers.BudgetMemberLambdaAuthorizer_FunctionHandler_Generated::FunctionHandler
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

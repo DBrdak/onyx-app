@@ -16,7 +16,7 @@ Resources:
     Properties:
       Handler: Messanger.Lambda::Messanger.Lambda.Functions.Emails.EmailLambda::FunctionHandler
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/9a342afe362ab7def840c9c8db306873
+      CodeUri: s3://onyx-default/8c616f0867ed61b6bb6cd07d7dd4054a
       FunctionName: EmailSender
       MemorySize: 3008
       EphemeralStorage:
@@ -25,10 +25,6 @@ Resources:
       PackageType: Zip
       Role:
         Ref: FullAccessRoleArn
-      Environment:
-        Variables:
-          TopicArn:
-            Ref: SendEmail
       Events:
         SnsEvent:
           Type: SNS
@@ -38,9 +34,9 @@ Resources:
     Metadata:
       SamResourceId: EmailSender
 Outputs:
-  SendEmailTopicArn:
-    Description: The ARN of the Send Email Topic
+  SendEmailTopicName:
+    Description: Send email topic name
     Value:
       Fn::GetAtt:
       - SendEmail
-      - TopicArn
+      - TopicName

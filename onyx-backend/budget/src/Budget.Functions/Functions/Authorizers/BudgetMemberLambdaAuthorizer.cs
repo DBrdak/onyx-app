@@ -6,6 +6,7 @@ using Budget.Application.Budgets.IsBudgetMember;
 using Budget.Functions.Functions.Shared;
 using LambdaKernel;
 using MediatR;
+using Newtonsoft.Json;
 
 namespace Budget.Functions.Functions.Authorizers;
 
@@ -19,7 +20,7 @@ public class BudgetMemberLambdaAuthorizer : BaseFunction
     {
     }
 
-    [LambdaFunction(ResourceName = "BudgetMemberAuthorizer")]
+    [LambdaFunction(ResourceName = "BudgetMemberLambdaAuthorizer")]
     public async Task<APIGatewayCustomAuthorizerV2SimpleResponse> FunctionHandler(
         APIGatewayCustomAuthorizerV2Request request,
         ILambdaContext context)

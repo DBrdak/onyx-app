@@ -31,7 +31,7 @@ Resources:
       Value: !Ref RemoveUserFromBudgetQueueName
       Description: "SSM Parameter for budgetMemberRemove queue name"
 
-  SendEmailTopicName:
+  SendEmailSnsTopicName:
     Type: AWS::SSM::Parameter
     Properties:
       Name: "/onyx-identity/sendEmailTopicName"

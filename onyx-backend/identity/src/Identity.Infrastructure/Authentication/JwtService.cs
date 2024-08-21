@@ -120,6 +120,22 @@ internal sealed class JwtService : IJwtService
             Result.Success(tokenValue);
     }
 
+    public Result<string> GetBudgetsIdsFromToken(string token)
+    {
+        try
+        {
+            var jwt = new JsonWebToken(token);
+
+            jwt.TryGetPayloadValue(UserRepresentationModel.BudgetIdsClaimName, out string budgetsIds);
+
+            return budgetsIds ?? Result.Failure<string>(tokenCreationFailedError);
+        }
+        catch (Exception)
+        {
+            return Result.Failure<string>(tokenCreationFailedError);
+        }
+    }
+
     public Result<string> GetUserIdFromToken(string encodedToken)
     {
         try

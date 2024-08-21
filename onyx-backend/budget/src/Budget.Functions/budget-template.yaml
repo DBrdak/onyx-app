@@ -38,13 +38,13 @@ Resources:
             Identity:
               Headers:
                 - authorization
-        BudgetMemberAuthorizer:
-          FunctionArn: !Ref BudgetMemberAuthorizerArn
-          AuthorizerPayloadFormatVersion: '2.0'
-          EnableSimpleResponses: true
-          Identity:
-            Headers:
-              - authorization
+          BudgetMemberAuthorizer:
+            FunctionArn: !GetAtt BudgetMemberLambdaAuthorizer.Arn
+            AuthorizerPayloadFormatVersion: '2.0'
+            EnableSimpleResponses: true
+            Identity:
+              Headers:
+                - authorization
   AccountsGetAll:
     Type: AWS::Serverless::Function
     Metadata:
@@ -69,8 +69,6 @@ Resources:
             Path: /api/v1/{budgetId}/accounts
             Method: GET
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   AccountsAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -95,8 +93,6 @@ Resources:
             Path: /api/v1/{budgetId}/accounts
             Method: POST
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   AccountsUpdate:
     Type: AWS::Serverless::Function
     Metadata:
@@ -121,8 +117,6 @@ Resources:
             Path: /api/v1/{budgetId}/accounts/{accountId}
             Method: PUT
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   AccountsRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -147,8 +141,6 @@ Resources:
             Path: /api/v1/{budgetId}/accounts/{accountId}
             Method: DELETE
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   AccountsBulkAddTransactions:
     Type: AWS::Serverless::Function
     Metadata:
@@ -173,8 +165,6 @@ Resources:
             Path: /api/v1/{budgetId}/accounts/{accountId}/transactions/bulk
             Method: POST
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   BudgetsGetAll:
     Type: AWS::Serverless::Function
     Metadata:
@@ -199,6 +189,8 @@ Resources:
             Path: /api/v1/budgets
             Method: GET
             ApiId: !Ref BudgetApi
+            Auth:
+              Authorizer: BudgetMemberAuthorizer
   BudgetsGetInvitation:
     Type: AWS::Serverless::Function
     Metadata:
@@ -223,8 +215,6 @@ Resources:
             Path: /api/v1/budgets/{budgetId}/invitation
             Method: PUT
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   BudgetsAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -273,8 +263,6 @@ Resources:
             Path: /api/v1/budgets/{budgetId}/remove/{userId}
             Method: PUT
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   BudgetsJoin:
     Type: AWS::Serverless::Function
     Metadata:
@@ -323,8 +311,6 @@ Resources:
             Path: /api/v1/budgets/{budgetId}
             Method: DELETE
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   CategoriesGetAll:
     Type: AWS::Serverless::Function
     Metadata:
@@ -349,8 +335,6 @@ Resources:
             Path: /api/v1/{budgetId}/categories
             Method: GET
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   CategoriesAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -375,8 +359,6 @@ Resources:
             Path: /api/v1/{budgetId}/categories
             Method: POST
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   CategoriesUpdate:
     Type: AWS::Serverless::Function
     Metadata:
@@ -401,8 +383,6 @@ Resources:
             Path: /api/v1/{budgetId}/categories/{categoryId}
             Method: PUT
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   CategoriesRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -427,8 +407,6 @@ Resources:
             Path: /api/v1/{budgetId}/categories/{categoryId}
             Method: DELETE
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   CounterpartiesAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -453,8 +431,6 @@ Resources:
             Path: /api/v1/{budgetId}/counterparties
             Method: POST
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   CounterpartiesUpdate:
     Type: AWS::Serverless::Function
     Metadata:
@@ -479,8 +455,6 @@ Resources:
             Path: /api/v1/{budgetId}/counterparties/{counterpartyId}
             Method: PUT
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   CounterpartiesRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -505,8 +479,6 @@ Resources:
             Path: /api/v1/{budgetId}/counterparties/{counterpartyId}
             Method: DELETE
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   TransactionsGet:
     Type: AWS::Serverless::Function
     Metadata:
@@ -531,8 +503,6 @@ Resources:
             Path: /api/v1/{budgetId}/transactions
             Method: GET
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   TransactionsAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -557,8 +527,6 @@ Resources:
             Path: /api/v1/{budgetId}/transactions
             Method: POST
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   TransactionsRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -583,8 +551,6 @@ Resources:
             Path: /api/v1/{budgetId}/transactions/{transactionId}
             Method: DELETE
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   TransactionsBulkRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -609,8 +575,6 @@ Resources:
             Path: /api/v1/{budgetId}/transactions/bulk
             Method: DELETE
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   SubcategoriesGetToAssign:
     Type: AWS::Serverless::Function
     Metadata:
@@ -635,8 +599,6 @@ Resources:
             Path: /api/v1/{budgetId}/subcategories/to-assign
             Method: GET
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   SubcategoriesAdd:
     Type: AWS::Serverless::Function
     Metadata:
@@ -661,8 +623,6 @@ Resources:
             Path: /api/v1/{budgetId}/subcategories
             Method: POST
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   SubcategoriesUpdate:
     Type: AWS::Serverless::Function
     Metadata:
@@ -687,8 +647,6 @@ Resources:
             Path: /api/v1/{budgetId}/subcategories/{subcategoryId}
             Method: PUT
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   SubcategoriesRemove:
     Type: AWS::Serverless::Function
     Metadata:
@@ -713,8 +671,6 @@ Resources:
             Path: /api/v1/{budgetId}/subcategories/{subcategoryId}
             Method: DELETE
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   SubcategoriesUpdateAssignment:
     Type: AWS::Serverless::Function
     Metadata:
@@ -739,8 +695,6 @@ Resources:
             Path: /api/v1/{budgetId}/subcategories/{subcategoryId}/assignment
             Method: PUT
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   SubcategoriesUpdateTarget:
     Type: AWS::Serverless::Function
     Metadata:
@@ -765,8 +719,6 @@ Resources:
             Path: /api/v1/{budgetId}/subcategories/{subcategoryId}/target
             Method: PUT
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   SubcategoriesRemoveTarget:
     Type: AWS::Serverless::Function
     Metadata:
@@ -791,8 +743,6 @@ Resources:
             Path: /api/v1/{budgetId}/subcategories/{subcategoryId}/target/remove
             Method: PUT
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
   CounterpartiesGetAll:
     Type: AWS::Serverless::Function
     Metadata:
@@ -817,14 +767,12 @@ Resources:
             Path: /api/v1/{budgetId}/counterparties
             Method: GET
             ApiId: !Ref BudgetApi
-            Auth:
-              Authorizer: BudgetMemberAuthorizer
-  BudgetMemberAuthorizer:
+  BudgetMemberLambdaAuthorizer:
     Type: AWS::Serverless::Function
     Metadata:
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: BudgetMemberAuthorizer
+      FunctionName: BudgetMemberLambdaAuthorizer
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008

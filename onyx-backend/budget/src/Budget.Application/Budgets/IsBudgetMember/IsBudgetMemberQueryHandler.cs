@@ -27,7 +27,7 @@ internal sealed class IsBudgetMemberQueryHandler : IQueryHandler<IsBudgetMemberQ
 
         if (budgetIdGetResult.IsFailure)
         {
-            return budgetIdGetResult.Error;
+            return true;
         }
 
         var budgetId = budgetIdGetResult.Value;
