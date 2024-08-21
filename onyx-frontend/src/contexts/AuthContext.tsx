@@ -56,12 +56,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   useApiInterceptors(userApi, accessToken);
 
   const logout = useCallback(() => {
+    setAccessToken(null);
+    localStorage.removeItem("longLivedToken");
     startTransition(() => {
-      setAccessToken(null);
-      localStorage.removeItem("longLivedToken");
-      queryClient.clear();
       setInitializationComplete(false);
       setIsInitialized(true);
+      queryClient.clear();
     });
   }, [queryClient]);
 

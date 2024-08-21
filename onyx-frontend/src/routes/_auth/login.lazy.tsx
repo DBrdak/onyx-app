@@ -16,7 +16,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-export const Route = createLazyFileRoute("/_home-layout/login")({
+export const Route = createLazyFileRoute("/_auth/login")({
   component: Login,
 });
 
