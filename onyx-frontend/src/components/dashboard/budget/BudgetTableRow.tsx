@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Link, useRouteContext } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Edit, Trash } from "lucide-react";
@@ -27,17 +27,16 @@ import {
   DEFAULT_MONTH_STRING,
   DEFAULT_YEAR_STRING,
 } from "@/lib/constants/date";
+import { User } from "@/lib/validation/user";
 
 interface BudgetTableRowProps {
   budget: Budget;
+  user: User;
 }
 
-const BudgetTableRow: FC<BudgetTableRowProps> = ({ budget }) => {
+const BudgetTableRow: FC<BudgetTableRowProps> = ({ budget, user }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const queryClient = useQueryClient();
-  const {
-    auth: { user },
-  } = useRouteContext({ from: "/_dashboard-layout/budget/" });
   const { id } = budget;
 
   const { mutate, isError, isPending } = useMutation({

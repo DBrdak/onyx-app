@@ -56,7 +56,7 @@ function Budget() {
             <p className="md:col-span-4">Users</p>
           </li>
           {budgets.map((budget) => (
-            <BudgetTableRow budget={budget} key={budget.id} />
+            <BudgetTableRow budget={budget} key={budget.id} user={user!} />
           ))}
 
           <li
@@ -65,11 +65,9 @@ function Budget() {
               isCreating && user && "grid-rows-[1fr] border-t",
             )}
           >
-            {user && (
-              <div className="overflow-hidden">
-                <CreateBudgetForm setIsCreating={setIsCreating} user={user} />
-              </div>
-            )}
+            <div className="overflow-hidden">
+              <CreateBudgetForm setIsCreating={setIsCreating} user={user!} />
+            </div>
           </li>
         </ul>
         <div className="flex justify-center">
