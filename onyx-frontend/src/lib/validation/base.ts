@@ -30,6 +30,12 @@ export const ResultSchema = z.object({
   error: ErrorSchema,
 });
 
+export type BaseResult = z.infer<typeof ResultSchema>;
+
+export interface ExtendedResult<T> extends BaseResult {
+  value: T;
+}
+
 export const TargetSchema = z.object({
   upToMonth: MonthDateSchema,
   startedAt: MonthDateSchema,

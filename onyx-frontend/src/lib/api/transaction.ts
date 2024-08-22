@@ -1,4 +1,4 @@
-import { privateApi } from "@/lib/axios";
+import { budgetApi } from "@/lib/axios";
 import {
   Transaction,
   TransactionResultSchema,
@@ -56,7 +56,7 @@ export const getTransactions = async (
   }
 
   try {
-    const { data } = await privateApi.get(url);
+    const { data } = await budgetApi.get(url);
     const validatedData = TransactionResultSchema.safeParse(data);
     if (!validatedData.success) {
       console.log(validatedData.error?.issues);
@@ -91,13 +91,13 @@ export const getTransactionsQueryOptions = (
   });
 
 export const createTransaction = ({ budgetId, payload }: CreateTransaction) =>
-  privateApi.post(`/${budgetId}/transactions`, payload);
+  budgetApi.post(`/${budgetId}/transactions`, payload);
 
 export const deleteTransaction = ({
   budgetId,
   transactionId,
 }: TransactionBudget) =>
-  privateApi.delete(`/${budgetId}/transactions/${transactionId}`);
+  budgetApi.delete(`/${budgetId}/transactions/${transactionId}`);
 
 export const deleteMultipleTransactions = ({
   budgetId,

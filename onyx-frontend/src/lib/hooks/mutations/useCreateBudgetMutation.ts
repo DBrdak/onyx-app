@@ -35,7 +35,13 @@ export const useCreateBudgetMutation = ({
             id: "12345",
             name: budgetName,
             currency: budgetCurrency,
-            userIds: [userId],
+            budgetMembers: [
+              {
+                id: userId,
+                username: "You",
+                email: "you@you.com",
+              },
+            ],
             optimistic: true,
           },
         ];

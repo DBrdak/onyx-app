@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouteContext } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Edit, Trash } from "lucide-react";
@@ -35,6 +35,9 @@ interface BudgetTableRowProps {
 const BudgetTableRow: FC<BudgetTableRowProps> = ({ budget }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const queryClient = useQueryClient();
+  const {
+    auth: { user },
+  } = useRouteContext({ from: "/_dashboard-layout/budget/" });
   const { id } = budget;
 
   const { mutate, isError, isPending } = useMutation({
@@ -80,13 +83,18 @@ const BudgetTableRow: FC<BudgetTableRowProps> = ({ budget }) => {
               >
                 <p className="md:col-span-3">{budget.name}</p>
                 <p className="md:col-span-2">{budget.currency}</p>
-                <p className="flex flex-col md:col-span-4">
-                  {budget.userIds.map((id) => (
-                    <span key={id} className="truncate">
-                      {id}
-                    </span>
+                <div className="grid grid-cols-1 gap-2 md:col-span-4 md:grid-cols-2 lg:grid-cols-3">
+                  {budget.budgetMembers.map((member) => (
+                    <p
+                      key={id}
+                      className="truncate rounded-full border px-2 text-center"
+                    >
+                      {member.username === user?.username
+                        ? "You"
+                        : member.username}
+                    </p>
                   ))}
-                </p>
+                </div>
               </Link>
             </li>
           </TooltipTrigger>

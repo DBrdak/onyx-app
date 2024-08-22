@@ -1,16 +1,58 @@
-import LoginButton from "@/components/home/LoginButton";
+import { Link } from "@tanstack/react-router";
+
 import Brand from "@/components/Logo";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { useAuthContext } from "@/lib/hooks/useAuthContext";
+import UserDropdown from "../dashboard/UserDropdown";
 
 const Navbar = () => {
+  const {
+    auth: { user },
+  } = useAuthContext();
+
   return (
-    <div className="max-w-1196px mt-6 flex h-30px justify-between bg-background  px-4 md:px-32">
-      <div className="flex h-30px cursor-pointer items-center mt-4">
-        <Brand className="text-foreground "/>
+    <div className="z-50 flex w-full items-center justify-between bg-background p-4">
+      <Link to="/" className="ml-4 md:ml-32">
+        <Brand className="text-foreground " />
+      </Link>
+
+      <div className="space-x-2">
+        {user ? (
+          <UserDropdown />
+        ) : (
+          <>
+            <Link
+              to="/register"
+              activeProps={{
+                className: "bg-accent",
+              }}
+              className={cn(
+                buttonVariants({
+                  variant: "outline",
+                  className: "rounded-full font-bold tracking-wide",
+                }),
+              )}
+            >
+              Sign up
+            </Link>
+            <Link
+              to="/login"
+              activeProps={{
+                className: "bg-accent",
+              }}
+              className={cn(
+                buttonVariants({
+                  variant: "outline",
+                  className: "rounded-full font-bold tracking-wide",
+                }),
+              )}
+            >
+              Sign in
+            </Link>
+          </>
+        )}
       </div>
-      <div className="z-30">
-        <LoginButton />
-      </div>
-      
     </div>
   );
 };

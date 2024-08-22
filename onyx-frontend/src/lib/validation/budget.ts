@@ -7,12 +7,13 @@ import {
 import { AccountSchema } from "@/lib/validation/account";
 import { CategorySchema } from "@/lib/validation/category";
 import { CounterpartySchema } from "@/lib/validation/counterparty";
+import { BudgetMemberSchema } from "@/lib/validation/user";
 
 export const BudgetSchema = z.object({
   id: z.string(),
   name: z.string(),
   currency: z.string(),
-  userIds: z.array(z.string()),
+  budgetMembers: z.array(BudgetMemberSchema),
   optimistic: z.boolean().optional(),
 });
 

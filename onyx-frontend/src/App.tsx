@@ -2,8 +2,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
-import { useAuth } from "./lib/hooks/useAuth";
-import { AuthProvider } from "./components/AuthProvider";
+import { AuthProvider } from "./contexts/AuthContext";
+import { useAuthContext } from "./lib/hooks/useAuthContext";
+import { useMemo } from "react";
+import DefaultLoadingSpinner from "./components/DefaultLoadingSpinner";
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -24,8 +26,8 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <RouterWithAuth />
-        <ReactQueryDevtools initialIsOpen={false} />
       </AuthProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };
@@ -33,7 +35,12 @@ const App = () => {
 export default App;
 
 const RouterWithAuth = () => {
-  const auth = useAuth();
-  const routerContext = { queryClient, auth };
+  const { auth } = useAuthContext();
+  const routerContext = useMemo(() => ({ queryClient, auth }), [auth]);
+
+  if (!auth.isInitialized) {
+    return <DefaultLoadingSpinner />;
+  }
+
   return <RouterProvider router={router} context={routerContext} />;
 };

@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { privateApi } from "@/lib/axios";
+import { budgetApi } from "@/lib/axios";
 import { getErrorMessage } from "@/lib/utils";
 import { CategoryResultSchema } from "@/lib/validation/category";
 
@@ -11,7 +11,7 @@ export interface CreateCategoryProps {
 
 export const getCategories = async (budgetId: string) => {
   try {
-    const { data } = await privateApi.get(`/${budgetId}/categories`);
+    const { data } = await budgetApi.get(`/${budgetId}/categories`);
     const validatedData = CategoryResultSchema.safeParse(data);
     if (!validatedData.success) {
       console.log(validatedData.error?.issues);
@@ -37,7 +37,7 @@ export const getCategoriesQueryOptions = (budgetId: string) =>
   });
 
 export const createCategory = async ({ budgetId, name }: CreateCategoryProps) =>
-  privateApi.post(`/${budgetId}/categories`, { name });
+  budgetApi.post(`/${budgetId}/categories`, { name });
 
 export const deleteCategory = ({
   budgetId,
@@ -45,7 +45,7 @@ export const deleteCategory = ({
 }: {
   budgetId: string;
   categoryId: string;
-}) => privateApi.delete(`/${budgetId}/categories/${categoryId}`);
+}) => budgetApi.delete(`/${budgetId}/categories/${categoryId}`);
 
 export const editCategoryName = ({
   budgetId,
@@ -55,4 +55,4 @@ export const editCategoryName = ({
   budgetId: string;
   categoryId: string;
   newName: string;
-}) => privateApi.put(`${budgetId}/categories/${categoryId}`, { newName });
+}) => budgetApi.put(`${budgetId}/categories/${categoryId}`, { newName });

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useNavigate, useRouteContext } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 
 import { ChevronDown, LoaderCircle } from "lucide-react";
 import UserProfileDialogContent from "@/components/dashboard/UserProfileDialogContent";
@@ -14,16 +14,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
+import { useAuthContext } from "@/lib/hooks/useAuthContext";
+
 interface UserDropdownProps {}
 
 const UserDropdown: FC<UserDropdownProps> = () => {
   const {
     auth: { user, logout },
-  } = useRouteContext({ from: "/_dashboard-layout" });
+  } = useAuthContext();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await logout();
+    logout();
     await navigate({ to: "/" });
   };
 
