@@ -138,5 +138,4 @@ public sealed class BudgetFunctions : BaseFunction
 
         return result.ReturnAPIResponse();
     }
-
 }
