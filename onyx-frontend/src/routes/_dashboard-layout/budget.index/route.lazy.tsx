@@ -101,17 +101,18 @@ function Budget() {
                 </div>
               </li>
             ))}
-
-            <li
-              className={cn(
-                "grid grid-rows-[0fr] overflow-hidden transition-all duration-300 ease-in-out",
-                isCreating && user && "grid-rows-[1fr] border-t",
-              )}
-            >
-              <div className="overflow-hidden">
-                <CreateBudgetForm setIsCreating={setIsCreating} user={user!} />
-              </div>
-            </li>
+            {user && (
+              <li
+                className={cn(
+                  "grid grid-rows-[0fr] overflow-hidden transition-all duration-300 ease-in-out",
+                  isCreating && user && "grid-rows-[1fr] border-t",
+                )}
+              >
+                <div className="overflow-hidden">
+                  <CreateBudgetForm setIsCreating={setIsCreating} user={user} />
+                </div>
+              </li>
+            )}
           </ul>
           <div className="mt-10 flex justify-center">
             <Button
