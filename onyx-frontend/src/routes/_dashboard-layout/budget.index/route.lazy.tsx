@@ -14,6 +14,7 @@ import {
   DEFAULT_YEAR_STRING,
 } from "@/lib/constants/date";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
 
 export const Route = createLazyFileRoute("/_dashboard-layout/budget/")({
   component: Budget,
@@ -61,7 +62,10 @@ function Budget() {
           </div>
           <ul className="rounded-b-lg border">
             {budgets.map(({ id, name, currency, budgetMembers }) => (
-              <li className="grid w-full grid-cols-10 items-center text-lg">
+              <li
+                key={id}
+                className="grid w-full grid-cols-10 items-center text-lg"
+              >
                 <Link
                   to={`/budget/${id}`}
                   params={{ budgetId: id }}
@@ -72,20 +76,21 @@ function Budget() {
                     accYear: DEFAULT_YEAR_STRING,
                   }}
                   mask={{ to: `/budget/${id}` }}
-                  className="group peer col-span-9 grid w-full grid-cols-9 gap-x-4 px-4 py-8 hover:bg-accent"
+                  className="group peer col-span-9 grid w-full grid-cols-9 items-center gap-x-4 px-4 py-8 hover:bg-accent"
                 >
                   <p className="col-span-3 min-w-[150px]">{name}</p>
                   <p className="col-span-2 min-w-[100px]">{currency}</p>
                   <div className="col-span-4 grid min-w-[250px] grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                     {budgetMembers.map((member) => (
-                      <p
-                        key={id}
-                        className="truncate rounded-full border px-2 text-center"
+                      <Badge
+                        key={member.id}
+                        className="items-center justify-center text-lg font-medium"
+                        variant="outline"
                       >
                         {member.username === user?.username
                           ? "You"
                           : member.username}
-                      </p>
+                      </Badge>
                     ))}
                   </div>
                 </Link>
