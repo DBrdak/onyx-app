@@ -8,6 +8,9 @@ Parameters:
   DeadLetterQueueArn:
     Type: String
     Description: ARN of the global dead letter queue
+  Environment:
+    Type: String
+    Description: The deployment environment (dev, qa, prod)
 Resources:
   IdentityApi:
     Type: AWS::Serverless::HttpApi
@@ -59,7 +62,7 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
-      FunctionName: Login
+      FunctionName: !Sub Login_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -85,7 +88,7 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
-      FunctionName: Register
+      FunctionName: !Sub Register_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -111,7 +114,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: VerifyEmail
+      FunctionName: !Sub VerifyEmail_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -137,7 +140,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: ResendEmail
+      FunctionName: !Sub ResendEmail_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -163,7 +166,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: Refresh
+      FunctionName: !Sub Refresh_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -189,7 +192,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: ForgotPassword
+      FunctionName: !Sub ForgotPassword_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -215,7 +218,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: NewPassword
+      FunctionName: !Sub NewPassword_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -241,7 +244,7 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
-      FunctionName: GetUser
+      FunctionName: !Sub GetUser_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -265,7 +268,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: UpdateUser
+      FunctionName: !Sub UpdateUser_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -289,7 +292,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: RequestEmailChange
+      FunctionName: !Sub RequestEmailChange_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -313,7 +316,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: Logout
+      FunctionName: !Sub Logout_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -337,7 +340,7 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
-      FunctionName: RemoveUser
+      FunctionName: !Sub RemoveUser_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -359,7 +362,7 @@ Resources:
     Metadata:
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: AddBudgetIdForUser
+      FunctionName: !Sub AddBudgetIdForUser_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -379,7 +382,7 @@ Resources:
     Metadata:
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: RemoveBudgetIdForUser
+      FunctionName: !Sub RemoveBudgetIdForUser_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -399,7 +402,7 @@ Resources:
     Metadata:
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: LambdaAuthorizer
+      FunctionName: !Sub LambdaAuthorizer_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
