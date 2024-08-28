@@ -11,6 +11,11 @@ Parameters:
   Environment:
     Type: String
     Description: The deployment environment (dev, qa, prod)
+    AllowedValues:
+      - dev
+      - qa
+      - prod
+    Default: qa
 Resources:
   IdentityApi:
     Type: AWS::Serverless::HttpApi
@@ -31,6 +36,7 @@ Resources:
         AllowCredentials: true
       DefaultRouteSettings:
         DetailedMetricsEnabled: true
+      StageName: !Ref Environment
       Auth:
         DefaultAuthorizer: LambdaAuthorizer
         Authorizers:

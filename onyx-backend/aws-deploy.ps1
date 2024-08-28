@@ -20,7 +20,6 @@ $configTemplate = ".\config-template.yaml"
 
 $awsProfile = "dbrdak-lambda"
 $region = "eu-central-1"
-$s3bucket = "onyx-$env"
 
 Write-Host "Deploying Base service..."
 aws cloudformation deploy `
@@ -38,7 +37,7 @@ $fullAccessRoleArn = (aws cloudformation describe-stacks `
     --profile $awsProfile)
 
 if (-not $fullAccessRoleArn) {
-    Write-Host "Error: Could not retrieve the ARN of the newly created role. Exiting."
+    Write-Host "Error: Could not retrieve the ARN of the role. Exiting."
     exit 1
 }
 
@@ -48,6 +47,23 @@ $deadLetterQueueArn = (aws cloudformation describe-stacks `
     --output text `
     --region $region `
     --profile $awsProfile)
+
+if (-not $deadLetterQueueArn) {
+    Write-Host "Error: Could not retrieve the ARN of the dead letter queue. Exiting."
+    exit 1
+}
+
+$s3bucket = (aws cloudformation describe-stacks `
+    --stack-name $baseStackName `
+    --query "Stacks[0].Outputs[?OutputKey=='S3BucketName'].OutputValue" `
+    --output text `
+    --region $region `
+    --profile $awsProfile)
+
+if (-not $s3bucket) {
+    Write-Host "Error: Could not retrieve the Name of the S3 bucket. Exiting."
+    exit 1
+}
 
 Write-Host "Packaging Messanger service..."
 sam build --template $messangerTemplate

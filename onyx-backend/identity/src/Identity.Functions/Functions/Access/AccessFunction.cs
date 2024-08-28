@@ -6,6 +6,7 @@ using Identity.Application.User.IsBudgetMember;
 using Identity.Functions.Functions.Shared;
 using LambdaKernel;
 using MediatR;
+using Newtonsoft.Json;
 
 namespace Identity.Functions.Functions.Access;
 
@@ -36,7 +37,9 @@ internal sealed class AccessFunction : BaseFunction
 
         var isAuthorized = _jwtService.ValidateJwt(token, out var principalId);
 
-        if (request.PathParameters.TryGetValue(
+        var pathParams = request.PathParameters ?? new Dictionary<string, string>();
+
+        if (pathParams.TryGetValue(
                 "budgetId", out var budgetId) &&
             !string.IsNullOrWhiteSpace(budgetId) &&
             isAuthorized)

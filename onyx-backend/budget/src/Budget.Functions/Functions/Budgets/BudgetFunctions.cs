@@ -1,6 +1,7 @@
 ﻿using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.Annotations;
 using Amazon.Lambda.APIGatewayEvents;
+using Amazon.Lambda.Core;
 using Budget.Application.Budgets.AddBudget;
 using Budget.Application.Budgets.AddUserToBudget;
 using Budget.Application.Budgets.EditBudget;
@@ -12,6 +13,7 @@ using Budget.Functions.Functions.Budgets.Requests;
 using Budget.Functions.Functions.Shared;
 using LambdaKernel;
 using MediatR;
+using Newtonsoft.Json;
 
 
 namespace Budget.Functions.Functions.Budgets;
@@ -42,18 +44,20 @@ public sealed class BudgetFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/{{budgetId}}/invitation")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetInvitation(
         string budgetId,
-        APIGatewayHttpApiV2ProxyRequest requestContext)
+        APIGatewayHttpApiV2ProxyRequest requestContext,
+        ILambdaContext context)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
-
+        context.Logger.Log(JsonConvert.SerializeObject(requestContext));
         var protocol = requestContext.Headers.TryGetValue(
             "X-Forwarded-Proto",
             out var protocolHeader) ?
             protocolHeader :
             "https";
-        var host = requestContext.Headers["Host"];
+        var host = requestContext.Headers["Client"];
         var path = requestContext.RawPath;
-        var baseUrl = $"{protocol}://{host}{path}";
+        var baseUrl = host;
+        //var baseUrl = $"{protocol}://{host}{path}";
         var command = new GetBudgetInvitationQuery(Guid.Parse(budgetId), baseUrl);
 
         var result = await Sender.Send(command);
