@@ -1,54 +1,68 @@
-$identityStackName = "onyx-identity"
+$env = $args[0].ToLower()
+
+$identityStackName = "onyx-identity-$env"
 $identityTemplate = ".\identity\src\Identity.Functions\identity-template.yaml"
 $identityPackagedTemplate = ".\identity\src\Identity.Functions\packaged-identity.yaml"
-$budgetStackName = "onyx-budget"
+
+$budgetStackName = "onyx-budget-$env"
 $budgetTemplate = ".\budget\src\Budget.Functions\budget-template.yaml"
 $budgetPackagedTemplate = ".\budget\src\Budget.Functions\packaged-budget.yaml"
+
 $messangerStackName = "onyx-messanger"
 $messangerTemplate = ".\messanger\src\Messanger.Lambda\messanger-template.yaml"
 $messangerPackagedTemplate = ".\messanger\src\Messanger.Lambda\packaged-messanger.yaml"
+
 $baseStackName = "onyx-base"
 $baseTemplate = ".\base-template.yaml"
+
+$configStackName = "onyx-config"
+$configTemplate = ".\config-template.yaml"
+
+$awsProfile = "dbrdak-lambda"
 $region = "eu-central-1"
-$s3bucket = "onyx-default"
 
-# Function to get IAM role ARN if it exists
-function Get-IAMRoleArn {
-    param (
-        [string]$roleName
-    )
-    try {
-        $role = aws iam get-role --role-name $roleName --query "Role.Arn" --output text
-        return $role.Arn
-    } catch {
-        return $null
-    }
-}
+Write-Host "Deploying Base service..."
+aws cloudformation deploy `
+    --template-file $baseTemplate `
+    --stack-name $baseStackName `
+    --capabilities CAPABILITY_NAMED_IAM `
+    --region $region `
+    --profile $awsProfile
 
-# Check if the FullAccess role exists or create it using CloudFormation
-$roleName = "FullAccess"
-$fullAccessRoleArn = Get-IAMRoleArn -roleName $roleName
+$fullAccessRoleArn = (aws cloudformation describe-stacks `
+    --stack-name $baseStackName `
+    --query "Stacks[0].Outputs[?OutputKey=='FullAccessRoleArn'].OutputValue" `
+    --output text `
+    --region $region `
+    --profile $awsProfile)
 
 if (-not $fullAccessRoleArn) {
-    Write-Host "Role '$roleName' does not exist. Creating new role using CloudFormation..."
+    Write-Host "Error: Could not retrieve the ARN of the role. Exiting."
+    exit 1
+}
 
-    Write-Host "Deploying Base service..."
-    aws cloudformation deploy `
-        --template-file $baseTemplate `
-        --stack-name $baseStackName `
-        --capabilities CAPABILITY_NAMED_IAM `
-        --region $region
+$deadLetterQueueArn = (aws cloudformation describe-stacks `
+    --stack-name $baseStackName `
+    --query "Stacks[0].Outputs[?OutputKey=='DeadLetterQueueArn'].OutputValue" `
+    --output text `
+    --region $region `
+    --profile $awsProfile)
 
-    $fullAccessRoleArn = (aws cloudformation describe-stacks `
-        --stack-name $baseStackName `
-        --query "Stacks[0].Outputs[?OutputKey=='FullAccessRoleArn'].OutputValue" `
-        --output text `
-        --region $region)
+if (-not $deadLetterQueueArn) {
+    Write-Host "Error: Could not retrieve the ARN of the dead letter queue. Exiting."
+    exit 1
+}
 
-    if (-not $fullAccessRoleArn) {
-        Write-Host "Error: Could not retrieve the ARN of the newly created role. Exiting."
-        exit 1
-    }
+$s3bucket = (aws cloudformation describe-stacks `
+    --stack-name $baseStackName `
+    --query "Stacks[0].Outputs[?OutputKey=='S3BucketName'].OutputValue" `
+    --output text `
+    --region $region `
+    --profile $awsProfile)
+
+if (-not $s3bucket) {
+    Write-Host "Error: Could not retrieve the Name of the S3 bucket. Exiting."
+    exit 1
 }
 
 Write-Host "Packaging Messanger service..."
@@ -60,14 +74,8 @@ sam deploy --template-file $messangerPackagedTemplate `
     --stack-name $messangerStackName `
     --capabilities CAPABILITY_IAM `
     --parameter-overrides "FullAccessRoleArn=$fullAccessRoleArn" `
-    --region $region
-
-$sendEmailTopicArn = (aws cloudformation describe-stacks --stack-name $messangerStackName --query "Stacks[0].Outputs[?OutputKey=='SendEmailTopicArn'].OutputValue" --output text --region $region)
-
-if (-not $sendEmailTopicArn) {
-    Write-Host "Error: Send Email topic Arn could not be retrieved. Exiting."
-    exit 1
-}
+    --region $region `
+    --profile $awsProfile
 
 # Identity service
 Write-Host "Packaging Identity service..."
@@ -78,10 +86,16 @@ Write-Host "Deploying Identity service..."
 sam deploy --template-file $identityPackagedTemplate `
     --stack-name $identityStackName `
     --capabilities CAPABILITY_IAM `
-    --parameter-overrides "SendEmailTopicArn=$sendEmailTopicArn FullAccessRoleArn=$fullAccessRoleArn" `
-    --region $region
+    --parameter-overrides "DeadLetterQueueArn=$deadLetterQueueArn FullAccessRoleArn=$fullAccessRoleArn Environment=$env" `
+    --region $region `
+    --profile $awsProfile
 
-$lambdaAuthorizerArn = (aws cloudformation describe-stacks --stack-name $identityStackName --query "Stacks[0].Outputs[?OutputKey=='LambdaAuthorizerArn'].OutputValue" --output text --region $region)
+$lambdaAuthorizerArn = (aws cloudformation describe-stacks `
+--stack-name $identityStackName `
+--query "Stacks[0].Outputs[?OutputKey=='LambdaAuthorizerArn'].OutputValue" `
+--output text `
+--region $region `
+--profile $awsProfile)
 
 if (-not $lambdaAuthorizerArn) {
     Write-Host "Error: LambdaAuthorizerArn could not be retrieved. Exiting."
@@ -97,7 +111,74 @@ Write-Host "Deploying Budget service..."
 sam deploy --template-file $budgetPackagedTemplate `
     --stack-name $budgetStackName `
     --capabilities CAPABILITY_IAM `
-    --parameter-overrides "LambdaAuthorizerArn=$lambdaAuthorizerArn FullAccessRoleArn=$fullAccessRoleArn" `
-    --region $region
+    --parameter-overrides "LambdaAuthorizerArn=$lambdaAuthorizerArn FullAccessRoleArn=$fullAccessRoleArn Environment=$env" `
+    --region $region `
+    --profile $awsProfile
 
 Write-Host "Deployment complete."
+
+$addBudgetForUserQueueName = (aws cloudformation describe-stacks `
+--stack-name $identityStackName `
+--query "Stacks[0].Outputs[?OutputKey=='AddBudgetForUserQueueName'].OutputValue" `
+--output text `
+--region $region  `
+--profile $awsProfile)
+
+$removeUserFromBudgetQueueName = (aws cloudformation describe-stacks `
+--stack-name $identityStackName `
+--query "Stacks[0].Outputs[?OutputKey=='RemoveUserFromBudgetQueueName'].OutputValue" `
+--output text `
+--region $region  `
+--profile $awsProfile)
+
+$sendEmailTopicName = (aws cloudformation describe-stacks `
+--stack-name $messangerStackName `
+--query "Stacks[0].Outputs[?OutputKey=='SendEmailTopicName'].OutputValue" `
+--output text `
+--region $region  `
+--profile $awsProfile)
+
+if (-not $addBudgetForUserQueueName) {
+    Write-Host "Error: AddBudgetForUserQueueName could not be retrieved. Exiting."
+    exit 1
+}
+if (-not $removeUserFromBudgetQueueName) {
+    Write-Host "Error: RemoveUserFromBudgetQueueName could not be retrieved. Exiting."
+    exit 1
+}
+if (-not $sendEmailTopicName) {
+    Write-Host "Error: SendEmailTopicName could not be retrieved. Exiting."
+    exit 1
+}
+
+Write-Host "Deploying Configuration service..."
+
+sam deploy --template-file $configTemplate `
+    --stack-name $configStackName `
+    --capabilities CAPABILITY_IAM `
+    --parameter-overrides `
+        "AddBudgetForUserQueueName=$addBudgetForUserQueueName" `
+        "RemoveUserFromBudgetQueueName=$removeUserFromBudgetQueueName" `
+        "SendEmailTopicName=$sendEmailTopicName" `
+    --region $region `
+    --profile $awsProfile
+
+Write-Host "Configuration deployment complete."
+
+$identityUrl =(aws cloudformation describe-stacks `
+--stack-name $identityStackName `
+--query "Stacks[0].Outputs[?OutputKey=='ApiURL'].OutputValue" `
+--output text `
+--region $region `
+--profile $awsProfile)
+
+$budgetUrl = (aws cloudformation describe-stacks `
+--stack-name $budgetStackName `
+--query "Stacks[0].Outputs[?OutputKey=='ApiURL'].OutputValue" `
+--output text `
+--region $region `
+--profile $awsProfile)
+
+Write-Host "Successfully deployed to $env" -ForegroundColor Blue
+Write-Host "Identity $env URL: $identityUrl" -ForegroundColor Green
+Write-Host "Budget $env URL: $budgetUrl" -ForegroundColor Green

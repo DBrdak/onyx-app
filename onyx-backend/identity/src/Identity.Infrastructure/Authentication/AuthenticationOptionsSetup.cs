@@ -6,7 +6,7 @@ namespace Identity.Infrastructure.Authentication;
 
 public sealed class AuthenticationOptionsSetup : IConfigureOptions<AuthenticationOptions>
 {
-    private const string sectionName = "Authentication";
+    private const string sectionName = "authentication";
     private readonly IConfiguration _configuration;
     private const string secretName = "onyx/identity/authentication";
 

@@ -23,4 +23,7 @@ public static class DataAccessErrors<TEntity> where TEntity : IEntity
     public static readonly Error TransactionError = new(
         "DataAccess.Transaction",
         $"Transaction commit failure");
+    public static readonly Error MustBeUnique = new(
+        "DataAccess.DistinctError",
+        $"Record must be unique");
 }

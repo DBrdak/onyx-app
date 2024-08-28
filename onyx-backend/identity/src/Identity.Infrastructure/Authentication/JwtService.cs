@@ -38,8 +38,8 @@ internal sealed class JwtService : IJwtService
             SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: null,
-            audience: null,
+            issuer: _options.Issuer,
+            audience: _options.Audience,
             claims: claims,
             notBefore: null,
             expires: DateTime.UtcNow.AddMinutes(_options.ExpireInMinutes),
@@ -63,11 +63,13 @@ internal sealed class JwtService : IJwtService
         {
             var validationParameters = new TokenValidationParameters
             {
-                ValidateIssuer = false,
-                ValidateAudience = false,
+                ValidateIssuer = true,
+                ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = signingKey,
+                ValidIssuer = _options.Issuer,
+                ValidAudience = _options.Audience
             };
 
             _ = tokenHandler.ValidateToken(
@@ -116,6 +118,22 @@ internal sealed class JwtService : IJwtService
         return tokenValue is null ?
             Result.Failure<string>(authenticationFailedError) :
             Result.Success(tokenValue);
+    }
+
+    public Result<string> GetBudgetsIdsFromToken(string token)
+    {
+        try
+        {
+            var jwt = new JsonWebToken(token);
+
+            jwt.TryGetPayloadValue(UserRepresentationModel.BudgetIdsClaimName, out string budgetsIds);
+
+            return budgetsIds ?? Result.Failure<string>(tokenCreationFailedError);
+        }
+        catch (Exception)
+        {
+            return Result.Failure<string>(tokenCreationFailedError);
+        }
     }
 
     public Result<string> GetUserIdFromToken(string encodedToken)

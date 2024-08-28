@@ -5,4 +5,6 @@ namespace Identity.Application.Abstractions.Authentication;
 public interface IUserContext
 {
     Result<string> GetUserId();
+
+    Result<IEnumerable<string>> GetBudgetsIds();
 }

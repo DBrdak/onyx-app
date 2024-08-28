@@ -24,4 +24,5 @@ public interface ICounterpartyRepository
     Task<Result<IEnumerable<Counterparty>>> GetManyByTypeAsync(CounterpartyType counterpartyType, CancellationToken cancellationToken);
 
     Task<Result<Counterparty>> GetByNameAndTypeOrAddAsync(CounterpartyName name, CounterpartyType type, BudgetId budgetId, CancellationToken cancellationToken);
+    Task<Result> RemoveRangeAsync(IEnumerable<CounterpartyId> entitiesId, CancellationToken cancellationToken = default);
 }

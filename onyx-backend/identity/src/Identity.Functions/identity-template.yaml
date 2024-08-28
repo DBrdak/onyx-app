@@ -2,12 +2,20 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: An AWS Serverless Application. This template is partially managed by Amazon.Lambda.Annotations (v1.3.0.0).
 Parameters:
-  SendEmailTopicArn:
-    Type: String
-    Description: ARN of the Send Email topic
   FullAccessRoleArn:
     Type: String
     Description: ARN of the FullAccess IAM role
+  DeadLetterQueueArn:
+    Type: String
+    Description: ARN of the global dead letter queue
+  Environment:
+    Type: String
+    Description: The deployment environment (dev, qa, prod)
+    AllowedValues:
+      - dev
+      - qa
+      - prod
+    Default: qa
 Resources:
   IdentityApi:
     Type: AWS::Serverless::HttpApi
@@ -28,6 +36,7 @@ Resources:
         AllowCredentials: true
       DefaultRouteSettings:
         DetailedMetricsEnabled: true
+      StageName: !Ref Environment
       Auth:
         DefaultAuthorizer: LambdaAuthorizer
         Authorizers:
@@ -38,6 +47,20 @@ Resources:
             Identity:
               Headers:
                 - authorization
+  RemoveUserFromBudgetQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: RemoveUserFromBudgetQueue
+      RedrivePolicy:
+        deadLetterTargetArn: !Ref DeadLetterQueueArn
+        maxReceiveCount: 5
+  AddBudgetForUserQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: AddBudgetForUserQueue
+      RedrivePolicy:
+        deadLetterTargetArn: !Ref DeadLetterQueueArn
+        maxReceiveCount: 5
   Login:
     Type: AWS::Serverless::Function
     Metadata:
@@ -45,7 +68,7 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
-      FunctionName: Login
+      FunctionName: !Sub Login_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -71,7 +94,7 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
-      FunctionName: Register
+      FunctionName: !Sub Register_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -97,7 +120,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: VerifyEmail
+      FunctionName: !Sub VerifyEmail_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -123,7 +146,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: ResendEmail
+      FunctionName: !Sub ResendEmail_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -149,7 +172,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: Refresh
+      FunctionName: !Sub Refresh_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -175,7 +198,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: ForgotPassword
+      FunctionName: !Sub ForgotPassword_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -201,7 +224,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: NewPassword
+      FunctionName: !Sub NewPassword_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -227,7 +250,7 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
-      FunctionName: GetUser
+      FunctionName: !Sub GetUser_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -251,7 +274,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: UpdateUser
+      FunctionName: !Sub UpdateUser_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -275,7 +298,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: RequestEmailChange
+      FunctionName: !Sub RequestEmailChange_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -299,7 +322,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: Logout
+      FunctionName: !Sub Logout_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -323,7 +346,7 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
-      FunctionName: RemoveUser
+      FunctionName: !Sub RemoveUser_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -340,12 +363,52 @@ Resources:
             Path: /api/v1/user/remove
             Method: DELETE
             ApiId: !Ref IdentityApi
+  AddBudgetIdForUser:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      FunctionName: !Sub AddBudgetIdForUser_${Environment}
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: !Ref FullAccessRoleArn
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_AddBudgetIdForUser_Generated::AddBudgetIdForUser
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt AddBudgetForUserQueue.Arn
+  RemoveBudgetIdForUser:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      FunctionName: !Sub RemoveBudgetIdForUser_${Environment}
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: !Ref FullAccessRoleArn
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RemoveBudgetIdForUser_Generated::RemoveBudgetIdForUser
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt RemoveUserFromBudgetQueue.Arn
   LambdaAuthorizer:
     Type: AWS::Serverless::Function
     Metadata:
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: LambdaAuthorizer
+      FunctionName: !Sub LambdaAuthorizer_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -363,3 +426,9 @@ Outputs:
   LambdaAuthorizerArn:
     Description: "The ARN of the Lambda Authorizer"
     Value: !GetAtt LambdaAuthorizer.Arn
+  RemoveUserFromBudgetQueueName:
+    Description: RemoveUserFromBudgetQueueName Queue Name
+    Value: !GetAtt RemoveUserFromBudgetQueue.QueueName
+  AddBudgetForUserQueueName:
+    Description: AddBudgetForUserQueue Queue Name
+    Value: !GetAtt AddBudgetForUserQueue.QueueName

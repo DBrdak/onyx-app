@@ -69,6 +69,22 @@ public sealed class Budget : Entity<BudgetId>
         return budget;
     }
 
+    public Result EditBudgetName(string newBudgetName)
+    {
+        var budgetNameCreateResult = BudgetName.Create(newBudgetName);
+
+        if (budgetNameCreateResult.IsFailure)
+        {
+            return budgetNameCreateResult.Error;
+        }
+
+        var budgetName = budgetNameCreateResult.Value;
+
+        Name = budgetName;
+
+        return Result.Success();
+    }
+
     public Result AddMember(string userId, string username, string email, string token)
     {
         if (_budgetMembers.Count >= maxUsers)

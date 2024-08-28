@@ -4,12 +4,12 @@ using Amazon.SecretsManager.Model;
 
 namespace SharedDAL.SecretsManager;
 
-public class SecretAccesor
+public sealed class SecretAccesor
 {
+    const string region = "eu-central-1";
+
     public static string GetSecret(string secretName)
     {
-        const string region = "eu-central-1";
-
         var client = new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(region));
 
         var request = new GetSecretValueRequest
@@ -25,8 +25,6 @@ public class SecretAccesor
 
     public static async Task<string> GetSecretAsync(string secretName)
     {
-        const string region = "eu-central-1";
-
         var client = new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(region));
 
         var request = new GetSecretValueRequest

@@ -18,4 +18,5 @@ public interface ICategoryRepository
     Task<Result<Category>> UpdateAsync(Category category, CancellationToken cancellationToken);
 
     Task<Result<Category>> GetCategoryWithSubcategory(SubcategoryId subcategoryId, CancellationToken cancellationToken);
+    Task<Result> RemoveRangeAsync(IEnumerable<CategoryId> entitiesId, CancellationToken cancellationToken = default);
 }

@@ -1,5 +1,6 @@
 ﻿using Abstractions.Messaging;
 using Budget.Application.Abstractions.Identity;
+using Budget.Application.Abstractions.IntegrationEvents;
 using Budget.Application.Budgets.Models;
 using Budget.Domain.Budgets;
 using MediatR;
@@ -13,11 +14,17 @@ internal sealed class AddBudgetCommandHandler : ICommandHandler<AddBudgetCommand
     private readonly IBudgetRepository _budgetRepository;
     private readonly IUserContext _userContext;
     private readonly IPublisher _publisher;
+    private readonly IQueueMessagePublisher _queueMessagePublisher;
 
-    public AddBudgetCommandHandler(IBudgetRepository budgetRepository, IUserContext userContext, IServiceProvider serviceProvider)
+    public AddBudgetCommandHandler(
+        IBudgetRepository budgetRepository,
+        IUserContext userContext,
+        IServiceProvider serviceProvider,
+        IQueueMessagePublisher queueMessagePublisher)
     {
         _budgetRepository = budgetRepository;
         _userContext = userContext;
+        _queueMessagePublisher = queueMessagePublisher;
         _publisher = serviceProvider.GetRequiredService<IPublisher>();
     }
 
@@ -54,7 +61,6 @@ internal sealed class AddBudgetCommandHandler : ICommandHandler<AddBudgetCommand
 
         var budget = budgetCreateResult.Value;
 
-
         var budgetAddResult = await _budgetRepository.AddAsync(budget, cancellationToken);
 
         if (budgetAddResult.IsFailure)
@@ -70,6 +76,16 @@ internal sealed class AddBudgetCommandHandler : ICommandHandler<AddBudgetCommand
                     async domainEvent => await _publisher.Publish(
                         domainEvent,
                         cancellationToken)));
+
+        var messagePublishResult = await _queueMessagePublisher.PublishBudgetMemberJoinedAsync(
+            userId,
+            budget.Id,
+            cancellationToken);
+
+        if (messagePublishResult.IsFailure)
+        {
+            return messagePublishResult.Error;
+        }
 
         return BudgetModel.FromDomainModel(budget);
     }

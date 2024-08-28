@@ -1,6 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: This template is partially managed by Amazon.Lambda.Annotations (v1.3.0.0).
+
 Resources:
   FullAccessRole:
     Type: AWS::IAM::Role
@@ -11,13 +12,13 @@ Resources:
         Statement: 
           - Effect: Allow
             Principal:
-                Service: "lambda.amazonaws.com"
+              Service: "lambda.amazonaws.com"
             Action: 
               - sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/IAMFullAccess
         - arn:aws:iam::aws:policy/SecretsManagerReadWrite
-        - arn:aws:iam::aws:policy/AmazonSESFullAccess
+        - arn:aws:iam::aws:policy/AmazonSQSFullAccess
         - arn:aws:iam::aws:policy/AmazonSNSFullAccess
         - arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess
         - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
@@ -25,7 +26,48 @@ Resources:
         - arn:aws:iam::aws:policy/CloudWatchFullAccessV2
         - arn:aws:iam::aws:policy/AWSCloudFormationFullAccess
         - arn:aws:iam::aws:policy/AWSLambda_FullAccess
+      Policies:
+        - PolicyName: SSMAccessPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                  - ssm:GetParametersByPath
+                Resource: "arn:aws:ssm:*:*:parameter/*"
+        - PolicyName: S3ReadOnlyAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:Get*
+                  - s3:List*
+                  - s3:Describe*
+                  - s3-object-lambda:Get*
+                  - s3-object-lambda:List*
+                Resource: "*"
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: DeadLetterQueue
+  AppS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "onyx-default"
+      VersioningConfiguration:
+        Status: Enabled
+
+
 Outputs:
   FullAccessRoleArn:
     Description: Arn of FullAccessRole
     Value: !GetAtt FullAccessRole.Arn
+  DeadLetterQueueArn:
+    Description: Dead letter queue arn
+    Value: !GetAtt DeadLetterQueue.Arn
+  S3BucketName:
+    Description: Name of the S3 bucket
+    Value: !Ref AppS3Bucket

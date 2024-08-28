@@ -10,16 +10,12 @@ public sealed class SubcategoryService
     public static Result RemoveSubcategory(
         Subcategory subcategory,
         Category category,
-        IEnumerable<Transaction> subcategoryTransactions)
-    {
-        Result[] results =
-        [
+        IEnumerable<Transaction> subcategoryTransactions,
+        Subcategory unknownSubcategory) =>
+        Result.Aggregate([
             category.RemoveSubcategory(subcategory),
-            .. subcategoryTransactions.Select(transaction => transaction.RemoveSubcategory()).ToArray()
-        ];
-
-        return results.FirstOrDefault(r => r.IsFailure) ?? Result.Success();
-    }
+            .. subcategoryTransactions.Select(transaction => transaction.RemoveSubcategory(unknownSubcategory)).ToArray()
+        ]);
 
     public static Result<Assignment> UpdateAssignment(
         Subcategory subcategory,

@@ -11,12 +11,16 @@ internal sealed class UserContext : IUserContext
     private const string userUsernameClaimName = "Username";
     private const string userEmailClaimName = "Email";
     private const string userCurrencyClaimName = "Currency";
+    private const string budgetsIdsClaimName = "BudgetsIds";
     private readonly Error _userIdClaimNotFound = new(
         "UserContext.UserIdNotFound",
         "Cannot retrieve user ID");
     private readonly Error _usercurrencyClaimNotFound = new(
         "UserContext.CurrencyNotFound",
         "Cannot retrieve base currency for user");
+    private readonly Error _budgetsIdsClaimNotFound = new(
+        "UserContext.BudgetsIds",
+        "Cannot retrieve budgets for user");
 
     public UserContext(RequestAccessor requestAccessor)
     {
@@ -52,4 +56,13 @@ internal sealed class UserContext : IUserContext
             .Value is var currency && !string.IsNullOrEmpty(currency) ?
             currency :
             _usercurrencyClaimNotFound;
+
+    public Result<List<Guid>> GetBudgetsIds() =>
+        _requestAccessor
+            .Claims.ToList()
+            .FirstOrDefault(claim => claim.Type == budgetsIdsClaimName)?
+            .Value is var budgetsIds &&
+        !string.IsNullOrEmpty(budgetsIds) ?
+            budgetsIds.Split(',').Select(Guid.Parse).ToList() :
+            _budgetsIdsClaimNotFound;
 }

@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template to create SSM parameters for Onyx.
+
+Parameters:
+  AddBudgetForUserQueueName:
+    Type: String
+    Description: The name of the budgetMemberJoined queue.
+
+  RemoveUserFromBudgetQueueName:
+    Type: String
+    Description: The name of the budgetMemberRemove queue.
+
+  SendEmailTopicName:
+    Type: String
+    Description: The name of the sendEmail topic.
+
+Resources:
+  QueueNamesBudgetMemberJoined:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: "/onyx-budget/queueNames/budgetMemberJoined"
+      Type: String
+      Value: !Ref AddBudgetForUserQueueName
+      Description: "SSM Parameter for budgetMemberJoined queue name"
+
+  QueueNamesBudgetMemberRemove:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: "/onyx-budget/queueNames/budgetMemberRemove"
+      Type: String
+      Value: !Ref RemoveUserFromBudgetQueueName
+      Description: "SSM Parameter for budgetMemberRemove queue name"
+
+  SendEmailSnsTopicName:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: "/onyx-identity/sendEmailTopicName"
+      Type: String
+      Value: !Ref SendEmailTopicName
+      Description: "SSM Parameter for sendEmail topic name"
+
+  AuthenticationIssuer:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: "/onyx-identity/authentication/issuer"
+      Type: String
+      Value: "Onyx"
+      Description: "SSM Parameter for authentication issuer"
+
+  AuthenticationAudience:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: "/onyx-identity/authentication/audience"
+      Type: String
+      Value: "Onyx"
+      Description: "SSM Parameter for authentication audience"
+
+  AuthenticationExpireInLongMinutes:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: "/onyx-identity/authentication/expireInLongMinutes"
+      Type: String
+      Value: "10080"
+      Description: "SSM Parameter for authentication expire in long minutes"
+
+  AuthenticationExpireInMinutes:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: "/onyx-identity/authentication/expireInMinutes"
+      Type: String
+      Value: "60"
+      Description: "SSM Parameter for authentication expire in minutes"

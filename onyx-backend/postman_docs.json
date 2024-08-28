@@ -97,7 +97,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"string\",\r\n    \"password\": \"string\",\r\n    \"username\": \"string\",\r\n    \"currency\": \"string\"\r\n}",
+									"raw": "{\r\n    \"email\": \"brdak02dominik@gmail.com\",\r\n    \"password\": \"Pa$$w0rd\",\r\n    \"username\": \"dbrdak\",\r\n    \"currency\": \"USD\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -261,7 +261,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"string\",\r\n    \"verificationCode\": \"string\"\r\n}",
+									"raw": "{\r\n    \"email\": \"brdak02dominik@gmail.com\",\r\n    \"verificationCode\": \"716731\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -466,7 +466,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "<uuid>",
+											"value": "8c46ce94-857b-4e13-9aa1-fd313f77a2ca",
 											"description": "(Required) "
 										}
 									]
@@ -1549,7 +1549,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "<uuid>",
+											"value": "8c46ce94-857b-4e13-9aa1-fd313f77a2ca",
 											"description": "(Required) "
 										}
 									]
@@ -1754,7 +1754,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"name\": \"<string>\"\n}",
+									"raw": "{\n  \"name\": \"Groceries\"\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -1776,7 +1776,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "<uuid>",
+											"value": "8c46ce94-857b-4e13-9aa1-fd313f77a2ca",
 											"description": "(Required) "
 										}
 									]
@@ -2037,7 +2037,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"newName\": \"<string>\"\n}",
+									"raw": "{\n  \"newName\": \"Groceries\"\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -2060,12 +2060,12 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "<uuid>",
+											"value": "8c46ce94-857b-4e13-9aa1-fd313f77a2ca",
 											"description": "(Required) "
 										},
 										{
 											"key": "categoryId",
-											"value": "<uuid>",
+											"value": "a7c670c0-8351-4c2b-ad36-fa7c6df42482",
 											"description": "(Required) "
 										}
 									]
@@ -2577,7 +2577,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/counterparties?type=<string>",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/counterparties?type=payee",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
@@ -2590,13 +2590,13 @@
 									"query": [
 										{
 											"key": "type",
-											"value": "<string>"
+											"value": "payee"
 										}
 									],
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "<uuid>",
+											"value": "8c46ce94-857b-4e13-9aa1-fd313f77a2ca",
 											"description": "(Required) "
 										}
 									]
@@ -2825,7 +2825,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"counterpartyType\": \"<string>\",\n  \"counterpartyName\": \"<string>\"\n}",
+									"raw": "{\n  \"counterpartyType\": \"Payee\",\n  \"counterpartyName\": \"Lidl\"\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -2847,7 +2847,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "<uuid>",
+											"value": "8c46ce94-857b-4e13-9aa1-fd313f77a2ca",
 											"description": "(Required) "
 										}
 									]
@@ -5924,7 +5924,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/transactions?counterpartyId=<uuid>&accountId=<uuid>&subcategoryId=<uuid>",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/transactions",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
@@ -5937,21 +5937,24 @@
 									"query": [
 										{
 											"key": "counterpartyId",
-											"value": "<uuid>"
+											"value": "<uuid>",
+											"disabled": true
 										},
 										{
 											"key": "accountId",
-											"value": "<uuid>"
+											"value": "<uuid>",
+											"disabled": true
 										},
 										{
 											"key": "subcategoryId",
-											"value": "<uuid>"
+											"value": "<uuid>",
+											"disabled": true
 										}
 									],
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "<uuid>",
+											"value": "8c46ce94-857b-4e13-9aa1-fd313f77a2ca",
 											"description": "(Required) "
 										}
 									]
@@ -7157,7 +7160,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"budgetName\": \"Budget 1\",\n  \"budgetCurrency\": \"PLN\"\n}",
+									"raw": "{\n  \"budgetName\": \"Budget 3\",\n  \"budgetCurrency\": \"CHF\"\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -8223,7 +8226,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "<uuid>",
+											"value": "590ff66f-40ce-432c-8935-0ccd43e47113",
 											"description": "(Required) "
 										}
 									]
@@ -8457,12 +8460,12 @@
 		},
 		{
 			"key": "ID_URL",
-			"value": "https://yu9x65iv7d.execute-api.eu-central-1.amazonaws.com/api/v1",
+			"value": "https://u0fys2wmi8.execute-api.eu-central-1.amazonaws.com/api/v1",
 			"type": "string"
 		},
 		{
 			"key": "BUDGET_URL",
-			"value": "https://vda327ao6h.execute-api.eu-central-1.amazonaws.com/api/v1"
+			"value": "https://5q6tw0dulc.execute-api.eu-central-1.amazonaws.com/api/v1"
 		},
 		{
 			"key": "REFRESH_TOKEN",

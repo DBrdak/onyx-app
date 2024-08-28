@@ -10,4 +10,5 @@ public interface IAccountRepository
     Task<Result<IEnumerable<Account>>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<Result<Account>> GetByIdAsync(AccountId accountId, CancellationToken cancellationToken);
     Task<Result<Account>> GetByNameAsync(AccountName accountName, CancellationToken cancellationToken);
+    Task<Result> RemoveRangeAsync(IEnumerable<AccountId> entitiesId, CancellationToken cancellationToken = default);
 }

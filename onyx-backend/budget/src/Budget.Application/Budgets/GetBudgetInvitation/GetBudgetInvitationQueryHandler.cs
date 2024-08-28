@@ -1,6 +1,7 @@
 ﻿using Abstractions.Messaging;
 using Budget.Application.Budgets.Models;
 using Budget.Domain.Budgets;
+using Extensions;
 using Models.Responses;
 
 namespace Budget.Application.Budgets.GetBudgetInvitation;
@@ -19,6 +20,11 @@ internal sealed class GetBudgetInvitationQueryHandler : IQueryHandler<GetBudgetI
 
     public async Task<Result<InvitationUrl>> Handle(GetBudgetInvitationQuery request, CancellationToken cancellationToken)
     {
+        if (request.BaseUrl.IsUrl())
+        {
+            return GetBudgetInvitationErrors.InvalidHost;
+        }
+
         var getBudgetResult = await _budgetRepository.GetByIdAsync(new BudgetId(request.BudgetId), cancellationToken);
 
         if (getBudgetResult.IsFailure)

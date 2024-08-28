@@ -23,15 +23,12 @@ Resources:
       Timeout: 30
       PackageType: Zip
       Role: !Ref FullAccessRoleArn
-      Environment:
-        Variables:
-          TopicArn: !Ref SendEmail
       Events:
         SnsEvent:
           Type: SNS
           Properties:
             Topic: !Ref SendEmail
 Outputs:
-  SendEmailTopicArn:
-    Description: "The ARN of the Send Email Topic"
-    Value: !GetAtt SendEmail.TopicArn
+  SendEmailTopicName:
+    Description: Send email topic name
+    Value: !GetAtt SendEmail.TopicName

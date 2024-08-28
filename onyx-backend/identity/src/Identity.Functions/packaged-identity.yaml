@@ -3,12 +3,20 @@ Transform: AWS::Serverless-2016-10-31
 Description: An AWS Serverless Application. This template is partially managed by
   Amazon.Lambda.Annotations (v1.3.0.0).
 Parameters:
-  SendEmailTopicArn:
-    Type: String
-    Description: ARN of the Send Email topic
   FullAccessRoleArn:
     Type: String
     Description: ARN of the FullAccess IAM role
+  DeadLetterQueueArn:
+    Type: String
+    Description: ARN of the global dead letter queue
+  Environment:
+    Type: String
+    Description: The deployment environment (dev, qa, prod)
+    AllowedValues:
+    - dev
+    - qa
+    - prod
+    Default: qa
 Resources:
   IdentityApi:
     Type: AWS::Serverless::HttpApi
@@ -29,6 +37,8 @@ Resources:
         AllowCredentials: true
       DefaultRouteSettings:
         DetailedMetricsEnabled: true
+      StageName:
+        Ref: Environment
       Auth:
         DefaultAuthorizer: LambdaAuthorizer
         Authorizers:
@@ -44,6 +54,26 @@ Resources:
               - authorization
     Metadata:
       SamResourceId: IdentityApi
+  RemoveUserFromBudgetQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: RemoveUserFromBudgetQueue
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Ref: DeadLetterQueueArn
+        maxReceiveCount: 5
+    Metadata:
+      SamResourceId: RemoveUserFromBudgetQueue
+  AddBudgetForUserQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: AddBudgetForUserQueue
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Ref: DeadLetterQueueArn
+        maxReceiveCount: 5
+    Metadata:
+      SamResourceId: AddBudgetForUserQueue
   Login:
     Type: AWS::Serverless::Function
     Metadata:
@@ -52,9 +82,10 @@ Resources:
       - RootPost
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: Login
+      FunctionName:
+        Fn::Sub: Login_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
+      CodeUri: s3://onyx-default/54839ebc4bc81c8b48126b7be8e1b1ea
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -81,9 +112,10 @@ Resources:
       - RootPost
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: Register
+      FunctionName:
+        Fn::Sub: Register_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
+      CodeUri: s3://onyx-default/54839ebc4bc81c8b48126b7be8e1b1ea
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -110,9 +142,10 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: VerifyEmail
+      FunctionName:
+        Fn::Sub: VerifyEmail_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
+      CodeUri: s3://onyx-default/54839ebc4bc81c8b48126b7be8e1b1ea
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -139,9 +172,10 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: ResendEmail
+      FunctionName:
+        Fn::Sub: ResendEmail_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
+      CodeUri: s3://onyx-default/54839ebc4bc81c8b48126b7be8e1b1ea
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -168,9 +202,10 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: Refresh
+      FunctionName:
+        Fn::Sub: Refresh_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
+      CodeUri: s3://onyx-default/54839ebc4bc81c8b48126b7be8e1b1ea
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -197,9 +232,10 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: ForgotPassword
+      FunctionName:
+        Fn::Sub: ForgotPassword_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
+      CodeUri: s3://onyx-default/54839ebc4bc81c8b48126b7be8e1b1ea
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -226,9 +262,10 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: NewPassword
+      FunctionName:
+        Fn::Sub: NewPassword_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
+      CodeUri: s3://onyx-default/54839ebc4bc81c8b48126b7be8e1b1ea
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -255,9 +292,10 @@ Resources:
       - RootGet
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: GetUser
+      FunctionName:
+        Fn::Sub: GetUser_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
+      CodeUri: s3://onyx-default/54839ebc4bc81c8b48126b7be8e1b1ea
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -282,9 +320,10 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: UpdateUser
+      FunctionName:
+        Fn::Sub: UpdateUser_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
+      CodeUri: s3://onyx-default/54839ebc4bc81c8b48126b7be8e1b1ea
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -309,9 +348,10 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: RequestEmailChange
+      FunctionName:
+        Fn::Sub: RequestEmailChange_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
+      CodeUri: s3://onyx-default/54839ebc4bc81c8b48126b7be8e1b1ea
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -336,9 +376,10 @@ Resources:
       - RootPut
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: Logout
+      FunctionName:
+        Fn::Sub: Logout_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
+      CodeUri: s3://onyx-default/54839ebc4bc81c8b48126b7be8e1b1ea
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -363,9 +404,10 @@ Resources:
       - RootDelete
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: RemoveUser
+      FunctionName:
+        Fn::Sub: RemoveUser_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
+      CodeUri: s3://onyx-default/54839ebc4bc81c8b48126b7be8e1b1ea
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -382,15 +424,68 @@ Resources:
             Method: DELETE
             ApiId:
               Ref: IdentityApi
+  AddBudgetIdForUser:
+    Type: AWS::Serverless::Function
+    Metadata:
+      SamResourceId: AddBudgetIdForUser
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      FunctionName:
+        Fn::Sub: AddBudgetIdForUser_${Environment}
+      Runtime: dotnet8
+      CodeUri: s3://onyx-default/54839ebc4bc81c8b48126b7be8e1b1ea
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role:
+        Ref: FullAccessRoleArn
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_AddBudgetIdForUser_Generated::AddBudgetIdForUser
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue:
+              Fn::GetAtt:
+              - AddBudgetForUserQueue
+              - Arn
+  RemoveBudgetIdForUser:
+    Type: AWS::Serverless::Function
+    Metadata:
+      SamResourceId: RemoveBudgetIdForUser
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      FunctionName:
+        Fn::Sub: RemoveBudgetIdForUser_${Environment}
+      Runtime: dotnet8
+      CodeUri: s3://onyx-default/54839ebc4bc81c8b48126b7be8e1b1ea
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role:
+        Ref: FullAccessRoleArn
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.User.UserFunctions_RemoveBudgetIdForUser_Generated::RemoveBudgetIdForUser
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue:
+              Fn::GetAtt:
+              - RemoveUserFromBudgetQueue
+              - Arn
   LambdaAuthorizer:
     Type: AWS::Serverless::Function
     Metadata:
       SamResourceId: LambdaAuthorizer
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: LambdaAuthorizer
+      FunctionName:
+        Fn::Sub: LambdaAuthorizer_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/73192c596da70759ad4355d7e4d4d65c
+      CodeUri: s3://onyx-default/54839ebc4bc81c8b48126b7be8e1b1ea
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -410,3 +505,15 @@ Outputs:
       Fn::GetAtt:
       - LambdaAuthorizer
       - Arn
+  RemoveUserFromBudgetQueueName:
+    Description: RemoveUserFromBudgetQueueName Queue Name
+    Value:
+      Fn::GetAtt:
+      - RemoveUserFromBudgetQueue
+      - QueueName
+  AddBudgetForUserQueueName:
+    Description: AddBudgetForUserQueue Queue Name
+    Value:
+      Fn::GetAtt:
+      - AddBudgetForUserQueue
+      - QueueName
