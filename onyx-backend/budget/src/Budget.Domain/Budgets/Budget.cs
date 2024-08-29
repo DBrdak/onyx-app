@@ -92,7 +92,7 @@ public sealed class Budget : Entity<BudgetId>
             return Result.Failure(BudgetErrors.MaxUserNumberReached);
         }
 
-        if (_budgetMembers.Any(member => member.Id == userId))
+        if (_budgetMembers.Any(member => member.Id == userId || member.Email.ToLower() == email.ToLower()))
         {
             return BudgetErrors.UserAlreadyAdded;
         }

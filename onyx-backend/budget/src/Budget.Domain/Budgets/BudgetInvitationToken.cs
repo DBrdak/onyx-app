@@ -6,7 +6,7 @@ public sealed record BudgetInvitationToken
 {
     public string Value { get; init; }
     public DateTime ExpirationDate { get; init; }
-    private const int expirationTimeInMinutes = 60;
+    private const int expirationTimeInMinutes = 1440; // One Day
 
     private BudgetInvitationToken(string value, DateTime expirationDate)
     {
@@ -20,7 +20,7 @@ public sealed record BudgetInvitationToken
 
     internal Result Validate(string token)
     {
-        if (ExpirationDate > DateTime.UtcNow)
+        if (ExpirationDate < DateTime.UtcNow)
         {
             return BudgetErrors.TokenExpired;
         }
