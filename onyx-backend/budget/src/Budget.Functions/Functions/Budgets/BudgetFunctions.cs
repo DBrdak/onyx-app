@@ -49,16 +49,8 @@ public sealed class BudgetFunctions : BaseFunction
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
         context.Logger.Log(JsonConvert.SerializeObject(requestContext));
-        var protocol = requestContext.Headers.TryGetValue(
-            "X-Forwarded-Proto",
-            out var protocolHeader) ?
-            protocolHeader :
-            "https";
-        var host = requestContext.Headers["Client"];
-        var path = requestContext.RawPath;
-        var baseUrl = host;
-        //var baseUrl = $"{protocol}://{host}{path}";
-        var command = new GetBudgetInvitationQuery(Guid.Parse(budgetId), baseUrl);
+        requestContext.Headers.TryGetValue("referer", out var clientUrl);
+        var command = new GetBudgetInvitationQuery(Guid.Parse(budgetId), clientUrl);
 
         var result = await Sender.Send(command);
 

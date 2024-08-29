@@ -1,7 +1,6 @@
 ﻿using Abstractions.Messaging;
 using Identity.Application.Abstractions.Authentication;
 using Identity.Infrastructure.Authentication.Models;
-using Identity.Infrastructure.Repositories;
 using Models.Responses;
 
 namespace Identity.Infrastructure.Authentication;

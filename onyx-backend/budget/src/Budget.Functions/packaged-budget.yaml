@@ -62,7 +62,7 @@ Resources:
       FunctionName:
         Fn::Sub: AccountsGetAll_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -90,7 +90,7 @@ Resources:
       FunctionName:
         Fn::Sub: AccountsAdd_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -118,7 +118,7 @@ Resources:
       FunctionName:
         Fn::Sub: AccountsUpdate_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -146,7 +146,7 @@ Resources:
       FunctionName:
         Fn::Sub: AccountsRemove_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -174,7 +174,7 @@ Resources:
       FunctionName:
         Fn::Sub: AccountsBulkAddTransactions_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -202,7 +202,7 @@ Resources:
       FunctionName:
         Fn::Sub: BudgetsGetAll_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -230,7 +230,7 @@ Resources:
       FunctionName:
         Fn::Sub: BudgetsGetInvitation_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -258,7 +258,7 @@ Resources:
       FunctionName:
         Fn::Sub: BudgetsAdd_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -286,7 +286,7 @@ Resources:
       FunctionName:
         Fn::Sub: BudgetsRemoveUser_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -314,7 +314,7 @@ Resources:
       FunctionName:
         Fn::Sub: BudgetsJoin_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -342,7 +342,7 @@ Resources:
       FunctionName:
         Fn::Sub: BudgetsRemove_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -370,7 +370,7 @@ Resources:
       FunctionName:
         Fn::Sub: CategoriesGetAll_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -398,7 +398,7 @@ Resources:
       FunctionName:
         Fn::Sub: CategoriesAdd_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -426,7 +426,7 @@ Resources:
       FunctionName:
         Fn::Sub: CategoriesUpdate_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -454,7 +454,7 @@ Resources:
       FunctionName:
         Fn::Sub: CategoriesRemove_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -482,7 +482,7 @@ Resources:
       FunctionName:
         Fn::Sub: CounterpartiesAdd_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -510,7 +510,7 @@ Resources:
       FunctionName:
         Fn::Sub: CounterpartiesUpdate_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -538,7 +538,7 @@ Resources:
       FunctionName:
         Fn::Sub: CounterpartiesRemove_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -566,7 +566,7 @@ Resources:
       FunctionName:
         Fn::Sub: TransactionsGet_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -594,7 +594,7 @@ Resources:
       FunctionName:
         Fn::Sub: TransactionsAdd_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -622,7 +622,7 @@ Resources:
       FunctionName:
         Fn::Sub: TransactionsRemove_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -650,7 +650,7 @@ Resources:
       FunctionName:
         Fn::Sub: TransactionsBulkRemove_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -678,7 +678,7 @@ Resources:
       FunctionName:
         Fn::Sub: SubcategoriesGetToAssign_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -706,7 +706,7 @@ Resources:
       FunctionName:
         Fn::Sub: SubcategoriesAdd_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -734,7 +734,7 @@ Resources:
       FunctionName:
         Fn::Sub: SubcategoriesUpdate_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -762,7 +762,7 @@ Resources:
       FunctionName:
         Fn::Sub: SubcategoriesRemove_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -790,7 +790,7 @@ Resources:
       FunctionName:
         Fn::Sub: SubcategoriesUpdateAssignment_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -818,7 +818,7 @@ Resources:
       FunctionName:
         Fn::Sub: SubcategoriesUpdateTarget_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -846,7 +846,7 @@ Resources:
       FunctionName:
         Fn::Sub: SubcategoriesRemoveTarget_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -874,7 +874,7 @@ Resources:
       FunctionName:
         Fn::Sub: CounterpartiesGetAll_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -902,7 +902,7 @@ Resources:
       FunctionName:
         Fn::Sub: BudgetsEdit_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -930,7 +930,7 @@ Resources:
       FunctionName:
         Fn::Sub: TransactionsSetSubcategory_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/abfe27be7a5b59c60f586773cc31febe
+      CodeUri: s3://onyx-default/d1695bf57831ebc639ddeb26b56df933
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -943,7 +943,7 @@ Resources:
         RootPut:
           Type: HttpApi
           Properties:
-            Path: /api/v1/{budgetId}/transactions/subcategory
+            Path: /api/v1/{budgetId}/transactions/{transactionId}/subcategory
             Method: PUT
             ApiId:
               Ref: BudgetApi

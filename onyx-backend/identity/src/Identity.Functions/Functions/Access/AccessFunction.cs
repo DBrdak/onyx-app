@@ -6,7 +6,6 @@ using Identity.Application.User.IsBudgetMember;
 using Identity.Functions.Functions.Shared;
 using LambdaKernel;
 using MediatR;
-using Newtonsoft.Json;
 
 namespace Identity.Functions.Functions.Access;
 

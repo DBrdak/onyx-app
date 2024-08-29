@@ -812,7 +812,7 @@ Resources:
         RootPut:
           Type: HttpApi
           Properties:
-            Path: /api/v1/{budgetId}/transactions/subcategory
+            Path: /api/v1/{budgetId}/transactions/{transactionId}/subcategory
             Method: PUT
             ApiId: !Ref BudgetApi
 Outputs:

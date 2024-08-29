@@ -101,16 +101,17 @@ public sealed class TransactionFunctions : BaseFunction
     }
 
     [LambdaFunction(ResourceName = $"Transactions{nameof(SetSubcategory)}")]
-    [HttpApi(LambdaHttpMethod.Put, $"{transactionBaseRoute}/subcategory")]
+    [HttpApi(LambdaHttpMethod.Put, $"{transactionBaseRoute}/{{transactionId}}/subcategory")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> SetSubcategory(
         string budgetId,
+        string transactionId,
         [FromBody] SetSubcategoryRequest request,
         APIGatewayHttpApiV2ProxyRequest requestContext)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
         var command = new SetSubcategoryCommand(
-            Guid.Parse(request.TransactionId),
+            Guid.Parse(transactionId),
             Guid.Parse(request.SubcategoryId));
 
         var result = await Sender.Send(command);

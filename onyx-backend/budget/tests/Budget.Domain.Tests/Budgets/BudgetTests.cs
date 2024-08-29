@@ -1,12 +1,4 @@
-﻿using Budget.Domain.Accounts;
-using Budget.Domain.Budgets.DomainEvents;
-using Budget.Domain.Tests.Accounts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Budget.Domain.Budgets;
+﻿using Budget.Domain.Budgets.DomainEvents;
 
 namespace Budget.Domain.Tests.Budgets;
 

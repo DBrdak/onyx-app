@@ -1,5 +1,4 @@
 using Abstractions.Messaging;
-using Budget.Application.Transactions.Models;
 using Budget.Domain.Budgets;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;

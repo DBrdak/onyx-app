@@ -20,7 +20,9 @@ internal sealed class GetBudgetInvitationQueryHandler : IQueryHandler<GetBudgetI
 
     public async Task<Result<InvitationUrl>> Handle(GetBudgetInvitationQuery request, CancellationToken cancellationToken)
     {
-        if (request.BaseUrl.IsUrl())
+        var clientUrl = request.BaseUrl;
+
+        if (!string.IsNullOrWhiteSpace(clientUrl) && clientUrl.IsUrl())
         {
             return GetBudgetInvitationErrors.InvalidHost;
         }
@@ -37,7 +39,7 @@ internal sealed class GetBudgetInvitationQueryHandler : IQueryHandler<GetBudgetI
         var token = budget.GetInvitationToken();
         var tokenValidForSeconds = (token.ExpirationDate - DateTime.UtcNow).Seconds;
 
-        var url = string.Join(request.BaseUrl, GetInvitationRelativePath(token.Value, budget.Id.Value));
+        var url = string.Join(clientUrl, GetInvitationRelativePath(token.Value, budget.Id.Value));
 
         var updateResult = await _budgetRepository.UpdateAsync(budget, cancellationToken);
 

@@ -1,7 +1,4 @@
-﻿using Models.DataTypes;
-using Models.UnitTests.Money;
-
-namespace Models.UnitTests.MonthDate;
+﻿namespace Models.UnitTests.MonthDate;
 
 public sealed class MonthDateTests
 {
