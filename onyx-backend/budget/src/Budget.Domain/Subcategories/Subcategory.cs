@@ -1,4 +1,5 @@
 ﻿using Budget.Domain.Budgets;
+using Budget.Domain.Categories;
 using Budget.Domain.Shared.Abstractions;
 using Models.DataTypes;
 using Models.Responses;
@@ -22,7 +23,8 @@ public sealed class Subcategory : BudgetOwnedEntity<SubcategoryId>
         IEnumerable<Assignment> assignments,
         Target? target,
         BudgetId budgetId,
-        SubcategoryId? id = null) : base(budgetId, id ?? new SubcategoryId())
+        SubcategoryId? id = null,
+        long? createdAt = null) : base(budgetId, id ?? new SubcategoryId(), createdAt)
     {
         Name = name;
         Description = description;

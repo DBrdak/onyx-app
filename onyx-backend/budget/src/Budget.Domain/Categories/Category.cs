@@ -14,8 +14,12 @@ public sealed class Category : BudgetOwnedEntity<CategoryId>
 
     [Newtonsoft.Json.JsonConstructor]
     [System.Text.Json.Serialization.JsonConstructor]
-    private Category(CategoryName name, List<SubcategoryId> subcategoriesId, BudgetId budgetId, CategoryId? id = null) 
-        : base(budgetId, id ?? new CategoryId())
+    private Category(
+        CategoryName name,
+        List<SubcategoryId> subcategoriesId,
+        BudgetId budgetId,
+        CategoryId? id = null,
+        long? createdAt = null) : base(budgetId, id ?? new CategoryId(), createdAt)
     {
         Name = name;
         _subcategoriesId = subcategoriesId;

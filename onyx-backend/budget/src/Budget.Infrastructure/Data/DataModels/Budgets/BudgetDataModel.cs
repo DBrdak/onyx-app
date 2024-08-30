@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Amazon.DynamoDBv2.DocumentModel;
+using Budget.Domain.Accounts;
 using Budget.Domain.Budgets;
 using Budget.Domain.Subcategories;
 using Models.DataTypes;
@@ -24,6 +25,7 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
     public IEnumerable<string> BudgetMembersId { get; init; }
     public IEnumerable<BudgetMemberDataModel> BudgetMembers { get; init; }
     public Guid? UnknownSubcategoryId { get; init; }
+    public long CreatedAt { get; init; }
 
     private BudgetDataModel(Document doc)
     {
@@ -42,6 +44,7 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
         InvitationTokenExpirationDateSecond = doc[nameof(InvitationTokenExpirationDateSecond)].AsNullableInt();
         UnknownSubcategoryId = doc[nameof(UnknownSubcategoryId)].AsNullableGuid();
         BudgetMembersId = doc[nameof(BudgetMembersId)].AsArrayOfString();
+        CreatedAt = doc[nameof(CreatedAt)].AsLong();
     }
 
 
@@ -72,6 +75,7 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
         );
         UnknownSubcategoryId = budget.UnknownSubcategoryId?.Value;
         BudgetMembersId = budget.BudgetMembers.Select(bm => bm.Id);
+        CreatedAt = budget.CreatedAt;
     }
 
     public static BudgetDataModel FromDomainModel(Domain.Budgets.Budget budget) => new(budget);
@@ -152,7 +156,8 @@ internal sealed class BudgetDataModel : IDataModel<Domain.Budgets.Budget>
                        budgetMembers,
                        invitationToken,
                        unkownSubcategoryId,
-                       id
+                       id,
+                       CreatedAt
                    ],
                    null) as Domain.Budgets.Budget ??
                throw new DataModelConversionException(

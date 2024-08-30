@@ -27,9 +27,9 @@ public abstract class Repository<TEntity, TEntityId>
         {
             Select = SelectValues.AllAttributes,
             Filter = new ScanFilter(),
-            Limit = 1000
+            Limit = 1000,
         };
-
+        
         var scanner = Table.Scan(config);
         var docs = new List<Document>();
 
@@ -38,7 +38,9 @@ public abstract class Repository<TEntity, TEntityId>
         while (!scanner.IsDone);
 
         var records = docs.Select(DataModelService.ConvertDocumentToDataModel);
-        var enitites = records.Select(record => record.ToDomainModel());
+        var enitites = records.Select(record => record.ToDomainModel())
+            .OrderByDescending(entity => entity.CreatedAt)
+            .AsEnumerable();
 
         return Result.Create(enitites);
     }

@@ -27,7 +27,8 @@ public sealed class Budget : Entity<BudgetId>
         List<BudgetMember> budgetMembers,
         BudgetInvitationToken? invitationToken,
         SubcategoryId? unknownSubcategoryId,
-        BudgetId? id = null) : base(id ?? new BudgetId())
+        BudgetId? id = null,
+        long? createdAt = null) : base(id ?? new BudgetId(), createdAt)
     {
         Name = name;
         BaseCurrency = baseCurrency;

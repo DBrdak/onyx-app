@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Security.Principal;
 using Amazon.DynamoDBv2.DocumentModel;
 using Budget.Domain.Accounts;
 using Budget.Domain.Budgets;
@@ -30,6 +31,7 @@ internal sealed class TransactionDataModel : IDataModel<Transaction>
     public string BudgetAmountCurrency { get; init; }
     public decimal OriginalAmountAmount { get; init; }
     public string OriginalAmountCurrency { get; init; }
+    public long CreatedAt { get; init; }
 
     public TransactionDataModel(Transaction transaction)
     {
@@ -51,6 +53,7 @@ internal sealed class TransactionDataModel : IDataModel<Transaction>
         BudgetAmountCurrency = transaction.BudgetAmount.Currency.Code;
         OriginalAmountAmount = transaction.OriginalAmount.Amount;
         OriginalAmountCurrency = transaction.OriginalAmount.Currency.Code;
+        CreatedAt = transaction.CreatedAt;
     }
 
     public TransactionDataModel(Document doc)
@@ -72,6 +75,7 @@ internal sealed class TransactionDataModel : IDataModel<Transaction>
         BudgetAmountCurrency = doc[nameof(BudgetAmountCurrency)];
         OriginalAmountAmount = doc[nameof(OriginalAmountAmount)].AsDecimal();
         OriginalAmountCurrency = doc[nameof(OriginalAmountCurrency)];
+        CreatedAt = doc[nameof(CreatedAt)].AsLong();
     }
 
     public static TransactionDataModel FromDomainModel(Transaction transaction) => new(transaction);
@@ -153,7 +157,8 @@ internal sealed class TransactionDataModel : IDataModel<Transaction>
                        counterpartyId,
                        budgetAmount,
                        budgetId,
-                       id
+                       id,
+                       CreatedAt
                    ],
                    null) as Transaction ??
                throw new DataModelConversionException(

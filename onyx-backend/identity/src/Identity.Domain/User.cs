@@ -42,7 +42,8 @@ public sealed class User : Entity<UserId>
         LoggingGuard guard,
         string? longLivedToken,
         List<Guid> budgetsIds,
-        UserId? userId = null) : base(userId ?? new UserId())
+        UserId? userId = null,
+        long? createdAt = null) : base(userId ?? new UserId(), createdAt)
     {
         Email = email;
         Username = username;

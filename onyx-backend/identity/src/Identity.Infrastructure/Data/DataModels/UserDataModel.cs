@@ -46,6 +46,7 @@ internal class UserDataModel : IDataModel<User>
     public int? VerificationCodeExpirationDateMinute { get; init; }
     public int? VerificationCodeExpirationDateSecond { get; init; }
     public List<Guid> BudgetsIds { get; init; }
+    public long CreatedAt { get; init; }
 
     public UserDataModel(Document doc)
     {
@@ -88,6 +89,7 @@ internal class UserDataModel : IDataModel<User>
             .AsDynamoDBList().Entries
             .Select(entry => Guid.Parse(entry.AsString()))
             .ToList();
+        CreatedAt = doc[nameof(CreatedAt)].AsLong();
     }
 
 
@@ -129,6 +131,7 @@ internal class UserDataModel : IDataModel<User>
         VerificationCodeExpirationDateMinute = user.VerificationCode?.ExpirationDate.Minute;
         VerificationCodeExpirationDateSecond = user.VerificationCode?.ExpirationDate.Second;
         BudgetsIds = user.BudgetsIds.ToList();
+        CreatedAt = user.CreatedAt;
     }
 
     public Type GetDomainModelType() => typeof(User);
@@ -276,7 +279,8 @@ internal class UserDataModel : IDataModel<User>
                     guard,
                     LongLivedToken,
                     BudgetsIds,
-                    id
+                    id,
+                    CreatedAt
                 ],
                 null) as User ??
             throw new DataModelConversionException(
