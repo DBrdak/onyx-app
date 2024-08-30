@@ -115,3 +115,12 @@ export const getToAssignQueryOptions = ({
     queryKey: ["toAssign", budgetId],
     queryFn: () => getToAssign({ month, year, budgetId }),
   });
+
+export const getInvitationLink = async (budgetId: string) => {
+  try {
+    const response = await budgetApi.put(`/budgets/${budgetId}/invitation`);
+    console.log(response.data);
+  } catch (error) {
+    console.error(getErrorMessage(error));
+  }
+};

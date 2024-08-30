@@ -3,6 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import CurrencyCombobox from "@/components/dashboard/CurrencyCombobox";
+import BudgetsTableUserBadge from "@/components/dashboard/budget/budgetsTable/BudgetsTableUserBadge";
 import {
   Form,
   FormControl,
@@ -10,21 +11,20 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-
-import { CreateBudget, CreateBudgetSchema } from "@/lib/validation/budget";
-import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { Input } from "@/components/ui/input";
-import { User } from "@/lib/validation/user";
-import { useCreateBudgetMutation } from "@/lib/hooks/mutations/useCreateBudgetMutation";
-import { Badge } from "@/components/ui/badge";
 import LoadingButton from "@/components/LoadingButton";
 
-interface CreateBudgetFormProps {
+import { useClickOutside } from "@/lib/hooks/useClickOutside";
+import { useCreateBudgetMutation } from "@/lib/hooks/mutations/useCreateBudgetMutation";
+import { CreateBudget, CreateBudgetSchema } from "@/lib/validation/budget";
+import { type User } from "@/lib/validation/user";
+
+interface BudgetsTableCreateFormProps {
   setIsCreating: (state: boolean) => void;
   user: User;
 }
 
-const CreateBudgetForm: FC<CreateBudgetFormProps> = ({
+const BudgetsTableCreateForm: FC<BudgetsTableCreateFormProps> = ({
   setIsCreating,
   user,
 }) => {
@@ -110,18 +110,16 @@ const CreateBudgetForm: FC<CreateBudgetFormProps> = ({
           )}
         />
         <div className="flex h-14 items-center justify-center md:col-span-3">
-          <Badge
-            variant="outline"
-            className="w-1/2 items-center justify-center text-lg font-medium"
-          >
-            You
-          </Badge>
+          <BudgetsTableUserBadge
+            memberName={user.username}
+            userName={user.username}
+          />
         </div>
         <LoadingButton
           type="submit"
           isLoading={isPending}
           disabled={isPending}
-          className="col-span-2 h-14 rounded-l-none font-semibold"
+          className="col-span-2 h-14 rounded-full font-semibold"
         >
           Create
         </LoadingButton>
@@ -130,4 +128,4 @@ const CreateBudgetForm: FC<CreateBudgetFormProps> = ({
   );
 };
 
-export default CreateBudgetForm;
+export default BudgetsTableCreateForm;

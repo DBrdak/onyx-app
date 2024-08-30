@@ -1,7 +1,8 @@
 import { FC } from "react";
 import { useNavigate } from "@tanstack/react-router";
 
-import { ChevronDown, LoaderCircle } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+import UserAvatar from "@/components/UserAvatar";
 import UserProfileDialogContent from "@/components/dashboard/UserProfileDialogContent";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,17 +35,11 @@ const UserDropdown: FC<UserDropdownProps> = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            variant="outline"
-            className="justify-between space-x-2 rounded-full bg-transparent p-0 pr-1 duration-700"
+            variant="ghost"
+            className="justify-between space-x-2 rounded-full border-none p-0 pr-1 duration-500"
             disabled={!user}
           >
-            <span className="inline-flex aspect-square h-full items-center justify-center rounded-full bg-primaryDark font-bold capitalize text-primaryDark-foreground">
-              {!user?.username ? (
-                <LoaderCircle className="animate-spin" />
-              ) : (
-                user.username[0]
-              )}
-            </span>
+            <UserAvatar username={user?.username} />
             <ChevronDown />
           </Button>
         </DropdownMenuTrigger>
