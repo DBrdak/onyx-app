@@ -56,18 +56,6 @@ internal sealed class AddTransactionCommandHandler : ICommandHandler<AddTransact
             return Result.Failure<TransactionModel>(counterpartyGetResult.Error);
         }
 
-        var subcategoryId = request.SubcategoryId is not null ? 
-            new SubcategoryId(request.SubcategoryId.Value) : 
-            null;
-        var subcategoryGetResult = subcategoryId is not null ?
-            await _subcategoryRepository.GetByIdAsync(subcategoryId, cancellationToken) :
-            null;
-
-        if (subcategoryGetResult is not null && subcategoryGetResult.IsFailure)
-        {
-            return Result.Failure<TransactionModel>(subcategoryGetResult.Error);
-        }
-
         var budgetIdGetResult = _budgetContext.GetBudgetId();
 
         if (budgetIdGetResult.IsFailure)
@@ -84,11 +72,33 @@ internal sealed class AddTransactionCommandHandler : ICommandHandler<AddTransact
             return budgetGetResult.Error;
         }
 
+        var budget = budgetGetResult.Value;
+
+        var subcategoryId = request.SubcategoryId is not null ? 
+            new SubcategoryId(request.SubcategoryId.Value) : 
+            null;
+
+        var isUnkownSubcategory = subcategoryId == budget.UnknownSubcategoryId;
+
+        if (isUnkownSubcategory)
+        {
+            return AddTransactionErrors.UnknownSubcategoryCannotBeAssigned;
+        }
+
+        var subcategoryGetResult = subcategoryId is not null ?
+            await _subcategoryRepository.GetByIdAsync(subcategoryId, cancellationToken) :
+            null;
+
+        if (subcategoryGetResult is not null && subcategoryGetResult.IsFailure)
+        {
+            return Result.Failure<TransactionModel>(subcategoryGetResult.Error);
+        }
+
         var subcategory = subcategoryGetResult?.Value;
         var counterparty = counterpartyGetResult.Value;
         var account = accountGetResult.Value;
         var amount = amountCreateResult.Value;
-        var budgetCurrency = budgetGetResult.Value.BaseCurrency;
+        var budgetCurrency = budget.BaseCurrency;
 
         var isForeignTransaction = account.Balance.Currency != amount.Currency;
 
