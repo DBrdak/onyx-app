@@ -29,6 +29,8 @@ public sealed class TransactionFunctions : BaseFunction
         [FromQuery] string? counterpartyId,
         [FromQuery] string? accountId,
         [FromQuery] string? subcategoryId,
+        [FromQuery] string? date,
+        [FromQuery] string? period,
         APIGatewayHttpApiV2ProxyRequest requestContext)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
@@ -37,7 +39,8 @@ public sealed class TransactionFunctions : BaseFunction
             counterpartyId is null ? null : Guid.Parse(counterpartyId),
             accountId is null ? null : Guid.Parse(accountId),
             subcategoryId is null ? null : Guid.Parse(subcategoryId),
-            Guid.Parse(budgetId));
+            date,
+            period);
 
         var result = await Sender.Send(transactionsQuery);
 

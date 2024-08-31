@@ -44,13 +44,13 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
 
         var transactionsGetTask = query switch
         {
-            _ when query == GetTransactionQueryRequest.All =>
+            _ when query.Entity == GetTransactionQueryRequest.AllEntity =>
                 _transactionRepository.GetAllAsync(cancellationToken),
-            _ when query == GetTransactionQueryRequest.Account =>
+            _ when query.Entity == GetTransactionQueryRequest.AccountEntity =>
                 _transactionRepository.GetByAccountAsync(new (request.AccountId!.Value), cancellationToken),
-            _ when query == GetTransactionQueryRequest.Subcategory =>
+            _ when query.Entity == GetTransactionQueryRequest.SubcategoryEntity =>
                 _transactionRepository.GetBySubcategoryAsync(new(request.AccountId!.Value), cancellationToken),
-            _ when query == GetTransactionQueryRequest.Counterparty =>
+            _ when query.Entity == GetTransactionQueryRequest.CounterpartyEntity =>
                 _transactionRepository.GetByCounterpartyAsync(new(request.AccountId!.Value), cancellationToken),
             _ => Task.FromResult(Result.Failure<IEnumerable<Transaction>>(Error.None))
         };
@@ -132,13 +132,13 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
     private static bool IsQueryValid(GetTransactionQueryRequest query, GetTransactionsQuery request) =>
         query switch
         {
-            _ when query == GetTransactionQueryRequest.All =>
+            _ when query.Entity == GetTransactionQueryRequest.AllEntity =>
                 true,
-            _ when query == GetTransactionQueryRequest.Account =>
+            _ when query.Entity == GetTransactionQueryRequest.AccountEntity =>
                 request.AccountId is not null,
-            _ when query == GetTransactionQueryRequest.Subcategory =>
+            _ when query.Entity == GetTransactionQueryRequest.SubcategoryEntity =>
                 request.SubcategoryId is not null,
-            _ when query == GetTransactionQueryRequest.Counterparty =>
+            _ when query.Entity == GetTransactionQueryRequest.CounterpartyEntity =>
                 request.CounterpartyId is not null,
             _ => false
         };

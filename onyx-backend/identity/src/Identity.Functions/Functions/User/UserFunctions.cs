@@ -116,13 +116,15 @@ public sealed class UserFunctions : BaseFunction
         {
             lambdaContext.Logger.LogError(
                 $"Problem occured when trying to execute {nameof(RemoveBudgetIdForUser)} Lambda queue handler\n" +
-                $"Details: {e.Message}");
+                $"Details: {e.Message}\n" +
+                $"Exception:\n{JsonConvert.SerializeObject(e)}");
         }
     }
 
     [LambdaFunction(ResourceName = nameof(AddBudgetIdForUser))]
     public async Task AddBudgetIdForUser(SQSEvent evnt, ILambdaContext lambdaContext)
     {
+        lambdaContext.Logger.Log(JsonConvert.SerializeObject(evnt));
         try
         {
             foreach (var message in evnt.Records)
@@ -138,7 +140,8 @@ public sealed class UserFunctions : BaseFunction
         {
             lambdaContext.Logger.LogError(
                 $"Problem occured when trying to execute {nameof(AddBudgetIdForUser)} Lambda queue handler\n" +
-                $"Details: {e.Message}");
+                $"Details: {e.Message}\n" +
+                $"Exception:\n{JsonConvert.SerializeObject(e)}");
         }
     }
 }
