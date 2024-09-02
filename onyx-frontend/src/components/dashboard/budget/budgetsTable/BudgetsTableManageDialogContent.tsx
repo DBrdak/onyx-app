@@ -2,19 +2,23 @@ import { FC } from "react";
 
 import {
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import BudgetsTableEditNameForm from "./BudgetsTableEditNameForm";
-import { type Budget } from "@/lib/validation/budget";
+import { BudgetInvitationLink, type Budget } from "@/lib/validation/budget";
+import CopyToClipboard from "../../CopyToClipboard";
 
 interface BudgetsTableManageDialogContentProps {
   budget: Budget;
+  invitationLink: BudgetInvitationLink | undefined;
+  isInvitationLinkLoading: boolean;
 }
 
 const BudgetsTableManageDialogContent: FC<
   BudgetsTableManageDialogContentProps
-> = ({ budget }) => {
+> = ({ budget, invitationLink, isInvitationLinkLoading }) => {
   return (
     <DialogContent
       className="space-y-4"
@@ -29,7 +33,25 @@ const BudgetsTableManageDialogContent: FC<
         <BudgetsTableEditNameForm budget={budget} />
       </div>
       <div>delete members</div>
-      <div>invitation link</div>
+      <div className="space-y-4">
+        <div className="space-y-1">
+          <DialogTitle>Invite members</DialogTitle>
+          <DialogDescription>
+            Copy and share your unique invitation link!
+          </DialogDescription>
+        </div>
+        <div className="pb-2">
+          {isInvitationLinkLoading && (
+            <div className="flex animate-pulse">
+              <div className="h-10 w-10 border bg-accent/60" />
+              <div className="w-full border-y border-r bg-accent/60" />
+            </div>
+          )}
+          {invitationLink && (
+            <CopyToClipboard textToCopy={invitationLink.value} />
+          )}
+        </div>
+      </div>
     </DialogContent>
   );
 };

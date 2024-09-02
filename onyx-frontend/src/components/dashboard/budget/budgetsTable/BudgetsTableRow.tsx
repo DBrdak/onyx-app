@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { useMutationState } from "@tanstack/react-query";
+import { useMutation, useMutationState } from "@tanstack/react-query";
 
 import { Ellipsis } from "lucide-react";
 import BudgetsTableUserBadge from "@/components/dashboard/budget/budgetsTable/BudgetsTableUserBadge";
@@ -25,13 +25,14 @@ import {
 import { cn } from "@/lib/utils";
 import { type Budget } from "@/lib/validation/budget";
 import { type User } from "@/lib/validation/user";
+import { getInvitationLink } from "@/lib/api/budget";
 
 interface BudgetsTableRowProps {
   budget: Budget;
   user: User | undefined;
 }
 
-export enum OPTION {
+enum OPTION {
   manage = "MANAGE",
   delete = "DELETE",
   none = "NONE",
@@ -51,6 +52,20 @@ const BudgetsTableRow: FC<BudgetsTableRowProps> = ({ budget, user }) => {
     filters: { mutationKey: ["editName", id], status: "pending" },
     select: (mutation) => mutation.state.status,
   });
+
+  const {
+    data: invitationLink,
+    mutate: performGetInvitationLink,
+    isPending: isInvitationLinkLoading,
+  } = useMutation({
+    mutationKey: ["invitationLink", id],
+    mutationFn: () => getInvitationLink(id),
+  });
+
+  const handleManageDropdownButton = () => {
+    performGetInvitationLink();
+    setOption(OPTION.manage);
+  };
 
   const isPending =
     isDeleting[0] === "pending" || isEditingName[0] === "pending";
@@ -104,16 +119,20 @@ const BudgetsTableRow: FC<BudgetsTableRowProps> = ({ budget, user }) => {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="p-0"
-                onClick={() => setOption(OPTION.manage)}
+                onClick={handleManageDropdownButton}
               >
-                <DialogTrigger className="p-2">Manage</DialogTrigger>
+                <DialogTrigger className="w-full p-2 text-start">
+                  Manage
+                </DialogTrigger>
               </DropdownMenuItem>
 
               <DropdownMenuItem
                 className="p-0"
                 onClick={() => setOption(OPTION.delete)}
               >
-                <DialogTrigger className="p-2">Delete</DialogTrigger>
+                <DialogTrigger className="w-full p-2 text-start">
+                  Delete
+                </DialogTrigger>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -124,7 +143,11 @@ const BudgetsTableRow: FC<BudgetsTableRowProps> = ({ budget, user }) => {
             />
           )}
           {option === OPTION.manage && (
-            <BudgetsTableManageDialogContent budget={budget} />
+            <BudgetsTableManageDialogContent
+              budget={budget}
+              invitationLink={invitationLink}
+              isInvitationLinkLoading={isInvitationLinkLoading}
+            />
           )}
         </Dialog>
       </div>
