@@ -58,7 +58,8 @@ const BudgetsTableDeleteDialogContent: FC<
         queryKey: getBudgetsQueryOptions.queryKey,
       });
     },
-    onError: () => {
+    onError: (err) => {
+      console.error("Deleting budget error", err);
       setDialogOpen(true);
     },
   });

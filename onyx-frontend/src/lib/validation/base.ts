@@ -86,6 +86,12 @@ export const NameSchema = z
   .min(1, "Please provide name.")
   .regex(/^[a-zA-Z0-9\s.-]{1,50}$/, "Invalid name.");
 
+export const NameInputSchema = z.object({
+  name: NameSchema,
+});
+
+export type TNameInputSchema = z.infer<typeof NameInputSchema>;
+
 export const RequiredString = z.string().min(1, "Required.");
 
 export const amountLiveValidation = (value: string) => {

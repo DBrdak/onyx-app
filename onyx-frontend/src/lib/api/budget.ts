@@ -2,10 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 
 import { budgetApi } from "@/lib/axios";
 import { getErrorMessage } from "@/lib/utils";
-import {
-  BudgetResultSchema,
-  BudgetWithPayloadResultSchema,
-} from "@/lib/validation/budget";
+import { BudgetResultSchema } from "@/lib/validation/budget";
 import { ToAssignSchema } from "../validation/subcategory";
 
 interface GetToAssign {
@@ -52,34 +49,8 @@ export const createBudget = ({
 
 export const deleteBudget = (id: string) => budgetApi.delete(`/budgets/${id}`);
 
-export const getBudget = async (id: string) => {
-  try {
-    const { data } = await budgetApi.get(`/budgets/${id}`);
-
-    const validatedData = BudgetWithPayloadResultSchema.safeParse(data);
-
-    if (!validatedData.success) {
-      console.log(validatedData.error.flatten());
-      throw new Error("Invalid data type.");
-    }
-
-    const { value, isFailure, error } = validatedData.data;
-    if (isFailure) {
-      throw new Error(error.message);
-    }
-
-    return value;
-  } catch (error) {
-    console.error(getErrorMessage(error));
-    throw new Error(getErrorMessage(error));
-  }
-};
-
-export const getBudgetQueryOptions = (id: string) =>
-  queryOptions({
-    queryKey: ["budget", id],
-    queryFn: () => getBudget(id),
-  });
+export const editBudgetName = ({ id, name }: { id: string; name: string }) =>
+  budgetApi.put(`/budgets/${id}/edit`, { newBudgetName: name });
 
 export const getToAssign = async ({ month, year, budgetId }: GetToAssign) => {
   try {
