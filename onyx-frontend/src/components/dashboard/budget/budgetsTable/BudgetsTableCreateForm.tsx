@@ -89,7 +89,7 @@ const BudgetsTableCreateForm: FC<BudgetsTableCreateFormProps> = ({
                 <Input
                   placeholder="Name..."
                   {...field}
-                  className="h-14 w-full"
+                  className="h-11 w-full"
                 />
               </FormControl>
               <FormMessage />
@@ -104,12 +104,12 @@ const BudgetsTableCreateForm: FC<BudgetsTableCreateFormProps> = ({
               <CurrencyCombobox
                 selectedValue={field.value}
                 onChange={field.onChange}
-                className="h-14"
+                className="h-11"
               />
             </FormItem>
           )}
         />
-        <div className="flex h-14 items-center justify-center md:col-span-3">
+        <div className="flex h-11 items-center justify-center md:col-span-3">
           <BudgetsTableUserBadge
             memberName={user.username}
             userName={user.username}
@@ -119,7 +119,7 @@ const BudgetsTableCreateForm: FC<BudgetsTableCreateFormProps> = ({
           type="submit"
           isLoading={isPending}
           disabled={isPending}
-          className="col-span-2 h-14 rounded-full font-semibold"
+          className="col-span-2 h-11 rounded-full font-semibold"
         >
           Create
         </LoadingButton>

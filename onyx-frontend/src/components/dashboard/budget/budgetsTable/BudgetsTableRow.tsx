@@ -88,7 +88,7 @@ const BudgetsTableRow: FC<BudgetsTableRowProps> = ({ budget, user }) => {
           accYear: DEFAULT_YEAR_STRING,
         }}
         mask={{ to: `/budget/${id}` }}
-        className="group peer col-span-9 grid w-full grid-cols-9 items-center gap-x-4 px-4 py-8 hover:bg-accent"
+        className="group peer col-span-9 grid w-full grid-cols-9 items-center gap-x-4 px-4 py-6 hover:bg-accent"
       >
         <div className="col-span-3 min-w-[150px]">{name}</div>
         <p className="col-span-2 min-w-[100px]">{currency}</p>

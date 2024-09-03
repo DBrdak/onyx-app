@@ -43,8 +43,8 @@ const BudgetsTableManageDialogContent: FC<
         <div className="pb-2">
           {isInvitationLinkLoading && (
             <div className="flex animate-pulse">
-              <div className="h-10 w-10 border bg-accent/60" />
-              <div className="w-full border-y border-r bg-accent/60" />
+              <div className="h-10 w-10 border bg-primary/60" />
+              <div className="w-full border-y border-r bg-primary/60" />
             </div>
           )}
           {invitationLink && (

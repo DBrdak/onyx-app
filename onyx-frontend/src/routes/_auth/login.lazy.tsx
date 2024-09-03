@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAuthContext } from "@/lib/hooks/useAuthContext";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -27,7 +27,8 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 function Login() {
-  const navigate = useNavigate();
+  const router = useRouter();
+  const { redirect } = Route.useSearch();
 
   const {
     auth: { login, isLoading },
@@ -48,7 +49,11 @@ function Login() {
       const isLoggedIn = await login(data.email, data.password);
 
       if (isLoggedIn) {
-        await navigate({ to: "/budget" });
+        if (redirect) {
+          router.history.push(redirect);
+        } else {
+          await router.navigate({ to: "/budget" });
+        }
       }
     } catch (error) {
       console.error("Login error:", error);
