@@ -50,7 +50,8 @@ public sealed class BudgetFunctions : BaseFunction
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
         context.Logger.Log(JsonConvert.SerializeObject(requestContext));
-        requestContext.Headers.TryGetValue("referer", out var clientUrl);
+
+        requestContext.Headers.TryGetValue("origin", out var clientUrl);
         var command = new GetBudgetInvitationQuery(Guid.Parse(budgetId), clientUrl);
 
         var result = await Sender.Send(command);
@@ -136,7 +137,7 @@ public sealed class BudgetFunctions : BaseFunction
     }
 
     [LambdaFunction(ResourceName = $"Budgets{nameof(GetByInvitationToken)}")]
-    [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/{{token}}")]
+    [HttpApi(LambdaHttpMethod.Get, $"{budgetBaseRoute}/{{token}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GetByInvitationToken(
         string token,
         APIGatewayHttpApiV2ProxyRequest requestContext)

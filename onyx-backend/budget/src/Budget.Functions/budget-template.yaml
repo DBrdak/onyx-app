@@ -820,22 +820,25 @@ Resources:
     Metadata:
       Tool: Amazon.Lambda.Annotations
       SyncedEvents:
-        - RootPut
+        - RootGet
     Properties:
       Runtime: dotnet8
       CodeUri: .
-      MemorySize: 512
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
       Timeout: 30
       Policies:
         - AWSLambdaBasicExecutionRole
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_GetByInvitationToken_Generated::GetByInvitationToken
       Events:
-        RootPut:
+        RootGet:
           Type: HttpApi
           Properties:
             Path: /api/v1/budgets/{token}
-            Method: PUT
+            Method: GET
+            ApiId: !Ref BudgetApi
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

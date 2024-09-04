@@ -44,7 +44,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"brdak02dominik@outlook.com\",\r\n    \"password\": \"Pa$$w0rd\"\r\n}",
+									"raw": "{\r\n    \"email\": \"tontav8@gmail.com\",\r\n    \"password\": \"Pa$$w0rd\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -97,7 +97,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"brdak02dominik@outlook.com\",\r\n    \"password\": \"Pa$$w0rd\",\r\n    \"username\": \"dbrdak\",\r\n    \"currency\": \"USD\"\r\n}",
+									"raw": "{\r\n    \"email\": \"tontav8@gmail.com\",\r\n    \"password\": \"Pa$$w0rd\",\r\n    \"username\": \"dbrdak\",\r\n    \"currency\": \"USD\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -261,7 +261,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"brdak02dominik@outlook.com\",\r\n    \"verificationCode\": \"017918\"\r\n}",
+									"raw": "{\r\n    \"email\": \"tontav8@gmail.com\",\r\n    \"verificationCode\": \"907093\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5967,12 +5967,24 @@
 											"key": "subcategoryId",
 											"value": "<uuid>",
 											"disabled": true
+										},
+										{
+											"key": "date",
+											"value": null,
+											"description": "date in iso format",
+											"disabled": true
+										},
+										{
+											"key": "period",
+											"value": null,
+											"description": "day / week / month / last7days / last30days",
+											"disabled": true
 										}
 									],
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "8c46ce94-857b-4e13-9aa1-fd313f77a2ca",
+											"value": "097716c2-68b1-406f-9dd7-df3b88062736",
 											"description": "(Required) "
 										}
 									]
@@ -7210,7 +7222,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"budgetName\": \"Budget 1\",\n  \"budgetCurrency\": \"CHF\"\n}",
+									"raw": "{\n  \"budgetName\": \"Budget 1\",\n  \"budgetCurrency\": \"JPY\"\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -7690,7 +7702,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/api/v1/budgets/:budgetId/join/:token",
+									"raw": "{{BUDGET_URL}}/api/v1/budgets/join/:token",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
@@ -7698,16 +7710,10 @@
 										"api",
 										"v1",
 										"budgets",
-										":budgetId",
 										"join",
 										":token"
 									],
 									"variable": [
-										{
-											"key": "budgetId",
-											"value": "<uuid>",
-											"description": "(Required)"
-										},
 										{
 											"key": "token",
 											"value": "<string>",
@@ -8259,7 +8265,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "ce7cbae2-aa08-478f-a63e-f0b075218e33",
+											"value": "097716c2-68b1-406f-9dd7-df3b88062736",
 											"description": "(Required) "
 										}
 									]
@@ -8481,6 +8487,32 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Get Budget By Invitation Token",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BUDGET_URL}}/api/v1/budgets/:token",
+									"host": [
+										"{{BUDGET_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"budgets",
+										":token"
+									],
+									"variable": [
+										{
+											"key": "token",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
@@ -8532,7 +8564,7 @@
 		},
 		{
 			"key": "BUDGET_URL",
-			"value": "https://3ytwgrzbji.execute-api.eu-central-1.amazonaws.com/dev/api/v1"
+			"value": "https://3ytwgrzbji.execute-api.eu-central-1.amazonaws.com/dev"
 		},
 		{
 			"key": "REFRESH_TOKEN",

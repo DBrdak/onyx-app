@@ -10,8 +10,8 @@ internal sealed class GetBudgetInvitationQueryHandler : IQueryHandler<GetBudgetI
 {
     private readonly IBudgetRepository _budgetRepository;
 
-    private string GetInvitationRelativePath(string token, Guid budgetId) =>
-        $"/budgets/join?token={token}&budgetId={budgetId}";
+    private string GetInvitationRelativePath(string token) =>
+        $"/budgets/join?token={token}";
 
     public GetBudgetInvitationQueryHandler(IBudgetRepository budgetRepository)
     {
@@ -39,7 +39,7 @@ internal sealed class GetBudgetInvitationQueryHandler : IQueryHandler<GetBudgetI
         var token = budget.GetInvitationToken();
         var tokenValidForSeconds = (token.ExpirationDate - DateTime.UtcNow).Seconds;
 
-        var url = string.Join(clientUrl, GetInvitationRelativePath(token.Value, budget.Id.Value));
+        var url = string.Join(clientUrl, GetInvitationRelativePath(token.Value));
 
         var updateResult = await _budgetRepository.UpdateAsync(budget, cancellationToken);
 
