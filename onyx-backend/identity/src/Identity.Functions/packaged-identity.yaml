@@ -85,7 +85,7 @@ Resources:
       FunctionName:
         Fn::Sub: Login_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ef26d6521bc51a3966bf0b0d1a7f746
+      CodeUri: s3://onyx-default/c63f5022a49af46b9221073fa75b1a66
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -115,7 +115,7 @@ Resources:
       FunctionName:
         Fn::Sub: Register_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ef26d6521bc51a3966bf0b0d1a7f746
+      CodeUri: s3://onyx-default/c63f5022a49af46b9221073fa75b1a66
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -145,7 +145,7 @@ Resources:
       FunctionName:
         Fn::Sub: VerifyEmail_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ef26d6521bc51a3966bf0b0d1a7f746
+      CodeUri: s3://onyx-default/c63f5022a49af46b9221073fa75b1a66
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -175,7 +175,7 @@ Resources:
       FunctionName:
         Fn::Sub: ResendEmail_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ef26d6521bc51a3966bf0b0d1a7f746
+      CodeUri: s3://onyx-default/c63f5022a49af46b9221073fa75b1a66
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -205,7 +205,7 @@ Resources:
       FunctionName:
         Fn::Sub: Refresh_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ef26d6521bc51a3966bf0b0d1a7f746
+      CodeUri: s3://onyx-default/c63f5022a49af46b9221073fa75b1a66
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -235,7 +235,7 @@ Resources:
       FunctionName:
         Fn::Sub: ForgotPassword_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ef26d6521bc51a3966bf0b0d1a7f746
+      CodeUri: s3://onyx-default/c63f5022a49af46b9221073fa75b1a66
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -265,7 +265,7 @@ Resources:
       FunctionName:
         Fn::Sub: NewPassword_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ef26d6521bc51a3966bf0b0d1a7f746
+      CodeUri: s3://onyx-default/c63f5022a49af46b9221073fa75b1a66
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -295,7 +295,7 @@ Resources:
       FunctionName:
         Fn::Sub: GetUser_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ef26d6521bc51a3966bf0b0d1a7f746
+      CodeUri: s3://onyx-default/c63f5022a49af46b9221073fa75b1a66
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -323,7 +323,7 @@ Resources:
       FunctionName:
         Fn::Sub: UpdateUser_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ef26d6521bc51a3966bf0b0d1a7f746
+      CodeUri: s3://onyx-default/c63f5022a49af46b9221073fa75b1a66
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -351,7 +351,7 @@ Resources:
       FunctionName:
         Fn::Sub: RequestEmailChange_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ef26d6521bc51a3966bf0b0d1a7f746
+      CodeUri: s3://onyx-default/c63f5022a49af46b9221073fa75b1a66
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -379,7 +379,7 @@ Resources:
       FunctionName:
         Fn::Sub: Logout_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ef26d6521bc51a3966bf0b0d1a7f746
+      CodeUri: s3://onyx-default/c63f5022a49af46b9221073fa75b1a66
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -407,7 +407,7 @@ Resources:
       FunctionName:
         Fn::Sub: RemoveUser_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ef26d6521bc51a3966bf0b0d1a7f746
+      CodeUri: s3://onyx-default/c63f5022a49af46b9221073fa75b1a66
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -433,7 +433,7 @@ Resources:
       FunctionName:
         Fn::Sub: AddBudgetIdForUser_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ef26d6521bc51a3966bf0b0d1a7f746
+      CodeUri: s3://onyx-default/c63f5022a49af46b9221073fa75b1a66
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -459,7 +459,7 @@ Resources:
       FunctionName:
         Fn::Sub: RemoveBudgetIdForUser_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ef26d6521bc51a3966bf0b0d1a7f746
+      CodeUri: s3://onyx-default/c63f5022a49af46b9221073fa75b1a66
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -485,7 +485,7 @@ Resources:
       FunctionName:
         Fn::Sub: LambdaAuthorizer_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/3ef26d6521bc51a3966bf0b0d1a7f746
+      CodeUri: s3://onyx-default/c63f5022a49af46b9221073fa75b1a66
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
