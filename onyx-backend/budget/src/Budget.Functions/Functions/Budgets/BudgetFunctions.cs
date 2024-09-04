@@ -5,6 +5,7 @@ using Amazon.Lambda.Core;
 using Budget.Application.Budgets.AddBudget;
 using Budget.Application.Budgets.AddUserToBudget;
 using Budget.Application.Budgets.EditBudget;
+using Budget.Application.Budgets.GetBudgetByToken;
 using Budget.Application.Budgets.GetBudgetInvitation;
 using Budget.Application.Budgets.GetBudgets;
 using Budget.Application.Budgets.RemoveBudget;
@@ -89,15 +90,14 @@ public sealed class BudgetFunctions : BaseFunction
     }
 
     [LambdaFunction(ResourceName = $"Budgets{nameof(Join)}")]
-    [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/{{budgetId}}/join/{{token}}")]
+    [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/join/{{token}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Join(
-        string budgetId,
         string token,
         APIGatewayHttpApiV2ProxyRequest requestContext)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
-        var command = new AddUserToBudgetCommand(Guid.Parse(budgetId), token);
+        var command = new AddUserToBudgetCommand(token);
 
         var result = await Sender.Send(command);
 
@@ -129,6 +129,21 @@ public sealed class BudgetFunctions : BaseFunction
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
         var command = new EditBudgetCommand(request.NewBudgetName);
+
+        var result = await Sender.Send(command);
+
+        return result.ReturnAPIResponse();
+    }
+
+    [LambdaFunction(ResourceName = $"Budgets{nameof(GetByInvitationToken)}")]
+    [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/{{token}}")]
+    public async Task<APIGatewayHttpApiV2ProxyResponse> GetByInvitationToken(
+        string token,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
+    {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
+        var command = new GetBudgetByTokenQuery(token);
 
         var result = await Sender.Send(command);
 

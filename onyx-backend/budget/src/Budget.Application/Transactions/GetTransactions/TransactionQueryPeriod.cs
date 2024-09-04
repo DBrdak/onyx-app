@@ -1,4 +1,5 @@
-﻿using Models.Responses;
+﻿using Extensions;
+using Models.Responses;
 
 namespace Budget.Application.Transactions.GetTransactions;
 
@@ -26,4 +27,16 @@ internal sealed record TransactionQueryPeriod
         all.FirstOrDefault(p => string.Equals(p.Value, period, StringComparison.CurrentCultureIgnoreCase)) ??
         day;
 
+    public long ToDateTimeTicksSearchFrom(DateTime date)
+    {
+        return this switch
+        {
+            _ when this == day => new DateTime(date.Year, date.Month, date.Day, 0, 0, 0).Ticks,
+            _ when this == week => date.BegginingOfTheWeek().Ticks,
+            _ when this == month => date.BegginingOfTheMonth().Ticks,
+            _ when this == last7Days => date.AddDays(-7).Ticks,
+            _ when this == last30Days => date.AddDays(-30).Ticks,
+            _ => date.Ticks
+        };
+    }
 }

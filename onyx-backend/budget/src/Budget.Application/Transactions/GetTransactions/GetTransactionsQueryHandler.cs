@@ -42,6 +42,8 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
             return Result.Failure<IEnumerable<TransactionModel>>(GetTransactionErrors.InvalidQueryValues);
         }
 
+        _transactionRepository.AddPagingParameters(query.Period.ToDateTimeTicksSearchFrom(query.Date));
+
         var transactionsGetTask = query switch
         {
             _ when query.Entity == GetTransactionQueryRequest.AllEntity =>

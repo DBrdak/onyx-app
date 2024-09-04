@@ -1,4 +1,5 @@
 ﻿using Abstractions.Messaging;
+using Budget.Application.Abstractions.Identity;
 using Budget.Application.Abstractions.IntegrationEvents;
 using Budget.Domain.Accounts;
 using Budget.Domain.Budgets;
@@ -6,6 +7,7 @@ using Budget.Domain.Categories;
 using Budget.Domain.Counterparties;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
+using MediatR;
 using Models.Responses;
 
 namespace Budget.Application.Budgets.RemoveBudget;
@@ -19,6 +21,7 @@ internal sealed class RemoveBudgetCommandHandler : ICommandHandler<RemoveBudgetC
     private readonly ICategoryRepository _categoryRepository;
     private readonly ISubcategoryRepository _subcategoryRepository;
     private readonly ITransactionRepository _transactionRepository;
+    private readonly IUserContext _userContext;
 
     public RemoveBudgetCommandHandler(
         IBudgetRepository budgetRepository,
@@ -27,7 +30,8 @@ internal sealed class RemoveBudgetCommandHandler : ICommandHandler<RemoveBudgetC
         ICounterpartyRepository counterpartyRepository,
         ICategoryRepository categoryRepository,
         ISubcategoryRepository subcategoryRepository,
-        ITransactionRepository transactionRepository)
+        ITransactionRepository transactionRepository,
+        IUserContext userContext)
     {
         _budgetRepository = budgetRepository;
         _queueMessagePublisher = queueMessagePublisher;
@@ -36,6 +40,7 @@ internal sealed class RemoveBudgetCommandHandler : ICommandHandler<RemoveBudgetC
         _categoryRepository = categoryRepository;
         _subcategoryRepository = subcategoryRepository;
         _transactionRepository = transactionRepository;
+        _userContext = userContext;
     }
 
     public async Task<Result> Handle(RemoveBudgetCommand request, CancellationToken cancellationToken)
@@ -108,6 +113,18 @@ internal sealed class RemoveBudgetCommandHandler : ICommandHandler<RemoveBudgetC
             return removeResult.Error;
         }
 
-        return Result.Success();
+        var userIdGetResult = _userContext.GetUserId();
+
+        if (userIdGetResult.IsFailure)
+        {
+            return userIdGetResult.Error;
+        }
+
+        var userId = userIdGetResult.Value;
+
+        return await _queueMessagePublisher.PublishBudgetMemberJoinedAsync(
+            userId,
+            budgetId,
+            cancellationToken);
     }
 }

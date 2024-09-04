@@ -284,7 +284,7 @@ Resources:
         RootPut:
           Type: HttpApi
           Properties:
-            Path: /api/v1/budgets/{budgetId}/join/{token}
+            Path: /api/v1/budgets/join/{token}
             Method: PUT
             ApiId: !Ref BudgetApi
   BudgetsRemove:
@@ -815,6 +815,27 @@ Resources:
             Path: /api/v1/{budgetId}/transactions/{transactionId}/subcategory
             Method: PUT
             ApiId: !Ref BudgetApi
+  BudgetsGetByInvitationToken:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootPut
+    Properties:
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 512
+      Timeout: 30
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      PackageType: Zip
+      Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_GetByInvitationToken_Generated::GetByInvitationToken
+      Events:
+        RootPut:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/budgets/{token}
+            Method: PUT
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

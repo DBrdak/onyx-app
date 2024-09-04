@@ -14,6 +14,8 @@ namespace Budget.Infrastructure.Repositories;
 
 internal sealed class TransactionRepository : BaseBudgetRepository<Transaction, TransactionId>, ITransactionRepository
 {
+    private long pageFromDateTime = DateTime.UtcNow.Ticks;
+
     public TransactionRepository(
         DbContext context,
         IBudgetContext budgetContext,
@@ -27,6 +29,7 @@ internal sealed class TransactionRepository : BaseBudgetRepository<Transaction, 
     public async Task<Result<IEnumerable<Transaction>>> GetByAccountAsync(AccountId accountId, CancellationToken cancellationToken)
     {
         var scanFilter = new ScanFilter();
+        scanFilter.AddCondition(nameof(TransactionDataModel.CreatedAt), ScanOperator.GreaterThanOrEqual, pageFromDateTime);
         scanFilter.AddCondition(nameof(TransactionDataModel.AccountId), ScanOperator.Equal, accountId.Value);
 
         return await GetWhereAsync(scanFilter, cancellationToken);
@@ -35,6 +38,7 @@ internal sealed class TransactionRepository : BaseBudgetRepository<Transaction, 
     public async Task<Result<IEnumerable<Transaction>>> GetByCounterpartyAsync(CounterpartyId counterpartyId, CancellationToken cancellationToken)
     {
         var scanFilter = new ScanFilter();
+        scanFilter.AddCondition(nameof(TransactionDataModel.CreatedAt), ScanOperator.GreaterThanOrEqual, pageFromDateTime);
         scanFilter.AddCondition(nameof(TransactionDataModel.CounterpartyId), ScanOperator.Equal, counterpartyId.Value);
 
         return await GetWhereAsync(scanFilter, cancellationToken);
@@ -56,6 +60,7 @@ internal sealed class TransactionRepository : BaseBudgetRepository<Transaction, 
     public async Task<Result<IEnumerable<Transaction>>> GetBySubcategoryAsync(SubcategoryId subcategoryId, CancellationToken cancellationToken)
     {
         var scanFilter = new ScanFilter();
+        scanFilter.AddCondition(nameof(TransactionDataModel.CreatedAt), ScanOperator.GreaterThanOrEqual, pageFromDateTime);
         scanFilter.AddCondition(nameof(TransactionDataModel.SubcategoryId), ScanOperator.Equal, subcategoryId.Value);
 
         return await GetWhereAsync(scanFilter, cancellationToken);
@@ -72,4 +77,6 @@ internal sealed class TransactionRepository : BaseBudgetRepository<Transaction, 
         
         return await GetWhereAsync(scanFilter, cancellationToken);
     }
+
+    public void AddPagingParameters(long fromDateTimeTicks) => pageFromDateTime = fromDateTimeTicks;
 }

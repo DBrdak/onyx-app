@@ -1,4 +1,6 @@
-﻿using Models.Responses;
+﻿using System.Buffers.Text;
+using System.Text;
+using Models.Responses;
 
 namespace Budget.Domain.Budgets;
 
@@ -6,7 +8,7 @@ public sealed record BudgetInvitationToken
 {
     public string Value { get; init; }
     public DateTime ExpirationDate { get; init; }
-    private const int expirationTimeInMinutes = 1440; // One Day
+    private const int expirationTimeInMinutes = 60 * 24 * 7; // One Week
 
     private BudgetInvitationToken(string value, DateTime expirationDate)
     {
@@ -14,9 +16,27 @@ public sealed record BudgetInvitationToken
         ExpirationDate = expirationDate;
     }
 
-    internal static BudgetInvitationToken Generate() =>
-        new(Guid.NewGuid().ToString(),
-            DateTime.UtcNow.AddMinutes(expirationTimeInMinutes));
+    internal static BudgetInvitationToken Generate(BudgetId budgetId)
+    {
+        var bytes = Encoding.UTF8.GetBytes(budgetId.Value.ToString());
+        var token = Convert.ToBase64String(bytes);
+
+        return new(token, DateTime.UtcNow.AddMinutes(expirationTimeInMinutes));
+    }
+
+    public static Result<BudgetId> GetBudgetIdFromToken(string token)
+    {
+        try
+        {
+            var bytes = Convert.FromBase64String(token);
+
+            return new BudgetId(Encoding.UTF8.GetString(bytes));
+        }
+        catch
+        {
+            return BudgetErrors.InvalidInvitationToken;
+        }
+    }
 
     internal Result Validate(string token)
     {

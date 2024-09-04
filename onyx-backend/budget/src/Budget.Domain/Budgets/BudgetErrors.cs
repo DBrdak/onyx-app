@@ -28,4 +28,7 @@ internal static class BudgetErrors
     internal static readonly Error InvitationTokenNotGenerated = new(
         "Budget.InvitationToken.NotGenerated",
         "Invitation token has not been generated");
+    internal static readonly Error InvalidInvitationToken = new(
+        "Budget.InvitationToken.Invalid",
+        "Provided invitation token is invalid");
 }
