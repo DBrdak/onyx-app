@@ -41,3 +41,14 @@ export type BudgetWithPayload = z.infer<typeof BudgetWithPayloadSchema>;
 export const BudgetWithPayloadResultSchema = ResultSchema.extend({
   value: BudgetWithPayloadSchema,
 });
+
+export const BudgetInvitationLinkSchema = z.object({
+  value: RequiredString,
+  validForSeconds: z.number(),
+});
+
+export type BudgetInvitationLink = z.infer<typeof BudgetInvitationLinkSchema>;
+
+export const BudgetInvitationLinkResultSchema = ResultSchema.extend({
+  value: BudgetInvitationLinkSchema,
+});

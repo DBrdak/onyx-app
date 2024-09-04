@@ -1,5 +1,10 @@
 import { identityApi, userApi } from "@/lib/axios";
-import { TokenResultSchema, UserResultSchema } from "@/lib/validation/user";
+import {
+  Token,
+  TokenResultSchema,
+  User,
+  UserResultSchema,
+} from "@/lib/validation/user";
 import { validateResponse } from "@/lib/utils";
 
 export const refreshAccessToken = async (longLivedToken: string) => {
@@ -20,10 +25,10 @@ export const login = async ({
     password,
   });
 
-  return validateResponse(TokenResultSchema, response.data);
+  return validateResponse<Token>(TokenResultSchema, response.data);
 };
 
 export const getUser = async () => {
   const response = await userApi.get("/user");
-  return validateResponse(UserResultSchema, response.data);
+  return validateResponse<User>(UserResultSchema, response.data);
 };

@@ -1,12 +1,15 @@
 import { queryOptions } from "@tanstack/react-query";
 
 import { budgetApi } from "@/lib/axios";
-import { getErrorMessage } from "@/lib/utils";
+import { validateResponse } from "@/lib/utils";
 import {
+  Budget,
+  BudgetInvitationLink,
+  BudgetInvitationLinkResultSchema,
   BudgetResultSchema,
-  BudgetWithPayloadResultSchema,
 } from "@/lib/validation/budget";
-import { ToAssignSchema } from "../validation/subcategory";
+import { ToAssignSchema } from "@/lib/validation/subcategory";
+import { Money } from "@/lib/validation/base";
 
 interface GetToAssign {
   month: string;
@@ -15,24 +18,8 @@ interface GetToAssign {
 }
 
 const getBudgets = async () => {
-  try {
-    const { data } = await budgetApi.get("/budgets");
-
-    const validatedData = BudgetResultSchema.safeParse(data);
-
-    if (!validatedData.success) {
-      throw new Error("Invalid data type.");
-    }
-
-    const { value, isFailure, error } = validatedData.data;
-    if (isFailure) {
-      throw new Error(error.message);
-    }
-
-    return value;
-  } catch (error) {
-    throw new Error(getErrorMessage(error));
-  }
+  const { data } = await budgetApi.get("/budgets");
+  return validateResponse<Budget[]>(BudgetResultSchema, data);
 };
 
 export const getBudgetsQueryOptions = queryOptions({
@@ -52,56 +39,25 @@ export const createBudget = ({
 
 export const deleteBudget = (id: string) => budgetApi.delete(`/budgets/${id}`);
 
-export const getBudget = async (id: string) => {
-  try {
-    const { data } = await budgetApi.get(`/budgets/${id}`);
+export const editBudgetName = ({ id, name }: { id: string; name: string }) =>
+  budgetApi.put(`/budgets/${id}/edit`, { newBudgetName: name });
 
-    const validatedData = BudgetWithPayloadResultSchema.safeParse(data);
-
-    if (!validatedData.success) {
-      console.log(validatedData.error.flatten());
-      throw new Error("Invalid data type.");
-    }
-
-    const { value, isFailure, error } = validatedData.data;
-    if (isFailure) {
-      throw new Error(error.message);
-    }
-
-    return value;
-  } catch (error) {
-    console.error(getErrorMessage(error));
-    throw new Error(getErrorMessage(error));
-  }
+export const getInvitationLink = async (budgetId: string) => {
+  const response = await budgetApi.put(`/budgets/${budgetId}/invitation`);
+  return validateResponse<BudgetInvitationLink>(
+    BudgetInvitationLinkResultSchema,
+    response.data,
+  );
 };
 
-export const getBudgetQueryOptions = (id: string) =>
-  queryOptions({
-    queryKey: ["budget", id],
-    queryFn: () => getBudget(id),
-  });
+export const joinBudget = (token: string, budgetId: string) =>
+  budgetApi.put(`budgets/${budgetId}/join/${token}`);
 
 export const getToAssign = async ({ month, year, budgetId }: GetToAssign) => {
-  try {
-    const { data } = await budgetApi.get(
-      `/${budgetId}/subcategories/to-assign?month=${month}&year=${year}`,
-    );
-    const validatedData = ToAssignSchema.safeParse(data);
-    if (!validatedData.success) {
-      console.log(validatedData.error.flatten());
-      throw new Error("Invalid data type.");
-    }
-
-    const { value, isFailure, error } = validatedData.data;
-    if (isFailure) {
-      throw new Error(error.message);
-    }
-
-    return value;
-  } catch (error) {
-    console.error(getErrorMessage(error));
-    throw new Error(getErrorMessage(error));
-  }
+  const { data } = await budgetApi.get(
+    `/${budgetId}/subcategories/to-assign?month=${month}&year=${year}`,
+  );
+  return validateResponse<Money>(ToAssignSchema, data);
 };
 
 export const getToAssignQueryKey = (budgetId: string) => ["toAssign", budgetId];

@@ -6,5 +6,6 @@ export const useGetUserData = (accessToken: string | null) => {
     queryKey: ["user"],
     queryFn: getUser,
     enabled: !!accessToken,
+    staleTime: Infinity,
   });
 };

@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import CurrencyCombobox from "@/components/dashboard/CurrencyCombobox";
-import { Button } from "@/components/ui/button";
+import BudgetsTableUserBadge from "@/components/dashboard/budget/budgetsTable/BudgetsTableUserBadge";
 import {
   Form,
   FormControl,
@@ -11,19 +11,20 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-
-import { CreateBudget, CreateBudgetSchema } from "@/lib/validation/budget";
-import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { Input } from "@/components/ui/input";
-import { User } from "@/lib/validation/user";
-import { useCreateBudgetMutation } from "@/lib/hooks/mutations/useCreateBudgetMutation";
+import LoadingButton from "@/components/LoadingButton";
 
-interface CreateBudgetFormProps {
+import { useClickOutside } from "@/lib/hooks/useClickOutside";
+import { useCreateBudgetMutation } from "@/lib/hooks/mutations/useCreateBudgetMutation";
+import { CreateBudget, CreateBudgetSchema } from "@/lib/validation/budget";
+import { type User } from "@/lib/validation/user";
+
+interface BudgetsTableCreateFormProps {
   setIsCreating: (state: boolean) => void;
   user: User;
 }
 
-const CreateBudgetForm: FC<CreateBudgetFormProps> = ({
+const BudgetsTableCreateForm: FC<BudgetsTableCreateFormProps> = ({
   setIsCreating,
   user,
 }) => {
@@ -56,7 +57,7 @@ const CreateBudgetForm: FC<CreateBudgetFormProps> = ({
     setIsCreating(false);
   };
 
-  const { mutate } = useCreateBudgetMutation({
+  const { mutate, isPending } = useCreateBudgetMutation({
     onMutationError,
     onMutationSuccess,
   });
@@ -77,7 +78,7 @@ const CreateBudgetForm: FC<CreateBudgetFormProps> = ({
       <form
         onSubmit={handleSubmit(onSubmit)}
         ref={formRef}
-        className="grid w-full gap-x-4 gap-y-4 px-4 py-6 md:grid-cols-9 md:gap-y-0"
+        className="grid w-full gap-x-4 gap-y-4 px-4 py-6 md:grid-cols-10 md:gap-y-0"
       >
         <FormField
           control={control}
@@ -88,7 +89,7 @@ const CreateBudgetForm: FC<CreateBudgetFormProps> = ({
                 <Input
                   placeholder="Name..."
                   {...field}
-                  className="h-14 w-full"
+                  className="h-11 w-full"
                 />
               </FormControl>
               <FormMessage />
@@ -103,33 +104,28 @@ const CreateBudgetForm: FC<CreateBudgetFormProps> = ({
               <CurrencyCombobox
                 selectedValue={field.value}
                 onChange={field.onChange}
-                className="h-full"
+                className="h-11"
               />
             </FormItem>
           )}
         />
-        <FormField
-          control={control}
-          name="userId"
-          render={({ field }) => (
-            <FormItem className="md:col-span-3">
-              <FormControl>
-                <Input {...field} className="h-14 w-full" disabled />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button
+        <div className="flex h-11 items-center justify-center md:col-span-3">
+          <BudgetsTableUserBadge
+            memberName={user.username}
+            userName={user.username}
+          />
+        </div>
+        <LoadingButton
           type="submit"
-          variant="outline"
-          className="col-span-1 h-14 rounded-l-none font-semibold"
+          isLoading={isPending}
+          disabled={isPending}
+          className="col-span-2 h-11 rounded-full font-semibold"
         >
           Create
-        </Button>
+        </LoadingButton>
       </form>
     </Form>
   );
 };
 
-export default CreateBudgetForm;
+export default BudgetsTableCreateForm;
