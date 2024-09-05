@@ -79,7 +79,7 @@ internal static class EmailTemplates
         </html>
         """);
     internal static (string subject, string htmlBody) EmailChangeBodyTemplate(string code, string username) => (
-        "",
+        "Requested email address change",
         $$"""
         <!DOCTYPE html>
         <html>
@@ -155,7 +155,7 @@ internal static class EmailTemplates
         </html>
         """);
     internal static (string subject, string htmlBody) ForgotPasswordBodyTemplate(string code, string username) => (
-        "",
+        "Requested new password",
         $$"""
         <!DOCTYPE html>
         <html>
