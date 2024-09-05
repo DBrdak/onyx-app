@@ -4,7 +4,7 @@ const Logo = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center text-primary-foreground w-52px",
+        "flex w-52px flex-col items-center justify-center text-primary-foreground",
         className,
       )}
     >

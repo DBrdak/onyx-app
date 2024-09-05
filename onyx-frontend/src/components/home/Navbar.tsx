@@ -21,36 +21,20 @@ const Navbar = () => {
         {user ? (
           <UserDropdown />
         ) : (
-          <>
-            <Link
-              to="/register"
-              activeProps={{
-                className: "bg-accent",
-              }}
-              className={cn(
-                buttonVariants({
-                  variant: "outline",
-                  className: "rounded-full font-bold tracking-wide",
-                }),
-              )}
-            >
-              Sign up
-            </Link>
-            <Link
-              to="/login"
-              activeProps={{
-                className: "bg-accent",
-              }}
-              className={cn(
-                buttonVariants({
-                  variant: "outline",
-                  className: "rounded-full font-bold tracking-wide",
-                }),
-              )}
-            >
-              Sign in
-            </Link>
-          </>
+          <Link
+            to="/login"
+            activeProps={{
+              className: "bg-accent",
+            }}
+            className={cn(
+              buttonVariants({
+                variant: "outline",
+                className: "rounded-full font-bold tracking-wide",
+              }),
+            )}
+          >
+            Sign in
+          </Link>
         )}
       </div>
     </div>

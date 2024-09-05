@@ -1,114 +1,76 @@
-import LoadingButton from "@/components/LoadingButton";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useAuthContext } from "@/lib/hooks/useAuthContext";
-import { useRouter } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+
+import Logo from "@/components/Logo";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import TypedHeader from "@/components/auth/TypedHeader";
+import LoginForm from "@/components/auth/LoginForm";
 
 export const Route = createLazyFileRoute("/_auth/login")({
   component: Login,
 });
 
-const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
+export enum FormVariant {
+  login = "LOGIN",
+  register = "REGISTER",
+}
 
 function Login() {
-  const router = useRouter();
-  const { redirect } = Route.useSearch();
-
-  const {
-    auth: { login, isLoading },
-  } = useAuthContext();
-
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  const { control, handleSubmit, setError } = form;
-
-  const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
-    try {
-      const isLoggedIn = await login(data.email, data.password);
-
-      if (isLoggedIn) {
-        if (redirect) {
-          router.history.push(redirect);
-        } else {
-          await router.navigate({ to: "/budget" });
-        }
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      setError("root", {
-        type: "manual",
-        message: "An error occurred during login. Please try again.",
-      });
-    }
-  };
+  const [formVariant, setFormVariant] = useState(FormVariant.login);
 
   return (
-    <div className="flex justify-center pt-20">
-      <Card className="w-full max-w-md">
-        <CardHeader>Sign in</CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-              <FormField
-                control={control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <Input {...field} type="email" placeholder="Email" />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <Input {...field} type="password" placeholder="Password" />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {form.formState.errors.root && (
-                <p className="text-red-500">
-                  {form.formState.errors.root.message}
-                </p>
+    <div className="grid h-full grid-cols-1 md:min-h-screen md:grid-cols-2 ">
+      <div className="relative flex flex-col items-center space-y-6 bg-primary px-4 py-6">
+        <Link to="/" className="md:absolute md:top-20">
+          <Logo className="h-full w-full" />
+        </Link>
+        <div className="ml-auto flex h-full w-full max-w-5xl flex-col items-center">
+          <TypedHeader formVariant={formVariant} />
+        </div>
+      </div>
+      <div className="h-full px-6 pb-6 pt-10 md:pt-20">
+        <div className="mr-auto flex max-w-5xl flex-col items-center space-y-20">
+          <div className="flex flex-col items-center space-y-3 md:flex-row md:space-x-1 md:space-y-0">
+            <Button
+              onClick={() => setFormVariant(FormVariant.login)}
+              className={cn(
+                "h-auto w-full px-1 text-xl font-medium",
+                formVariant === FormVariant.login && "before:scale-x-100",
               )}
-              <LoadingButton
-                isLoading={isLoading}
-                type="submit"
-                className="w-full"
-              >
-                Sign in
-              </LoadingButton>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+              variant="underline"
+            >
+              Sign in
+            </Button>
+            <p className="text-xl">or</p>
+            <Button
+              onClick={() => setFormVariant(FormVariant.register)}
+              className={cn(
+                "h-auto w-full px-1 text-xl font-medium",
+                formVariant === FormVariant.register && "before:scale-x-100",
+              )}
+              variant="underline"
+            >
+              create new account!
+            </Button>
+          </div>
+          {formVariant === FormVariant.login ? <LoginForm /> : "register"}
+          <div className="relative flex w-full justify-center border-b">
+            <p className="absolute -translate-y-1/2 bg-background px-2 text-3xl text-accent-foreground/80">
+              or
+            </p>
+          </div>
+          <Button variant="outline" className="mx-auto w-full max-w-sm">
+            Continue with Google
+          </Button>
+          <p className="mx-auto w-full max-w-md text-sm">
+            By signing up to ONYX you consent and agree to ONYX privacy policy
+            to store, manage and process your personal information. To read
+            more, please see our privacy policy.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
