@@ -1,10 +1,10 @@
-import {
+import React, {
   createContext,
   useCallback,
   useEffect,
   useState,
-  useTransition,
   useMemo,
+  useRef,
 } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLoginMutation } from "@/lib/hooks/mutations/useLoginMutation";
@@ -13,15 +13,14 @@ import { getErrorMessage } from "@/lib/utils";
 import { useApiInterceptors } from "@/lib/hooks/useApiInterceptors";
 import { budgetApi, userApi } from "@/lib/axios";
 import { useGetUserData } from "@/lib/hooks/useGetUserData";
-import { User } from "@/lib/validation/user";
+import { type User } from "@/lib/validation/user";
 
 export interface Auth {
   login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
   accessToken: string | null;
   user: User | undefined;
   isInitialized: boolean;
-  isLoading: boolean;
 }
 
 export const AuthContext = createContext<{ auth: Auth } | undefined>(undefined);
@@ -29,59 +28,59 @@ export const AuthContext = createContext<{ auth: Auth } | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [isPending, startTransition] = useTransition();
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const accessTokenRef = useRef<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [initializationComplete, setInitializationComplete] = useState(false);
-
   const queryClient = useQueryClient();
 
-  const { mutateAsync: refreshToken, isPending: isRefreshingToken } =
-    useRefreshTokenMutation((token) => {
-      startTransition(() => {
-        setAccessToken(token);
-      });
-    });
+  const { mutateAsync: refreshToken } = useRefreshTokenMutation();
+  const { mutateAsync: performLogin } = useLoginMutation();
+  const { data: user, refetch: refetchUser } = useGetUserData();
 
-  const { mutateAsync: performLogin, isPending: isLoggingIn } =
-    useLoginMutation((token) => {
-      startTransition(() => {
-        setAccessToken(token);
-      });
-    });
+  const updateAccessToken = useCallback((newToken: string | null) => {
+    setAccessToken(newToken);
+    accessTokenRef.current = newToken;
+  }, []);
 
-  const { data: user, isLoading: isLoadingUser } = useGetUserData(accessToken);
+  useApiInterceptors(budgetApi, () => accessTokenRef.current);
+  useApiInterceptors(userApi, () => accessTokenRef.current);
 
-  useApiInterceptors(budgetApi, accessToken);
-  useApiInterceptors(userApi, accessToken);
+  const setAuthData = useCallback(
+    async (newAccessToken: string, newLongLivedToken: string) => {
+      updateAccessToken(newAccessToken);
+      localStorage.setItem("longLivedToken", newLongLivedToken);
+      await refetchUser();
+    },
+    [updateAccessToken, refetchUser],
+  );
 
-  const logout = useCallback(() => {
-    setAccessToken(null);
+  const clearAuthData = useCallback(() => {
+    updateAccessToken(null);
     localStorage.removeItem("longLivedToken");
-    startTransition(() => {
-      setInitializationComplete(false);
-      setIsInitialized(true);
-      queryClient.clear();
-    });
-  }, [queryClient]);
+    setIsInitialized(true);
+    queryClient.clear();
+  }, [queryClient, updateAccessToken]);
+
+  const logout = useCallback(async () => {
+    // await userApi.put("/auth/logout");
+    clearAuthData();
+  }, [clearAuthData]);
 
   const login = useCallback(
     async (email: string, password: string): Promise<boolean> => {
       try {
-        await performLogin({ email, password });
-
-        return new Promise((resolve) => {
-          startTransition(() => {
-            // After the state is updated, resolve the promise
-            resolve(true);
-          });
+        const { accessToken, longLivedToken } = await performLogin({
+          email,
+          password,
         });
+        await setAuthData(accessToken, longLivedToken);
+        return true;
       } catch (error) {
         console.error("Login failed:", getErrorMessage(error));
-        return false;
+        throw error;
       }
     },
-    [performLogin],
+    [performLogin, setAuthData],
   );
 
   useEffect(() => {
@@ -89,32 +88,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const longLivedToken = localStorage.getItem("longLivedToken");
       if (longLivedToken) {
         try {
-          await refreshToken(longLivedToken);
-          startTransition(() => {
-            setInitializationComplete(true);
-          });
+          const { accessToken, longLivedToken: newLongLivedToken } =
+            await refreshToken(longLivedToken);
+          await setAuthData(accessToken, newLongLivedToken);
         } catch (error) {
           console.error("Token refresh failed:", getErrorMessage(error));
           logout();
         }
       } else {
-        logout();
+        clearAuthData();
       }
+      setIsInitialized(true);
     };
 
     initializeAuth();
-  }, []);
-
-  useEffect(() => {
-    if (
-      initializationComplete &&
-      (accessToken === null || (accessToken && user))
-    ) {
-      startTransition(() => {
-        setIsInitialized(true);
-      });
-    }
-  }, [accessToken, user, initializationComplete]);
+  }, [refreshToken, setAuthData, logout, clearAuthData]);
 
   const authValue = useMemo(
     () => ({
@@ -124,21 +112,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         logout,
         user,
         isInitialized,
-        isLoading:
-          isRefreshingToken || isLoggingIn || isLoadingUser || isPending,
       },
     }),
-    [
-      isInitialized,
-      accessToken,
-      login,
-      logout,
-      user,
-      isRefreshingToken,
-      isLoggingIn,
-      isLoadingUser,
-      isPending,
-    ],
+    [isInitialized, accessToken, login, logout, user],
   );
 
   return (

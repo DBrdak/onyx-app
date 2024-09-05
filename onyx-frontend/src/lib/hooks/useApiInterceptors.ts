@@ -1,17 +1,21 @@
-import { useLayoutEffect } from "react";
+import { useEffect } from "react";
 import { AxiosInstance } from "axios";
 
 export const useApiInterceptors = (
   api: AxiosInstance,
-  accessToken: string | null,
+  accessToken: () => string | null,
 ) => {
-  useLayoutEffect(() => {
+  useEffect(() => {
     const requestInterceptor = api.interceptors.request.use((config) => {
-      if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
+      const token = accessToken();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
     });
-    return () => api.interceptors.request.eject(requestInterceptor);
-  }, [accessToken]);
+
+    return () => {
+      api.interceptors.request.eject(requestInterceptor);
+    };
+  }, [api]);
 };

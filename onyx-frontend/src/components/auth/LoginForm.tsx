@@ -1,57 +1,76 @@
 import { FC } from "react";
 import { useRouter, useSearch } from "@tanstack/react-router";
-import { useAuthContext } from "@/lib/hooks/useAuthContext";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { Input } from "../ui/input";
-import LoadingButton from "../LoadingButton";
-import { z } from "zod";
 
-const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
+import LoadingButton from "@/components/LoadingButton";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
+import { Input } from "@/components/ui/input";
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+import { useAuthContext } from "@/lib/hooks/useAuthContext";
+import { LoginSchema, TLoginSchema } from "@/lib/validation/user";
+import { getErrorMessage } from "@/lib/utils";
 
-interface LoginFormProps {}
-
-const LoginForm: FC<LoginFormProps> = ({}) => {
+const LoginForm: FC = () => {
   const router = useRouter();
   const { redirect } = useSearch({ from: "/_auth/login" });
+  const { toast } = useToast();
 
   const {
-    auth: { login, isLoading },
+    auth: { login },
   } = useAuthContext();
 
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<TLoginSchema>({
+    resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const { control, handleSubmit, setError } = form;
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { isSubmitting },
+  } = form;
 
-  const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
+  const onSubmit: SubmitHandler<TLoginSchema> = async (data) => {
     try {
-      const isLoggedIn = await login(data.email, data.password);
+      await login(data.email, data.password);
 
-      if (isLoggedIn) {
-        if (redirect) {
-          router.history.push(redirect);
-        } else {
-          await router.navigate({ to: "/budget" });
-        }
+      if (redirect) {
+        router.history.push(redirect);
+      } else {
+        await router.navigate({ to: "/budget" });
       }
     } catch (error) {
-      console.error("Login error:", error);
-      setError("root", {
-        type: "manual",
-        message: "An error occurred during login. Please try again.",
-      });
+      const message = getErrorMessage(error);
+
+      if (message === "User not found") {
+        console.log(message);
+
+        setError("email", {
+          message: "Invalid email.",
+        });
+      } else if (message === "Invalid credentials") {
+        setError("password", {
+          message: "Invalid password.",
+        });
+      } else {
+        return toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Oops... Something went wrong. Please try again",
+        });
+      }
     }
   };
 
@@ -67,7 +86,7 @@ const LoginForm: FC<LoginFormProps> = ({}) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
-              <Input {...field} type="email" placeholder="Email" />
+              <Input {...field} placeholder="Email" />
               <FormMessage />
             </FormItem>
           )}
@@ -83,10 +102,11 @@ const LoginForm: FC<LoginFormProps> = ({}) => {
             </FormItem>
           )}
         />
-        {form.formState.errors.root && (
-          <p className="text-red-500">{form.formState.errors.root.message}</p>
-        )}
-        <LoadingButton isLoading={isLoading} type="submit" className="w-full">
+        <LoadingButton
+          isLoading={isSubmitting}
+          type="submit"
+          className="w-full"
+        >
           Sign in
         </LoadingButton>
       </form>

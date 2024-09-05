@@ -28,3 +28,10 @@ export type TokenResult = z.infer<typeof TokenResultSchema>;
 
 export const BudgetMemberSchema = UserSchema.omit({ currency: true });
 export type BudgetMember = z.infer<typeof BudgetMemberSchema>;
+
+export const LoginSchema = z.object({
+  email: RequiredString.email("Invalid email address"),
+  password: RequiredString,
+});
+
+export type TLoginSchema = z.infer<typeof LoginSchema>;

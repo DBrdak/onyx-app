@@ -26,8 +26,8 @@ const UserDropdown: FC<UserDropdownProps> = () => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    logout();
     await navigate({ to: "/" });
+    await logout();
   };
 
   return (
