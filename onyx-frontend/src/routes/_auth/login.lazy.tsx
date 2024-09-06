@@ -1,12 +1,15 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 import Logo from "@/components/Logo";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import TypedHeader from "@/components/auth/TypedHeader";
 import LoginForm from "@/components/auth/LoginForm";
+import ForgotForm from "@/components/auth/ForgotForm";
+import ForgotNewForm from "@/components/auth/ForgotNewForm";
+import { Button } from "@/components/ui/button";
+
+import { cn } from "@/lib/utils";
 
 export const Route = createLazyFileRoute("/_auth/login")({
   component: Login,
@@ -15,10 +18,13 @@ export const Route = createLazyFileRoute("/_auth/login")({
 export enum FormVariant {
   login = "LOGIN",
   register = "REGISTER",
+  forgotRequest = "FORGOT_REQUEST",
+  forgotNew = "FORGOT_NEW",
 }
 
 function Login() {
   const [formVariant, setFormVariant] = useState(FormVariant.login);
+  const [defaultEmail, setDefaultEmail] = useState("");
 
   return (
     <div className="grid h-full grid-cols-1 md:min-h-screen md:grid-cols-2 ">
@@ -31,7 +37,14 @@ function Login() {
         </div>
       </div>
       <div className="h-full px-6 pb-6 pt-10 md:pt-20">
-        <div className="mr-auto flex max-w-5xl flex-col items-center space-y-20">
+        <div
+          className={cn(
+            "mr-auto flex max-w-5xl flex-col items-center space-y-20",
+            (formVariant === FormVariant.register ||
+              formVariant === FormVariant.forgotNew) &&
+              "md:space-y-10",
+          )}
+        >
           <div className="flex flex-col items-center space-y-3 md:flex-row md:space-x-1 md:space-y-0">
             <Button
               onClick={() => setFormVariant(FormVariant.login)}
@@ -55,7 +68,21 @@ function Login() {
               create new account!
             </Button>
           </div>
-          {formVariant === FormVariant.login ? <LoginForm /> : "register"}
+          {formVariant === FormVariant.login && (
+            <LoginForm setFormVariant={setFormVariant} />
+          )}
+          {formVariant === FormVariant.forgotRequest && (
+            <ForgotForm
+              setDefaultEmail={setDefaultEmail}
+              setFormVariant={setFormVariant}
+            />
+          )}
+          {formVariant === FormVariant.forgotNew && (
+            <ForgotNewForm
+              defaultEmail={defaultEmail}
+              setFormVariant={setFormVariant}
+            />
+          )}
           <div className="relative flex w-full justify-center border-b">
             <p className="absolute -translate-y-1/2 bg-background px-2 text-3xl text-accent-foreground/80">
               or

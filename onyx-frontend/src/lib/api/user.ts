@@ -7,6 +7,12 @@ import {
 } from "@/lib/validation/user";
 import { validateResponse } from "@/lib/utils";
 
+export interface ForgotPasswordNewPayload {
+  email: string;
+  newPassword: string;
+  verificationCode: string;
+}
+
 export const refreshAccessToken = async (longLivedToken: string) => {
   const response = await identityApi.put("/auth/refresh", { longLivedToken });
   const validatedData = TokenResultSchema.parse(response.data);
@@ -32,3 +38,9 @@ export const getUser = async () => {
   const response = await userApi.get("/user");
   return validateResponse<User>(UserResultSchema, response.data);
 };
+
+export const forgotPasswordRequest = (email: string) =>
+  identityApi.put("/auth/forgot-password/request", { email });
+
+export const forgotPasswordNew = (payload: ForgotPasswordNewPayload) =>
+  identityApi.put("/auth/forgot-password/new", payload);

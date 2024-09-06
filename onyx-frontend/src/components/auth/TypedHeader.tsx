@@ -43,9 +43,14 @@ const TypedHeader: FC<TypedHeaderProps> = ({ formVariant }) => {
             "inline-block  animate-typing overflow-hidden whitespace-nowrap border-r-4 border-gray-500",
         )}
       >
-        {formVariant === FormVariant.login
-          ? "Stay Connected with the ONYX Family! Sign In!"
-          : "Unleash All Features and Join the ONYX Family!"}
+        {formVariant === FormVariant.login &&
+          "Stay Connected with the ONYX Family! Sign In!"}
+        {formVariant === FormVariant.register &&
+          "Join the ONYX Family and Unleash All Features!"}
+        {formVariant === FormVariant.forgotRequest &&
+          "After submitting form check your email."}
+        {formVariant === FormVariant.forgotNew &&
+          "After submitting sign in using new credentials."}
       </h1>
     </div>
   );

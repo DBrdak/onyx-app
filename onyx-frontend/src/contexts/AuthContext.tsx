@@ -5,6 +5,7 @@ import React, {
   useState,
   useMemo,
   useRef,
+  startTransition,
 } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLoginMutation } from "@/lib/hooks/mutations/useLoginMutation";
@@ -62,8 +63,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [queryClient, updateAccessToken]);
 
   const logout = useCallback(async () => {
-    // await userApi.put("/auth/logout");
-    clearAuthData();
+    await userApi.put("/user/logout");
+    startTransition(() => {
+      clearAuthData();
+    });
   }, [clearAuthData]);
 
   const login = useCallback(

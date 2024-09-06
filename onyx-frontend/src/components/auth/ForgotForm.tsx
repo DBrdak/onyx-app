@@ -1,9 +1,7 @@
 import { Dispatch, FC, SetStateAction } from "react";
-import { useRouter, useSearch } from "@tanstack/react-router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { PasswordInput } from "@/components/auth/PasswordInput";
 import LoadingButton from "@/components/LoadingButton";
 import {
   Form,
@@ -14,31 +12,28 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
-import { useAuthContext } from "@/lib/hooks/useAuthContext";
-import { LoginSchema, TLoginSchema } from "@/lib/validation/user";
+import { EmailSchema, TEmailSchema } from "@/lib/validation/user";
 import { getErrorMessage } from "@/lib/utils";
 import { FormVariant } from "@/routes/_auth/login.lazy";
+import { useMutation } from "@tanstack/react-query";
+import { forgotPasswordRequest } from "@/lib/api/user";
 
-interface LoginFormProps {
+interface ForgotFormProps {
+  setDefaultEmail: Dispatch<SetStateAction<string>>;
   setFormVariant: Dispatch<SetStateAction<FormVariant>>;
 }
 
-const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
-  const router = useRouter();
-  const { redirect } = useSearch({ from: "/_auth/login" });
+const ForgotForm: FC<ForgotFormProps> = ({
+  setDefaultEmail,
+  setFormVariant,
+}) => {
   const { toast } = useToast();
 
-  const {
-    auth: { login },
-  } = useAuthContext();
-
-  const form = useForm<TLoginSchema>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<TEmailSchema>({
+    resolver: zodResolver(EmailSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
@@ -49,25 +44,18 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
     formState: { isSubmitting },
   } = form;
 
-  const onSubmit: SubmitHandler<TLoginSchema> = async (data) => {
-    try {
-      await login(data.email, data.password);
-
-      if (redirect) {
-        router.history.push(redirect);
-      } else {
-        await router.navigate({ to: "/budget" });
-      }
-    } catch (error) {
-      const message = getErrorMessage(error);
+  const { mutateAsync } = useMutation({
+    mutationFn: forgotPasswordRequest,
+    onSuccess: (_, email) => {
+      setDefaultEmail(email);
+      setFormVariant(FormVariant.forgotNew);
+    },
+    onError: (err) => {
+      const message = getErrorMessage(err);
 
       if (message === "User not found") {
         setError("email", {
           message: "Invalid email.",
-        });
-      } else if (message === "Invalid credentials") {
-        setError("password", {
-          message: "Invalid password.",
         });
       } else {
         return toast({
@@ -76,7 +64,11 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
           description: "Oops... Something went wrong. Please try again",
         });
       }
-    }
+    },
+  });
+
+  const onSubmit: SubmitHandler<TEmailSchema> = async (data) => {
+    await mutateAsync(data.email);
   };
 
   return (
@@ -96,34 +88,16 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
             </FormItem>
           )}
         />
-        <FormField
-          control={control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <PasswordInput {...field} />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <LoadingButton
           isLoading={isSubmitting}
           type="submit"
           className="w-full"
         >
-          Sign in
+          Continue
         </LoadingButton>
-        <Button
-          onClick={() => setFormVariant(FormVariant.forgotRequest)}
-          variant="underline"
-          className="h-6 px-0 py-0"
-        >
-          Forgot Password?
-        </Button>
       </form>
     </Form>
   );
 };
 
-export default LoginForm;
+export default ForgotForm;
