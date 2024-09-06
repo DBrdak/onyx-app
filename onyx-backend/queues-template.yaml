@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: This template is partially managed by Amazon.Lambda.Annotations (v1.3.0.0).
+Resources:
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: DeadLetterQueue
+  RemoveUserFromBudgetQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: RemoveUserFromBudgetQueue
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt DeadLetterQueue.Arn
+        maxReceiveCount: 5
+  AddBudgetForUserQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: AddBudgetForUserQueue
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt DeadLetterQueue.Arn
+        maxReceiveCount: 5
+  RemoveUserQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: RemoveUserQueue
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt DeadLetterQueue.Arn
+        maxReceiveCount: 5
+Outputs:
+  DeadLetterQueueArn:
+    Description: Dead letter queue arn
+    Value: !GetAtt DeadLetterQueue.Arn
+  RemoveUserFromBudgetQueueName:
+    Description: RemoveUserFromBudget Queue Name
+    Value: !GetAtt RemoveUserFromBudgetQueue.QueueName
+  AddBudgetForUserQueueName:
+    Description: AddBudgetForUser Queue Name
+    Value: !GetAtt AddBudgetForUserQueue.QueueName
+  RemoveUserQueueName:
+    Description: RemoveUser Queue Name
+    Value: !GetAtt RemoveUserQueue.QueueName
+  AddBudgetForUserQueueArn:
+    Description: RemoveUserFromBudget Queue Arn
+    Value: !GetAtt AddBudgetForUserQueue.Arn
+  RemoveUserFromBudgetQueueArn:
+    Description: AddBudgetForUser Queue Arn
+    Value: !GetAtt RemoveUserFromBudgetQueue.Arn
+  RemoveUserQueueArn:
+    Description: RemoveUser Queue Arn
+    Value: !GetAtt RemoveUserQueue.Arn

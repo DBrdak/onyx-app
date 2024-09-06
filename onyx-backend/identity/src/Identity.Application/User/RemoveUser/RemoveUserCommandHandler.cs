@@ -1,6 +1,6 @@
 ﻿using Abstractions.Messaging;
 using Identity.Application.Abstractions.Authentication;
-using Identity.Application.Abstractions.UserEvents;
+using Identity.Application.Abstractions.IntegrationEvents;
 using Identity.Domain;
 using Models.Responses;
 
@@ -9,10 +9,10 @@ namespace Identity.Application.User.RemoveUser;
 internal sealed class RemoveUserCommandHandler : ICommandHandler<RemoveUserCommand>
 {
     private readonly IUserRepository _userRepository;
-    private readonly IUserEventsService _userEventsService;
+    private readonly IQueueMessagePublisher _userEventsService;
     private readonly IUserContext _userContext;
 
-    public RemoveUserCommandHandler(IUserRepository userRepository, IUserEventsService userEventsService, IUserContext userContext)
+    public RemoveUserCommandHandler(IUserRepository userRepository, IQueueMessagePublisher userEventsService, IUserContext userContext)
     {
         _userRepository = userRepository;
         _userEventsService = userEventsService;
@@ -46,7 +46,7 @@ internal sealed class RemoveUserCommandHandler : ICommandHandler<RemoveUserComma
             return preRemoveResult.Error;
         }
 
-        var publishResult = await _userEventsService.PublishUserRemovedEvent(user.Id.Value, cancellationToken);
+        var publishResult = await _userEventsService.PublishUserRemovedAsync(user.Id.Value, cancellationToken);
 
         if (publishResult.IsFailure)
         {

@@ -8,6 +8,9 @@ Parameters:
   FullAccessRoleArn:
     Type: String
     Description: ARN of the FullAccess IAM role
+  RemoveUserQueueArn:
+    Type: String
+    Description: ARN of the RemoveUser queue
   Environment:
     Type: String
     Description: The deployment environment (dev, qa, prod)

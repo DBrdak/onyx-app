@@ -15,6 +15,9 @@ $messangerPackagedTemplate = ".\messanger\src\Messanger.Lambda\packaged-messange
 $baseStackName = "onyx-base"
 $baseTemplate = ".\base-template.yaml"
 
+$queuesStackName = "onyx-queues"
+$queuesTemplate = ".\queues-template.yaml"
+
 $configStackName = "onyx-config"
 $configTemplate = ".\config-template.yaml"
 
@@ -36,23 +39,6 @@ $fullAccessRoleArn = (aws cloudformation describe-stacks `
     --region $region `
     --profile $awsProfile)
 
-if (-not $fullAccessRoleArn) {
-    Write-Host "Error: Could not retrieve the ARN of the role. Exiting."
-    exit 1
-}
-
-$deadLetterQueueArn = (aws cloudformation describe-stacks `
-    --stack-name $baseStackName `
-    --query "Stacks[0].Outputs[?OutputKey=='DeadLetterQueueArn'].OutputValue" `
-    --output text `
-    --region $region `
-    --profile $awsProfile)
-
-if (-not $deadLetterQueueArn) {
-    Write-Host "Error: Could not retrieve the ARN of the dead letter queue. Exiting."
-    exit 1
-}
-
 $s3bucket = (aws cloudformation describe-stacks `
     --stack-name $baseStackName `
     --query "Stacks[0].Outputs[?OutputKey=='S3BucketName'].OutputValue" `
@@ -60,8 +46,96 @@ $s3bucket = (aws cloudformation describe-stacks `
     --region $region `
     --profile $awsProfile)
 
-if (-not $s3bucket) {
-    Write-Host "Error: Could not retrieve the Name of the S3 bucket. Exiting."
+if (-not $fullAccessRoleArn -or $fullAccessRoleArn -eq "None") {
+    Write-Host "Error: Could not retrieve the ARN of the role. Exiting."
+    exit 1
+}
+if (-not $s3bucket -or $s3bucket -eq "None") {
+    $s3bucket = "onyx-default"
+}
+
+Write-Host "Deploying Queues service..."
+aws cloudformation deploy `
+    --template-file $queuesTemplate `
+    --stack-name $queuesStackName `
+    --capabilities CAPABILITY_NAMED_IAM `
+    --region $region `
+    --profile $awsProfile
+
+$deadLetterQueueArn = (aws cloudformation describe-stacks `
+    --stack-name $queuesStackName `
+    --query "Stacks[0].Outputs[?OutputKey=='DeadLetterQueueArn'].OutputValue" `
+    --output text `
+    --region $region `
+    --profile $awsProfile)
+
+$addBudgetForUserQueueName = (aws cloudformation describe-stacks `
+    --stack-name $queuesStackName `
+    --query "Stacks[0].Outputs[?OutputKey=='AddBudgetForUserQueueName'].OutputValue" `
+    --output text `
+    --region $region  `
+    --profile $awsProfile)
+
+$removeUserFromBudgetQueueName = (aws cloudformation describe-stacks `
+    --stack-name $queuesStackName `
+    --query "Stacks[0].Outputs[?OutputKey=='RemoveUserFromBudgetQueueName'].OutputValue" `
+    --output text `
+    --region $region  `
+    --profile $awsProfile)
+
+$removeUserQueueName = (aws cloudformation describe-stacks `
+    --stack-name $queuesStackName `
+    --query "Stacks[0].Outputs[?OutputKey=='RemoveUserQueueName'].OutputValue" `
+    --output text `
+    --region $region  `
+    --profile $awsProfile)
+$addBudgetForUserQueueArn = (aws cloudformation describe-stacks `
+    --stack-name $queuesStackName `
+    --query "Stacks[0].Outputs[?OutputKey=='AddBudgetForUserQueueArn'].OutputValue" `
+    --output text `
+    --region $region  `
+    --profile $awsProfile)
+
+$removeUserFromBudgetQueueArn = (aws cloudformation describe-stacks `
+    --stack-name $queuesStackName `
+    --query "Stacks[0].Outputs[?OutputKey=='RemoveUserFromBudgetQueueArn'].OutputValue" `
+    --output text `
+    --region $region  `
+    --profile $awsProfile)
+
+$removeUserQueueArn = (aws cloudformation describe-stacks `
+    --stack-name $queuesStackName `
+    --query "Stacks[0].Outputs[?OutputKey=='RemoveUserQueueArn'].OutputValue" `
+    --output text `
+    --region $region  `
+    --profile $awsProfile)
+
+if (-not $deadLetterQueueArn -or $deadLetterQueueArn -eq "None") {
+    Write-Host "Error: Could not retrieve the ARN of the dead letter queue. Exiting."
+    exit 1
+}
+if (-not $addBudgetForUserQueueName -or $addBudgetForUserQueueName -eq "None") {
+    Write-Host "Error: AddBudgetForUserQueueName could not be retrieved. Exiting."
+    exit 1
+}
+if (-not $removeUserFromBudgetQueueName -or $removeUserFromBudgetQueueName -eq "None") {
+    Write-Host "Error: RemoveUserFromBudgetQueueName could not be retrieved. Exiting."
+    exit 1
+}
+if (-not $removeUserQueueName -or $removeUserQueueName -eq "None") {
+    Write-Host "Error: RemoveUserQueueName could not be retrieved. Exiting."
+    exit 1
+}
+if (-not $addBudgetForUserQueueArn -or $addBudgetForUserQueueArn -eq "None") {
+    Write-Host "Error: AddBudgetForUserQueueArn could not be retrieved. Exiting."
+    exit 1
+}
+if (-not $removeUserFromBudgetQueueArn -or $removeUserFromBudgetQueueArn -eq "None") {
+    Write-Host "Error: RemoveUserFromBudgetQueueArn could not be retrieved. Exiting."
+    exit 1
+}
+if (-not $removeUserQueueArn -or $removeUserQueueArn -eq "None") {
+    Write-Host "Error: RemoveUserQueueArn could not be retrieved. Exiting."
     exit 1
 }
 
@@ -86,7 +160,7 @@ Write-Host "Deploying Identity service..."
 sam deploy --template-file $identityPackagedTemplate `
     --stack-name $identityStackName `
     --capabilities CAPABILITY_IAM `
-    --parameter-overrides "DeadLetterQueueArn=$deadLetterQueueArn FullAccessRoleArn=$fullAccessRoleArn Environment=$env" `
+    --parameter-overrides "FullAccessRoleArn=$fullAccessRoleArn RemoveUserFromBudgetQueueArn=$removeUserFromBudgetQueueArn AddBudgetForUserQueueArn=$addBudgetForUserQueueArn Environment=$env" `
     --region $region `
     --profile $awsProfile
 
@@ -97,7 +171,7 @@ $lambdaAuthorizerArn = (aws cloudformation describe-stacks `
 --region $region `
 --profile $awsProfile)
 
-if (-not $lambdaAuthorizerArn) {
+if (-not $lambdaAuthorizerArn -or $lambdaAuthorizerArn -eq "None") {
     Write-Host "Error: LambdaAuthorizerArn could not be retrieved. Exiting."
     exit 1
 }
@@ -111,25 +185,11 @@ Write-Host "Deploying Budget service..."
 sam deploy --template-file $budgetPackagedTemplate `
     --stack-name $budgetStackName `
     --capabilities CAPABILITY_IAM `
-    --parameter-overrides "LambdaAuthorizerArn=$lambdaAuthorizerArn FullAccessRoleArn=$fullAccessRoleArn Environment=$env" `
+    --parameter-overrides "LambdaAuthorizerArn=$lambdaAuthorizerArn RemoveUserQueueArn=$removeUserQueueArn FullAccessRoleArn=$fullAccessRoleArn Environment=$env" `
     --region $region `
     --profile $awsProfile
 
 Write-Host "Deployment complete."
-
-$addBudgetForUserQueueName = (aws cloudformation describe-stacks `
---stack-name $identityStackName `
---query "Stacks[0].Outputs[?OutputKey=='AddBudgetForUserQueueName'].OutputValue" `
---output text `
---region $region  `
---profile $awsProfile)
-
-$removeUserFromBudgetQueueName = (aws cloudformation describe-stacks `
---stack-name $identityStackName `
---query "Stacks[0].Outputs[?OutputKey=='RemoveUserFromBudgetQueueName'].OutputValue" `
---output text `
---region $region  `
---profile $awsProfile)
 
 $sendEmailTopicName = (aws cloudformation describe-stacks `
 --stack-name $messangerStackName `
@@ -138,14 +198,6 @@ $sendEmailTopicName = (aws cloudformation describe-stacks `
 --region $region  `
 --profile $awsProfile)
 
-if (-not $addBudgetForUserQueueName) {
-    Write-Host "Error: AddBudgetForUserQueueName could not be retrieved. Exiting."
-    exit 1
-}
-if (-not $removeUserFromBudgetQueueName) {
-    Write-Host "Error: RemoveUserFromBudgetQueueName could not be retrieved. Exiting."
-    exit 1
-}
 if (-not $sendEmailTopicName) {
     Write-Host "Error: SendEmailTopicName could not be retrieved. Exiting."
     exit 1
@@ -159,6 +211,7 @@ sam deploy --template-file $configTemplate `
     --parameter-overrides `
         "AddBudgetForUserQueueName=$addBudgetForUserQueueName" `
         "RemoveUserFromBudgetQueueName=$removeUserFromBudgetQueueName" `
+        "RemoveUserQueueName=$removeUserQueueName" `
         "SendEmailTopicName=$sendEmailTopicName" `
     --region $region `
     --profile $awsProfile
