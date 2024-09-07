@@ -47,10 +47,13 @@ const TypedHeader: FC<TypedHeaderProps> = ({ formVariant }) => {
           "Stay Connected with the ONYX Family! Sign In!"}
         {formVariant === FormVariant.register &&
           "Join the ONYX Family and Unleash All Features!"}
-        {formVariant === FormVariant.forgotRequest &&
+        {(formVariant === FormVariant.forgotRequest ||
+          formVariant === FormVariant.forgotVerify) &&
           "After submitting form check your email."}
         {formVariant === FormVariant.forgotNew &&
           "After submitting sign in using new credentials."}
+        {formVariant === FormVariant.verify &&
+          "After submitting sign in using your credentials."}
       </h1>
     </div>
   );

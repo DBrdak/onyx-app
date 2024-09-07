@@ -69,6 +69,8 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
         setError("password", {
           message: "Invalid password.",
         });
+      } else if (message === "Email is not verified") {
+        setError("email", { message });
       } else {
         return toast({
           variant: "destructive",
@@ -114,13 +116,24 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
         >
           Sign in
         </LoadingButton>
-        <Button
-          onClick={() => setFormVariant(FormVariant.forgotRequest)}
-          variant="underline"
-          className="h-6 px-0 py-0"
-        >
-          Forgot Password?
-        </Button>
+        <div className="flex flex-col items-start space-y-1">
+          <Button
+            type="button"
+            onClick={() => setFormVariant(FormVariant.forgotRequest)}
+            variant="underline"
+            className="h-6 px-0 py-0"
+          >
+            Forgot Password?
+          </Button>
+          <Button
+            type="button"
+            onClick={() => setFormVariant(FormVariant.forgotVerify)}
+            variant="underline"
+            className="h-6 px-0 py-0"
+          >
+            Forgot to verify email?
+          </Button>
+        </div>
       </form>
     </Form>
   );

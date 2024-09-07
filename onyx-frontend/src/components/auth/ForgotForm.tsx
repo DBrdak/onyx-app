@@ -15,18 +15,18 @@ import { Input } from "@/components/ui/input";
 
 import { EmailSchema, TEmailSchema } from "@/lib/validation/user";
 import { getErrorMessage } from "@/lib/utils";
-import { FormVariant } from "@/routes/_auth/login.lazy";
 import { useMutation } from "@tanstack/react-query";
-import { forgotPasswordRequest } from "@/lib/api/user";
 
 interface ForgotFormProps {
   setDefaultEmail: Dispatch<SetStateAction<string>>;
-  setFormVariant: Dispatch<SetStateAction<FormVariant>>;
+  setFormVariant: () => void;
+  mutationFn: (email: string) => Promise<void>;
 }
 
 const ForgotForm: FC<ForgotFormProps> = ({
   setDefaultEmail,
   setFormVariant,
+  mutationFn,
 }) => {
   const { toast } = useToast();
 
@@ -45,10 +45,10 @@ const ForgotForm: FC<ForgotFormProps> = ({
   } = form;
 
   const { mutateAsync } = useMutation({
-    mutationFn: forgotPasswordRequest,
+    mutationFn: mutationFn,
     onSuccess: (_, email) => {
       setDefaultEmail(email);
-      setFormVariant(FormVariant.forgotNew);
+      setFormVariant();
     },
     onError: (err) => {
       const message = getErrorMessage(err);
@@ -56,6 +56,12 @@ const ForgotForm: FC<ForgotFormProps> = ({
       if (message === "User not found") {
         setError("email", {
           message: "Invalid email.",
+        });
+      } else if (
+        message === "The verification code was not previously requested"
+      ) {
+        setError("email", {
+          message,
         });
       } else {
         return toast({

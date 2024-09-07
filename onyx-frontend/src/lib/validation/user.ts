@@ -63,3 +63,19 @@ export const ForgotPasswordNewSchema = EmailSchema.extend({
 }).and(ConfirmedPasswordSchema);
 
 export type TForgotPasswordNewSchema = z.infer<typeof ForgotPasswordNewSchema>;
+
+export const RegisterSchema = EmailSchema.extend({
+  username: RequiredString.max(
+    15,
+    "Usernamne maximum length is 15 characters.",
+  ),
+  currency: RequiredString,
+}).and(ConfirmedPasswordSchema);
+
+export type TRegisterSchema = z.infer<typeof RegisterSchema>;
+
+export const VerifySchema = EmailSchema.extend({
+  verificationCode: RequiredString,
+});
+
+export type TVerifySchema = z.infer<typeof VerifySchema>;
