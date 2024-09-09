@@ -1,6 +1,11 @@
 ﻿using Amazon.DynamoDBv2.DocumentModel;
 using Budget.Application.Abstractions.Identity;
+using Budget.Domain.Accounts;
 using Budget.Domain.Budgets;
+using Budget.Domain.Categories;
+using Budget.Domain.Counterparties;
+using Budget.Domain.Subcategories;
+using Budget.Domain.Transactions;
 using Budget.Infrastructure.Data.DataModels.Budgets;
 using Models.Responses;
 using SharedDAL;
