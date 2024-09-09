@@ -1,6 +1,4 @@
-﻿using Amazon.S3;
-using Amazon.SQS;
-using Azure;
+﻿using Amazon.SQS;
 using Extensions.Http;
 using Identity.Application.Abstractions.IntegrationEvents;
 using Microsoft.Extensions.Configuration;

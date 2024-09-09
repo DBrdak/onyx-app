@@ -1,5 +1,4 @@
 ﻿using Budget.Domain.Budgets;
-using Budget.Domain.Categories;
 using Budget.Domain.Shared.Abstractions;
 using Models.DataTypes;
 using Models.Responses;

@@ -842,6 +842,26 @@ Resources:
             Path: /api/v1/budgets/{token}
             Method: GET
             ApiId: !Ref BudgetApi
+  PurgeUserBudgetData:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+    Properties:
+      FunctionName: !Sub PurgeUserBudgetData_${Environment}
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: !Ref FullAccessRoleArn
+      PackageType: Zip
+      Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_PurgeUserBudgetData_Generated::PurgeUserBudgetData
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue: !Ref RemoveUserQueueArn
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

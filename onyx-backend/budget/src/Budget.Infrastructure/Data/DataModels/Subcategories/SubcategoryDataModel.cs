@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Amazon.DynamoDBv2.DocumentModel;
-using Budget.Domain.Accounts;
 using Budget.Domain.Budgets;
 using Budget.Domain.Subcategories;
 using Models.DataTypes;

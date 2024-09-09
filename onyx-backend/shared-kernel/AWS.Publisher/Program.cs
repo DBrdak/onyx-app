@@ -1,14 +1,12 @@
 ﻿using Amazon.CloudFormation;
 using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
-using Amazon.Util;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using System.Net;
 using Amazon;
 using AWS.Publisher.Configurations;
 using static AWS.Publisher.Terminal.Printer;
 using Amazon.S3;
+using AWS.Publisher.Stacks;
 
 namespace AWS.Publisher;
 
@@ -21,7 +19,7 @@ internal class Program
         var serviceProvider = ConfigureServices(env);
         var appBuilder = serviceProvider.GetRequiredService<AppBuilder>();
 
-        await appBuilder.BuildAWSApplication();
+        await appBuilder.BuildAwsApplication();
     }
 
     private static ServiceProvider ConfigureServices(CurrentEnvironment env)
@@ -34,6 +32,7 @@ internal class Program
         services.AddSingleton(new AmazonCloudFormationClient(creds, RegionEndpoint.EUCentral1));
         services.AddSingleton(new AmazonS3Client(creds, RegionEndpoint.EUCentral1));
         services.AddSingleton<CloudFormation.Publisher>();
+        services.AddSingleton(new StackRegistry());
 
         return services.BuildServiceProvider();
     }
@@ -47,6 +46,7 @@ internal class Program
         }
 
         PrintLine($"Could not load credentials for profile {AwsSpecs.Profile}", ConsoleColor.Red);
-        throw new Exception();
+        Environment.Exit(1);
+        return null;
     }
 }

@@ -18,13 +18,12 @@ internal sealed class ConfigStack : Stack
     private static readonly StackOutput[] outputs =
     [];
 
-    public ConfigStack(CurrentEnvironment env) : base(
+    public ConfigStack() : base(
         name,
         templatePath,
         packagedTemplatePath,
         parameters,
-        outputs,
-        env)
+        outputs)
     {
     }
 }

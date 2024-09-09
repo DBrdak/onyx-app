@@ -1,5 +1,4 @@
-﻿using Amazon.CloudFormation;
-using AWS.Publisher.Configurations;
+﻿using AWS.Publisher.Configurations;
 using AWS.Publisher.Stacks;
 
 namespace AWS.Publisher;
@@ -15,12 +14,13 @@ internal class AppBuilder
         _env = env;
     }
 
-    public async Task BuildAWSApplication()
+    public async Task BuildAwsApplication()
     {
         var stacks = StacksFactory.GetStacksForDeployment(_env);
 
-        var deploymentTasks = stacks.Select(async stack => await _publisher.DeployStackAsync(stack));
-
-        await Task.WhenAll(deploymentTasks);
+        foreach (var stack in stacks)
+        {
+            await _publisher.DeployStackAsync(stack);
+        }
     }
 }

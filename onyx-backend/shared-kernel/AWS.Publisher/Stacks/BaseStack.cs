@@ -1,5 +1,4 @@
-﻿using Amazon.CloudFormation.Model;
-using AWS.Publisher.Configurations;
+﻿using AWS.Publisher.Configurations;
 using AWS.Publisher.Stacks.Primitives;
 
 namespace AWS.Publisher.Stacks;
@@ -16,12 +15,11 @@ internal sealed class BaseStack : Stack
         new("S3BucketName")
     ];
 
-    public BaseStack(CurrentEnvironment env) : base(
+    public BaseStack() : base(
         name,
         templatePath,
         packagedTemplatePath,
         parameters,
-        outputs,
-        env)
+        outputs)
     { }
 }

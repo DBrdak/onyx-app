@@ -1,6 +1,5 @@
 ﻿using Budget.Domain.Budgets;
 using Budget.Domain.Categories;
-using Budget.Domain.Tests.Budgets;
 
 namespace Budget.Domain.Tests.Categories;
 
@@ -79,7 +78,7 @@ public sealed class CategoryTests
 
         // Assert
         Assert.True(newSubcategoryResult.IsFailure);
-        Assert.DoesNotContain(exampleCategory.SubcategoriesId, x => x == newSubcategoryResult.Value.Id);
+        Assert.DoesNotContain(exampleCategory.SubcategoriesId, x => x == newSubcategoryResult.Value?.Id);
     }
 
     [Fact]

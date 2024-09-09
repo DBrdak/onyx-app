@@ -5,7 +5,7 @@ namespace AWS.Publisher.Stacks;
 
 internal sealed class MessangerStack : Stack
 {
-    private const string name = "onyx-budget";
+    private const string name = "onyx-messanger";
     private const string templatePath = @$"{Global.BasePath}\messanger\src\Messanger.Lambda\messanger-template.yaml";
     private const string packagedTemplatePath = $@"{Global.BasePath}\messanger\src\Messanger.Lambda\packaged-messanger.yaml";
     private static readonly StackParameter[] parameters =
@@ -17,13 +17,12 @@ internal sealed class MessangerStack : Stack
         new("SendEmailTopicName")
     ];
 
-    public MessangerStack(CurrentEnvironment env) : base(
+    public MessangerStack() : base(
         name,
         templatePath,
         packagedTemplatePath,
         parameters,
-        outputs,
-        env)
+        outputs)
     {
     }
 }

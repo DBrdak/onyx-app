@@ -1,6 +1,5 @@
 ﻿using Budget.Domain.Accounts;
 using Budget.Domain.Budgets;
-using Budget.Domain.Categories;
 using Budget.Domain.Counterparties;
 using Budget.Domain.Shared.Abstractions;
 using Budget.Domain.Shared.Constants;

@@ -19,7 +19,22 @@ internal abstract class Stack
         StackOutput[] outputs,
         CurrentEnvironment env)
     {
-        Name = $"{Name}-{env.Value}";
+        Name = $"{name}-{env.Value}";
+        TemplatePath = templatePath;
+        PackagedTemplatePath = packagedTemplatePath;
+        Parameters = parameters;
+        Outputs = outputs;
+        Parameters.FirstOrDefault(p => p.Name.ToLower() == "environment")?.SetValue(env.Value);
+    }
+
+    protected Stack(
+        string name,
+        string templatePath,
+        string? packagedTemplatePath,
+        StackParameter[] parameters,
+        StackOutput[] outputs)
+    {
+        Name = $"{name}";
         TemplatePath = templatePath;
         PackagedTemplatePath = packagedTemplatePath;
         Parameters = parameters;

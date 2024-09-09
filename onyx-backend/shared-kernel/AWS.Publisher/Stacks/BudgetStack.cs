@@ -1,5 +1,4 @@
-﻿using Amazon.CloudFormation.Model;
-using AWS.Publisher.Configurations;
+﻿using AWS.Publisher.Configurations;
 using AWS.Publisher.Stacks.Primitives;
 
 namespace AWS.Publisher.Stacks;

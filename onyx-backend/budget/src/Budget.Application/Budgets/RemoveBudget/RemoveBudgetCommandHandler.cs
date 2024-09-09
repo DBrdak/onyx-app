@@ -7,7 +7,6 @@ using Budget.Domain.Categories;
 using Budget.Domain.Counterparties;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
-using MediatR;
 using Models.Responses;
 
 namespace Budget.Application.Budgets.RemoveBudget;

@@ -2,12 +2,14 @@
 using Amazon.Lambda.Annotations;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using Amazon.Lambda.SQSEvents;
 using Budget.Application.Budgets.AddBudget;
 using Budget.Application.Budgets.AddUserToBudget;
 using Budget.Application.Budgets.EditBudget;
 using Budget.Application.Budgets.GetBudgetByToken;
 using Budget.Application.Budgets.GetBudgetInvitation;
 using Budget.Application.Budgets.GetBudgets;
+using Budget.Application.Budgets.PurgeUserData;
 using Budget.Application.Budgets.RemoveBudget;
 using Budget.Application.Budgets.RemoveUserFromBudgetBudget;
 using Budget.Functions.Functions.Budgets.Requests;
@@ -149,5 +151,28 @@ public sealed class BudgetFunctions : BaseFunction
         var result = await Sender.Send(command);
 
         return result.ReturnAPIResponse();
+    }
+
+    [LambdaFunction(ResourceName = nameof(PurgeUserBudgetData))]
+    public async Task PurgeUserBudgetData(SQSEvent evnt, ILambdaContext lambdaContext)
+    {
+        try
+        {
+            foreach (var message in evnt.Records)
+            {
+                var command = JsonConvert.DeserializeObject<PurgeUserDataCommand>(message.Body) ??
+                              throw new ArgumentException(
+                                  $"Invalid message body for {nameof(PurgeUserBudgetData)} Lambda queue handler");
+
+                await Sender.Send(command);
+            }
+        }
+        catch (Exception e)
+        {
+            lambdaContext.Logger.LogError(
+                $"Problem occured when trying to execute {nameof(PurgeUserBudgetData)} Lambda queue handler\n" +
+                $"Details: {e.Message}\n" +
+                $"Exception:\n{JsonConvert.SerializeObject(e)}");
+        }
     }
 }

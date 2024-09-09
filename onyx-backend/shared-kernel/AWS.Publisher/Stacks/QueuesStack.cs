@@ -20,13 +20,12 @@ internal sealed class QueuesStack : Stack
         new("RemoveUserQueueArn"),
     ];
 
-    public QueuesStack(CurrentEnvironment env) : base(
+    public QueuesStack() : base(
         name,
         templatePath,
         packagedTemplatePath,
         parameters,
-        outputs,
-        env)
+        outputs)
     {
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Budget.Domain.Budgets;
 using Budget.Domain.Categories;
-using Budget.Domain.Subcategories;
 using Models.Responses;
 
 namespace Budget.Application.Categories.Validator;
