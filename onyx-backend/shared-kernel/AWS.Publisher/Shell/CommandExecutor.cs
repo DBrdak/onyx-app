@@ -21,11 +21,9 @@ internal static class CommandExecutor
         };
 
         process.Start();
-        process.StandardOutput.ReadToEnd();
-        var error = process.StandardError.ReadToEnd();
         process.WaitForExit();
 
-        if (string.IsNullOrWhiteSpace(error))
+        if (process.ExitCode == 0)
         {
             return;
         }

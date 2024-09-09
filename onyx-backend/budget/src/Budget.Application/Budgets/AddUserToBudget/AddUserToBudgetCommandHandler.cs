@@ -38,8 +38,8 @@ internal sealed class AddUserToBudgetCommandHandler : ICommandHandler<AddUserToB
         }
 
         var userId = userIdGetResult.Value;
-        var username = userIdGetResult.Value;
-        var userEmail = userIdGetResult.Value;
+        var username = usernameGetResult.Value;
+        var userEmail = emailGetResult.Value;
 
         var bugetIdGetResult = BudgetInvitationToken.GetBudgetIdFromToken(request.Token);
 

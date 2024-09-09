@@ -825,14 +825,14 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
+      FunctionName: !Sub BudgetsGetByInvitationToken_${Environment}
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
       Timeout: 30
-      Policies:
-        - AWSLambdaBasicExecutionRole
+      Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Budget.Functions::Budget.Functions.Functions.Budgets.BudgetFunctions_GetByInvitationToken_Generated::GetByInvitationToken
       Events:

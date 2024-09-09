@@ -2,7 +2,9 @@
 using Amazon.CloudFormation.Model;
 using AWS.Publisher.Shell;
 using AWS.Publisher.Stacks;
+using AWS.Publisher.Stacks.Extensions;
 using static AWS.Publisher.Terminal.Printer;
+using Delegate = AWS.Publisher.Extensions.Delegate;
 using Stack = AWS.Publisher.Stacks.Stack;
 
 namespace AWS.Publisher.CloudFormation;
@@ -33,11 +35,17 @@ internal sealed class Publisher
         }
         catch (AlreadyExistsException)
         {
-            stack = await UpdateStackAsync(stack);
+
+            await Delegate.TryCatchAsync(
+                async () =>
+                {
+                    stack = await UpdateStackAsync(stack);
+                },
+                ex => $"Error occured on deploying {stack.Name}: {ex.Message}");
         }
         catch (Exception ex)
         {
-            PrintLine($"Error deploying {stack.Name}: {ex.Message}", ConsoleColor.Red);
+            PrintLine($"Error occured on deploying {stack.Name}: {ex.Message}", ConsoleColor.Red);
             Environment.Exit(1);
         }
 
@@ -51,7 +59,7 @@ internal sealed class Publisher
         var updateRequest = new UpdateStackRequest
         {
             StackName = stack.Name,
-            TemplateBody = await File.ReadAllTextAsync(stack.TemplatePath),
+            TemplateBody = await stack.GetTemplateFileAsync(),
             Parameters = [.. stack.Parameters.Select(p => p.ToAmazonParameter())],
             Capabilities = ["CAPABILITY_AUTO_EXPAND"]
         };
@@ -69,7 +77,7 @@ internal sealed class Publisher
         var createRequest = new CreateStackRequest
         {
             StackName = stack.Name,
-            TemplateBody = await File.ReadAllTextAsync(stack.TemplatePath),
+            TemplateBody = await stack.GetTemplateFileAsync(),
             Parameters = [.. stack.Parameters.Select(p => p.ToAmazonParameter())],
             Capabilities = ["CAPABILITY_AUTO_EXPAND"]
         };
@@ -116,16 +124,13 @@ internal sealed class Publisher
                 continue;
             }
 
-            try
-            {
-                var output = _stackRegistry.GetOutput(stackParameter.Name); 
-                stackParameter.SetValue(output.Value);
-            }
-            catch 
-            {
-                PrintLine($"Error occured when trying to set parameter {stackParameter.Name} for stack {stack.Name}", ConsoleColor.Red);
-                Environment.Exit(1);
-            }
+            Delegate.TryCatch(
+                () =>
+                {
+                    var output = _stackRegistry.GetOutput(stackParameter.Name);
+                    stackParameter.SetValue(output.Value);
+                },
+                $"Error occured when trying to set parameter {stackParameter.Name} for stack {stack.Name}");
         }
 
         return stack;
