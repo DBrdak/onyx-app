@@ -3,17 +3,22 @@ import { FC, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Copy } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface CopyToClipboardProps {
-  textToCopy: string;
+  textToCopy?: string;
+  isLoading?: boolean;
 }
 
-const CopyToClipboard: FC<CopyToClipboardProps> = ({ textToCopy }) => {
+const CopyToClipboard: FC<CopyToClipboardProps> = ({
+  textToCopy,
+  isLoading,
+}) => {
   const [copied, setCopied] = useState(false);
 
   const copyText = () => {
     navigator.clipboard
-      .writeText(textToCopy)
+      .writeText(textToCopy!)
       .then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
@@ -27,6 +32,7 @@ const CopyToClipboard: FC<CopyToClipboardProps> = ({ textToCopy }) => {
     <div className="relative">
       <div className="flex">
         <Button
+          disabled={isLoading}
           onClick={copyText}
           size="icon"
           variant="outline"
@@ -35,9 +41,12 @@ const CopyToClipboard: FC<CopyToClipboardProps> = ({ textToCopy }) => {
           <Copy />
         </Button>
         <Input
-          value={textToCopy}
+          value={isLoading ? "loading..." : textToCopy}
           disabled
-          className="truncate rounded-l-none border-l-0 no-underline disabled:opacity-100"
+          className={cn(
+            "truncate rounded-l-none border-l-0 no-underline disabled:opacity-100",
+            isLoading && "animate-pulse",
+          )}
           style={{
             pointerEvents: "none",
           }}

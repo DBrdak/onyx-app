@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { useRouter, useSearch } from "@tanstack/react-router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +29,7 @@ interface LoginFormProps {
 }
 
 const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
   const { redirect } = useSearch({ from: "/_auth/login" });
@@ -46,14 +47,10 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
     },
   });
 
-  const {
-    control,
-    handleSubmit,
-    setError,
-    formState: { isSubmitting },
-  } = form;
+  const { control, handleSubmit, setError } = form;
 
   const onSubmit: SubmitHandler<TLoginSchema> = async (data) => {
+    setIsLoading(true);
     try {
       await login(data.email, data.password);
       await queryClient.prefetchQuery(getBudgetsQueryOptions);
@@ -82,6 +79,8 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
           description: "Oops... Something went wrong. Please try again",
         });
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -114,17 +113,13 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
           )}
         />
         <div className="pt-4">
-          <LoadingButton
-            isLoading={isSubmitting}
-            type="submit"
-            className="w-full"
-          >
+          <LoadingButton isLoading={isLoading} type="submit" className="w-full">
             Sign in
           </LoadingButton>
         </div>
         <div className="flex flex-col items-start space-y-1">
           <Button
-            disabled={isSubmitting}
+            disabled={isLoading}
             type="button"
             onClick={() => setFormVariant(FormVariant.forgotRequest)}
             variant="underline"
@@ -133,7 +128,7 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
             Forgot Password?
           </Button>
           <Button
-            disabled={isSubmitting}
+            disabled={isLoading}
             type="button"
             onClick={() => setFormVariant(FormVariant.forgotVerify)}
             variant="underline"
@@ -143,7 +138,7 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
           </Button>
         </div>
       </form>
-      <FormFooter disabled={isSubmitting} />
+      <FormFooter disabled={isLoading} />
     </Form>
   );
 };

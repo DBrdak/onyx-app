@@ -15,12 +15,12 @@ export const Route = createFileRoute("/_dashboard-layout/budgets/join")({
 });
 
 function Invitation() {
-  const { budgetId, token } = Route.useSearch();
+  const { token } = Route.useSearch();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: () => joinBudget(token, budgetId),
+    mutationFn: () => joinBudget(token),
     onSuccess: async () => {
       await navigate({ to: "/budget" });
     },

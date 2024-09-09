@@ -18,7 +18,6 @@ export type SingleBudgetPageSearchParams = z.infer<
 
 export const JoinBudgetParamsSchema = z.object({
   token: RequiredString,
-  budgetId: RequiredString,
 });
 
 export type JoinBudgetPageSearchParams = z.infer<typeof JoinBudgetParamsSchema>;

@@ -50,8 +50,8 @@ export const getInvitationLink = async (budgetId: string) => {
   );
 };
 
-export const joinBudget = (token: string, budgetId: string) =>
-  budgetApi.put(`budgets/${budgetId}/join/${token}`);
+export const joinBudget = (token: string) =>
+  budgetApi.put(`budgets/join/${token}`);
 
 export const getToAssign = async ({ month, year, budgetId }: GetToAssign) => {
   const { data } = await budgetApi.get(

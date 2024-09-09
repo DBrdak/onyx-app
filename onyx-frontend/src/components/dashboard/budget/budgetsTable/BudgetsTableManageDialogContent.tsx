@@ -32,7 +32,9 @@ const BudgetsTableManageDialogContent: FC<
         <DialogTitle>Edit name</DialogTitle>
         <BudgetsTableEditNameForm budget={budget} />
       </div>
-      <div>delete members</div>
+      <div className="space-y-4">
+        <DialogTitle>Remove members</DialogTitle>
+      </div>
       <div className="space-y-4">
         <div className="space-y-1">
           <DialogTitle>Invite members</DialogTitle>
@@ -41,14 +43,14 @@ const BudgetsTableManageDialogContent: FC<
           </DialogDescription>
         </div>
         <div className="pb-2">
-          {isInvitationLinkLoading && (
-            <div className="flex animate-pulse">
-              <div className="h-10 w-10 border bg-primary/60" />
-              <div className="w-full border-y border-r bg-primary/60" />
-            </div>
-          )}
+          <CopyToClipboard
+            textToCopy={invitationLink?.value}
+            isLoading={isInvitationLinkLoading}
+          />
           {invitationLink && (
-            <CopyToClipboard textToCopy={invitationLink.value} />
+            <p className="pt-1 text-right text-sm">
+              Your link is valid for: {invitationLink.validForSeconds}
+            </p>
           )}
         </div>
       </div>
