@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, LoaderCircle } from "lucide-react";
 import UserAvatar from "@/components/UserAvatar";
 import UserProfileDialogContent from "@/components/dashboard/UserProfileDialogContent";
 import { Button } from "@/components/ui/button";
@@ -14,20 +14,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { type User } from "@/lib/validation/user";
 
-import { useAuthContext } from "@/lib/hooks/useAuthContext";
+interface UserDropdownProps {
+  user: User;
+  logout: () => Promise<void>;
+}
 
-interface UserDropdownProps {}
-
-const UserDropdown: FC<UserDropdownProps> = () => {
-  const {
-    auth: { user, logout },
-  } = useAuthContext();
+const UserDropdown: FC<UserDropdownProps> = ({ user, logout }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    logout();
-    await navigate({ to: "/" });
+    setIsLoading(true);
+    try {
+      await logout();
+      await navigate({ to: "/" });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -37,33 +44,32 @@ const UserDropdown: FC<UserDropdownProps> = () => {
           <Button
             variant="ghost"
             className="justify-between space-x-2 rounded-full border-none p-0 pr-1 duration-500"
-            disabled={!user}
+            disabled={!user || isLoading}
           >
-            <UserAvatar username={user?.username} />
+            {isLoading ? (
+              <LoaderCircle className="animate-spin" />
+            ) : (
+              <UserAvatar username={user.username} />
+            )}
             <ChevronDown />
           </Button>
         </DropdownMenuTrigger>
-        {user && (
-          <>
-            <DropdownMenuContent
-              sideOffset={10}
-              align="end"
-              className="max-w-[150px]"
-            >
-              <DropdownMenuLabel className="truncate text-center capitalize">
-                {user?.username}
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DialogTrigger asChild>
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-              </DialogTrigger>
-              <DropdownMenuItem onClick={handleLogout}>
-                Sign out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-            <UserProfileDialogContent user={user} />
-          </>
-        )}
+
+        <DropdownMenuContent
+          sideOffset={10}
+          align="end"
+          className="max-w-[150px]"
+        >
+          <DropdownMenuLabel className="truncate text-center capitalize">
+            {user.username}
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DialogTrigger asChild>
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+          </DialogTrigger>
+          <DropdownMenuItem onClick={handleLogout}>Sign out</DropdownMenuItem>
+        </DropdownMenuContent>
+        <UserProfileDialogContent user={user} />
       </DropdownMenu>
     </Dialog>
   );

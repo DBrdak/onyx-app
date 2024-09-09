@@ -1,5 +1,4 @@
-import Navbar from "@/components/home/Navbar";
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_auth")({
   beforeLoad: ({
@@ -13,12 +12,4 @@ export const Route = createFileRoute("/_auth")({
       });
     }
   },
-  component: () => (
-    <div className="mx-auto min-h-screen max-w-[1440px]">
-      <Navbar />
-      <div className="pt-20">
-        <Outlet />
-      </div>
-    </div>
-  ),
 });

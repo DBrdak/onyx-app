@@ -8,7 +8,7 @@ import UserDropdown from "../dashboard/UserDropdown";
 
 const Navbar = () => {
   const {
-    auth: { user },
+    auth: { user, logout },
   } = useAuthContext();
 
   return (
@@ -19,38 +19,22 @@ const Navbar = () => {
 
       <div className="space-x-2">
         {user ? (
-          <UserDropdown />
+          <UserDropdown user={user} logout={logout} />
         ) : (
-          <>
-            <Link
-              to="/register"
-              activeProps={{
-                className: "bg-accent",
-              }}
-              className={cn(
-                buttonVariants({
-                  variant: "outline",
-                  className: "rounded-full font-bold tracking-wide",
-                }),
-              )}
-            >
-              Sign up
-            </Link>
-            <Link
-              to="/login"
-              activeProps={{
-                className: "bg-accent",
-              }}
-              className={cn(
-                buttonVariants({
-                  variant: "outline",
-                  className: "rounded-full font-bold tracking-wide",
-                }),
-              )}
-            >
-              Sign in
-            </Link>
-          </>
+          <Link
+            to="/login"
+            activeProps={{
+              className: "bg-accent",
+            }}
+            className={cn(
+              buttonVariants({
+                variant: "outline",
+                className: "rounded-full font-bold tracking-wide",
+              }),
+            )}
+          >
+            Sign in
+          </Link>
         )}
       </div>
     </div>
