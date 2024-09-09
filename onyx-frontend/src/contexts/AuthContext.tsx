@@ -5,7 +5,6 @@ import React, {
   useState,
   useMemo,
   useRef,
-  startTransition,
 } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLoginMutation } from "@/lib/hooks/mutations/useLoginMutation";
@@ -17,7 +16,7 @@ import { useGetUserData } from "@/lib/hooks/useGetUserData";
 import { type User } from "@/lib/validation/user";
 
 export interface Auth {
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   accessToken: string | null;
   user: User | undefined;
@@ -64,20 +63,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = useCallback(async () => {
     await userApi.put("/user/logout");
-    startTransition(() => {
-      clearAuthData();
-    });
+    clearAuthData();
   }, [clearAuthData]);
 
   const login = useCallback(
-    async (email: string, password: string): Promise<boolean> => {
+    async (email: string, password: string): Promise<void> => {
       try {
         const { accessToken, longLivedToken } = await performLogin({
           email,
           password,
         });
         await setAuthData(accessToken, longLivedToken);
-        return true;
       } catch (error) {
         console.error("Login failed:", getErrorMessage(error));
         throw error;

@@ -3,6 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 
+import FormFooter from "@/components/auth/FormFooter";
 import { PasswordInput } from "@/components/auth/PasswordInput";
 import LoadingButton from "@/components/LoadingButton";
 import CurrencyCombobox from "@/components/dashboard/CurrencyCombobox";
@@ -146,14 +147,17 @@ const RegisterForm: FC<RegisterFormProps> = ({
             </FormItem>
           )}
         />
-        <LoadingButton
-          isLoading={isSubmitting}
-          type="submit"
-          className="w-full"
-        >
-          Register
-        </LoadingButton>
+        <div className="pt-4">
+          <LoadingButton
+            isLoading={isSubmitting}
+            type="submit"
+            className="w-full"
+          >
+            Register
+          </LoadingButton>
+        </div>
       </form>
+      <FormFooter disabled={isSubmitting} />
     </Form>
   );
 };

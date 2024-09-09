@@ -94,13 +94,15 @@ const ForgotForm: FC<ForgotFormProps> = ({
             </FormItem>
           )}
         />
-        <LoadingButton
-          isLoading={isSubmitting}
-          type="submit"
-          className="w-full"
-        >
-          Continue
-        </LoadingButton>
+        <div className="pt-4">
+          <LoadingButton
+            isLoading={isSubmitting}
+            type="submit"
+            className="w-full"
+          >
+            Continue
+          </LoadingButton>
+        </div>
       </form>
     </Form>
   );

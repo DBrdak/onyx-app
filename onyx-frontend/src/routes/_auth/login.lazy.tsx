@@ -46,7 +46,6 @@ function Login() {
           className={cn(
             "mr-auto flex max-w-5xl flex-col items-center space-y-16",
             formVariant === FormVariant.register && "space-y-4",
-            formVariant === FormVariant.forgotNew && "space-y-10",
           )}
         >
           <div className="flex flex-col items-center space-y-3 md:flex-row md:space-x-1 md:space-y-0">
@@ -114,26 +113,6 @@ function Login() {
               />
             )}
           </div>
-          <div className="relative flex w-full justify-center border-b">
-            <p className="absolute -translate-y-1/2 bg-background px-2 text-3xl text-accent-foreground/80">
-              or
-            </p>
-          </div>
-          <div
-            className={cn(
-              "mx-auto w-full max-w-sm",
-              formVariant === FormVariant.register && "pt-3",
-            )}
-          >
-            <Button variant="outline" className="w-full ">
-              Continue with Google
-            </Button>
-          </div>
-          <p className="mx-auto w-full max-w-md text-xs">
-            By signing up to ONYX you consent and agree to ONYX privacy policy
-            to store, manage and process your personal information. To read
-            more, please see our privacy policy.
-          </p>
         </div>
       </div>
     </div>

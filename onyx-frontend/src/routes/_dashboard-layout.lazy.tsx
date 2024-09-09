@@ -18,12 +18,16 @@ import { useQuery } from "@tanstack/react-query";
 import { getAccountsQueryOptions } from "@/lib/api/account";
 import { Account } from "@/lib/validation/account";
 import { SingleBudgetPageSearchParams } from "@/lib/validation/searchParams";
+import { useAuthContext } from "@/lib/hooks/useAuthContext";
 
 export const Route = createLazyFileRoute("/_dashboard-layout")({
   component: Layout,
 });
 
 function Layout() {
+  const {
+    auth: { user, logout },
+  } = useAuthContext();
   const isDesktop = useMediaQuery("(min-width: 1280px)");
   const { pathname } = useLocation();
   const isBudgetSelected = pathname.startsWith("/budget/");
@@ -197,7 +201,7 @@ function Layout() {
 
       <main className="mx-auto flex h-screen w-full max-w-screen-xl flex-col space-y-8 px-12 pb-4 pt-8">
         <nav className="text-end">
-          <UserDropdown />
+          <UserDropdown user={user!} logout={logout} />
         </nav>
         <Outlet />
       </main>
@@ -214,6 +218,9 @@ const MobileLayout = ({
   budgetId: string | undefined;
   accounts: Account[];
 }) => {
+  const {
+    auth: { user, logout },
+  } = useAuthContext();
   return (
     <>
       <nav className="fixed z-50 flex w-full items-center justify-between bg-primaryDark px-4 py-2 text-primaryDark-foreground md:px-8">
@@ -225,7 +232,7 @@ const MobileLayout = ({
         <Link to="/budget">
           <Logo />
         </Link>
-        <UserDropdown />
+        <UserDropdown user={user!} logout={logout} />
       </nav>
       <main className="px-4 pb-12 pt-28 md:px-8">
         <Outlet />

@@ -111,13 +111,15 @@ const VerifyForm: FC<VerifyFormProps> = ({ defaultEmail, setFormVariant }) => {
             </FormItem>
           )}
         />
-        <LoadingButton
-          isLoading={isSubmitting}
-          type="submit"
-          className="w-full"
-        >
-          Verify
-        </LoadingButton>
+        <div className="pt-4">
+          <LoadingButton
+            isLoading={isSubmitting}
+            type="submit"
+            className="w-full"
+          >
+            Verify
+          </LoadingButton>
+        </div>
       </form>
     </Form>
   );

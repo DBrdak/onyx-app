@@ -8,7 +8,7 @@ import UserDropdown from "../dashboard/UserDropdown";
 
 const Navbar = () => {
   const {
-    auth: { user },
+    auth: { user, logout },
   } = useAuthContext();
 
   return (
@@ -19,7 +19,7 @@ const Navbar = () => {
 
       <div className="space-x-2">
         {user ? (
-          <UserDropdown />
+          <UserDropdown user={user} logout={logout} />
         ) : (
           <Link
             to="/login"
