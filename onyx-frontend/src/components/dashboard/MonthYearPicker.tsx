@@ -144,7 +144,7 @@ const MonthYearPicker: FC<MonthYearPickerProps> = ({
           >
             <SquareChevronLeft />
           </button>
-          <p className="text-lg font-bold">{localYear}</p>
+          <p className="text-base font-bold">{localYear}</p>
           <button
             disabled={
               isIncreaseYearDisabled &&

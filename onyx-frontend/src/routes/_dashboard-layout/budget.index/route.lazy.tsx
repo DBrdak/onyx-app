@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
-import BudgetsTable from "@/components/dashboard/budget/budgetsTable/BudgetsTable";
+import BudgetsTable from "@/components/dashboard/budgets/budgetsTable/BudgetsTable";
 
 import { getBudgetsQueryOptions } from "@/lib/api/budget";
 import { useAuthContext } from "@/lib/hooks/useAuthContext";
