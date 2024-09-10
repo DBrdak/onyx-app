@@ -134,12 +134,8 @@ public sealed class Budget : Entity<BudgetId>
         return Result.Success();
     }
 
-    public BudgetInvitationToken GetInvitationToken()
-    {
-        InvitationToken = BudgetInvitationToken.Generate(Id);
-
-        return InvitationToken;
-    }
+    public BudgetInvitationToken GetInvitationToken() =>
+        InvitationToken ??= BudgetInvitationToken.Generate(Id);
 
     public void Setup(Category initialCategory, Subcategory initialSubcategory)
     {

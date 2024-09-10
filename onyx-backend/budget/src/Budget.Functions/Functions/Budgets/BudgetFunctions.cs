@@ -51,9 +51,8 @@ public sealed class BudgetFunctions : BaseFunction
         ILambdaContext context)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
-        context.Logger.Log(JsonConvert.SerializeObject(requestContext));
 
-        requestContext.Headers.TryGetValue("Origin", out var clientUrl); 
+        requestContext.Headers.TryGetValue("origin", out var clientUrl);
         var command = new GetBudgetInvitationQuery(Guid.Parse(budgetId), clientUrl);
 
         var result = await Sender.Send(command);
