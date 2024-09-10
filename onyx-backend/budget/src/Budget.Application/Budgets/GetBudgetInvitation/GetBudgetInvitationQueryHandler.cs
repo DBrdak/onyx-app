@@ -37,7 +37,8 @@ internal sealed class GetBudgetInvitationQueryHandler : IQueryHandler<GetBudgetI
         var budget = getBudgetResult.Value;
 
         var token = budget.GetInvitationToken();
-        var tokenValidForSeconds = (token.ExpirationDate - DateTime.UtcNow).Seconds;
+        var tokenValidForTimeSpan = token.ExpirationDate - DateTime.UtcNow;
+        var tokenValidForSeconds = Convert.ToInt32(tokenValidForTimeSpan.TotalSeconds);
 
         var url = string.Join(clientUrl, GetInvitationRelativePath(token.Value));
 

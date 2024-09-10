@@ -41,8 +41,10 @@ internal static class Delegate
             result = default;
         }
     }
-    public static async Task TryCatchAsync<TResult>(Func<Task<TResult>> func, string callbackMessage, out TResult result)
+    public static async Task<TResult> TryCatchAsync<TResult>(Func<Task<TResult>> func, string callbackMessage)
     {
+        TResult result;
+
         try
         {
             result = await func.Invoke();
@@ -53,6 +55,8 @@ internal static class Delegate
             Environment.Exit(1);
             result = default;
         }
+
+        return result;
     }
 
     public static void TryCatch(Action func, Func<Exception, string> callbackMessage)
@@ -92,8 +96,9 @@ internal static class Delegate
             result = default;
         }
     }
-    public static async Task TryCatchAsync<TResult>(Func<Task<TResult>> func, Func<Exception, string> callbackMessage, out TResult result)
+    public static async Task<TResult> TryCatchAsync<TResult>(Func<Task<TResult>> func, Func<Exception, string> callbackMessage)
     {
+        TResult result;
         try
         {
             result = await func.Invoke();
@@ -104,5 +109,7 @@ internal static class Delegate
             Environment.Exit(1);
             result = default;
         }
+
+        return result;
     }
 }

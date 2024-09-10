@@ -32,6 +32,7 @@ public sealed class DbContext
     public Table Set<TEntity>() where TEntity : IEntity =>
         typeof(TEntity) switch
         {
+            { Name: "User" } => Users,
             { Name: "Budget" } => Budgets,
             { Name: "Account" } => Accounts,
             { Name: "Counterparty" } => Counterparties,
