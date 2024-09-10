@@ -4,21 +4,21 @@ import UserAvatar from "@/components/UserAvatar";
 import { Badge } from "@/components/ui/badge";
 
 interface BudgetsTableUserBadgeProps {
-  memberName: string;
-  userName?: string;
+  userName: string;
+  avatar?: string;
   children?: ReactNode;
 }
 
 const BudgetsTableUserBadge: FC<BudgetsTableUserBadgeProps> = ({
-  memberName,
   userName,
+  avatar,
   children,
 }) => {
   return (
     <Badge className="max-w-min items-center p-0" variant="outline">
-      <UserAvatar username={memberName} />
+      <UserAvatar avatar={avatar} />
       <span className="flex-1 px-4 text-center text-base font-normal">
-        {memberName === userName ? "You" : memberName}
+        {userName}
       </span>
       {children}
     </Badge>

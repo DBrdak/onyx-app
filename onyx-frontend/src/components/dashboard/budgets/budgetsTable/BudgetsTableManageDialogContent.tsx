@@ -2,13 +2,13 @@ import { FC } from "react";
 
 import {
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import BudgetsTableEditNameForm from "./BudgetsTableEditNameForm";
 import { BudgetInvitationLink, type Budget } from "@/lib/validation/budget";
 import CopyToClipboard from "../../CopyToClipboard";
+import BudgetsTableRemoveMembers from "./BudgetsTableRemoveMembers";
 
 interface BudgetsTableManageDialogContentProps {
   budget: Budget;
@@ -34,13 +34,12 @@ const BudgetsTableManageDialogContent: FC<
       </div>
       <div className="space-y-4">
         <DialogTitle>Remove members</DialogTitle>
+        <BudgetsTableRemoveMembers budget={budget} />
       </div>
       <div className="space-y-4">
         <div className="space-y-1">
           <DialogTitle>Invite members</DialogTitle>
-          <DialogDescription>
-            Copy and share your unique invitation link!
-          </DialogDescription>
+          <p className="text-sm">Copy and share your unique invitation link!</p>
         </div>
         <div className="pb-2">
           <CopyToClipboard

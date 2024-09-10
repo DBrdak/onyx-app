@@ -10,7 +10,7 @@ export type TEmailSchema = z.infer<typeof EmailSchema>;
 export const UserSchema = z.object({
   id: RequiredString,
   username: RequiredString,
-  email: RequiredString.email(),
+  email: RequiredString,
   currency: RequiredString,
 });
 

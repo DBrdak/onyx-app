@@ -110,10 +110,7 @@ const BudgetsTableCreateForm: FC<BudgetsTableCreateFormProps> = ({
           )}
         />
         <div className="flex h-11 items-center justify-center md:col-span-3">
-          <BudgetsTableUserBadge
-            memberName={user.username}
-            userName={user.username}
-          />
+          <BudgetsTableUserBadge userName={user.username} />
         </div>
         <LoadingButton
           type="submit"

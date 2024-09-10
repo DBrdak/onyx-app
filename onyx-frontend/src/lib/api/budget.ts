@@ -19,6 +19,7 @@ interface GetToAssign {
 
 const getBudgets = async () => {
   const { data } = await budgetApi.get("/budgets");
+
   return validateResponse<Budget[]>(BudgetResultSchema, data);
 };
 
@@ -71,3 +72,11 @@ export const getToAssignQueryOptions = ({
     queryKey: ["toAssign", budgetId],
     queryFn: () => getToAssign({ month, year, budgetId }),
   });
+
+export const removeBudgetMember = ({
+  memberId,
+  budgetId,
+}: {
+  memberId: string;
+  budgetId: string;
+}) => budgetApi.put(`/budgets/${budgetId}/remove/${memberId}`);

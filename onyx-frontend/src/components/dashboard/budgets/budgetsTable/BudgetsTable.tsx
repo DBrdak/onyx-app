@@ -8,15 +8,17 @@ import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
 import { type Budget } from "@/lib/validation/budget";
-import { type User } from "@/lib/validation/user";
+import { useAuthContext } from "@/lib/hooks/useAuthContext";
 
 interface BudgetsTableProps {
   budgets: Budget[];
-  user: User | undefined;
 }
 
-const BudgetsTable: FC<BudgetsTableProps> = ({ budgets, user }) => {
+const BudgetsTable: FC<BudgetsTableProps> = ({ budgets }) => {
   const [isCreating, setIsCreating] = useState(false);
+  const {
+    auth: { user },
+  } = useAuthContext();
 
   const noBudgets = budgets.length === 0 || !budgets;
 
@@ -40,7 +42,7 @@ const BudgetsTable: FC<BudgetsTableProps> = ({ budgets, user }) => {
       </div>
       <ul className="rounded-b-lg border">
         {budgets.map((budget) => (
-          <BudgetsTableRow budget={budget} user={user} key={budget.id} />
+          <BudgetsTableRow budget={budget} key={budget.id} />
         ))}
         {user && (
           <li

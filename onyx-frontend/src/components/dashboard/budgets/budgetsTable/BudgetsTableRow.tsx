@@ -24,12 +24,11 @@ import {
 } from "@/lib/constants/date";
 import { cn } from "@/lib/utils";
 import { type Budget } from "@/lib/validation/budget";
-import { type User } from "@/lib/validation/user";
 import { getInvitationLink } from "@/lib/api/budget";
+import { useAuthContext } from "@/lib/hooks/useAuthContext";
 
 interface BudgetsTableRowProps {
   budget: Budget;
-  user: User | undefined;
 }
 
 enum OPTION {
@@ -38,8 +37,11 @@ enum OPTION {
   none = "NONE",
 }
 
-const BudgetsTableRow: FC<BudgetsTableRowProps> = ({ budget, user }) => {
+const BudgetsTableRow: FC<BudgetsTableRowProps> = ({ budget }) => {
   const { id, name, currency, budgetMembers, optimistic } = budget;
+  const {
+    auth: { user },
+  } = useAuthContext();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [option, setOption] = useState(OPTION.none);
 
@@ -96,8 +98,7 @@ const BudgetsTableRow: FC<BudgetsTableRowProps> = ({ budget, user }) => {
           {budgetMembers.map((member) => (
             <BudgetsTableUserBadge
               key={member.id}
-              memberName={member.username}
-              userName={user?.username}
+              userName={user?.id === member.id ? "You" : member.username}
             />
           ))}
         </div>
