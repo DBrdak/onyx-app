@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { Dispatch, FC, SetStateAction, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -21,11 +21,13 @@ import { getBudgetsQueryOptions, removeBudgetMember } from "@/lib/api/budget";
 interface BudgetsTableRemoveFormProps {
   member: BudgetMember | null;
   budgetId: string;
+  setSelectedMember: Dispatch<SetStateAction<BudgetMember | null>>;
 }
 
 const BudgetsTableRemoveForm: FC<BudgetsTableRemoveFormProps> = ({
   member,
   budgetId,
+  setSelectedMember,
 }) => {
   const queryClient = useQueryClient();
   const form = useForm({
@@ -58,6 +60,9 @@ const BudgetsTableRemoveForm: FC<BudgetsTableRemoveFormProps> = ({
     },
     onError: (err) => {
       console.error("Deleting budget error", err);
+    },
+    onSuccess: () => {
+      setSelectedMember(null);
     },
   });
 

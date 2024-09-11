@@ -29,37 +29,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  const accessTokenRef = useRef<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const accessTokenRef = useRef<string | null>(null);
   const queryClient = useQueryClient();
 
   const { mutateAsync: refreshToken } = useRefreshTokenMutation();
   const { mutateAsync: performLogin } = useLoginMutation();
   const { data: user, refetch: refetchUser } = useGetUserData();
 
-  const updateAccessToken = useCallback((newToken: string | null) => {
-    setAccessToken(newToken);
-    accessTokenRef.current = newToken;
-  }, []);
-
   useApiInterceptors(budgetApi, () => accessTokenRef.current);
   useApiInterceptors(userApi, () => accessTokenRef.current);
 
-  const setAuthData = useCallback(
-    async (newAccessToken: string, newLongLivedToken: string) => {
-      updateAccessToken(newAccessToken);
-      localStorage.setItem("longLivedToken", newLongLivedToken);
+  const updateUserData = useCallback(
+    async (newAccessToken: string) => {
+      accessTokenRef.current = newAccessToken;
       await refetchUser();
     },
-    [updateAccessToken, refetchUser],
+    [refetchUser],
   );
 
+  const updateStateTokens = (
+    newAccessToken: string,
+    newLongLivedToken: string,
+  ) => {
+    setAccessToken(newAccessToken);
+    localStorage.setItem("longLivedToken", newLongLivedToken);
+  };
+
   const clearAuthData = useCallback(() => {
-    updateAccessToken(null);
-    localStorage.removeItem("longLivedToken");
     setIsInitialized(true);
+    localStorage.removeItem("longLivedToken");
+    accessTokenRef.current = null;
+    setAccessToken(null);
     queryClient.clear();
-  }, [queryClient, updateAccessToken]);
+  }, [queryClient]);
 
   const logout = useCallback(async () => {
     await userApi.put("/user/logout");
@@ -73,13 +76,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           email,
           password,
         });
-        await setAuthData(accessToken, longLivedToken);
+        await updateUserData(accessToken);
+        updateStateTokens(accessToken, longLivedToken);
       } catch (error) {
         console.error("Login failed:", getErrorMessage(error));
         throw error;
       }
     },
-    [performLogin, setAuthData],
+    [performLogin, updateUserData],
   );
 
   useEffect(() => {
@@ -89,7 +93,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         try {
           const { accessToken, longLivedToken: newLongLivedToken } =
             await refreshToken(longLivedToken);
-          await setAuthData(accessToken, newLongLivedToken);
+          await updateUserData(accessToken);
+          updateStateTokens(accessToken, newLongLivedToken);
         } catch (error) {
           console.error("Token refresh failed:", getErrorMessage(error));
           logout();
@@ -101,7 +106,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     initializeAuth();
-  }, [refreshToken, setAuthData, logout, clearAuthData]);
+  }, [refreshToken, logout, clearAuthData, updateUserData]);
 
   const authValue = useMemo(
     () => ({
@@ -113,7 +118,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         isInitialized,
       },
     }),
-    [isInitialized, accessToken, login, logout, user],
+    [accessToken, user, isInitialized],
   );
 
   return (

@@ -92,3 +92,14 @@ export const formatToDecimalString = (num: number) => {
 export const isCurrentDate = (month: string, year: string) =>
   Number(month) === new Date().getMonth() + 1 &&
   Number(year) === new Date().getFullYear();
+
+export const convertSecondsToDaysHours = (seconds: number): string => {
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor((seconds % 86400) / 3600);
+
+  if (days > 0) {
+    return `${days} day${days > 1 ? "s and" : "and"} ${hours} hour${hours > 1 ? "s." : "."}`;
+  } else {
+    return `${hours} hour${hours > 1 ? "s." : "."}`;
+  }
+};

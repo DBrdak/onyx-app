@@ -9,6 +9,7 @@ import BudgetsTableEditNameForm from "./BudgetsTableEditNameForm";
 import { BudgetInvitationLink, type Budget } from "@/lib/validation/budget";
 import CopyToClipboard from "../../CopyToClipboard";
 import BudgetsTableRemoveMembers from "./BudgetsTableRemoveMembers";
+import { convertSecondsToDaysHours } from "@/lib/utils";
 
 interface BudgetsTableManageDialogContentProps {
   budget: Budget;
@@ -48,7 +49,8 @@ const BudgetsTableManageDialogContent: FC<
           />
           {invitationLink && (
             <p className="pt-1 text-right text-sm">
-              Your link is valid for: {invitationLink.validForSeconds}
+              Your link is valid for:{" "}
+              {convertSecondsToDaysHours(invitationLink.validForSeconds)}
             </p>
           )}
         </div>

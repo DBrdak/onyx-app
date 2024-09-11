@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { FC, useEffect } from "react";
 import { useRouter, useSearch } from "@tanstack/react-router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,22 +21,17 @@ import { useAuthContext } from "@/lib/hooks/useAuthContext";
 import { LoginSchema, TLoginSchema } from "@/lib/validation/user";
 import { getErrorMessage } from "@/lib/utils";
 import { FormVariant } from "@/routes/_auth/login.lazy";
-import { useQueryClient } from "@tanstack/react-query";
-import { getBudgetsQueryOptions } from "@/lib/api/budget";
 
 interface LoginFormProps {
-  setFormVariant: Dispatch<SetStateAction<FormVariant>>;
+  setFormVariant: (variant: FormVariant) => void;
 }
 
 const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const queryClient = useQueryClient();
   const { redirect } = useSearch({ from: "/_auth/login" });
   const { toast } = useToast();
-
   const {
-    auth: { login },
+    auth: { login, accessToken },
   } = useAuthContext();
 
   const form = useForm<TLoginSchema>({
@@ -47,18 +42,16 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
     },
   });
 
-  const { control, handleSubmit, setError } = form;
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { isSubmitting },
+  } = form;
 
   const onSubmit: SubmitHandler<TLoginSchema> = async (data) => {
-    setIsLoading(true);
     try {
       await login(data.email, data.password);
-      await queryClient.prefetchQuery(getBudgetsQueryOptions);
-      if (redirect) {
-        router.history.push(redirect);
-      } else {
-        await router.navigate({ to: "/budget" });
-      }
     } catch (error) {
       const message = getErrorMessage(error);
 
@@ -79,10 +72,22 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
           description: "Oops... Something went wrong. Please try again",
         });
       }
-    } finally {
-      setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (accessToken) {
+        if (redirect) {
+          await router.history.push(redirect);
+        } else {
+          await router.navigate({ to: "/budget" });
+        }
+      }
+    };
+
+    checkAuth();
+  }, [accessToken]);
 
   return (
     <Form {...form}>
@@ -113,13 +118,17 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
           )}
         />
         <div className="pt-4">
-          <LoadingButton isLoading={isLoading} type="submit" className="w-full">
+          <LoadingButton
+            isLoading={isSubmitting}
+            type="submit"
+            className="w-full"
+          >
             Sign in
           </LoadingButton>
         </div>
         <div className="flex flex-col items-start space-y-1">
           <Button
-            disabled={isLoading}
+            disabled={isSubmitting}
             type="button"
             onClick={() => setFormVariant(FormVariant.forgotRequest)}
             variant="underline"
@@ -128,7 +137,7 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
             Forgot Password?
           </Button>
           <Button
-            disabled={isLoading}
+            disabled={isSubmitting}
             type="button"
             onClick={() => setFormVariant(FormVariant.forgotVerify)}
             variant="underline"
@@ -138,7 +147,7 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
           </Button>
         </div>
       </form>
-      <FormFooter disabled={isLoading} />
+      <FormFooter disabled={isSubmitting} />
     </Form>
   );
 };

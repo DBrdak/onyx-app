@@ -68,6 +68,7 @@ const BudgetsTableRemoveMembers: FC<BudgetsTableRemoveMembersProps> = ({
           <BudgetsTableRemoveForm
             budgetId={budget.id}
             member={selectedMember}
+            setSelectedMember={setSelectedMember}
           />
         </div>
       </div>

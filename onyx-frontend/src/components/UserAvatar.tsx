@@ -12,7 +12,7 @@ const UserAvatar: FC<UserAvatarProps> = ({ avatar }) => {
     <Avatar>
       <AvatarImage src={avatar} />
       <AvatarFallback>
-        <User />
+        <User className="text-foreground" />
       </AvatarFallback>
     </Avatar>
   );
