@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { getBudgetsQueryOptions } from "@/lib/api/budget";
-import BudgetsLoadingSkeleton from "@/components/dashboard/budget/BudgetsLoadingSkeleton";
+import BudgetsLoadingSkeleton from "@/components/dashboard/budgets/BudgetsLoadingSkeleton";
 import RouteLoadingError from "@/components/RouteLoadingError";
 
 export const Route = createFileRoute("/_dashboard-layout/budget/")({

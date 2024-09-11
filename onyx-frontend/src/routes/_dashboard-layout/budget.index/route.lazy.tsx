@@ -1,20 +1,15 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
-import BudgetsTable from "@/components/dashboard/budget/budgetsTable/BudgetsTable";
+import BudgetsTable from "@/components/dashboard/budgets/budgetsTable/BudgetsTable";
 
 import { getBudgetsQueryOptions } from "@/lib/api/budget";
-import { useAuthContext } from "@/lib/hooks/useAuthContext";
 
 export const Route = createLazyFileRoute("/_dashboard-layout/budget/")({
   component: Budget,
 });
 
 function Budget() {
-  const {
-    auth: { user },
-  } = useAuthContext();
-
   const budgetsQuery = useSuspenseQuery(getBudgetsQueryOptions);
   const { data: budgets } = budgetsQuery;
 
@@ -30,7 +25,7 @@ function Budget() {
         </p>
       </header>
       <section className="h-full py-10 md:pt-20">
-        <BudgetsTable user={user} budgets={budgets} />
+        <BudgetsTable budgets={budgets} />
       </section>
     </div>
   );

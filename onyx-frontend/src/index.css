@@ -4,66 +4,51 @@
 
 @layer base {
   @font-face {
-    font-family: "Montserrat";
-    font-weight: 100;
-    src:
-      url(/fonts/Montserrat-Thin.woff2) format("woff2"),
-      url(/fonts/Montserrat-Thin.woff) format("woff");
-  }
-  @font-face {
-    font-family: "Montserrat";
-    font-weight: 200;
-    src:
-      url(/fonts/Montserrat-ExtraLight.woff2) format("woff2"),
-      url(/fonts/Montserrat-ExtraLight.woff) format("woff");
-  }
-  @font-face {
-    font-family: "Montserrat";
+    font-family: "Inter";
     font-weight: 300;
     src:
-      url(/fonts/Montserrat-Light.woff2) format("woff2"),
-      url(/fonts/Montserrat-Light.woff) format("woff");
+      url(/fonts/Inter18pt-Light.woff2) format("woff2"),
+      url(/fonts/Inter18pt-Light.woff) format("woff");
   }
   @font-face {
-    font-family: "Montserrat";
+    font-family: "Inter";
     font-weight: 400;
     src:
-      url(/fonts/Montserrat-Regular.woff2) format("woff2"),
-      url(/fonts/Montserrat-Regular.woff) format("woff");
+      url(/fonts/Inter18pt-Regular.woff2) format("woff2"),
+      url(/fonts/Inter18pt-Regular.woff) format("woff");
   }
   @font-face {
-    font-family: "Montserrat";
+    font-family: "Inter";
     font-weight: 500;
     src:
-      url(/fonts/Montserrat-Medium.woff2) format("woff2"),
-      url(/fonts/Montserrat-Medium.woff) format("woff");
+      url(/fonts/Inter18pt-Medium.woff2) format("woff2"),
+      url(/fonts/Inter18pt-Medium.woff) format("woff");
   }
   @font-face {
-    font-family: "Montserrat";
+    font-family: "Inter";
     font-weight: 600;
     src:
-      url(/fonts/Montserrat-SemiBold.woff2) format("woff2"),
-      url(/fonts/Montserrat-SemiBold.woff) format("woff");
+      url(/fonts/Inter24pt-SemiBold.woff2) format("woff2"),
+      url(/fonts/Inter24pt-SemiBold.woff) format("woff");
   }
   @font-face {
-    font-family: "Montserrat";
+    font-family: "Inter";
     font-weight: 700;
     src:
-      url(/fonts/Montserrat-Bold.woff2) format("woff2"),
-      url(/fonts/Montserrat-Bold.woff) format("woff");
+      url(/fonts/Inter28pt-Bold.woff2) format("woff2"),
+      url(/fonts/Inter28pt-Bold.woff) format("woff");
   }
   @font-face {
-    font-family: "Montserrat";
+    font-family: "Inter";
     font-weight: 900;
     src:
-      url(/fonts/Montserrat-Black.woff2) format("woff2"),
-      url(/fonts/Montserrat-Black.woff) format("woff");
+      url(/fonts/Inter28pt-Black.woff2) format("woff2"),
+      url(/fonts/Inter28pt-Black.woff) format("woff");
   }
 }
 
 body {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 500;
+  font-family: "Inter", sans-serif;
 }
 
 @layer base {
@@ -80,7 +65,7 @@ body {
     --secondary: 240 4.8% 90%;
     --secondary-foreground: 240 5.9% 10%;
     --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 36.1%;
+    --muted-foreground: 240 3.8% 11.1%;
     --accent: 240 4.8% 95.9%;
     --accent-foreground: 240 5.9% 10%;
     --destructive: 0 84.2% 60.2%;

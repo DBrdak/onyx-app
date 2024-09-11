@@ -1,11 +1,17 @@
 import { z } from "zod";
 import { RequiredString, ResultSchema } from "@/lib/validation/base";
 
+export const EmailSchema = z.object({
+  email: RequiredString.email("Invalid email address"),
+});
+
+export type TEmailSchema = z.infer<typeof EmailSchema>;
+
 export const UserSchema = z.object({
-  id: z.string(),
-  username: z.string(),
-  email: z.string().email(),
-  currency: z.string(),
+  id: RequiredString,
+  username: RequiredString,
+  email: RequiredString,
+  currency: RequiredString,
 });
 
 export const UserResultSchema = ResultSchema.extend({
@@ -28,12 +34,6 @@ export type TokenResult = z.infer<typeof TokenResultSchema>;
 
 export const BudgetMemberSchema = UserSchema.omit({ currency: true });
 export type BudgetMember = z.infer<typeof BudgetMemberSchema>;
-
-export const EmailSchema = z.object({
-  email: RequiredString.email("Invalid email address"),
-});
-
-export type TEmailSchema = z.infer<typeof EmailSchema>;
 
 export const LoginSchema = EmailSchema.extend({
   password: RequiredString,

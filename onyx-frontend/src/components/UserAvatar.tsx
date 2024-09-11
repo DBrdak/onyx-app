@@ -1,21 +1,18 @@
 import { FC } from "react";
 
-import { LoaderCircle } from "lucide-react";
+import { User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface UserAvatarProps {
   avatar?: string;
-  username: string | undefined;
 }
 
-const UserAvatar: FC<UserAvatarProps> = ({ avatar, username }) => {
+const UserAvatar: FC<UserAvatarProps> = ({ avatar }) => {
   return (
     <Avatar>
       <AvatarImage src={avatar} />
       <AvatarFallback>
-        <span className="flex aspect-square h-full items-center justify-center rounded-full border-none bg-transparent font-bold capitalize text-foreground">
-          {!username ? <LoaderCircle className="animate-spin" /> : username[0]}
-        </span>
+        <User className="text-foreground" />
       </AvatarFallback>
     </Avatar>
   );

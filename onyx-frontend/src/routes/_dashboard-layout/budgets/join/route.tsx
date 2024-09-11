@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 
 import LoadingButton from "@/components/LoadingButton";
 
 import { JoinBudgetParamsSchema } from "@/lib/validation/searchParams";
-import { joinBudget } from "@/lib/api/budget";
+import { getBudgetsQueryOptions, joinBudget } from "@/lib/api/budget";
 import { getErrorMessage } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -15,12 +15,16 @@ export const Route = createFileRoute("/_dashboard-layout/budgets/join")({
 });
 
 function Invitation() {
-  const { budgetId, token } = Route.useSearch();
+  const { token } = Route.useSearch();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: () => joinBudget(token, budgetId),
+    mutationFn: () => joinBudget(token),
+    onSettled: async () => {
+      await queryClient.invalidateQueries(getBudgetsQueryOptions);
+    },
     onSuccess: async () => {
       await navigate({ to: "/budget" });
     },

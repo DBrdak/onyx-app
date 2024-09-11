@@ -1,1 +1,1 @@
-export const USER_LOCALE = navigator.language || "en-US";
+export const USER_LOCALE = "en-US";

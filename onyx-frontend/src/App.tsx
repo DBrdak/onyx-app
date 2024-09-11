@@ -36,7 +36,13 @@ export default App;
 
 const RouterWithAuth = () => {
   const { auth } = useAuthContext();
-  const routerContext = useMemo(() => ({ queryClient, auth }), [auth]);
+  const routerContext = useMemo(
+    () => ({
+      queryClient,
+      auth,
+    }),
+    [auth.accessToken, auth.isInitialized],
+  );
 
   if (!auth.isInitialized) {
     return <DefaultLoadingSpinner />;

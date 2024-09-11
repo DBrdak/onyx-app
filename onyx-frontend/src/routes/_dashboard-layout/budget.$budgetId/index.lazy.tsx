@@ -2,9 +2,9 @@ import { useMemo, useState } from "react";
 import { useSuspenseQueries } from "@tanstack/react-query";
 import { Navigate, createLazyFileRoute } from "@tanstack/react-router";
 
-import BudgetAssignmentCard from "@/components/dashboard/budget/BudgetAssigmentCard";
-import CategoriesCard from "@/components/dashboard/budget/CategoriesCard";
-import SubcategoriesCard from "@/components/dashboard/budget/SubcategoriesCard";
+import AssignmentCard from "@/components/dashboard/budget/assignmentCard/AssigmentCard";
+import CategoriesCard from "@/components/dashboard/budget/categoriesCard/CategoriesCard";
+import SubcategoriesCard from "@/components/dashboard/budget/subcategoriesCard/SubcategoriesCard";
 
 import { getToAssignQueryOptions } from "@/lib/api/budget";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
@@ -76,10 +76,7 @@ function SingleBudget() {
   return (
     <div className="grid h-full grid-cols-1 gap-x-8 gap-y-4 overflow-hidden rounded-md lg:grid-cols-5">
       <div className="flex h-full flex-col space-y-4 lg:col-span-2">
-        <BudgetAssignmentCard
-          toAssign={toAssign}
-          availableDates={availableDates}
-        />
+        <AssignmentCard toAssign={toAssign} availableDates={availableDates} />
         <CategoriesCard
           activeCategoryId={activeCategoryId}
           setActiveCategoryId={setActiveCategoryId}

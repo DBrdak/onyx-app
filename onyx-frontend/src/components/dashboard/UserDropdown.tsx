@@ -49,7 +49,7 @@ const UserDropdown: FC<UserDropdownProps> = ({ user, logout }) => {
             {isLoading ? (
               <LoaderCircle className="animate-spin" />
             ) : (
-              <UserAvatar username={user.username} />
+              <UserAvatar />
             )}
             <ChevronDown />
           </Button>

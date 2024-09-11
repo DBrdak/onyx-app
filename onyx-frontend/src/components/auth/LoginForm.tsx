@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { FC, useEffect } from "react";
 import { useRouter, useSearch } from "@tanstack/react-router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,21 +21,17 @@ import { useAuthContext } from "@/lib/hooks/useAuthContext";
 import { LoginSchema, TLoginSchema } from "@/lib/validation/user";
 import { getErrorMessage } from "@/lib/utils";
 import { FormVariant } from "@/routes/_auth/login.lazy";
-import { useQueryClient } from "@tanstack/react-query";
-import { getBudgetsQueryOptions } from "@/lib/api/budget";
 
 interface LoginFormProps {
-  setFormVariant: Dispatch<SetStateAction<FormVariant>>;
+  setFormVariant: (variant: FormVariant) => void;
 }
 
 const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const { redirect } = useSearch({ from: "/_auth/login" });
   const { toast } = useToast();
-
   const {
-    auth: { login },
+    auth: { login, accessToken },
   } = useAuthContext();
 
   const form = useForm<TLoginSchema>({
@@ -56,12 +52,6 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
   const onSubmit: SubmitHandler<TLoginSchema> = async (data) => {
     try {
       await login(data.email, data.password);
-      await queryClient.prefetchQuery(getBudgetsQueryOptions);
-      if (redirect) {
-        router.history.push(redirect);
-      } else {
-        await router.navigate({ to: "/budget" });
-      }
     } catch (error) {
       const message = getErrorMessage(error);
 
@@ -84,6 +74,20 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
       }
     }
   };
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (accessToken) {
+        if (redirect) {
+          await router.history.push(redirect);
+        } else {
+          await router.navigate({ to: "/budget" });
+        }
+      }
+    };
+
+    checkAuth();
+  }, [accessToken]);
 
   return (
     <Form {...form}>
