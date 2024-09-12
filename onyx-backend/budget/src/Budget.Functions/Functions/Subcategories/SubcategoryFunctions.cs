@@ -1,4 +1,5 @@
-﻿using Amazon.Lambda.Annotations.APIGateway;
+﻿using Abstractions.Messaging;
+using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.Annotations;
 using Amazon.Lambda.APIGatewayEvents;
 using Budget.Application.Subcategories.AddSubcategory;
@@ -12,6 +13,8 @@ using Budget.Functions.Functions.Shared;
 using Budget.Functions.Functions.Subcategories.Requests;
 using LambdaKernel;
 using MediatR;
+using Budget.Application.Abstractions.Messaging;
+using Budget.Domain.Subcategories;
 
 namespace Budget.Functions.Functions.Subcategories;
 

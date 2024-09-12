@@ -8,6 +8,7 @@ using Budget.Domain.Transactions;
 using Models.DataTypes;
 using SharedDAL.DataModels;
 using SharedDAL.DataModels.Abstractions;
+using SharedDAL.Extensions;
 
 namespace Budget.Infrastructure.Data.DataModels.Transactions;
 
@@ -60,8 +61,8 @@ internal sealed class TransactionDataModel : IDataModel<Transaction>
         Id = doc[nameof(Id)].AsGuid();
         BudgetId = doc[nameof(BudgetId)].AsGuid();
         AccountId = doc[nameof(AccountId)].AsGuid();
-        SubcategoryId = doc[nameof(SubcategoryId)].AsGuid();
-        CounterpartyId = doc[nameof(CounterpartyId)].AsGuid();
+        SubcategoryId = doc[nameof(SubcategoryId)].AsNullableGuid();
+        CounterpartyId = doc[nameof(CounterpartyId)].AsNullableGuid();
         TransactedAtDay = doc[nameof(TransactedAtDay)].AsInt();
         TransactedAtMonth = doc[nameof(TransactedAtMonth)].AsInt();
         TransactedAtYear = doc[nameof(TransactedAtYear)].AsInt();
