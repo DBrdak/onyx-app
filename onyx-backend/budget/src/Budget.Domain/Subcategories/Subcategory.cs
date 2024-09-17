@@ -179,16 +179,11 @@ public sealed class Subcategory : BudgetOwnedEntity<SubcategoryId>
         var transactionMonthDate = transactionMonthDateCreateResult.Value;
         var assignment = _assignments.FirstOrDefault(a => a.Month == transactionMonthDate);
 
-        if (assignment is null)
-        {
-            return SubcategoryErrors.SubcategoryNotAssignedForMonth;
-        }
+        var assignmentTransactionRemoveResult = assignment?.RemoveTransaction(transaction) ?? Result.Success();
 
-        assignment.RemoveTransaction(transaction);
+        var targetTransactionRemoveResult = Target?.RemoveTransaction(transaction) ?? Result.Success();
 
-        Target?.RemoveTransaction(transaction);
-
-        return Result.Success(assignment);
+        return Result.Aggregate([assignmentTransactionRemoveResult, targetTransactionRemoveResult]);
     }
 
     public Result<Target> SetTarget(Money targetAmount, MonthDate startedAt, MonthDate upToMonth)

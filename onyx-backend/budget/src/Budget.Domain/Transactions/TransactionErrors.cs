@@ -29,4 +29,7 @@ internal static class TransactionErrors
     internal static readonly Error TargetAmountMustBeNegative = new (
         "Transaction.TargetAmount.MustBeNegative",
         "Target amount must be negative");
+    internal static readonly Error InvalidCreateParameters = new(
+        "Transaction.Create.InvalidParameters",
+        "Provided invalid parameters to create the transaction");
 }

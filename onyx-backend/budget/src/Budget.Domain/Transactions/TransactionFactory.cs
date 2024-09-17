@@ -46,39 +46,40 @@ public sealed class TransactionFactory
 
     private Result<Transaction>
         SwitchTransactionCreate(bool isForeignTransaction, bool isOutflow) =>
-        (isForeignTransaction, isOutflow) switch
+        (isForeignTransaction, isOutflow, _subcategory, _convertedAmount) switch
         {
-            (true, true) => Transaction.CreateForeignOutflow(
+            (true, true, not null, not null) => Transaction.CreateForeignOutflow(
                 account,
-                _subcategory!,
-                _convertedAmount!,
+                _subcategory,
+                _convertedAmount,
                 _originalAmount,
                 _transactedAt,
                 _counterparty,
                 _budgetAmount,
                 budgetId),
-            (true, false) => Transaction.CreateForeignInflow(
+            (true, false, _, not null) => Transaction.CreateForeignInflow(
                 account,
-                _convertedAmount!,
+                _convertedAmount,
                 _originalAmount,
                 _transactedAt,
                 _counterparty,
                 _budgetAmount,
                 budgetId),
-            (false, true) => Transaction.CreatePrincipalOutflow(
+            (false, true, not null, _) => Transaction.CreatePrincipalOutflow(
                 account,
-                _subcategory!,
+                _subcategory,
                 _originalAmount,
                 _transactedAt,
                 _counterparty,
                 _budgetAmount,
                 budgetId),
-            (false, false) => Transaction.CreatePrincipalInflow(
+            (false, false, _, _) => Transaction.CreatePrincipalInflow(
                 account,
                 _originalAmount,
                 _transactedAt,
                 _counterparty,
                 _budgetAmount,
-                budgetId)
+                budgetId),
+            _ => TransactionErrors.InvalidCreateParameters
         };
 }
