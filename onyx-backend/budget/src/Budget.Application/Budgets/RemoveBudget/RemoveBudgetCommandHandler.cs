@@ -1,5 +1,4 @@
 ﻿using Abstractions.Messaging;
-using Budget.Application.Abstractions.Identity;
 using Budget.Application.Abstractions.IntegrationEvents;
 using Budget.Domain.Accounts;
 using Budget.Domain.Budgets;

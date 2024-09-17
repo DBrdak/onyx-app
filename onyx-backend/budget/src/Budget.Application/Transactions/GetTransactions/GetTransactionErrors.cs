@@ -10,4 +10,7 @@ internal static class GetTransactionErrors
     internal static readonly Error QueryIsNull = new (
         "GetTransaction.QueryIsNull",
         "Pass the query");
+    internal static readonly Error NullFilters = new (
+        "GetTransaction.NullFilters",
+        "Period and date are required filters");
 }

@@ -56,7 +56,7 @@ internal sealed record GetTransactionQueryRequest
 
         if (!isValidDate)
         {
-            date = DateTime.UtcNow.ToLocalTime();
+            date = DateTime.UtcNow;
         }
 
         return request switch

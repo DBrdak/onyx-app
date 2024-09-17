@@ -1,12 +1,6 @@
 using Abstractions.Messaging;
-using Budget.Application.Abstractions.Identity;
 using Budget.Application.Abstractions.IntegrationEvents;
-using Budget.Domain.Accounts;
 using Budget.Domain.Budgets;
-using Budget.Domain.Categories;
-using Budget.Domain.Counterparties;
-using Budget.Domain.Subcategories;
-using Budget.Domain.Transactions;
 using Models.Responses;
 
 namespace Budget.Application.Budgets.PurgeUserData;

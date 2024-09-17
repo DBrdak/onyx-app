@@ -26,6 +26,11 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
 
     public async Task<Result<IEnumerable<TransactionModel>>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(request.Period) || string.IsNullOrWhiteSpace(request.Date))
+        {
+            return GetTransactionErrors.NullFilters;
+        }
+
         var queryCreateResult = GetTransactionQueryRequest.FromRequest(request);
 
         if (queryCreateResult.IsFailure)
