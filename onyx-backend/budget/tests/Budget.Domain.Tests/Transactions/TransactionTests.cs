@@ -1,5 +1,4 @@
-﻿using Budget.Domain.Subcategories;
-using Budget.Domain.Transactions;
+﻿using Budget.Domain.Transactions;
 
 namespace Budget.Domain.Tests.Transactions;
 

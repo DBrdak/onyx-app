@@ -1,0 +1,3 @@
+﻿namespace Budget.Application.Statistics;
+
+public interface IStatistics;
