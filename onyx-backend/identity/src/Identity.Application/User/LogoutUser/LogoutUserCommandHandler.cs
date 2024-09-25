@@ -31,7 +31,7 @@ internal sealed class LogoutUserCommandHandler : ICommandHandler<LogoutUserComma
 
         if (userGetResult.IsFailure)
         {
-            return Result.Failure(userGetResult.Error);
+            return userGetResult.Error;
         }
 
         var user = userGetResult.Value;
@@ -40,16 +40,9 @@ internal sealed class LogoutUserCommandHandler : ICommandHandler<LogoutUserComma
 
         if (logoutResult.IsFailure)
         {
-            return Result.Failure(logoutResult.Error);
+            return logoutResult.Error;
         }
 
-        var updateResult = await _userRepository.UpdateAsync(user, cancellationToken);
-
-        if (updateResult.IsFailure)
-        {
-            return Result.Failure(updateResult.Error);
-        }
-
-        return Result.Success();
+        return await _userRepository.UpdateAsync(user, cancellationToken);
     }
 }

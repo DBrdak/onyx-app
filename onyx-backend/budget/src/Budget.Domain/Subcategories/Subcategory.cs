@@ -22,7 +22,8 @@ public sealed class Subcategory : BudgetOwnedEntity<SubcategoryId>
         IEnumerable<Assignment> assignments,
         Target? target,
         BudgetId budgetId,
-        SubcategoryId? id = null) : base(budgetId, id ?? new SubcategoryId())
+        SubcategoryId? id = null,
+        long? createdAt = null) : base(budgetId, id ?? new SubcategoryId(), createdAt)
     {
         Name = name;
         Description = description;
@@ -82,7 +83,7 @@ public sealed class Subcategory : BudgetOwnedEntity<SubcategoryId>
 
         if (monthDateCreateResult.IsFailure)
         {
-            return Result.Failure<Assignment>(monthDateCreateResult.Error);
+            return monthDateCreateResult.Error;
         }
 
         var monthDate = monthDateCreateResult.Value;
@@ -90,14 +91,14 @@ public sealed class Subcategory : BudgetOwnedEntity<SubcategoryId>
 
         if (isAssignedForMonth)
         {
-            return Result.Failure<Assignment>(SubcategoryErrors.SubcategoryAlreadyAssignedForMonth);
+            return SubcategoryErrors.SubcategoryAlreadyAssignedForMonth;
         }
 
         var assignmentCreateResult = Assignment.Create(monthDate, amount);
 
         if (assignmentCreateResult.IsFailure)
         {
-            return Result.Failure<Assignment>(assignmentCreateResult.Error);
+            return assignmentCreateResult.Error;
         }
 
         var assignment = assignmentCreateResult.Value;
@@ -112,7 +113,7 @@ public sealed class Subcategory : BudgetOwnedEntity<SubcategoryId>
 
         if (monthDateCreateResult.IsFailure)
         {
-            return Result.Failure<Assignment>(monthDateCreateResult.Error);
+            return monthDateCreateResult.Error;
         }
 
         var monthDate = monthDateCreateResult.Value;
@@ -120,10 +121,10 @@ public sealed class Subcategory : BudgetOwnedEntity<SubcategoryId>
 
         if (assignment is null)
         {
-            return Result.Failure<Assignment>(SubcategoryErrors.SubcategoryNotAssignedForMonth);
+            return SubcategoryErrors.SubcategoryNotAssignedForMonth;
         }
 
-        if (amount.Amount <= 0)
+        if (Math.Floor(amount.Amount) <= 0)
         {
             _assignments.Remove(assignment);
         }
@@ -132,7 +133,7 @@ public sealed class Subcategory : BudgetOwnedEntity<SubcategoryId>
 
         if (reassignResult.IsFailure)
         {
-            return Result.Failure<Assignment>(reassignResult.Error);
+            return reassignResult.Error;
         }
 
         return assignment;
@@ -172,7 +173,7 @@ public sealed class Subcategory : BudgetOwnedEntity<SubcategoryId>
 
         if (transactionMonthDateCreateResult.IsFailure)
         {
-            return Result.Failure<Assignment>(transactionMonthDateCreateResult.Error);
+            return transactionMonthDateCreateResult.Error;
         }
 
         var transactionMonthDate = transactionMonthDateCreateResult.Value;
@@ -180,7 +181,7 @@ public sealed class Subcategory : BudgetOwnedEntity<SubcategoryId>
 
         if (assignment is null)
         {
-            return Result.Failure<Assignment>(SubcategoryErrors.SubcategoryNotAssignedForMonth);
+            return SubcategoryErrors.SubcategoryNotAssignedForMonth;
         }
 
         assignment.RemoveTransaction(transaction);

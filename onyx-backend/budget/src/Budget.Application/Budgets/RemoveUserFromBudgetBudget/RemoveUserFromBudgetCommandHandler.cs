@@ -44,6 +44,7 @@ internal sealed class RemoveUserFromBudgetCommandHandler : ICommandHandler<Remov
         {
             return updateResult.Error;
         }
+
         budget = updateResult.Value;
 
         var messagePublishResult = await _queueMessagePublisher.PublishBudgetMemberJoinedAsync(

@@ -8,6 +8,7 @@ using Budget.Domain.Transactions;
 using Models.DataTypes;
 using SharedDAL.DataModels;
 using SharedDAL.DataModels.Abstractions;
+using SharedDAL.Extensions;
 
 namespace Budget.Infrastructure.Data.DataModels.Transactions;
 
@@ -30,6 +31,7 @@ internal sealed class TransactionDataModel : IDataModel<Transaction>
     public string BudgetAmountCurrency { get; init; }
     public decimal OriginalAmountAmount { get; init; }
     public string OriginalAmountCurrency { get; init; }
+    public long CreatedAt { get; init; }
 
     public TransactionDataModel(Transaction transaction)
     {
@@ -51,6 +53,7 @@ internal sealed class TransactionDataModel : IDataModel<Transaction>
         BudgetAmountCurrency = transaction.BudgetAmount.Currency.Code;
         OriginalAmountAmount = transaction.OriginalAmount.Amount;
         OriginalAmountCurrency = transaction.OriginalAmount.Currency.Code;
+        CreatedAt = transaction.CreatedAt;
     }
 
     public TransactionDataModel(Document doc)
@@ -58,8 +61,8 @@ internal sealed class TransactionDataModel : IDataModel<Transaction>
         Id = doc[nameof(Id)].AsGuid();
         BudgetId = doc[nameof(BudgetId)].AsGuid();
         AccountId = doc[nameof(AccountId)].AsGuid();
-        SubcategoryId = doc[nameof(SubcategoryId)].AsGuid();
-        CounterpartyId = doc[nameof(CounterpartyId)].AsGuid();
+        SubcategoryId = doc[nameof(SubcategoryId)].AsNullableGuid();
+        CounterpartyId = doc[nameof(CounterpartyId)].AsNullableGuid();
         TransactedAtDay = doc[nameof(TransactedAtDay)].AsInt();
         TransactedAtMonth = doc[nameof(TransactedAtMonth)].AsInt();
         TransactedAtYear = doc[nameof(TransactedAtYear)].AsInt();
@@ -72,6 +75,7 @@ internal sealed class TransactionDataModel : IDataModel<Transaction>
         BudgetAmountCurrency = doc[nameof(BudgetAmountCurrency)];
         OriginalAmountAmount = doc[nameof(OriginalAmountAmount)].AsDecimal();
         OriginalAmountCurrency = doc[nameof(OriginalAmountCurrency)];
+        CreatedAt = doc[nameof(CreatedAt)].AsLong();
     }
 
     public static TransactionDataModel FromDomainModel(Transaction transaction) => new(transaction);
@@ -153,7 +157,8 @@ internal sealed class TransactionDataModel : IDataModel<Transaction>
                        counterpartyId,
                        budgetAmount,
                        budgetId,
-                       id
+                       id,
+                       CreatedAt
                    ],
                    null) as Transaction ??
                throw new DataModelConversionException(

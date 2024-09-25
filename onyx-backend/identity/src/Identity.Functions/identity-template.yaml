@@ -5,9 +5,12 @@ Parameters:
   FullAccessRoleArn:
     Type: String
     Description: ARN of the FullAccess IAM role
-  DeadLetterQueueArn:
+  AddBudgetForUserQueueArn:
     Type: String
-    Description: ARN of the global dead letter queue
+    Description: ARN of the AddBudgetForUserQueue
+  RemoveUserFromBudgetQueueArn:
+    Type: String
+    Description: ARN of the RemoveUserFromBudgetQueue
   Environment:
     Type: String
     Description: The deployment environment (dev, qa, prod)
@@ -47,20 +50,6 @@ Resources:
             Identity:
               Headers:
                 - authorization
-  RemoveUserFromBudgetQueue:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: RemoveUserFromBudgetQueue
-      RedrivePolicy:
-        deadLetterTargetArn: !Ref DeadLetterQueueArn
-        maxReceiveCount: 5
-  AddBudgetForUserQueue:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: AddBudgetForUserQueue
-      RedrivePolicy:
-        deadLetterTargetArn: !Ref DeadLetterQueueArn
-        maxReceiveCount: 5
   Login:
     Type: AWS::Serverless::Function
     Metadata:
@@ -382,7 +371,7 @@ Resources:
         SqsEvent:
           Type: SQS
           Properties:
-            Queue: !GetAtt AddBudgetForUserQueue.Arn
+            Queue: !Ref AddBudgetForUserQueueArn
   RemoveBudgetIdForUser:
     Type: AWS::Serverless::Function
     Metadata:
@@ -402,7 +391,7 @@ Resources:
         SqsEvent:
           Type: SQS
           Properties:
-            Queue: !GetAtt RemoveUserFromBudgetQueue.Arn
+            Queue: !Ref RemoveUserFromBudgetQueueArn
   LambdaAuthorizer:
     Type: AWS::Serverless::Function
     Metadata:
@@ -426,9 +415,3 @@ Outputs:
   LambdaAuthorizerArn:
     Description: "The ARN of the Lambda Authorizer"
     Value: !GetAtt LambdaAuthorizer.Arn
-  RemoveUserFromBudgetQueueName:
-    Description: RemoveUserFromBudgetQueueName Queue Name
-    Value: !GetAtt RemoveUserFromBudgetQueue.QueueName
-  AddBudgetForUserQueueName:
-    Description: AddBudgetForUserQueue Queue Name
-    Value: !GetAtt AddBudgetForUserQueue.QueueName

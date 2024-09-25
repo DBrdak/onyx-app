@@ -38,4 +38,6 @@ public interface ITransactionRepository
     Task<Result<IEnumerable<Transaction>>> GetForTargetAsync(SubcategoryId subcategoryId, Target target, CancellationToken cancellationToken);
 
     Task<Result<Transaction>> UpdateAsync(Transaction transaction, CancellationToken cancellationToken);
+
+    void AddPagingParameters(long fromDateTimeTicks);
 }

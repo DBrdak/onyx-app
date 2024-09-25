@@ -27,7 +27,8 @@ public sealed class Budget : Entity<BudgetId>
         List<BudgetMember> budgetMembers,
         BudgetInvitationToken? invitationToken,
         SubcategoryId? unknownSubcategoryId,
-        BudgetId? id = null) : base(id ?? new BudgetId())
+        BudgetId? id = null,
+        long? createdAt = null) : base(id ?? new BudgetId(), createdAt)
     {
         Name = name;
         BaseCurrency = baseCurrency;
@@ -92,7 +93,7 @@ public sealed class Budget : Entity<BudgetId>
             return Result.Failure(BudgetErrors.MaxUserNumberReached);
         }
 
-        if (_budgetMembers.Any(member => member.Id == userId))
+        if (_budgetMembers.Any(member => member.Id == userId || member.Email.ToLower() == email.ToLower()))
         {
             return BudgetErrors.UserAlreadyAdded;
         }
@@ -133,8 +134,8 @@ public sealed class Budget : Entity<BudgetId>
         return Result.Success();
     }
 
-    public BudgetInvitationToken GetInvitationToken() => 
-        InvitationToken ??= BudgetInvitationToken.Generate();
+    public BudgetInvitationToken GetInvitationToken() =>
+        InvitationToken ??= BudgetInvitationToken.Generate(Id);
 
     public void Setup(Category initialCategory, Subcategory initialSubcategory)
     {

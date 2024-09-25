@@ -25,7 +25,6 @@ internal sealed class AddUserToBudgetCommandHandler : ICommandHandler<AddUserToB
 
     public async Task<Result<BudgetModel>> Handle(AddUserToBudgetCommand request, CancellationToken cancellationToken)
     {
-
         var (userIdGetResult, usernameGetResult, emailGetResult) =
             (_userContext.GetUserId(), _userContext.GetUserUsername(), _userContext.GetUserEmail());
 
@@ -39,10 +38,19 @@ internal sealed class AddUserToBudgetCommandHandler : ICommandHandler<AddUserToB
         }
 
         var userId = userIdGetResult.Value;
-        var username = userIdGetResult.Value;
-        var userEmail = userIdGetResult.Value;
+        var username = usernameGetResult.Value;
+        var userEmail = emailGetResult.Value;
 
-        var getBudgetResult = await _budgetRepository.GetByIdAsync(new(request.BudgetId), cancellationToken);
+        var bugetIdGetResult = BudgetInvitationToken.GetBudgetIdFromToken(request.Token);
+
+        if (bugetIdGetResult.IsFailure)
+        {
+            return bugetIdGetResult.Error;
+        }
+
+        var budgetId = bugetIdGetResult.Value;
+
+        var getBudgetResult = await _budgetRepository.GetByIdAsync(budgetId, cancellationToken);
 
         if (getBudgetResult.IsFailure)
         {

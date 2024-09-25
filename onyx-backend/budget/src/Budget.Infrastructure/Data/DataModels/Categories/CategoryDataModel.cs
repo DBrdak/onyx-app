@@ -14,6 +14,7 @@ internal sealed class CategoryDataModel : IDataModel<Category>
     public Guid BudgetId { get; init; }
     public string Name { get; init; }
     public IEnumerable<Guid> SubcategoriesId { get; init; }
+    public long CreatedAt { get; init; }
 
     private CategoryDataModel(Category category)
     {
@@ -21,6 +22,7 @@ internal sealed class CategoryDataModel : IDataModel<Category>
         BudgetId = category.BudgetId.Value;
         Name = category.Name.Value;
         SubcategoriesId = category.SubcategoriesId.Select(sid => sid.Value);
+        CreatedAt = category.CreatedAt;
     }
 
     private CategoryDataModel(Document doc)
@@ -29,6 +31,7 @@ internal sealed class CategoryDataModel : IDataModel<Category>
         BudgetId = doc[nameof(BudgetId)].AsGuid();
         Name = doc[nameof(Name)];
         SubcategoriesId = doc[nameof(SubcategoriesId)].AsArrayOfString().Select(Guid.Parse);
+        CreatedAt = doc[nameof(CreatedAt)].AsLong();
     }
 
     public static CategoryDataModel FromDomainModel(Category category) => new(category);
@@ -56,7 +59,7 @@ internal sealed class CategoryDataModel : IDataModel<Category>
             typeof(Category),
             BindingFlags.Instance | BindingFlags.NonPublic,
             null,
-            [name, subcategoriesId, budgetId, id],
+            [name, subcategoriesId, budgetId, id, CreatedAt],
             null) as Category ??
                throw new DataModelConversionException(
                    typeof(CategoryDataModel),

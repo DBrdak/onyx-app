@@ -2,11 +2,14 @@
 using Amazon.Lambda.Annotations;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using Amazon.Lambda.SQSEvents;
 using Budget.Application.Budgets.AddBudget;
 using Budget.Application.Budgets.AddUserToBudget;
 using Budget.Application.Budgets.EditBudget;
+using Budget.Application.Budgets.GetBudgetByToken;
 using Budget.Application.Budgets.GetBudgetInvitation;
 using Budget.Application.Budgets.GetBudgets;
+using Budget.Application.Budgets.PurgeUserData;
 using Budget.Application.Budgets.RemoveBudget;
 using Budget.Application.Budgets.RemoveUserFromBudgetBudget;
 using Budget.Functions.Functions.Budgets.Requests;
@@ -48,17 +51,9 @@ public sealed class BudgetFunctions : BaseFunction
         ILambdaContext context)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
-        context.Logger.Log(JsonConvert.SerializeObject(requestContext));
-        var protocol = requestContext.Headers.TryGetValue(
-            "X-Forwarded-Proto",
-            out var protocolHeader) ?
-            protocolHeader :
-            "https";
-        var host = requestContext.Headers["Client"];
-        var path = requestContext.RawPath;
-        var baseUrl = host;
-        //var baseUrl = $"{protocol}://{host}{path}";
-        var command = new GetBudgetInvitationQuery(Guid.Parse(budgetId), baseUrl);
+
+        requestContext.Headers.TryGetValue("origin", out var clientUrl);
+        var command = new GetBudgetInvitationQuery(Guid.Parse(budgetId), clientUrl);
 
         var result = await Sender.Send(command);
 
@@ -97,15 +92,14 @@ public sealed class BudgetFunctions : BaseFunction
     }
 
     [LambdaFunction(ResourceName = $"Budgets{nameof(Join)}")]
-    [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/{{budgetId}}/join/{{token}}")]
+    [HttpApi(LambdaHttpMethod.Put, $"{budgetBaseRoute}/join/{{token}}")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> Join(
-        string budgetId,
         string token,
         APIGatewayHttpApiV2ProxyRequest requestContext)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
-        var command = new AddUserToBudgetCommand(Guid.Parse(budgetId), token);
+        var command = new AddUserToBudgetCommand(token);
 
         var result = await Sender.Send(command);
 
@@ -141,5 +135,43 @@ public sealed class BudgetFunctions : BaseFunction
         var result = await Sender.Send(command);
 
         return result.ReturnAPIResponse();
+    }
+
+    [LambdaFunction(ResourceName = $"Budgets{nameof(GetByInvitationToken)}")]
+    [HttpApi(LambdaHttpMethod.Get, $"{budgetBaseRoute}/{{token}}")]
+    public async Task<APIGatewayHttpApiV2ProxyResponse> GetByInvitationToken(
+        string token,
+        APIGatewayHttpApiV2ProxyRequest requestContext)
+    {
+        ServiceProvider?.AddRequestContextAccessor(requestContext);
+
+        var command = new GetBudgetByTokenQuery(token);
+
+        var result = await Sender.Send(command);
+
+        return result.ReturnAPIResponse();
+    }
+
+    [LambdaFunction(ResourceName = nameof(PurgeUserBudgetData))]
+    public async Task PurgeUserBudgetData(SQSEvent evnt, ILambdaContext lambdaContext)
+    {
+        try
+        {
+            foreach (var message in evnt.Records)
+            {
+                var command = JsonConvert.DeserializeObject<PurgeUserDataCommand>(message.Body) ??
+                              throw new ArgumentException(
+                                  $"Invalid message body for {nameof(PurgeUserBudgetData)} Lambda queue handler");
+
+                await Sender.Send(command);
+            }
+        }
+        catch (Exception e)
+        {
+            lambdaContext.Logger.LogError(
+                $"Problem occured when trying to execute {nameof(PurgeUserBudgetData)} Lambda queue handler\n" +
+                $"Details: {e.Message}\n" +
+                $"Exception:\n{JsonConvert.SerializeObject(e)}");
+        }
     }
 }

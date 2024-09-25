@@ -12,12 +12,10 @@ internal sealed class QueueMessagePublisher : IQueueMessagePublisher
 {
     private readonly IAmazonSQS _sqsClient;
     private readonly IConfiguration _configuration;
-    private readonly IServiceProvider _serviceProvider;
 
-    public QueueMessagePublisher(IConfiguration configuration, IServiceProvider serviceProvider)
+    public QueueMessagePublisher(IConfiguration configuration)
     {
         _configuration = configuration;
-        _serviceProvider = serviceProvider;
         _sqsClient = new AmazonSQSClient();
     }
 

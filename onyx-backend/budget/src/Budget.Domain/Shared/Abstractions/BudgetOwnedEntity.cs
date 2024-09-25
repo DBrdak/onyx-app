@@ -10,7 +10,7 @@ public abstract class BudgetOwnedEntity<TId> : Entity<TId>
 
     [System.Text.Json.Serialization.JsonConstructor]
     [Newtonsoft.Json.JsonConstructor]
-    protected BudgetOwnedEntity(BudgetId budgetId, TId id) : base(id)
+    protected BudgetOwnedEntity(BudgetId budgetId, TId id, long? createdAt) : base(id, createdAt)
     {
         BudgetId = budgetId;
     }

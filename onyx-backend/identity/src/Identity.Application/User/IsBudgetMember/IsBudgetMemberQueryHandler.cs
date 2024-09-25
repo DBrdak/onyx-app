@@ -32,16 +32,14 @@ internal sealed class IsBudgetMemberQueryHandler : IQueryHandler<IsBudgetMemberQ
 
         var budgetsIdsGetResult = _userContext.GetBudgetsIds();
 
-        if (budgetsIdsGetResult.IsFailure)
+        if (budgetsIdsGetResult.IsSuccess)
         {
-            return budgetsIdsGetResult.Error;
-        }
+            var budgetIds = budgetsIdsGetResult.Value;
 
-        var budgetIds = budgetsIdsGetResult.Value;
-
-        if (budgetIds.Any(id => id == budgetId))
-        {
-            return true;
+            if (budgetIds.Any(id => id == budgetId))
+            {
+                return true;
+            }
         }
 
         var userIdGetResult = _userContext.GetUserId();

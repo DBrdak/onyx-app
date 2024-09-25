@@ -24,6 +24,7 @@ internal sealed class SubcategoryDataModel : IDataModel<Subcategory>
     public string? TargetTargetCurrency { get; init; }
     public decimal? TargetCollectedAmount { get; init; }
     public string? TargetCollectedCurrency { get; init; }
+    public long CreatedAt { get; init; }
 
     private SubcategoryDataModel(Document doc)
     {
@@ -42,6 +43,7 @@ internal sealed class SubcategoryDataModel : IDataModel<Subcategory>
         TargetTargetCurrency = doc[nameof(TargetTargetCurrency)].AsNullableString();
         TargetCollectedAmount = doc[nameof(TargetCollectedAmount)].AsNullableDecimal();
         TargetCollectedCurrency = doc[nameof(TargetCollectedCurrency)].AsNullableString();
+        CreatedAt = doc[nameof(CreatedAt)].AsLong();
     }
 
     private SubcategoryDataModel(Subcategory subcategory)
@@ -59,6 +61,7 @@ internal sealed class SubcategoryDataModel : IDataModel<Subcategory>
         TargetTargetCurrency = subcategory.Target?.TargetAmount?.Currency.Code;
         TargetCollectedAmount = subcategory.Target?.CollectedAmount?.Amount;
         TargetCollectedCurrency = subcategory.Target?.CollectedAmount?.Currency.Code;
+        CreatedAt = subcategory.CreatedAt;
     }
 
     public static SubcategoryDataModel FromDomainModel(Subcategory subcategory) => new(subcategory);
@@ -119,7 +122,8 @@ internal sealed class SubcategoryDataModel : IDataModel<Subcategory>
                        assignments,
                        target,
                        budgetId,
-                       id
+                       id,
+                       CreatedAt
                    ],
                    null) as Subcategory ??
                throw new DataModelConversionException(

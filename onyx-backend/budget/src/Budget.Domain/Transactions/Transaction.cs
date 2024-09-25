@@ -31,7 +31,8 @@ public sealed class Transaction : BudgetOwnedEntity<TransactionId>
         CounterpartyId? counterpartyId,
         Money? budgetAmount,
         BudgetId budgetId,
-        TransactionId? id = null) : base(budgetId, id ?? new TransactionId())
+        TransactionId? id = null,
+        long? createdAt = null) : base(budgetId, id ?? new TransactionId(), createdAt)
     {
         AccountId = accountId;
         Amount = amount;
@@ -51,8 +52,8 @@ public sealed class Transaction : BudgetOwnedEntity<TransactionId>
         Counterparty counterparty,
         Money? budgetAmount,
         BudgetId budgetId,
-        TransactionId? id = null) 
-        : base(budgetId, id ?? new TransactionId())
+        TransactionId? id = null,
+        long? createdAt = null) : base(budgetId, id ?? new TransactionId(), createdAt)
     {
         AccountId = account.Id;
         Amount = amount;

@@ -50,11 +50,11 @@ internal sealed class RemoveBudgetCommandHandler : ICommandHandler<RemoveBudgetC
         
         var budget = budgetGetResult.Value;
 
-        var removeAllRelativesTask = RemoveAllRelativesAsync(budgetId, cancellationToken);
+        var removeAllRelativesTask = RemoveAllRelativesAsync(cancellationToken);
 
         var messagePublishTasks = budget.BudgetMembers
             .ToList()
-            .Select(member => _queueMessagePublisher.PublishBudgetMemberJoinedAsync(
+            .Select(member => _queueMessagePublisher.PublishBudgetMemberRemoveAsync(
                 member.Id,
                 budget.Id,
                 cancellationToken));
@@ -69,7 +69,7 @@ internal sealed class RemoveBudgetCommandHandler : ICommandHandler<RemoveBudgetC
         return await _budgetRepository.RemoveAsync(budget.Id, cancellationToken);
     }
 
-    private async Task<Result> RemoveAllRelativesAsync(BudgetId budgetId, CancellationToken cancellationToken)
+    private async Task<Result> RemoveAllRelativesAsync(CancellationToken cancellationToken)
     {
         var (accountsGetResult, categoriesGetResult, counterpartiesGetResult, subcategoriesGetResult, transactionsGetResult) = (
             await _accountRepository.GetAllAsync(cancellationToken),
@@ -102,12 +102,6 @@ internal sealed class RemoveBudgetCommandHandler : ICommandHandler<RemoveBudgetC
             _transactionRepository.RemoveRangeAsync(transactions.Select(t => t.Id), cancellationToken)
         ]);
 
-        if (Result.Aggregate(removeResults) is var removeResult &&
-            removeResult.IsFailure)
-        {
-            return removeResult.Error;
-        }
-
-        return Result.Success();
+        return Result.Aggregate(removeResults);
     }
 }

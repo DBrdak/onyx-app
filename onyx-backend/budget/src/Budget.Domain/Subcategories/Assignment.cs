@@ -5,7 +5,6 @@ using Models.Responses;
 
 namespace Budget.Domain.Subcategories;
 
-// TODO: make two gets detailed with transactions, simple wihout transactions
 public sealed record Assignment : ValueObject
 {
     public MonthDate Month { get; init; }

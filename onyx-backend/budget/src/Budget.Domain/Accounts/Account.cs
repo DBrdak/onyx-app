@@ -14,8 +14,14 @@ public sealed class Account : BudgetOwnedEntity<AccountId>
 
     [Newtonsoft.Json.JsonConstructor]
     [System.Text.Json.Serialization.JsonConstructor]
-    private Account(AccountName name, Money balance, AccountType type, BudgetId budgetId, AccountId? id = null) 
-        : base(budgetId, id ?? new AccountId())
+    private Account(
+        AccountName name,
+        Money balance,
+        AccountType type,
+        BudgetId budgetId,
+        AccountId? id = null,
+        long? createdAt = null) 
+        : base(budgetId, id ?? new AccountId(), createdAt)
     {
         Name = name;
         Balance = balance;

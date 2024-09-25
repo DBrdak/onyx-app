@@ -97,7 +97,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"brdak02dominik@gmail.com\",\r\n    \"password\": \"Pa$$w0rd\",\r\n    \"username\": \"dbrdak\",\r\n    \"currency\": \"USD\"\r\n}",
+									"raw": "{\r\n    \"email\": \"tontav8@gmail.com\",\r\n    \"password\": \"Pa$$w0rd\",\r\n    \"username\": \"dbrdak\",\r\n    \"currency\": \"USD\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -261,7 +261,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"brdak02dominik@gmail.com\",\r\n    \"verificationCode\": \"716731\"\r\n}",
+									"raw": "{\r\n    \"email\": \"tontav8@gmail.com\",\r\n    \"verificationCode\": \"907093\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -365,7 +365,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"newEmail\": \"string?\",\r\n    \"newUsername\": \"string? \",\r\n    \"NewCurrency\": \"string?\" ,\r\n    \"VerificationCode\": \"string?\"\r\n}",
+									"raw": "{\r\n    \"newEmail\": \"string?\",\r\n    \"newUsername\": \"string?\",\r\n    \"NewCurrency\": \"string?\",\r\n    \"VerificationCode\": \"string?\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -431,6 +431,24 @@
 								"description": "# User Removal\n\nThis endpoint is used to delete a user account.\n\n## Request Body\n\nThe request should include a JSON object with the following parameter:\n\n- `password` (string): The password of the user account to be deleted\n    \n\n### Response\n\nVoid"
 							},
 							"response": []
+						},
+						{
+							"name": "Logout",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{ID_URL}}/auth/logout",
+									"host": [
+										"{{ID_URL}}"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
@@ -466,7 +484,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "8c46ce94-857b-4e13-9aa1-fd313f77a2ca",
+											"value": "08e2cad0-d381-48ba-9a24-82b9ca932f48",
 											"description": "(Required) "
 										}
 									]
@@ -1549,7 +1567,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "8c46ce94-857b-4e13-9aa1-fd313f77a2ca",
+											"value": "08e2cad0-d381-48ba-9a24-82b9ca932f48",
 											"description": "(Required) "
 										}
 									]
@@ -1776,7 +1794,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "8c46ce94-857b-4e13-9aa1-fd313f77a2ca",
+											"value": "08e2cad0-d381-48ba-9a24-82b9ca932f48",
 											"description": "(Required) "
 										}
 									]
@@ -3653,7 +3671,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"parentCategoryId\": \"<uuid>\",\n  \"subcategoryName\": \"<string>\"\n}",
+									"raw": "{\n  \"parentCategoryId\": \"813845a3-0c10-4af0-ad79-55f169458238\",\n  \"subcategoryName\": \"Meat\"\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -3675,7 +3693,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "<uuid>",
+											"value": "08e2cad0-d381-48ba-9a24-82b9ca932f48",
 											"description": "(Required) "
 										}
 									]
@@ -3931,7 +3949,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/subcategories/to-assign?month=<integer>&year=<integer>",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/subcategories/to-assign?month=8&year=2024",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
@@ -3945,17 +3963,17 @@
 									"query": [
 										{
 											"key": "month",
-											"value": "<integer>"
+											"value": "8"
 										},
 										{
 											"key": "year",
-											"value": "<integer>"
+											"value": "2024"
 										}
 									],
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "<string>",
+											"value": "08e2cad0-d381-48ba-9a24-82b9ca932f48",
 											"description": "(Required) "
 										}
 									]
@@ -4509,7 +4527,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"assignedAmount\": \"<double>\",\n  \"assignmentMonth\": {\n    \"month\": \"<integer>\",\n    \"year\": \"<integer>\"\n  }\n}",
+									"raw": "{\n  \"assignedAmount\": 0,\n  \"assignmentMonth\": {\n    \"month\": 9,\n    \"year\": 2024\n  }\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -4533,12 +4551,12 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "<uuid>",
+											"value": "08e2cad0-d381-48ba-9a24-82b9ca932f48",
 											"description": "(Required) "
 										},
 										{
 											"key": "subcategoryId",
-											"value": "<uuid>",
+											"value": "7d2e834d-7351-4705-8854-485fe571b873",
 											"description": "(Required) "
 										}
 									]
@@ -5949,12 +5967,24 @@
 											"key": "subcategoryId",
 											"value": "<uuid>",
 											"disabled": true
+										},
+										{
+											"key": "date",
+											"value": null,
+											"description": "date in iso format",
+											"disabled": true
+										},
+										{
+											"key": "period",
+											"value": null,
+											"description": "day / week / month / last7days / last30days",
+											"disabled": true
 										}
 									],
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "8c46ce94-857b-4e13-9aa1-fd313f77a2ca",
+											"value": "097716c2-68b1-406f-9dd7-df3b88062736",
 											"description": "(Required) "
 										}
 									]
@@ -6957,6 +6987,38 @@
 									"body": "{\n  \"isSuccess\": \"<boolean>\",\n  \"isFailure\": \"<boolean>\",\n  \"error\": {\n    \"code\": \"<string>\",\n    \"message\": \"<string>\"\n  }\n}"
 								}
 							]
+						},
+						{
+							"name": "Set Subcategory",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/transactions/:transactionId/subcategory",
+									"host": [
+										"{{BUDGET_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										":budgetId",
+										"transactions",
+										":transactionId",
+										"subcategory"
+									],
+									"variable": [
+										{
+											"key": "budgetId",
+											"value": ""
+										},
+										{
+											"key": "transactionId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -7160,7 +7222,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"budgetName\": \"Budget 3\",\n  \"budgetCurrency\": \"CHF\"\n}",
+									"raw": "{\n  \"budgetName\": \"Budget 1\",\n  \"budgetCurrency\": \"JPY\"\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -7344,6 +7406,9 @@
 						},
 						{
 							"name": "Get Invitation",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -7356,8 +7421,8 @@
 										"value": "text/plain"
 									},
 									{
-										"key": "Host",
-										"value": "",
+										"key": "Client",
+										"value": "https://localhost:5173",
 										"description": "REQUIRED",
 										"type": "text"
 									}
@@ -7377,7 +7442,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "f3334c74-b7b7-4125-82fe-f41c8f7c467e",
+											"value": "08e2cad0-d381-48ba-9a24-82b9ca932f48",
 											"description": "(Required) "
 										}
 									]
@@ -7636,18 +7701,8 @@
 										"value": "text/plain"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"userIdToAdd\": \"<string>\",\n  \"userIdToRemove\": \"<string>\"\n}",
-									"options": {
-										"raw": {
-											"headerFamily": "json",
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "{{BUDGET_URL}}/api/v1/budgets/:budgetId/join/:token",
+									"raw": "{{BUDGET_URL}}/api/v1/budgets/join/:token",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
@@ -7655,16 +7710,10 @@
 										"api",
 										"v1",
 										"budgets",
-										":budgetId",
 										"join",
 										":token"
 									],
 									"variable": [
-										{
-											"key": "budgetId",
-											"value": "<uuid>",
-											"description": "(Required)"
-										},
 										{
 											"key": "token",
 											"value": "<string>",
@@ -7926,16 +7975,6 @@
 										"value": "text/plain"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"userIdToAdd\": \"<string>\",\n  \"userIdToRemove\": \"<string>\"\n}",
-									"options": {
-										"raw": {
-											"headerFamily": "json",
-											"language": "json"
-										}
-									}
-								},
 								"url": {
 									"raw": "{{BUDGET_URL}}/api/v1/budgets/:budgetId/remove/:userId",
 									"host": [
@@ -8226,7 +8265,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "590ff66f-40ce-432c-8935-0ccd43e47113",
+											"value": "097716c2-68b1-406f-9dd7-df3b88062736",
 											"description": "(Required) "
 										}
 									]
@@ -8414,6 +8453,66 @@
 									"body": "{\n  \"isSuccess\": \"<boolean>\",\n  \"isFailure\": \"<boolean>\",\n  \"error\": {\n    \"code\": \"<string>\",\n    \"message\": \"<string>\"\n  }\n}"
 								}
 							]
+						},
+						{
+							"name": "Edit Budget",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"newBudgetName\": \"Budget Test\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BUDGET_URL}}/budgets/:budgetId/edit",
+									"host": [
+										"{{BUDGET_URL}}"
+									],
+									"path": [
+										"budgets",
+										":budgetId",
+										"edit"
+									],
+									"variable": [
+										{
+											"key": "budgetId",
+											"value": "c1cb4d51-0c3f-4c17-908b-216e2315337e"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Budget By Invitation Token",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BUDGET_URL}}/api/v1/budgets/:token",
+									"host": [
+										"{{BUDGET_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"budgets",
+										":token"
+									],
+									"variable": [
+										{
+											"key": "token",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
@@ -8460,12 +8559,12 @@
 		},
 		{
 			"key": "ID_URL",
-			"value": "https://u0fys2wmi8.execute-api.eu-central-1.amazonaws.com/api/v1",
+			"value": "https://f2tl69hlj1.execute-api.eu-central-1.amazonaws.com/dev/api/v1",
 			"type": "string"
 		},
 		{
 			"key": "BUDGET_URL",
-			"value": "https://5q6tw0dulc.execute-api.eu-central-1.amazonaws.com/api/v1"
+			"value": "https://3ytwgrzbji.execute-api.eu-central-1.amazonaws.com/dev"
 		},
 		{
 			"key": "REFRESH_TOKEN",

@@ -10,8 +10,8 @@ internal sealed class GetBudgetInvitationQueryHandler : IQueryHandler<GetBudgetI
 {
     private readonly IBudgetRepository _budgetRepository;
 
-    private string GetInvitationRelativePath(string token, Guid budgetId) =>
-        $"/budgets/join?token={token}&budgetId={budgetId}";
+    private string GetInvitationRelativePath(string token) =>
+        $"/budgets/join?token={token}";
 
     public GetBudgetInvitationQueryHandler(IBudgetRepository budgetRepository)
     {
@@ -20,7 +20,9 @@ internal sealed class GetBudgetInvitationQueryHandler : IQueryHandler<GetBudgetI
 
     public async Task<Result<InvitationUrl>> Handle(GetBudgetInvitationQuery request, CancellationToken cancellationToken)
     {
-        if (request.BaseUrl.IsUrl())
+        var clientUrl = request.BaseUrl;
+
+        if (!string.IsNullOrWhiteSpace(clientUrl) && clientUrl.IsUrl())
         {
             return GetBudgetInvitationErrors.InvalidHost;
         }
@@ -35,9 +37,10 @@ internal sealed class GetBudgetInvitationQueryHandler : IQueryHandler<GetBudgetI
         var budget = getBudgetResult.Value;
 
         var token = budget.GetInvitationToken();
-        var tokenValidForSeconds = (token.ExpirationDate - DateTime.UtcNow).Seconds;
+        var tokenValidForTimeSpan = token.ExpirationDate - DateTime.UtcNow;
+        var tokenValidForSeconds = Convert.ToInt32(tokenValidForTimeSpan.TotalSeconds);
 
-        var url = string.Join(request.BaseUrl, GetInvitationRelativePath(token.Value, budget.Id.Value));
+        var url = string.Concat(clientUrl, GetInvitationRelativePath(token.Value));
 
         var updateResult = await _budgetRepository.UpdateAsync(budget, cancellationToken);
 

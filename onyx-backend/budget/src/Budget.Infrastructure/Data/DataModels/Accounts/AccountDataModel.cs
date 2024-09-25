@@ -16,6 +16,7 @@ internal sealed class AccountDataModel : IDataModel<Account>
     public decimal BalanceAmount { get; init; }
     public string BalanceCurrency { get; init; }
     public string Type { get; init; }
+    public long CreatedAt { get; init; }
 
     private AccountDataModel(
         Document doc)
@@ -26,6 +27,7 @@ internal sealed class AccountDataModel : IDataModel<Account>
         BalanceAmount = doc[nameof(BalanceAmount)].AsDecimal();
         BalanceCurrency = doc[nameof(BalanceCurrency)];
         Type = doc[nameof(Type)];
+        CreatedAt = doc[nameof(CreatedAt)].AsLong();
     }
     private AccountDataModel(
         Account account)
@@ -36,6 +38,7 @@ internal sealed class AccountDataModel : IDataModel<Account>
         BalanceAmount = account.Balance.Amount;
         BalanceCurrency = account.Balance.Currency.Code;
         Type = account.Type.Value;
+        CreatedAt = account.CreatedAt;
     }
 
     public Type GetDomainModelType() => typeof(Account);
@@ -86,7 +89,7 @@ internal sealed class AccountDataModel : IDataModel<Account>
                    typeof(Account),
                    BindingFlags.Instance | BindingFlags.NonPublic,
                    null,
-                   [name, balance, accountType, budgetId, accountId],
+                   [name, balance, accountType, budgetId, accountId, CreatedAt],
                    null) as Account ??
                throw new DataModelConversionException(
                    typeof(AccountDataModel),

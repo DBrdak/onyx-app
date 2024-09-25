@@ -13,6 +13,7 @@ internal sealed class CounterpartyDataModel : IDataModel<Counterparty>
     public Guid BudgetId { get; init; }
     public string Name { get; init; }
     public string Type { get; init; }
+    public long CreatedAt { get; init; }
 
     private CounterpartyDataModel(Counterparty counterparty)
     {
@@ -20,6 +21,7 @@ internal sealed class CounterpartyDataModel : IDataModel<Counterparty>
         BudgetId = counterparty.BudgetId.Value;
         Name = counterparty.Name.Value;
         Type = counterparty.Type.Value;
+        CreatedAt = counterparty.CreatedAt;
     }
 
     private CounterpartyDataModel(Document doc)
@@ -28,6 +30,7 @@ internal sealed class CounterpartyDataModel : IDataModel<Counterparty>
         BudgetId = doc[nameof(BudgetId)].AsGuid();
         Name = doc[nameof(Name)];
         Type = doc[nameof(Type)];
+        CreatedAt = doc[nameof(CreatedAt)].AsLong();
     }
 
     public static CounterpartyDataModel FromDomainModel(Counterparty counterparty) => new(counterparty);
@@ -65,7 +68,7 @@ internal sealed class CounterpartyDataModel : IDataModel<Counterparty>
                    typeof(Counterparty),
                    BindingFlags.Instance | BindingFlags.NonPublic,
                    null,
-                   [name, type, budgetId, id],
+                   [name, type, budgetId, id, CreatedAt],
                    null) as Counterparty ??
                throw new DataModelConversionException(
                    this,

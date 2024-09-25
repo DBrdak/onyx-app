@@ -12,8 +12,12 @@ public sealed class Counterparty : BudgetOwnedEntity<CounterpartyId>
 
     [Newtonsoft.Json.JsonConstructor]
     [System.Text.Json.Serialization.JsonConstructor]
-    private Counterparty(CounterpartyName name, CounterpartyType type, BudgetId budgetId, CounterpartyId? id = null) 
-        : base(budgetId, id ?? new CounterpartyId())
+    private Counterparty(
+        CounterpartyName name,
+        CounterpartyType type,
+        BudgetId budgetId,
+        CounterpartyId? id = null,
+        long? createdAt = null) : base(budgetId, id ?? new CounterpartyId(), createdAt)
     {
         Name = name;
         Type = type;
