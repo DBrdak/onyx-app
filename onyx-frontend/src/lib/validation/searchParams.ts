@@ -1,5 +1,7 @@
 import { z } from "zod";
 import {
+  DatePeriodSchema,
+  IsoDateSchema,
   MonthStringSchema,
   RequiredString,
   YearStringSchema,
@@ -8,8 +10,8 @@ import {
 export const SingleBudgetPageParamsSchema = z.object({
   month: MonthStringSchema,
   year: YearStringSchema,
-  accMonth: MonthStringSchema,
-  accYear: YearStringSchema,
+  accDate: IsoDateSchema,
+  accPeriod: DatePeriodSchema,
 });
 
 export type SingleBudgetPageSearchParams = z.infer<

@@ -1,11 +1,8 @@
 import axios from "axios";
 
-const ID_URL =
-  "https://bgu7jwv7ud.execute-api.eu-central-1.amazonaws.com/dev/api/v1";
-const USER_URL =
-  "https://bgu7jwv7ud.execute-api.eu-central-1.amazonaws.com/dev/api/v1";
-const BUDGET_URL =
-  "https://wcqwxmcd88.execute-api.eu-central-1.amazonaws.com/dev/api/v1";
+const ID_URL = "https://identity.onyxapp.tech/api/v1";
+const USER_URL = "https://identity.onyxapp.tech/api/v1";
+const BUDGET_URL = "https://budget.onyxapp.tech/api/v1";
 
 export const identityApi = axios.create({
   baseURL: ID_URL,

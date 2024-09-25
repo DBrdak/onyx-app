@@ -7,7 +7,6 @@ import TransactionsTable from "@/components/dashboard/accounts/transactionsTable
 
 import { getTransactionsQueryOptions } from "@/lib/api/transaction";
 import { getAccountsQueryOptions } from "@/lib/api/account";
-import { useAccountTransactionsData } from "@/lib/hooks/useAccountTransactionsData";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
 
 export const Route = createLazyFileRoute(
@@ -18,11 +17,13 @@ export const Route = createLazyFileRoute(
 
 function Account() {
   const { accountId, budgetId } = Route.useParams();
-  const { accMonth, accYear } = Route.useSearch();
+  const { accDate, accPeriod } = Route.useSearch();
   const [{ data: transactions }, { data: accounts }] = useSuspenseQueries({
     queries: [
       getTransactionsQueryOptions(budgetId, accountId, {
         accountId,
+        date: accDate,
+        period: accPeriod,
       }),
       getAccountsQueryOptions(budgetId),
       getCategoriesQueryOptions(budgetId),
@@ -36,23 +37,19 @@ function Account() {
 
   if (!selectedAccount) throw new Error("Incorrect account ID");
 
-  const accountCardTransactionsData = useAccountTransactionsData(
-    transactions,
-    accMonth,
-    accYear,
-  );
+  console.log(transactions);
 
   return (
     <div>
-      <AccountCard
+      {/* <AccountCard
         selectedAccount={selectedAccount}
         accounts={accounts}
         budgetId={budgetId}
         transactionsData={accountCardTransactionsData}
-      />
+      /> */}
       <TransactionsTable
         selectedAccount={selectedAccount}
-        transactions={accountCardTransactionsData.selectedDateTransactions}
+        transactions={transactions}
       />
     </div>
   );

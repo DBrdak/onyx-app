@@ -1,7 +1,8 @@
 import { queryOptions } from "@tanstack/react-query";
 import { budgetApi } from "@/lib/axios";
-import { getErrorMessage } from "@/lib/utils";
+import { getErrorMessage, validateResponse } from "@/lib/utils";
 import {
+  Account,
   AccountResultSchema,
   SingleAccountResultSchema,
 } from "@/lib/validation/account";
@@ -31,24 +32,9 @@ interface EditAccountName extends EditBase {
 }
 
 export const getAccounts = async (budgetId: string) => {
-  try {
-    const { data } = await budgetApi.get(`/${budgetId}/accounts`);
-    const validatedData = AccountResultSchema.safeParse(data);
-    if (!validatedData.success) {
-      console.log(validatedData.error?.issues);
-      throw new Error("Invalid data type.");
-    }
+  const { data } = await budgetApi.get(`/${budgetId}/accounts`);
 
-    const { value, isFailure, error } = validatedData.data;
-    if (isFailure) {
-      throw new Error(error.message);
-    }
-
-    return value;
-  } catch (error) {
-    console.error(getErrorMessage(error));
-    throw new Error(getErrorMessage(error));
-  }
+  return validateResponse<Account[]>(AccountResultSchema, data);
 };
 
 export const getAccountsQueryOptions = (budgetId: string) =>

@@ -19,7 +19,9 @@ import {
 import { Button } from "@/components/ui/button";
 
 import {
+  DEFAULT_ISO_DATE,
   DEFAULT_MONTH_STRING,
+  DEFAULT_PERIOD_OPTION,
   DEFAULT_YEAR_STRING,
 } from "@/lib/constants/date";
 import { cn } from "@/lib/utils";
@@ -86,8 +88,8 @@ const BudgetsTableRow: FC<BudgetsTableRowProps> = ({ budget }) => {
         search={{
           month: DEFAULT_MONTH_STRING,
           year: DEFAULT_YEAR_STRING,
-          accMonth: DEFAULT_MONTH_STRING,
-          accYear: DEFAULT_YEAR_STRING,
+          accDate: DEFAULT_ISO_DATE,
+          accPeriod: DEFAULT_PERIOD_OPTION,
         }}
         mask={{ to: `/budget/${id}` }}
         className="group peer col-span-9 grid w-full grid-cols-9 items-center gap-x-4 px-4 py-6 hover:bg-accent"

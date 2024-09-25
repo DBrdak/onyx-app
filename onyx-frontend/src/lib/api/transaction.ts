@@ -13,10 +13,11 @@ interface TransactionBudget {
   transactionId: string;
 }
 interface QueryParams {
-  query?: string;
   counterpartyId?: string;
   accountId?: string;
   subcategoryId?: string;
+  date?: string;
+  period?: string;
 }
 
 export interface CreateTransactionPayload {
@@ -41,12 +42,13 @@ export const getTransactions = async (
   budgetId: string,
   search: QueryParams,
 ) => {
-  const { accountId, counterpartyId, query, subcategoryId } = search;
+  const { accountId, counterpartyId, subcategoryId, date, period } = search;
   const searchParams = new URLSearchParams({
     ...(accountId && { accountId }),
     ...(counterpartyId && { counterpartyId }),
-    ...(query && { query }),
     ...(subcategoryId && { subcategoryId }),
+    ...(date && { date }),
+    ...(period && { period }),
   });
 
   let url = `/${budgetId}/transactions`;
