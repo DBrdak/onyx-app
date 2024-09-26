@@ -19,6 +19,7 @@ internal sealed class TransactionDataModel : IDataModel<Transaction>
     public Guid AccountId { get; init; }
     public Guid? SubcategoryId { get; init; }
     public Guid? CounterpartyId { get; init; }
+    public long TransactedAt { get; init; }
     public int TransactedAtDay { get; init; }
     public int TransactedAtMonth { get; init; }
     public int TransactedAtYear { get; init; }
@@ -41,6 +42,7 @@ internal sealed class TransactionDataModel : IDataModel<Transaction>
         AccountId = transaction.AccountId.Value;
         SubcategoryId = transaction.SubcategoryId?.Value;
         CounterpartyId = transaction.CounterpartyId?.Value;
+        TransactedAt = transactedAt.Ticks;
         TransactedAtDay = transactedAt.Day;
         TransactedAtMonth = transactedAt.Month;
         TransactedAtYear = transactedAt.Year;

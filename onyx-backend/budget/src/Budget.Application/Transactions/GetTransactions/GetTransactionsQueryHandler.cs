@@ -35,7 +35,7 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
 
         if (queryCreateResult.IsFailure)
         {
-            return Result.Failure<IEnumerable<TransactionModel>>(queryCreateResult.Error);
+            return queryCreateResult.Error;
         }
 
         var query = queryCreateResult.Value;
@@ -44,7 +44,7 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
 
         if (!isRequestValid)
         {
-            return Result.Failure<IEnumerable<TransactionModel>>(GetTransactionErrors.InvalidQueryValues);
+            return GetTransactionErrors.InvalidQueryValues;
         }
 
         _transactionRepository.AddPagingParameters(query.Period.ToDateTimeTicksSearchFrom(query.Date));
@@ -66,7 +66,7 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
 
         if (transactionsGetResult.IsFailure)
         {
-            return Result.Failure<IEnumerable<TransactionModel>>(transactionsGetResult.Error);
+            return transactionsGetResult.Error;
         }
 
         var transactions = transactionsGetResult.Value;
@@ -78,7 +78,7 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
 
         if (transactionModelsGetResults.FirstOrDefault(r => r.IsFailure) is not null and var failureResult)
         {
-            return Result.Failure<IEnumerable<TransactionModel>>(failureResult.Error);
+            return failureResult.Error;
         }
 
         var transactionModels = transactionModelsGetResults.Select(r => r.Value);
