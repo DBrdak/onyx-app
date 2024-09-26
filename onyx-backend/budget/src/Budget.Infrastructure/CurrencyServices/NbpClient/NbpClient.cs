@@ -1,5 +1,5 @@
 ﻿using Budget.Infrastructure.CurrencyServices.NbpClient.Models;
-using Models.DataTypes;
+using Models.Primitives;
 using Models.Responses;
 using Newtonsoft.Json;
 

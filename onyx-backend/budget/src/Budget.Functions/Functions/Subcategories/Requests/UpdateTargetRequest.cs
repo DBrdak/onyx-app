@@ -1,4 +1,4 @@
-﻿using Models.DataTypes;
+﻿using Models.Primitives;
 
 namespace Budget.Functions.Functions.Subcategories.Requests;
 

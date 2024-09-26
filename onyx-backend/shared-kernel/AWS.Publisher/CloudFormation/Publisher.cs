@@ -5,7 +5,7 @@ using AWS.Publisher.Stacks;
 using AWS.Publisher.Stacks.Extensions;
 using static AWS.Publisher.Terminal.Printer;
 using Delegate = AWS.Publisher.Extensions.Delegate;
-using Stack = AWS.Publisher.Stacks.Stack;
+using Stack = AWS.Publisher.Stacks.Abstractions.Stack;
 
 namespace AWS.Publisher.CloudFormation;
 

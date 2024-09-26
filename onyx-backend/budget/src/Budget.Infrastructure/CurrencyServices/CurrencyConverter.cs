@@ -1,5 +1,5 @@
 ﻿using Budget.Application.Abstractions.Currency;
-using Models.DataTypes;
+using Models.Primitives;
 using Models.Responses;
 
 namespace Budget.Infrastructure.CurrencyServices;

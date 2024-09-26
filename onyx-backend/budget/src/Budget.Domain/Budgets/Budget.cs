@@ -2,7 +2,7 @@
 using Budget.Domain.Budgets.DomainEvents;
 using Budget.Domain.Categories;
 using Budget.Domain.Subcategories;
-using Models.DataTypes;
+using Models.Primitives;
 using Models.Responses;
 
 namespace Budget.Domain.Budgets;

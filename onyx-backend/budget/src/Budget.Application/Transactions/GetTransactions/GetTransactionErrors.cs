@@ -12,5 +12,5 @@ internal static class GetTransactionErrors
         "Pass the query");
     internal static readonly Error NullFilters = new (
         "GetTransaction.NullFilters",
-        "Period and date are required filters");
+        "QueryPeriod and date are required filters");
 }

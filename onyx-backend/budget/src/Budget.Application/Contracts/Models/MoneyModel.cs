@@ -1,4 +1,4 @@
-﻿using Models.DataTypes;
+﻿using Models.Primitives;
 using Models.Responses;
 
 namespace Budget.Application.Contracts.Models;
@@ -20,7 +20,7 @@ public sealed record MoneyModel
 
     internal Result<Money> ToDomainModel()
     {
-        var currencyCreateResult = global::Models.DataTypes.Currency.FromCode(Currency);
+        var currencyCreateResult = global::Models.Primitives.Currency.FromCode(Currency);
 
         if (currencyCreateResult.IsFailure)
         {

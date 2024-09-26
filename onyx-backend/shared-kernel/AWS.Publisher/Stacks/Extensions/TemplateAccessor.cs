@@ -1,4 +1,6 @@
-﻿namespace AWS.Publisher.Stacks.Extensions;
+﻿using AWS.Publisher.Stacks.Abstractions;
+
+namespace AWS.Publisher.Stacks.Extensions;
 
 internal static class TemplateAccessor
 {

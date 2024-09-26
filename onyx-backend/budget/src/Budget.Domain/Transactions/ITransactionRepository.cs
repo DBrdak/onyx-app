@@ -1,6 +1,7 @@
 ﻿using Budget.Domain.Accounts;
 using Budget.Domain.Counterparties;
 using Budget.Domain.Subcategories;
+using Models.Primitives;
 using Models.Responses;
 
 namespace Budget.Domain.Transactions;
@@ -39,5 +40,5 @@ public interface ITransactionRepository
 
     Task<Result<Transaction>> UpdateAsync(Transaction transaction, CancellationToken cancellationToken);
 
-    void AddPagingParameters(long fromDateTimeTicks);
+    void AddPagingParameters(Period pagingPeriod);
 }

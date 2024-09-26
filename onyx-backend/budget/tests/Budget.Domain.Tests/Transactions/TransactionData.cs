@@ -6,9 +6,9 @@ using Budget.Domain.Tests.Accounts;
 using Budget.Domain.Tests.Counterparties;
 using Budget.Domain.Tests.Subcategories;
 using Budget.Domain.Transactions;
-using Models.DataTypes;
 using System.Reflection;
 using Budget.Domain.Categories;
+using Models.Primitives;
 
 namespace Budget.Domain.Tests.Transactions;
 

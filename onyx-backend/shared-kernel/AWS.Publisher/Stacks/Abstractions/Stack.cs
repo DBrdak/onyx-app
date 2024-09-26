@@ -1,7 +1,7 @@
 ﻿using AWS.Publisher.Configurations;
 using AWS.Publisher.Stacks.Primitives;
 
-namespace AWS.Publisher.Stacks;
+namespace AWS.Publisher.Stacks.Abstractions;
 
 internal abstract class Stack
 {

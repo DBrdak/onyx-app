@@ -1,6 +1,6 @@
 ﻿using Budget.Domain.Budgets;
 using Budget.Domain.Shared.Abstractions;
-using Models.DataTypes;
+using Models.Primitives;
 using Models.Responses;
 using Transaction = Budget.Domain.Transactions.Transaction;
 

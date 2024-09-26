@@ -1,6 +1,6 @@
 ﻿using Budget.Application.Abstractions.Messaging;
 using Budget.Application.Subcategories.Models;
-using Models.DataTypes;
+using Models.Primitives;
 
 namespace Budget.Application.Subcategories.UpdateAssignment;
 

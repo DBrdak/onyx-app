@@ -2,7 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Models.DataTypes;
+namespace Models.Primitives;
 
 public record Money
 {    

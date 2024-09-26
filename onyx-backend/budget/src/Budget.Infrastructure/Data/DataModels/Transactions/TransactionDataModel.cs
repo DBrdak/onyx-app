@@ -5,7 +5,7 @@ using Budget.Domain.Budgets;
 using Budget.Domain.Counterparties;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
-using Models.DataTypes;
+using Models.Primitives;
 using SharedDAL.DataModels;
 using SharedDAL.DataModels.Abstractions;
 using SharedDAL.Extensions;

@@ -4,6 +4,7 @@ using Budget.Domain.Accounts;
 using Budget.Domain.Counterparties;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
+using Models.Primitives;
 using Models.Responses;
 using Transaction = Budget.Domain.Transactions.Transaction;
 
@@ -47,7 +48,9 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
             return GetTransactionErrors.InvalidQueryValues;
         }
 
-        _transactionRepository.AddPagingParameters(query.Period.ToDateTimeTicksSearchFrom(query.Date));
+        var periodQuery = query.QueryPeriod.ToPeriod(query.Date);
+
+        _transactionRepository.AddPagingParameters(periodQuery);
 
         var transactionsGetTask = query switch
         {

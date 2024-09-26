@@ -1,6 +1,6 @@
 ﻿using Abstractions.DomainBaseTypes;
 using Converters.DateTime;
-using Models.DataTypes;
+using Models.Primitives;
 using Models.Responses;
 using Newtonsoft.Json;
 

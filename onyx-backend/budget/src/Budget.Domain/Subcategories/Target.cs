@@ -1,6 +1,6 @@
 ﻿using Abstractions.DomainBaseTypes;
 using Budget.Domain.Transactions;
-using Models.DataTypes;
+using Models.Primitives;
 using Models.Responses;
 
 namespace Budget.Domain.Subcategories;

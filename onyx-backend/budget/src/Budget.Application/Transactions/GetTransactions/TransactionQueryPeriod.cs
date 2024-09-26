@@ -1,4 +1,5 @@
 ﻿using Extensions;
+using Models.Primitives;
 using Models.Responses;
 
 namespace Budget.Application.Transactions.GetTransactions;
@@ -27,16 +28,29 @@ internal sealed record TransactionQueryPeriod
         all.FirstOrDefault(p => string.Equals(p.Value, period, StringComparison.CurrentCultureIgnoreCase)) ??
         day;
 
-    public long ToDateTimeTicksSearchFrom(DateTime date)
-    {
-        return this switch
+    public Period ToPeriod(DateTime date) =>
+        this switch
         {
-            _ when this == day => new DateTime(date.Year, date.Month, date.Day, 0, 0, 0).Ticks,
-            _ when this == week => date.BegginingOfTheWeek().Ticks,
-            _ when this == month => date.BegginingOfTheMonth().Ticks,
-            _ when this == last7Days => date.AddDays(-7).Ticks,
-            _ when this == last30Days => date.AddDays(-30).Ticks,
-            _ => date.Ticks
+            _ when this == day => Period.Create(
+                    new DateTime(
+                        date.Year,
+                        date.Month,
+                        date.Day,
+                        0,
+                        0,
+                        0).Ticks,
+                    new DateTime(
+                        date.Year,
+                        date.Month,
+                        date.Day + 1,
+                        0,
+                        0,
+                        0).Ticks)
+                .Value,
+            _ when this == week => Period.Create(date.BegginingOfTheWeek().Ticks, date.EndOfTheWeek().Ticks).Value,
+            _ when this == month => Period.Create(date.BegginingOfTheMonth().Ticks, date.EndOfTheMonth().Ticks).Value,
+            _ when this == last7Days => Period.Create(date.AddDays(-7).Ticks, date.Ticks).Value,
+            _ when this == last30Days => Period.Create(date.AddDays(-30).Ticks, date.Ticks).Value,
+            _ => Period.Create(DateTime.UtcNow.BegginingOfTheMonth().Ticks, DateTime.UtcNow.EndOfTheMonth().Ticks).Value,
         };
-    }
 }

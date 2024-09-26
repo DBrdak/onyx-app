@@ -32,20 +32,20 @@ public sealed class MonthDateData
         (13, -1)
     ];
 
-    public static readonly DataTypes.MonthDate ExampleEarlier = DataTypes.MonthDate.Create(1, 2024).Value;
-    public static readonly DataTypes.MonthDate ExampleLater = DataTypes.MonthDate.Create(12, 2024).Value;
+    public static readonly Primitives.MonthDate ExampleEarlier = Primitives.MonthDate.Create(1, 2024).Value;
+    public static readonly Primitives.MonthDate ExampleLater = Primitives.MonthDate.Create(12, 2024).Value;
     public static readonly int ExamplesMonthsPositiveInterval = 11;
     public static readonly int ExamplesMonthsNegativeInterval = -ExamplesMonthsPositiveInterval;
 
     public static readonly int ExampleSummand = 1;
     public static readonly int ExampleSubtrahend = 1;
 
-    public static readonly DataTypes.MonthDate ExampleSum = DataTypes.MonthDate.Create(1, 2025).Value;
-    public static readonly DataTypes.MonthDate ExampleDiffrence = DataTypes.MonthDate.Create(11, 2024).Value;
-    public static readonly DataTypes.MonthDate ExampleLaterIncrementation = DataTypes.MonthDate.Create(
+    public static readonly Primitives.MonthDate ExampleSum = Primitives.MonthDate.Create(1, 2025).Value;
+    public static readonly Primitives.MonthDate ExampleDiffrence = Primitives.MonthDate.Create(11, 2024).Value;
+    public static readonly Primitives.MonthDate ExampleLaterIncrementation = Primitives.MonthDate.Create(
         1,
         2025).Value;
-    public static readonly DataTypes.MonthDate ExampleEarlierDecrementation = DataTypes.MonthDate.Create(
+    public static readonly Primitives.MonthDate ExampleEarlierDecrementation = Primitives.MonthDate.Create(
         12,
         2023).Value;
 

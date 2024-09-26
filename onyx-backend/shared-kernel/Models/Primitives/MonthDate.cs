@@ -1,6 +1,6 @@
 ﻿using Models.Responses;
 
-namespace Models.DataTypes;
+namespace Models.Primitives;
 
 /// <summary>
 /// Date type which represents specific month of the year. Date format is MM/YYYY.

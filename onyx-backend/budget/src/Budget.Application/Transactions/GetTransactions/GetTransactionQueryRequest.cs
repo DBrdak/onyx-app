@@ -6,13 +6,13 @@ internal sealed record GetTransactionQueryRequest
 {
     public string Entity { get; init; }
     public DateTime Date { get; init; }
-    public TransactionQueryPeriod Period { get; init; }
+    public TransactionQueryPeriod QueryPeriod { get; init; }
 
-    private GetTransactionQueryRequest(string entity, DateTime date, TransactionQueryPeriod period)
+    private GetTransactionQueryRequest(string entity, DateTime date, TransactionQueryPeriod queryPeriod)
     {
         Entity = entity;
         Date = date;
-        Period = period;
+        QueryPeriod = queryPeriod;
     }
 
     private static GetTransactionQueryRequest All(
