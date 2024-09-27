@@ -18,6 +18,7 @@ export const Route = createLazyFileRoute(
 function Account() {
   const { accountId, budgetId } = Route.useParams();
   const { accDate, accPeriod } = Route.useSearch();
+
   const [{ data: transactions }, { data: accounts }] = useSuspenseQueries({
     queries: [
       getTransactionsQueryOptions(budgetId, accountId, {
@@ -37,16 +38,14 @@ function Account() {
 
   if (!selectedAccount) throw new Error("Incorrect account ID");
 
-  console.log(transactions);
-
   return (
     <div>
-      {/* <AccountCard
+      <AccountCard
         selectedAccount={selectedAccount}
         accounts={accounts}
         budgetId={budgetId}
-        transactionsData={accountCardTransactionsData}
-      /> */}
+        transactions={transactions}
+      />
       <TransactionsTable
         selectedAccount={selectedAccount}
         transactions={transactions}

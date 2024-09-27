@@ -17,11 +17,13 @@ import { useParams } from "@tanstack/react-router";
 interface AccountCardNameFormProps {
   defaultName: string;
   accountId: string;
+  disabled: boolean;
 }
 
 const AccountCardNameForm: FC<AccountCardNameFormProps> = ({
   defaultName,
   accountId,
+  disabled,
 }) => {
   const queryClient = useQueryClient();
   const { budgetId } = useParams({
@@ -113,6 +115,7 @@ const AccountCardNameForm: FC<AccountCardNameFormProps> = ({
                 <Input
                   {...field}
                   autoComplete="off"
+                  disabled={disabled}
                   className="border-none bg-transparent text-lg focus-visible:ring-0 focus-visible:ring-primary-foreground focus-visible:ring-offset-1 md:text-2xl"
                 />
               </FormControl>

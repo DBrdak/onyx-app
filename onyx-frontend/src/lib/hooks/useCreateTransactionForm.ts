@@ -23,9 +23,11 @@ interface Props {
 }
 
 export const useCreateTransactionForm = ({ account }: Props) => {
-  const { accMonth, accYear } = useSearch({
+  const { accDate } = useSearch({
     from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
   });
+  const accMonth = new Date(accDate).getMonth() + 1;
+  const accYear = new Date(accDate).getFullYear();
   const { budgetId, accountId } = useParams({
     from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
   });

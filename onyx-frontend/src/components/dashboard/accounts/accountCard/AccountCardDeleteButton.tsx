@@ -18,10 +18,12 @@ import { useDeleteAccountMutation } from "@/lib/hooks/mutations/useDeleteAccount
 
 interface AccountCardDeleteButtonProps {
   accountId: string;
+  disabled: boolean;
 }
 
 const AccountCardDeleteButton: FC<AccountCardDeleteButtonProps> = ({
   accountId,
+  disabled,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { budgetId } = useParams({
@@ -45,6 +47,7 @@ const AccountCardDeleteButton: FC<AccountCardDeleteButtonProps> = ({
     <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
       <DialogTrigger asChild>
         <Button
+          disabled={disabled}
           variant="ghost"
           size="icon"
           className="opacity-50 hover:bg-transparent hover:text-primary-foreground hover:opacity-100"

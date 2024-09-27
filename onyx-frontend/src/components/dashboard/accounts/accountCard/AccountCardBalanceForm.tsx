@@ -13,11 +13,13 @@ import { formatToDotDecimal } from "@/lib/utils";
 interface AccountCardBalanceFormProps {
   balance: Money;
   accountId: string;
+  disabled: boolean;
 }
 
 const AccountCardBalanceForm: FC<AccountCardBalanceFormProps> = ({
   balance,
   accountId,
+  disabled,
 }) => {
   const { budgetId } = useParams({
     from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
@@ -62,6 +64,7 @@ const AccountCardBalanceForm: FC<AccountCardBalanceFormProps> = ({
           render={({ field }) => (
             <FormItem className="flex items-center space-x-1 space-y-0">
               <AmountInput
+                disabled={disabled}
                 field={field}
                 currency={currency}
                 className="border-0 bg-transparent pl-1 text-left text-lg focus-visible:ring-0 focus-visible:ring-primary-foreground focus-visible:ring-offset-1 md:text-xl"

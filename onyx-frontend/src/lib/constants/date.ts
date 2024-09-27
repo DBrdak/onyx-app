@@ -29,5 +29,28 @@ export const DATE_PERIOD_OPTIONS = [
   "last30days",
 ] as const;
 
+export const DATE_PERIOD_SELECT = [
+  {
+    value: "day",
+    label: "Day",
+  },
+  {
+    value: "week",
+    label: "Week",
+  },
+  {
+    value: "month",
+    label: "Month",
+  },
+  {
+    value: "last7days",
+    label: "Last 7 days",
+  },
+  {
+    value: "last30days",
+    label: "Last 30 days",
+  },
+] as const;
+
 export const DEFAULT_PERIOD_OPTION = "last30days";
 export const DEFAULT_ISO_DATE = format(new Date(), "yyyy-MM-dd");

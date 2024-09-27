@@ -10,6 +10,7 @@ interface AmountInputProps<
   field: ControllerRenderProps<TFieldValues, TName>;
   currency: string;
   className?: string;
+  disabled?: boolean;
 }
 
 const AmountInput = <
@@ -19,9 +20,11 @@ const AmountInput = <
   field,
   className,
   currency,
+  disabled,
 }: AmountInputProps<TFieldValues, TName>) => {
   return (
     <CurrencyInput
+      disabled={disabled}
       name={field.name}
       defaultValue={field.value}
       value={field.value}

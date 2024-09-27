@@ -1,46 +1,32 @@
 import { FC, useMemo } from "react";
+import { Link } from "@tanstack/react-router";
 
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import AccountCardBalanceForm from "@/components/dashboard/accounts/accountCard/AccountCardBalanceForm";
 import AccountCardNameForm from "@/components/dashboard/accounts/accountCard/AccountCardNameForm";
-import AccountCardDatePicker from "@/components/dashboard/accounts/accountCard/AccountCardDatePicker";
 import AccountCardDeleteButton from "@/components/dashboard/accounts/accountCard/AccountCardDeleteButton";
-
-import { Account } from "@/lib/validation/account";
-import { cn, getFormattedCurrency } from "@/lib/utils";
+import AccountCardFilters from "@/components/dashboard/accounts/accountCard/AccountCardFilters";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { Link, useSearch } from "@tanstack/react-router";
 
-interface TransactionsData {
-  [x: number]: {
-    balance: {
-      [x: number]: {
-        income: number;
-        expenses: number;
-      };
-    };
-  };
-  availableDates: {
-    [x: number]: number[];
-  };
-}
+import { cn, getFormattedCurrency } from "@/lib/utils";
+import { type Account } from "@/lib/validation/account";
+import { type Transaction } from "@/lib/validation/transaction";
+import { useIsFetching } from "@tanstack/react-query";
+import { getTransactionsQueryKey } from "@/lib/api/transaction";
 
 interface AccountCardProps {
   selectedAccount: Account;
   accounts: Account[];
   budgetId: string;
-  transactionsData: TransactionsData;
+  transactions: Transaction[];
 }
 
 const AccountCard: FC<AccountCardProps> = ({
   selectedAccount,
   accounts,
   budgetId,
-  transactionsData,
+  transactions,
 }) => {
-  const { accMonth, accYear } = useSearch({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
   const selectedAccountIndex = useMemo(
     () => accounts.findIndex((a) => a.id === selectedAccount.id),
     [accounts, selectedAccount.id],
@@ -50,6 +36,30 @@ const AccountCard: FC<AccountCardProps> = ({
     accounts[selectedAccountIndex + 1].id;
   const prevAccountId =
     selectedAccountIndex !== 0 && accounts[selectedAccountIndex - 1].id;
+
+  const { expenses, income } = transactions.reduce(
+    (a, c) => {
+      const {
+        amount: { amount },
+      } = c;
+
+      if (amount < 0) {
+        a.expenses += amount;
+      } else {
+        a.income += amount;
+      }
+
+      return a;
+    },
+    {
+      expenses: 0,
+      income: 0,
+    },
+  );
+
+  const isFetchingTransactions =
+    useIsFetching({ queryKey: getTransactionsQueryKey(selectedAccount.id) }) >
+    0;
 
   return (
     <div
@@ -64,6 +74,7 @@ const AccountCard: FC<AccountCardProps> = ({
           size="icon"
           className="absolute right-5 top-1/2 hidden -translate-y-1/2 rounded-full lg:inline-flex"
           asChild
+          disabled={isFetchingTransactions}
         >
           <Link
             to={`/budget/${budgetId}/accounts/${nextAccountId}`}
@@ -82,6 +93,7 @@ const AccountCard: FC<AccountCardProps> = ({
           size="icon"
           className="absolute left-5 top-1/2 hidden -translate-y-1/2 rounded-full disabled:opacity-50 lg:inline-flex"
           asChild
+          disabled={isFetchingTransactions}
         >
           <Link
             to={`/budget/${budgetId}/accounts/${prevAccountId}`}
@@ -101,9 +113,13 @@ const AccountCard: FC<AccountCardProps> = ({
             <AccountCardNameForm
               defaultName={selectedAccount.name}
               accountId={selectedAccount.id}
+              disabled={isFetchingTransactions}
             />
           </div>
-          <AccountCardDeleteButton accountId={selectedAccount.id} />
+          <AccountCardDeleteButton
+            accountId={selectedAccount.id}
+            disabled={isFetchingTransactions}
+          />
         </div>
         <div className="pl-3">
           <span className="text-xs">BALANCE</span>
@@ -111,6 +127,7 @@ const AccountCard: FC<AccountCardProps> = ({
             <AccountCardBalanceForm
               balance={selectedAccount.balance}
               accountId={selectedAccount.id}
+              disabled={isFetchingTransactions}
             />
           </div>
         </div>
@@ -121,29 +138,29 @@ const AccountCard: FC<AccountCardProps> = ({
           </span>
         </div>
       </div>
-      <div className="m-auto max-w-[400px] space-y-10 md:mx-0 md:my-auto md:w-auto md:space-y-4 lg:justify-self-start">
-        <AccountCardDatePicker
-          availableDates={transactionsData.availableDates}
-        />
+      <div className="m-auto w-full max-w-[400px] space-y-10 md:mx-0 md:my-auto md:space-y-6 lg:justify-self-start">
+        <AccountCardFilters />
         <div className="grid h-fit grid-cols-2 md:w-full">
           <div className="mr-2 space-y-2 px-1">
             <h3 className="text-xl font-semibold">Income:</h3>
-            <p className="space-x-2 text-lg font-semibold">
-              {getFormattedCurrency(
-                transactionsData[Number(accYear)].balance[Number(accMonth)]
-                  .income || 0,
-                selectedAccount.balance.currency,
+            <p
+              className={cn(
+                "space-x-2 text-lg font-semibold text-primary",
+                isFetchingTransactions && "animate-pulse opacity-50",
               )}
+            >
+              {getFormattedCurrency(income, selectedAccount.balance.currency)}
             </p>
           </div>
           <div className="ml-2 space-y-2 px-1">
             <h3 className="text-xl font-semibold">Expenses:</h3>
-            <p className="space-x-2 text-lg font-semibold">
-              {getFormattedCurrency(
-                transactionsData[Number(accYear)].balance[Number(accMonth)]
-                  .expenses || 0,
-                selectedAccount.balance.currency,
+            <p
+              className={cn(
+                "space-x-2 text-lg font-semibold text-destructive",
+                isFetchingTransactions && "animate-pulse opacity-50",
               )}
+            >
+              {getFormattedCurrency(expenses, selectedAccount.balance.currency)}
             </p>
           </div>
         </div>
