@@ -32,6 +32,15 @@ internal sealed class TransactionRepository : BaseBudgetRepository<Transaction, 
     {
     }
 
+    public async Task<Result<IEnumerable<Transaction>>> GetAllPagedAsync(CancellationToken cancellationToken)
+    {
+        var scanFilter = new ScanFilter();
+        scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.GreaterThanOrEqual, _period.Start);
+        scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.LessThanOrEqual, _period.End);
+
+        return await GetWhereAsync(scanFilter, cancellationToken);
+    }
+
     public async Task<Result<IEnumerable<Transaction>>> GetByAccountAsync(
         AccountId accountId,
         CancellationToken cancellationToken)

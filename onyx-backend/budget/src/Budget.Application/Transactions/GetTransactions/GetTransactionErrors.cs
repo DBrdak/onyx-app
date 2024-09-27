@@ -4,13 +4,14 @@ namespace Budget.Application.Transactions.GetTransactions;
 
 internal static class GetTransactionErrors
 {
-    internal static readonly Error InvalidQueryValues = new(
+    public static readonly Error InvalidDate = new ("GetTransaction.InvalidDate", "Provided date or dateRange is invalid");
+    public static readonly Error InvalidQueryValues = new(
         "GetTransaction.InvalidQueryValues",
         "Invalid values for query");
-    internal static readonly Error QueryIsNull = new (
+    public static readonly Error QueryIsNull = new (
         "GetTransaction.QueryIsNull",
         "Pass the query");
-    internal static readonly Error NullFilters = new (
+    public static readonly Error NullFilters = new (
         "GetTransaction.NullFilters",
-        "QueryPeriod and date are required filters");
+        "You need to specify either date + period or dateRangeStart + dateRangeEnd");
 }

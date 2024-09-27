@@ -8,4 +8,6 @@ public sealed record GetTransactionsQuery(
     Guid? AccountId,
     Guid? SubcategoryId,
     string? Date,
-    string? Period) : IQuery<IEnumerable<TransactionModel>>;
+    string? Period,
+    string? DateRangeStart,
+    string? DateRangeEnd) : IQuery<IEnumerable<TransactionModel>>;

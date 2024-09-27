@@ -28,6 +28,7 @@ public interface ITransactionRepository
 
     Task<Result> UpdateRangeAsync(IEnumerable<Transaction> transactions, CancellationToken cancellationToken = default);
 
+    Task<Result<IEnumerable<Transaction>>> GetAllPagedAsync(CancellationToken cancellationToken);
     Task<Result<IEnumerable<Transaction>>> GetByAccountAsync(AccountId accountId, CancellationToken cancellationToken);
 
     Task<Result<IEnumerable<Transaction>>> GetByCounterpartyAsync(CounterpartyId counterpartyId, CancellationToken cancellationToken);

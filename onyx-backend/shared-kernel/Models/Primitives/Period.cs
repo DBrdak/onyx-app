@@ -18,11 +18,16 @@ public sealed record Period
         End = end;
     }
 
-    public static Result<Period> Create(long start, long end)
+    public static Result<Period> Create(long start, long end, long? maxPeriod = null)
     {
         if (start > end)
         {
             return new Error("Period.StartGreaterThanEnd", "Start data connot be greater than end date");
+        }
+
+        if (maxPeriod.HasValue && end - start > maxPeriod)
+        {
+            return new Error("Period.PeriodTooLong", "Period is too long");
         }
 
         return new Period(start, end);

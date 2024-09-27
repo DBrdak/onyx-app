@@ -29,7 +29,7 @@ public static class DateTimeExtensions
             currentDay = date.DayOfWeek;
         }
 
-        return new(date.Year, date.Month, date.Day);
+        return date.StartOfTheDay();
     }
 
     public static DateTime BegginingOfTheMonth(this DateTime date)
@@ -42,7 +42,7 @@ public static class DateTimeExtensions
             currentDay = date.Day;
         }
 
-        return new(date.Year, date.Month, date.Day);
+        return date.StartOfTheDay();
     }
     public static DateTime EndOfTheWeek(this DateTime date)
     {
@@ -54,7 +54,7 @@ public static class DateTimeExtensions
             currentDay = date.DayOfWeek;
         }
 
-        return new(date.Year, date.Month, date.Day);
+        return date.EndOfTheDay();
     }
 
     public static DateTime EndOfTheMonth(this DateTime date)
@@ -67,6 +67,12 @@ public static class DateTimeExtensions
             currentDay = date.Day;
         }
 
-        return new(date.Year, date.Month, date.Day);
+        return date.EndOfTheDay();
     }
+
+    public static DateTime StartOfTheDay(this DateTime date) =>
+        new(date.Year, date.Month, date.Day, 0, 0, 0);
+
+    public static DateTime EndOfTheDay(this DateTime date) =>
+        new(date.Year, date.Month, date.Day, 23, 59, 59);
 }

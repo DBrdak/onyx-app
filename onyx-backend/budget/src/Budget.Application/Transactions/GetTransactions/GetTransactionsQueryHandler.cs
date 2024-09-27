@@ -1,11 +1,15 @@
-﻿using Abstractions.Messaging;
+﻿using System.Text.Json.Nodes;
+using Abstractions.Messaging;
+using Amazon.Lambda.Core;
 using Budget.Application.Transactions.Models;
 using Budget.Domain.Accounts;
 using Budget.Domain.Counterparties;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
+using Extensions;
 using Models.Primitives;
 using Models.Responses;
+using Newtonsoft.Json;
 using Transaction = Budget.Domain.Transactions.Transaction;
 
 namespace Budget.Application.Transactions.GetTransactions;
@@ -17,7 +21,11 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
     private readonly IAccountRepository _accountRepository;
     private readonly ICounterpartyRepository _counterpartyRepository;
 
-    public GetTransactionsQueryHandler(ITransactionRepository transactionRepository, ICounterpartyRepository counterpartyRepository, ISubcategoryRepository subcategoryRepository, IAccountRepository accountRepository)
+    public GetTransactionsQueryHandler(
+        ITransactionRepository transactionRepository,
+        ICounterpartyRepository counterpartyRepository,
+        ISubcategoryRepository subcategoryRepository,
+        IAccountRepository accountRepository)
     {
         _transactionRepository = transactionRepository;
         _counterpartyRepository = counterpartyRepository;
@@ -27,7 +35,10 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
 
     public async Task<Result<IEnumerable<TransactionModel>>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(request.Period) || string.IsNullOrWhiteSpace(request.Date))
+        if ((string.IsNullOrWhiteSpace(request.Period) ||
+            string.IsNullOrWhiteSpace(request.Date)) &&
+             (string.IsNullOrWhiteSpace(request.DateRangeStart) ||
+              string.IsNullOrWhiteSpace(request.DateRangeEnd)))
         {
             return GetTransactionErrors.NullFilters;
         }
@@ -48,14 +59,22 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
             return GetTransactionErrors.InvalidQueryValues;
         }
 
-        var periodQuery = query.QueryPeriod.ToPeriod(query.Date);
+        var period = query switch
+        {
+            _ when query.DateRange is not null => query.DateRange,
+            _ when query.Date is not null => query.QueryPeriod.ToPeriod(query.Date.Value),
+            _ => Period.Create(DateTime.UtcNow.BegginingOfTheMonth().Ticks, DateTime.UtcNow.EndOfTheMonth().Ticks).Value
+        };
+        var (a, b) = (new DateTime(period.Start), new DateTime(period.End));
+        LambdaLogger.Log(a.ToString("D"));
+        LambdaLogger.Log(b.ToString("D"));
 
-        _transactionRepository.AddPagingParameters(periodQuery);
+        _transactionRepository.AddPagingParameters(period);
 
         var transactionsGetTask = query switch
         {
             _ when query.Entity == GetTransactionQueryRequest.AllEntity =>
-                _transactionRepository.GetAllAsync(cancellationToken),
+                _transactionRepository.GetAllPagedAsync(cancellationToken),
             _ when query.Entity == GetTransactionQueryRequest.AccountEntity =>
                 _transactionRepository.GetByAccountAsync(new (request.AccountId!.Value), cancellationToken),
             _ when query.Entity == GetTransactionQueryRequest.SubcategoryEntity =>

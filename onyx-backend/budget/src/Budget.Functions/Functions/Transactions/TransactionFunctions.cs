@@ -31,6 +31,8 @@ public sealed class TransactionFunctions : BaseFunction
         [FromQuery] string? subcategoryId,
         [FromQuery] string? date,
         [FromQuery] string? period,
+        [FromQuery] string? dateRangeStart,
+        [FromQuery] string? dateRangeEnd,
         APIGatewayHttpApiV2ProxyRequest requestContext)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
@@ -40,7 +42,9 @@ public sealed class TransactionFunctions : BaseFunction
             accountId is null ? null : Guid.Parse(accountId),
             subcategoryId is null ? null : Guid.Parse(subcategoryId),
             date,
-            period);
+            period,
+            dateRangeStart, 
+            dateRangeEnd);
 
         var result = await Sender.Send(transactionsQuery);
 
