@@ -80,12 +80,12 @@ const AccountCardFiltersMonthCalendar: FC = () => {
           )}
           onClick={() => setOpen(true)}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
           {selectedMonth ? (
             format(selectedMonth, "LLLL yyyy")
           ) : (
             <span>Pick a month</span>
           )}
+          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-4" align="start">

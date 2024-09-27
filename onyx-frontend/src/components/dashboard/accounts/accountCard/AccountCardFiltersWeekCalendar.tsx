@@ -68,7 +68,7 @@ const AccountCardFiltersWeekCalendar: FC = () => {
           {selectedWeek?.from ? (
             selectedWeek.to ? (
               <>
-                {format(selectedWeek.from, "dd/MM/yyyy")} -{" "}
+                {format(selectedWeek.from, "dd")} -{" "}
                 {format(selectedWeek.to, "dd/MM/yyyy")}
               </>
             ) : (
