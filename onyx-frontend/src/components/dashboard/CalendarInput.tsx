@@ -61,11 +61,7 @@ const CalendarInput = <
             )}
             onClick={() => setOpen(true)}
           >
-            {field.value ? (
-              format(field.value, "PPP")
-            ) : (
-              <span>Pick a date</span>
-            )}
+            {field.value ? format(field.value, "PP") : <span>Pick a date</span>}
             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
           </Button>
         </FormControl>
@@ -75,6 +71,7 @@ const CalendarInput = <
           mode="single"
           selected={field.value}
           onSelect={(date) => {
+            if (!date) return;
             field.onChange(date);
             setOpen(false);
           }}

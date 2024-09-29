@@ -39,7 +39,7 @@ function Account() {
   if (!selectedAccount) throw new Error("Incorrect account ID");
 
   return (
-    <div>
+    <>
       <AccountCard
         selectedAccount={selectedAccount}
         accounts={accounts}
@@ -50,6 +50,6 @@ function Account() {
         selectedAccount={selectedAccount}
         transactions={transactions}
       />
-    </div>
+    </>
   );
 }

@@ -32,7 +32,7 @@ const AmountInput = <
       onValueChange={field.onChange}
       intlConfig={{ locale: USER_LOCALE, currency }}
       decimalScale={2}
-      maxLength={9}
+      maxLength={11}
       allowNegativeValue={false}
       className={cn(
         "flex h-10 w-full rounded-md bg-transparent px-3 py-2 text-right text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",

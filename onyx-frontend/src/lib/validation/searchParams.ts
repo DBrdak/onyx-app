@@ -12,6 +12,7 @@ export const SingleBudgetPageParamsSchema = z.object({
   year: YearStringSchema,
   accDate: IsoDateSchema,
   accPeriod: DatePeriodSchema,
+  tableSize: z.string().default("7").catch("7"),
 });
 
 export type SingleBudgetPageSearchParams = z.infer<

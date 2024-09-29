@@ -81,7 +81,7 @@ const TransactionsTableCreateForm: FC<TransactionsTableCreateFormProps> = ({
                 <Input
                   {...field}
                   placeholder="Counterparty..."
-                  className="placeholder:text-foreground"
+                  className="bg-transparent placeholder:text-foreground"
                 />
               </FormControl>
               <FormMessage />

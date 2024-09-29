@@ -20,7 +20,7 @@ import {
   ImportTransactionsPresubmitState,
   ImportTransactionsSubmitStageArraySchema,
 } from "@/lib/validation/transaction";
-import { useDataTable } from "@/lib/hooks/useDataTable";
+import { useTransactionsDataTable } from "@/lib/hooks/useTransactionsDataTable";
 import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
@@ -53,7 +53,7 @@ const ImportTableSubmitStage: FC<ImportTableSubmitStageProps> = ({
     [budgetId, setSubmitStageData],
   );
 
-  const { table, globalFilter, setGlobalFilter } = useDataTable({
+  const { table, globalFilter, setGlobalFilter } = useTransactionsDataTable({
     data,
     columns,
   });

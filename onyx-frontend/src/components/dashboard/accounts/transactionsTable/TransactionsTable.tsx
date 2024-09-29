@@ -9,6 +9,7 @@ import CreateTransactionButton from "@/components/dashboard/accounts/transaction
 import DeleteTransactionsButton from "@/components/dashboard/accounts/transactionsTable/TransactionsTableDeleteButton";
 import ImportTransactionsButton from "@/components/dashboard/accounts/transactionsTable/TransactionsTableImportButton";
 import ImportTableSelectStage from "@/components/dashboard/accounts/transactionsTable/importTable/ImportTableSelectStage";
+import TransactionTableSizeFilter from "@/components/dashboard/accounts/transactionsTable/TransactionTableSizeFilter";
 import {
   Table,
   TableBody,
@@ -19,15 +20,15 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
 
 import { Transaction } from "@/lib/validation/transaction";
 import { Account } from "@/lib/validation/account";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import { DataTablePagination } from "@/components/ui/table-pagination";
-import { useDataTable } from "@/lib/hooks/useDataTable";
+import { useTransactionsDataTable } from "@/lib/hooks/useTransactionsDataTable";
 import { useSelectableCategories } from "@/lib/hooks/useSelectableCategories";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface TransactionsTable {
   transactions: Transaction[];
@@ -52,12 +53,13 @@ const TransactionsTable: FC<TransactionsTable> = ({
   const { budgetId } = useParams({
     from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
   });
+
   const isLargeDevice = useMediaQuery("(min-width: 1024px)");
   const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
   const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
   const [isCreateFormVisible, setIsCreateFormVisible] = useState(false);
   const { table, globalFilter, setGlobalFilter, setRowSelection } =
-    useDataTable({
+    useTransactionsDataTable({
       data: transactions,
       columns,
     });
@@ -90,7 +92,7 @@ const TransactionsTable: FC<TransactionsTable> = ({
     );
 
   return (
-    <div className="pt-3">
+    <div className="flex h-full flex-col overflow-y-hidden px-1 pt-3">
       <div className="flex flex-col justify-between space-y-2 py-4 md:flex-row md:space-y-0">
         <div className="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
           {isLargeDevice ? (
@@ -119,22 +121,29 @@ const TransactionsTable: FC<TransactionsTable> = ({
           )}
           <ImportTransactionsButton onUpload={onUpload} />
         </div>
-        <Input
-          disabled={transactions.length === 0}
-          placeholder="Search..."
-          value={globalFilter}
-          onChange={(e) => setGlobalFilter(e.target.value)}
-          className="w-full md:max-w-xs"
-        />
+        <div className="flex flex-col space-y-2 md:min-w-96 md:flex-row md:space-x-2 md:space-y-0">
+          <Input
+            disabled={transactions.length === 0}
+            placeholder="Search..."
+            value={globalFilter}
+            onChange={(e) => setGlobalFilter(e.target.value)}
+            className="w-full"
+          />
+          <TransactionTableSizeFilter />
+        </div>
       </div>
-      <Card>
-        <Table>
-          <TableHeader className="overflow-hidden bg-muted">
+
+      <ScrollArea className="h-full flex-grow overflow-auto">
+        <Table className="relative border bg-card">
+          <TableHeader className="sticky top-0 z-10 bg-muted">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className="sticky top-0 z-10 bg-muted"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -194,7 +203,7 @@ const TransactionsTable: FC<TransactionsTable> = ({
             )}
           </TableBody>
         </Table>
-      </Card>
+      </ScrollArea>
       <DataTablePagination table={table} />
     </div>
   );

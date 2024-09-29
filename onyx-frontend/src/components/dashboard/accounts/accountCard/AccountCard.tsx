@@ -64,7 +64,7 @@ const AccountCard: FC<AccountCardProps> = ({
   return (
     <div
       className={cn(
-        "relative grid grid-cols-1 gap-y-10 rounded-xl border bg-card px-4 py-6 shadow-md md:grid-cols-2 md:gap-x-10 md:gap-y-0 lg:gap-x-20",
+        "relative grid grid-cols-1 gap-y-10 rounded-xl border bg-card p-4 shadow-md md:grid-cols-2 md:gap-x-10 md:gap-y-0 lg:gap-x-20",
         selectedAccount.optimistic && "opacity-50",
       )}
     >
