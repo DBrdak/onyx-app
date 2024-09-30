@@ -22,7 +22,7 @@ public sealed class RequestAccessor
         string path,
         string method,
         object body,
-        IDictionary<string, string> queryParams)
+        IDictionary<string, string>? queryParams)
     {
         AuthorizationToken = authorizationToken;
         Claims = claims;
@@ -30,6 +30,6 @@ public sealed class RequestAccessor
         Method = method;
         PathParams = pathParams;
         Body = body;
-        QueryParams = queryParams.ToDictionary();
+        QueryParams = queryParams?.ToDictionary() ?? [];
     }
 }

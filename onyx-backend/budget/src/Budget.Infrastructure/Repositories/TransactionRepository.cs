@@ -35,8 +35,7 @@ internal sealed class TransactionRepository : BaseBudgetRepository<Transaction, 
     public async Task<Result<IEnumerable<Transaction>>> GetAllPagedAsync(CancellationToken cancellationToken)
     {
         var scanFilter = new ScanFilter();
-        scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.GreaterThanOrEqual, _period.Start);
-        scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.LessThanOrEqual, _period.End);
+        scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.Between, _period.Start, _period.End);
 
         return await GetWhereAsync(scanFilter, cancellationToken);
     }
@@ -46,8 +45,7 @@ internal sealed class TransactionRepository : BaseBudgetRepository<Transaction, 
         CancellationToken cancellationToken)
     {
         var scanFilter = new ScanFilter();
-        scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.GreaterThanOrEqual, _period.Start);
-        scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.LessThanOrEqual, _period.End);
+        scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.Between, _period.Start, _period.End);
         scanFilter.AddCondition(nameof(TransactionDataModel.AccountId), ScanOperator.Equal, accountId.Value);
 
         return await GetWhereAsync(scanFilter, cancellationToken);
@@ -58,9 +56,19 @@ internal sealed class TransactionRepository : BaseBudgetRepository<Transaction, 
         CancellationToken cancellationToken)
     {
         var scanFilter = new ScanFilter();
-        scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.GreaterThanOrEqual, _period.Start);
-        scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.LessThanOrEqual, _period.End);
+        scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.Between, _period.Start, _period.End);
         scanFilter.AddCondition(nameof(TransactionDataModel.CounterpartyId), ScanOperator.Equal, counterpartyId.Value);
+
+        return await GetWhereAsync(scanFilter, cancellationToken);
+    }
+
+    public async Task<Result<IEnumerable<Transaction>>> GetBySubcategoryAsync(
+        SubcategoryId subcategoryId,
+        CancellationToken cancellationToken)
+    {
+        var scanFilter = new ScanFilter();
+        scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.Between, _period.Start, _period.End);
+        scanFilter.AddCondition(nameof(TransactionDataModel.SubcategoryId), ScanOperator.Equal, subcategoryId.Value);
 
         return await GetWhereAsync(scanFilter, cancellationToken);
     }
@@ -74,18 +82,6 @@ internal sealed class TransactionRepository : BaseBudgetRepository<Transaction, 
         scanFilter.AddCondition(nameof(TransactionDataModel.SubcategoryId), ScanOperator.Equal, subcategoryId.Value);
         scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAtMonth), ScanOperator.Equal, assignment.Month.Month);
         scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAtYear), ScanOperator.Equal, assignment.Month.Year);
-
-        return await GetWhereAsync(scanFilter, cancellationToken);
-    }
-
-    public async Task<Result<IEnumerable<Transaction>>> GetBySubcategoryAsync(
-        SubcategoryId subcategoryId,
-        CancellationToken cancellationToken)
-    {
-        var scanFilter = new ScanFilter();
-        scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.GreaterThanOrEqual, _period.Start);
-        scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.LessThanOrEqual, _period.End);
-        scanFilter.AddCondition(nameof(TransactionDataModel.SubcategoryId), ScanOperator.Equal, subcategoryId.Value);
 
         return await GetWhereAsync(scanFilter, cancellationToken);
     }

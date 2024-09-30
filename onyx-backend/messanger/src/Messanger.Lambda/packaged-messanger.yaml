@@ -16,7 +16,7 @@ Resources:
     Properties:
       Handler: Messanger.Lambda::Messanger.Lambda.Functions.Emails.EmailLambda::FunctionHandler
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/0f6fff5c87d4e8a855e0f9a07cada12b
+      CodeUri: s3://onyx-default/1a88ff17c61e911ca04498603237059b
       FunctionName: EmailSender
       MemorySize: 3008
       EphemeralStorage:

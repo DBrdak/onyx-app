@@ -65,10 +65,7 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
             _ when query.Date is not null => query.QueryPeriod.ToPeriod(query.Date.Value),
             _ => Period.Create(DateTime.UtcNow.BegginingOfTheMonth().Ticks, DateTime.UtcNow.EndOfTheMonth().Ticks).Value
         };
-        var (a, b) = (new DateTime(period.Start), new DateTime(period.End));
-        LambdaLogger.Log(a.ToString("D"));
-        LambdaLogger.Log(b.ToString("D"));
-
+        
         _transactionRepository.AddPagingParameters(period);
 
         var transactionsGetTask = query switch
@@ -78,10 +75,10 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
             _ when query.Entity == GetTransactionQueryRequest.AccountEntity =>
                 _transactionRepository.GetByAccountAsync(new (request.AccountId!.Value), cancellationToken),
             _ when query.Entity == GetTransactionQueryRequest.SubcategoryEntity =>
-                _transactionRepository.GetBySubcategoryAsync(new(request.AccountId!.Value), cancellationToken),
+                _transactionRepository.GetBySubcategoryAsync(new(request.SubcategoryId!.Value), cancellationToken),
             _ when query.Entity == GetTransactionQueryRequest.CounterpartyEntity =>
-                _transactionRepository.GetByCounterpartyAsync(new(request.AccountId!.Value), cancellationToken),
-            _ => Task.FromResult(Result.Failure<IEnumerable<Transaction>>(Error.None))
+                _transactionRepository.GetByCounterpartyAsync(new(request.CounterpartyId!.Value), cancellationToken),
+            _ => Task.FromResult(Result.Failure<IEnumerable<Transaction>>(Error.InvalidValue))
         };
 
         var transactionsGetResult = await transactionsGetTask;

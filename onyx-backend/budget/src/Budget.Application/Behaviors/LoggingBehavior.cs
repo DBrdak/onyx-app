@@ -75,5 +75,5 @@ public sealed class LoggingBehavior<TRequest, TResponse>
     }
 
     private string GetUserModel => 
-        _requestAccessor.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? "Unknown user";
+        _requestAccessor.Claims.FirstOrDefault(c => c.Type.ToLower() == "email")?.Value ?? "Unknown user";
 }
