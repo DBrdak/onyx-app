@@ -2,4 +2,7 @@
 
 public sealed record CounterpartiesStatistics : IStatistics
 {
+    public void Calculate()
+    {
+    }
 }

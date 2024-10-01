@@ -22,7 +22,7 @@ public sealed record Period
     {
         if (start > end)
         {
-            return new Error("Period.StartGreaterThanEnd", "Start data connot be greater than end date");
+            return new Error("Period.StartGreaterThanEnd", "Start date connot be greater than end date");
         }
 
         if (maxPeriod.HasValue && end - start > maxPeriod)

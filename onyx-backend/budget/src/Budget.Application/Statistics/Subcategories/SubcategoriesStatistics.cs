@@ -2,4 +2,7 @@
 
 public sealed record SubcategoriesStatistics : IStatistics
 {
+    public void Calculate()
+    {
+    }
 }

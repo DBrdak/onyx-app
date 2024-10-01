@@ -1,3 +1,6 @@
 ﻿namespace Budget.Application.Statistics;
 
-public interface IStatistics;
+public interface IStatistics
+{
+    void Calculate();
+}

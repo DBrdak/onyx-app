@@ -2,4 +2,7 @@
 
 public sealed record AccountsStatistics : IStatistics
 {
+    public void Calculate()
+    {
+    }
 }

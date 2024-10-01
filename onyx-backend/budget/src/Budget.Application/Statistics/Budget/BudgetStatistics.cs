@@ -2,4 +2,7 @@
 
 public sealed record BudgetStatistics : IStatistics
 {
+    public void Calculate()
+    {
+    }
 }

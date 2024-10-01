@@ -102,4 +102,12 @@ internal sealed class TransactionRepository : BaseBudgetRepository<Transaction, 
     }
 
     public void AddPagingParameters(Period period) => _period = period;
+
+    public async Task<Result<IEnumerable<Transaction>>> GetForPeriodAsync(Period period, CancellationToken cancellationToken)
+    {
+        var scanFilter = new ScanFilter();
+        scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.Between, period.Start, period.End);
+
+        return await GetWhereAsync(scanFilter, cancellationToken);
+    }
 }

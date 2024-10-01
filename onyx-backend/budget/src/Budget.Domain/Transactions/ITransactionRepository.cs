@@ -42,4 +42,6 @@ public interface ITransactionRepository
     Task<Result<Transaction>> UpdateAsync(Transaction transaction, CancellationToken cancellationToken);
 
     void AddPagingParameters(Period pagingPeriod);
+
+    Task<Result<IEnumerable<Transaction>>> GetForPeriodAsync(Period period, CancellationToken cancellationToken);
 }

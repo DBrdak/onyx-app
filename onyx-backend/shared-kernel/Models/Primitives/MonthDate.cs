@@ -21,6 +21,12 @@ public sealed record MonthDate
     {
         Month = month;
         Year = year;
+    }    
+    
+    private MonthDate(DateTime date)
+    {
+        Month = date.Month;
+        Year = date.Year;
     }
 
 
@@ -59,6 +65,26 @@ public sealed record MonthDate
 
     public override string ToString() => $"{Month:00}/{Year}";
 
+    public bool ContainsDate(DateTime date) => date.Month == Month && date.Year == Year;
+
+    public bool IsInPeriod(Period period)
+    {
+        var start = new MonthDate(new DateTime(period.Start));
+        var end = new MonthDate(new DateTime(period.End));
+
+        return this >= start && this <= end;
+    }
+
+    public bool IsInPeriod(MonthPeriod period) => this >= period.Start && this <= period.End;
+
+    public static int CalculateIntervalBetweenDates(MonthDate date1, MonthDate date2)
+    {
+        var totalMonths1 = date1.Year * 12 + date1.Month;
+        var totalMonths2 = date2.Year * 12 + date2.Month;
+
+        return Math.Abs(totalMonths2 - totalMonths1);
+    }
+
     // Operators
     public static MonthDate operator ++(MonthDate date) =>
         date.Month == 12 ?
@@ -87,7 +113,7 @@ public sealed record MonthDate
             newMonth = 12;
 
             return new(newMonth, newYear);
-        }
+    }
 
     public static MonthDate operator -(MonthDate date, int monthsToSubstract)
     {
@@ -106,19 +132,17 @@ public sealed record MonthDate
             newMonth = 12;
 
             return new (newMonth, newYear);
-        }
+    }
 
     public static bool operator <(MonthDate date1, MonthDate date2) =>
-        date1.Year < date2.Year || date1.Month < date2.Month;
+        date1.Year * 12 + date1.Month < date2.Year * 12 + date2.Month;
 
     public static bool operator >(MonthDate date1, MonthDate date2) =>
-        date1.Year > date2.Year || date1.Month > date2.Month;
+        date1.Year * 12 + date1.Month > date2.Year * 12 + date2.Month;
 
     public static bool operator <=(MonthDate date1, MonthDate date2) =>
-        date1 == date2 || date1 < date2;
+        date1.Year * 12 + date1.Month <= date2.Year * 12 + date2.Month;
 
     public static bool operator >=(MonthDate date1, MonthDate date2) =>
-        date1 == date2 || date1 > date2;
-
-    public bool ContainsDate(DateTime date) => date.Month == Month && date.Year == Year;
+        date1.Year * 12 + date1.Month >= date2.Year * 12 + date2.Month;
 }
