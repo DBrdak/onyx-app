@@ -93,13 +93,13 @@ public sealed class TransactionFunctions : BaseFunction
     [HttpApi(LambdaHttpMethod.Delete, $"{transactionBaseRoute}/bulk")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> BulkRemove(
         string budgetId,
-        [FromBody] string[] transactionIds,
+        [FromBody] TransactionsBulkRemoveRequest request,
         APIGatewayHttpApiV2ProxyRequest requestContext)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
         var command = new BulkRemoveTransactionsCommand(
-            transactionIds.Select(Guid.Parse).ToArray(),
+            request.TransactionsId.Select(Guid.Parse).ToArray(),
             Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);
