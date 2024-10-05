@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { parse, isValid } from "date-fns";
+import { parse, isValid, format, addYears, isBefore } from "date-fns";
 
 import { SubcategorySchema } from "@/lib/validation/subcategory";
 import {
@@ -86,7 +86,7 @@ export type TCreateTransactionSchema = z.infer<typeof CreateTransactionSchema>;
 export const ImportTransactionsSelectStageSchema = z.object({
   date: DateSchema,
   counterparty: RequiredString,
-  currency: RequiredString,
+  currency: z.enum(ALL_CURRENCIES),
   amount: AmountSchema,
 });
 
@@ -98,16 +98,37 @@ export type TImportTransactionsSelectStage = z.infer<
   typeof ImportTransactionsSelectStageSchema
 >;
 
-const AmountWithValidatedCurrency = z.object({
-  amount: z.number(),
-  currency: z.enum(ALL_CURRENCIES),
-});
-
 export const ImportTransactionsSubmitStageSchema = z
   .object({
-    accountId: RequiredString,
-    amount: AmountWithValidatedCurrency,
-    transactedAt: DateSchema,
+    amount: MoneySchema,
+    transactedAt: DateSchema.transform((dateString) => {
+      let parsedDate = parse(dateString, "yyyy-MM-dd HH:mm:ss", new Date());
+      if (!isValid(parsedDate)) {
+        parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
+      }
+      return format(parsedDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+    }).refine(
+      (dateString) => {
+        const parsedDate = new Date(dateString);
+        const currentUtcDate = new Date(
+          Date.UTC(
+            new Date().getUTCFullYear(),
+            new Date().getUTCMonth(),
+            new Date().getUTCDate(),
+            new Date().getUTCHours(),
+            new Date().getUTCMinutes(),
+            new Date().getUTCSeconds(),
+          ),
+        );
+
+        const fiveYearsAgoUtc = addYears(currentUtcDate, -5);
+
+        return isBefore(fiveYearsAgoUtc, parsedDate);
+      },
+      {
+        message: "Transaction date cannot be older than 5 years.",
+      },
+    ),
     counterpartyName: RequiredString,
     subcategoryId: RequiredString.nullable(),
   })

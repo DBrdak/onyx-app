@@ -21,7 +21,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { Transaction } from "@/lib/validation/transaction";
+import {
+  ImportTransactionsPresubmitState,
+  Transaction,
+} from "@/lib/validation/transaction";
 import { Account } from "@/lib/validation/account";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
@@ -29,15 +32,18 @@ import { DataTablePagination } from "@/components/ui/table-pagination";
 import { useTransactionsDataTable } from "@/lib/hooks/useTransactionsDataTable";
 import { useSelectableCategories } from "@/lib/hooks/useSelectableCategories";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import ImportTableSubmitStage from "./importTable/ImportTableSubmitStage";
 
 interface TransactionsTable {
   transactions: Transaction[];
   selectedAccount: Account;
 }
 
-enum VARIANTS {
+export enum VARIANTS {
   LIST = "LIST",
   IMPORT = "IMPORT",
+  SELECT = "SELECT",
+  SUBMIT = "SUBMIT",
 }
 
 const INITIAL_IMPORT_RESULTS = {
@@ -56,6 +62,9 @@ const TransactionsTable: FC<TransactionsTable> = ({
 
   const isLargeDevice = useMediaQuery("(min-width: 1024px)");
   const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
+  const [submitVariantData, setSubmitVariantData] = useState<
+    ImportTransactionsPresubmitState[]
+  >([]);
   const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
   const [isCreateFormVisible, setIsCreateFormVisible] = useState(false);
   const { table, globalFilter, setGlobalFilter, setRowSelection } =
@@ -70,18 +79,34 @@ const TransactionsTable: FC<TransactionsTable> = ({
     setImportResults(results);
   }, []);
 
-  const onCencel = useCallback(() => {
+  const setDefaultTableVariant = useCallback(() => {
     setVariant(VARIANTS.LIST);
     setImportResults(INITIAL_IMPORT_RESULTS);
   }, []);
 
   if (variant === VARIANTS.IMPORT) {
     return (
-      <ImportTableSelectStage data={importResults.data} onCencel={onCencel} />
+      <ImportTableSelectStage
+        data={importResults.data}
+        setDefaultTableVariant={setDefaultTableVariant}
+        setVariant={setVariant}
+        setSubmitVariantData={setSubmitVariantData}
+      />
     );
   }
 
-  if (!selectableCategories)
+  if (variant === VARIANTS.SUBMIT) {
+    return (
+      <ImportTableSubmitStage
+        data={submitVariantData}
+        setVariant={setVariant}
+        setSubmitVariantData={setSubmitVariantData}
+        setDefaultTableVariant={setDefaultTableVariant}
+      />
+    );
+  }
+
+  if (!selectableCategories || !selectableCategories.length)
     return (
       <div className="w-full pt-20 text-center">
         <h2 className="text-lg font-semibold">

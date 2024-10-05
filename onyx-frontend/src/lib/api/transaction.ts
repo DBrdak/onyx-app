@@ -23,7 +23,7 @@ interface QueryParams {
 export interface CreateTransactionPayload {
   accountId: string;
   amount: Money;
-  transactedAt: Date;
+  transactedAt: string;
   counterpartyName: string;
   subcategoryId?: string | null;
 }
@@ -36,6 +36,12 @@ export interface CreateTransaction {
 interface DeleteMultipleTransactions {
   budgetId: string;
   rows: Row<Transaction>[];
+}
+
+interface CreateTransactionsPayload {
+  budgetId: string;
+  accountId: string;
+  transactions: Omit<CreateTransactionPayload, "accountId">[];
 }
 
 export const getTransactions = async (
@@ -95,6 +101,15 @@ export const getTransactionsQueryOptions = (
 export const createTransaction = ({ budgetId, payload }: CreateTransaction) =>
   budgetApi.post(`/${budgetId}/transactions`, payload);
 
+export const createTransactions = ({
+  budgetId,
+  accountId,
+  transactions,
+}: CreateTransactionsPayload) =>
+  budgetApi.post(`/${budgetId}/accounts/${accountId}/transactions/bulk`, {
+    transactions,
+  });
+
 export const deleteTransaction = ({
   budgetId,
   transactionId,
@@ -105,9 +120,11 @@ export const deleteMultipleTransactions = ({
   budgetId,
   rows,
 }: DeleteMultipleTransactions) => {
-  const deletePromises = rows.map((r) =>
-    deleteTransaction({ budgetId, transactionId: r.original.id }),
-  );
+  const idsToDelete = rows.map((t) => t.original.id);
 
-  return Promise.all(deletePromises);
+  return budgetApi.delete(`/${budgetId}/transactions/bulk`, {
+    data: {
+      transactionsId: idsToDelete,
+    },
+  });
 };

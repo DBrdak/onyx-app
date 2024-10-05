@@ -1,10 +1,16 @@
-import { FC, useCallback, useMemo, useState } from "react";
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 
 import ImportTableSelectStageHeadSelect from "@/components/dashboard/accounts/transactionsTable/importTable/ImportTableSelectStageHeadSelect";
-import ImportTableSubmitStage from "@/components/dashboard/accounts/transactionsTable/importTable/ImportTableSubmitStage";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -18,40 +24,52 @@ import {
   ImportTransactionsPresubmitState,
   ImportTransactionsSelectStageArraySchema,
 } from "@/lib/validation/transaction";
+import { VARIANTS } from "@/components/dashboard/accounts/transactionsTable/TransactionsTable";
+import { getCategoriesQueryOptions } from "@/lib/api/category";
 
 interface ImportTableSelectStageProps {
   data: string[][];
-  onCencel: () => void;
+  setDefaultTableVariant: () => void;
+  setVariant: Dispatch<SetStateAction<VARIANTS>>;
+  setSubmitVariantData: Dispatch<
+    SetStateAction<ImportTransactionsPresubmitState[]>
+  >;
 }
 
 interface SelectedColumns {
   [key: string]: string | null;
 }
 
-enum STAGE {
-  SELECT = "SELECT",
-  SUBMIT = "SUBMIT",
-}
-
 const REQUIRED_OPTIONS = ["date", "counterparty", "amount", "currency"];
 
 const ImportTableSelectStage: FC<ImportTableSelectStageProps> = ({
   data,
-  onCencel,
+  setDefaultTableVariant,
+  setVariant,
+  setSubmitVariantData,
 }) => {
   const [selectedColumns, setSelectedColumns] = useState<SelectedColumns>({});
-  const [importStage, setImportStage] = useState<STAGE>(STAGE.SELECT);
-  const [submitStageData, setSubmitStageData] = useState<
-    ImportTransactionsPresubmitState[]
-  >([]);
-  const { accountId } = useParams({
+
+  const { budgetId } = useParams({
     from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
   });
+  const queryClient = useQueryClient();
   const { toast } = useToast();
 
   const headers = data[0];
   const body = data.slice(1);
-  const croppedBody = data.slice(1, 7);
+  const croppedBody = data.slice(1, 5);
+  const categories = queryClient.getQueryData(
+    getCategoriesQueryOptions(budgetId).queryKey,
+  );
+  const defaultSubcategory = useMemo(() => {
+    const uncategorized = categories?.find(
+      (cat) => cat.name === "Uncategorized",
+    );
+    return (
+      uncategorized?.subcategories.find((s) => s.name === "Unknown") || null
+    );
+  }, [categories]);
 
   const onTableHeadSelectChange = useCallback(
     (columnIndex: number, value: string | null) => {
@@ -129,39 +147,28 @@ const ImportTableSelectStage: FC<ImportTableSelectStageProps> = ({
       });
     }
 
-    setSubmitStageData(
-      validatedSelectStageData.data.map((t) => ({
-        accountId,
-        amount: {
-          amount: Number(t.amount),
-          currency: t.currency,
-        },
-        transactedAt: t.date,
-        counterpartyName: t.counterparty,
-        subcategoryId: null,
-        subcategoryName: null,
-      })),
+    setSubmitVariantData(
+      validatedSelectStageData.data.map((t) => {
+        const numericAmount = Number(t.amount);
+
+        return {
+          amount: {
+            amount: numericAmount,
+            currency: t.currency,
+          },
+          transactedAt: t.date,
+          counterpartyName: t.counterparty,
+          subcategoryId: (numericAmount < 0 && defaultSubcategory?.id) || null,
+          subcategoryName:
+            (numericAmount < 0 && defaultSubcategory?.name) || null,
+        };
+      }),
     );
-    setImportStage(STAGE.SUBMIT);
+    setVariant(VARIANTS.SUBMIT);
   };
 
-  const onBack = useCallback(() => {
-    setImportStage(STAGE.SELECT);
-    setSubmitStageData([]);
-  }, []);
-
-  if (importStage === STAGE.SUBMIT) {
-    return (
-      <ImportTableSubmitStage
-        data={submitStageData}
-        onBack={onBack}
-        setSubmitStageData={setSubmitStageData}
-      />
-    );
-  }
-
   return (
-    <div className="space-y-8 pt-7">
+    <div className="space-y-6 pt-6">
       <div className="space-y-4 md:flex md:justify-between md:space-y-0">
         <h3 className="text-lg font-semibold">Import Transactions</h3>
         <div className="space-y-4 md:space-x-2 md:space-y-0">
@@ -175,40 +182,40 @@ const ImportTableSelectStage: FC<ImportTableSelectStageProps> = ({
           </Button>
           <Button
             variant="outline"
-            onClick={onCencel}
+            onClick={setDefaultTableVariant}
             className="w-full md:w-auto"
           >
             Cencel
           </Button>
         </div>
       </div>
-      <Card>
-        <Table>
-          <TableHeader className="bg-muted">
-            <TableRow>
-              {headers.map((_header, index) => (
-                <TableHead key={index}>
-                  <ImportTableSelectStageHeadSelect
-                    columnIndex={index}
-                    selectedColumns={selectedColumns}
-                    onChange={onTableHeadSelectChange}
-                    selectOptions={REQUIRED_OPTIONS}
-                  />
-                </TableHead>
+
+      <Table className="border bg-card">
+        <TableHeader className="bg-muted">
+          <TableRow>
+            {headers.map((_header, index) => (
+              <TableHead key={index}>
+                <ImportTableSelectStageHeadSelect
+                  columnIndex={index}
+                  selectedColumns={selectedColumns}
+                  onChange={onTableHeadSelectChange}
+                  selectOptions={REQUIRED_OPTIONS}
+                />
+              </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {croppedBody.map((row: string[], index) => (
+            <TableRow key={index}>
+              {row.map((cell, index) => (
+                <TableCell key={index}>{cell}</TableCell>
               ))}
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {croppedBody.map((row: string[], index) => (
-              <TableRow key={index}>
-                {row.map((cell, index) => (
-                  <TableCell key={index}>{cell}</TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Card>
+          ))}
+        </TableBody>
+      </Table>
+
       <h3 className="text-center font-semibold">
         This is a showcase of your imported transactions data. Select only the
         required columns and proceed to the final step.

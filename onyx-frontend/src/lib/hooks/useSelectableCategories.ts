@@ -13,16 +13,25 @@ export const useSelectableCategories = ({ budgetId }: Props) => {
   return useMemo(() => {
     const categories = queryClient.getQueryData(queryKey);
     if (!categories || !categories.length) return null;
+
     return categories
       .filter((c) => c.subcategories.length > 0)
-      .map((c) => ({
-        label: c.name,
-        value: c.id,
-        subcategories: c.subcategories.map((s) => ({
-          label: s.name,
-          value: s.id,
-        })),
-      }));
+      .map((c) => {
+        if (c.name !== "Uncategorized") {
+          return {
+            id: c.id,
+            label: c.name,
+            value: c.id,
+            subcategories: c.subcategories.map((s) => ({
+              id: s.id,
+              label: s.name,
+              value: s.id,
+            })),
+          };
+        }
+        return null;
+      })
+      .filter(Boolean);
   }, [
     queryKey,
     queryClient,

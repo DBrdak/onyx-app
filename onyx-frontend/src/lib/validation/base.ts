@@ -9,14 +9,17 @@ import {
   DEFAULT_YEAR_STRING,
 } from "@/lib/constants/date";
 import { ACCOUNT_TYPES } from "@/lib/constants/account";
+import { ALL_CURRENCIES } from "@/lib/constants/currency";
 
 export const ErrorSchema = z.object({
   code: z.string(),
   message: z.string(),
 });
 
+export const CurrencySchema = z.enum(ALL_CURRENCIES);
+
 export const MoneySchema = z.object({
-  currency: z.string().min(1),
+  currency: CurrencySchema,
   amount: z.number(),
 });
 

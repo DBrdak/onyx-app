@@ -2,8 +2,13 @@ import { Dispatch, FC, SetStateAction, useMemo } from "react";
 import { useParams } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { ArrowLeft } from "lucide-react";
+import TransactionTableSizeFilter from "@/components/dashboard/accounts/transactionsTable/TransactionTableSizeFilter";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 import DataTable from "@/components/ui/data-table";
 import { DataTablePagination } from "@/components/ui/table-pagination";
 import { Input } from "@/components/ui/input";
@@ -16,41 +21,106 @@ import {
   createTextColumn,
 } from "@/components/dashboard/accounts/transactionsTable/TransactionsTableColumnsDefinitions";
 
+import { cn } from "@/lib/utils";
 import {
   ImportTransactionsPresubmitState,
   ImportTransactionsSubmitStageArraySchema,
 } from "@/lib/validation/transaction";
 import { useTransactionsDataTable } from "@/lib/hooks/useTransactionsDataTable";
-import { ArrowLeft } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useToast } from "@/components/ui/use-toast";
+import {
+  createTransactions,
+  getTransactionsQueryKey,
+} from "@/lib/api/transaction";
+import LoadingButton from "@/components/LoadingButton";
+import { getAccountsQueryOptions } from "@/lib/api/account";
+import { VARIANTS } from "../TransactionsTable";
 
 interface ImportTableSubmitStageProps {
   data: ImportTransactionsPresubmitState[];
-  onBack: () => void;
-  setSubmitStageData: Dispatch<
+  setVariant: Dispatch<SetStateAction<VARIANTS>>;
+  setSubmitVariantData: Dispatch<
     SetStateAction<ImportTransactionsPresubmitState[]>
   >;
+  setDefaultTableVariant: () => void;
 }
 
 const ImportTableSubmitStage: FC<ImportTableSubmitStageProps> = ({
   data,
-  onBack,
-  setSubmitStageData,
+  setSubmitVariantData,
+  setVariant,
+  setDefaultTableVariant,
 }) => {
-  const { budgetId } = useParams({
+  const { budgetId, accountId } = useParams({
     from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
   });
+  const queryClient = useQueryClient();
+
+  const { toast } = useToast();
+
+  const { mutate: performCreateTransactions, isPending } = useMutation({
+    mutationFn: createTransactions,
+    onError: (err) => {
+      console.log(err);
+      return toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Please try again later.",
+      });
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: getTransactionsQueryKey(accountId),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: getAccountsQueryOptions(budgetId).queryKey,
+      });
+      setDefaultTableVariant();
+    },
+  });
+
+  const onCreate = () => {
+    const validatedData =
+      ImportTransactionsSubmitStageArraySchema.safeParse(data);
+
+    if (!validatedData.success) {
+      const dateValidationError = validatedData.error.errors.find(
+        (error) =>
+          error.path.includes("transactedAt") &&
+          error.message.includes("older than 5 years"),
+      );
+
+      if (dateValidationError) {
+        return toast({
+          title: "Date error",
+          variant: "destructive",
+          description: "The transaction date cannot be older than 5 years.",
+        });
+      }
+
+      console.log(validatedData.error.errors);
+      return toast({
+        title: "Data error",
+        variant: "destructive",
+        description: "Please check all selected data values.",
+      });
+    }
+
+    performCreateTransactions({
+      budgetId,
+      accountId,
+      transactions: validatedData.data,
+    });
+  };
 
   const columns: ColumnDef<ImportTransactionsPresubmitState>[] = useMemo(
     () => [
-      createSelectColumn(),
+      createSelectColumn(isPending),
       createDateColumn((row) => format(new Date(row.transactedAt), "PP")),
       createTextColumn("counterparty", "Counterparty", "counterpartyName"),
-      createSubcategorySelectColumn(budgetId, setSubmitStageData),
+      createSubcategorySelectColumn(budgetId, setSubmitVariantData, isPending),
       createAmountColumn("amount.amount"),
     ],
-    [budgetId, setSubmitStageData],
+    [budgetId, setSubmitVariantData, isPending],
   );
 
   const { table, globalFilter, setGlobalFilter } = useTransactionsDataTable({
@@ -61,29 +131,11 @@ const ImportTableSubmitStage: FC<ImportTableSubmitStageProps> = ({
   const selectedRows = table.getFilteredSelectedRowModel().rows;
 
   const onSelectedRowsDelete = () => {
-    setSubmitStageData((prev) => {
+    setSubmitVariantData((prev) => {
       const selectedIndexes = new Set(selectedRows.map((r) => r.index));
       return prev.filter((_, index) => !selectedIndexes.has(index));
     });
     table.resetRowSelection();
-  };
-
-  const { toast } = useToast();
-
-  const onCreate = () => {
-    const validatedData =
-      ImportTransactionsSubmitStageArraySchema.safeParse(data);
-
-    if (!validatedData.data || validatedData.error) {
-      console.log(validatedData.error.errors);
-      return toast({
-        title: "Data error",
-        variant: "destructive",
-        description: "Please check all selected data values.",
-      });
-    }
-
-    console.log(validatedData.data);
   };
 
   const isCreateDisabled = useMemo(
@@ -91,11 +143,16 @@ const ImportTableSubmitStage: FC<ImportTableSubmitStageProps> = ({
     [data],
   );
 
+  const onBack = () => {
+    setSubmitVariantData([]);
+    setVariant(VARIANTS.SELECT);
+  };
+
   return (
-    <div className="pt-3">
+    <div className="flex flex-col overflow-hidden">
       <div className="flex flex-col justify-between space-y-2 py-4 md:flex-row md:space-x-2 md:space-y-0">
         <div className="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
-          <Button onClick={onBack} variant="outline">
+          <Button onClick={onBack} variant="outline" disabled={isPending}>
             <ArrowLeft className="mr-2 size-4" />
             Back
           </Button>
@@ -111,7 +168,7 @@ const ImportTableSubmitStage: FC<ImportTableSubmitStageProps> = ({
         </div>
         <div className="flex flex-grow justify-center">
           <Input
-            disabled={data.length === 0}
+            disabled={data.length === 0 || isPending}
             placeholder="Search..."
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
@@ -119,20 +176,27 @@ const ImportTableSubmitStage: FC<ImportTableSubmitStageProps> = ({
           />
         </div>
 
-        <Button
-          onClick={onCreate}
-          disabled={isCreateDisabled}
-          className="md:px-8"
-        >
-          Create
-        </Button>
+        <div className="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
+          <TransactionTableSizeFilter disabled={isPending} />
+          <LoadingButton
+            onClick={onCreate}
+            disabled={isCreateDisabled || isPending}
+            className="md:px-8"
+            isLoading={isPending}
+          >
+            Create
+          </LoadingButton>
+        </div>
       </div>
-      <DataTable
-        columns={columns}
-        table={table}
-        className="bg-card"
-        cellClassName="py-2"
-      />
+      <ScrollArea className="h-full flex-grow overflow-auto">
+        <DataTable
+          columns={columns}
+          table={table}
+          className="bg-card"
+          cellClassName="py-2"
+          disabled={isPending}
+        />
+      </ScrollArea>
       <DataTablePagination table={table} />
     </div>
   );

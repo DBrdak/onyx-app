@@ -30,7 +30,13 @@ const TABLE_SIZE_OPTIONS = [
   },
 ];
 
-const TransactionTableSizeFilter: FC = () => {
+interface TransactionTableSizeFilterProps {
+  disabled?: boolean;
+}
+
+const TransactionTableSizeFilter: FC<TransactionTableSizeFilterProps> = ({
+  disabled,
+}) => {
   const { tableSize } = useSearch({
     from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
   });
@@ -48,7 +54,7 @@ const TransactionTableSizeFilter: FC = () => {
 
   return (
     <Select value={size} onValueChange={(value) => onSelect(value)}>
-      <SelectTrigger className="md:max-w-28">
+      <SelectTrigger className="md:max-w-28" disabled={disabled}>
         <SelectValue placeholder="Table size" />
       </SelectTrigger>
       <SelectContent>

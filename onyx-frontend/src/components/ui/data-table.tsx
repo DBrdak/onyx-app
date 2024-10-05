@@ -18,6 +18,7 @@ export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   className?: string;
   cellClassName?: string;
+  disabled?: boolean;
 }
 
 function DataTable<TData, TValue>({
@@ -25,11 +26,17 @@ function DataTable<TData, TValue>({
   columns,
   className,
   cellClassName,
+  disabled,
 }: DataTableProps<TData, TValue>) {
   return (
     <div className={cn("rounded-md border", className)}>
       <Table>
-        <TableHeader className="bg-muted">
+        <TableHeader
+          className={cn(
+            "bg-muted",
+            disabled && "pointer-events-none opacity-50",
+          )}
+        >
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {

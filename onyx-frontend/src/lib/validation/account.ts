@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   AccountTypeSchema,
+  CurrencySchema,
   MoneySchema,
   NameSchema,
   RequiredString,
@@ -27,7 +28,7 @@ export type Account = z.infer<typeof AccountSchema>;
 export const CreateAccountSchema = z.object({
   name: NameSchema,
   amount: RequiredString,
-  currency: RequiredString,
+  currency: CurrencySchema,
   accountType: AccountTypeSchema,
 });
 
