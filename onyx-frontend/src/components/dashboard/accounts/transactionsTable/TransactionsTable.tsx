@@ -41,7 +41,6 @@ interface TransactionsTable {
 export enum VARIANTS {
   LIST = "LIST",
   IMPORT = "IMPORT",
-  SELECT = "SELECT",
   SUBMIT = "SUBMIT",
 }
 

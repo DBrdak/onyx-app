@@ -144,8 +144,8 @@ const ImportTableSubmitStage: FC<ImportTableSubmitStageProps> = ({
   );
 
   const onBack = () => {
+    setVariant(VARIANTS.IMPORT);
     setSubmitVariantData([]);
-    setVariant(VARIANTS.SELECT);
   };
 
   return (
