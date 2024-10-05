@@ -8,6 +8,7 @@ import TransactionsTable from "@/components/dashboard/accounts/transactionsTable
 import { getTransactionsQueryOptions } from "@/lib/api/transaction";
 import { getAccountsQueryOptions } from "@/lib/api/account";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
+import { useSelectableCategories } from "@/lib/hooks/useSelectableCategories";
 
 export const Route = createLazyFileRoute(
   "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
@@ -38,6 +39,10 @@ function Account() {
 
   if (!selectedAccount) throw new Error("Incorrect account ID");
 
+  const selectableCategories = useSelectableCategories({ budgetId });
+
+  const disabled = !selectableCategories || !selectableCategories.length;
+
   return (
     <>
       <AccountCard
@@ -45,10 +50,12 @@ function Account() {
         accounts={accounts}
         budgetId={budgetId}
         transactions={transactions}
+        disabled={disabled}
       />
       <TransactionsTable
         selectedAccount={selectedAccount}
         transactions={transactions}
+        disabled={disabled}
       />
     </>
   );

@@ -6,32 +6,38 @@ interface Props {
   budgetId: string;
 }
 
-export const useSelectableCategories = ({ budgetId }: Props) => {
+interface Selectable {
+  id: string;
+  label: string;
+  value: string;
+}
+
+export interface SelectableCategory extends Selectable {
+  subcategories: Selectable[];
+}
+
+export const useSelectableCategories = ({
+  budgetId,
+}: Props): SelectableCategory[] | null => {
   const queryClient = useQueryClient();
   const queryKey = getCategoriesQueryOptions(budgetId).queryKey;
 
-  return useMemo(() => {
+  return useMemo<SelectableCategory[] | null>(() => {
     const categories = queryClient.getQueryData(queryKey);
     if (!categories || !categories.length) return null;
 
     return categories
-      .filter((c) => c.subcategories.length > 0)
-      .map((c) => {
-        if (c.name !== "Uncategorized") {
-          return {
-            id: c.id,
-            label: c.name,
-            value: c.id,
-            subcategories: c.subcategories.map((s) => ({
-              id: s.id,
-              label: s.name,
-              value: s.id,
-            })),
-          };
-        }
-        return null;
-      })
-      .filter(Boolean);
+      .filter((c) => c.subcategories.length > 0 && c.name !== "Uncategorized")
+      .map((c) => ({
+        id: c.id,
+        label: c.name,
+        value: c.id,
+        subcategories: c.subcategories.map((s) => ({
+          id: s.id,
+          label: s.name,
+          value: s.id,
+        })),
+      }));
   }, [
     queryKey,
     queryClient,

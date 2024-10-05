@@ -17,7 +17,11 @@ import {
 import { DATE_PERIOD_OPTIONS, DATE_PERIOD_SELECT } from "@/lib/constants/date";
 import { getTransactionsQueryKey } from "@/lib/api/transaction";
 
-const AccountCardFilters: FC = () => {
+interface AccountCardFiltersProps {
+  disabled: boolean;
+}
+
+const AccountCardFilters: FC<AccountCardFiltersProps> = ({ disabled }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { accPeriod } = useSearch({
@@ -61,6 +65,7 @@ const AccountCardFilters: FC = () => {
       </p>
       <div className="grid grid-cols-1 gap-y-2 md:grid-cols-2 md:gap-x-2 md:gap-y-0">
         <Select
+          disabled={disabled}
           value={selectedPeriod}
           onValueChange={(v) =>
             handleSelectChange(v as (typeof DATE_PERIOD_OPTIONS)[number])

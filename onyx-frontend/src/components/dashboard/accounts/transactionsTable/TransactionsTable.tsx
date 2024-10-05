@@ -1,5 +1,4 @@
 import { FC, useCallback, useState } from "react";
-import { useParams } from "@tanstack/react-router";
 import { flexRender } from "@tanstack/react-table";
 
 import { Minus, Plus } from "lucide-react";
@@ -30,13 +29,13 @@ import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import { DataTablePagination } from "@/components/ui/table-pagination";
 import { useTransactionsDataTable } from "@/lib/hooks/useTransactionsDataTable";
-import { useSelectableCategories } from "@/lib/hooks/useSelectableCategories";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ImportTableSubmitStage from "./importTable/ImportTableSubmitStage";
 
 interface TransactionsTable {
   transactions: Transaction[];
   selectedAccount: Account;
+  disabled: boolean;
 }
 
 export enum VARIANTS {
@@ -55,11 +54,8 @@ const INITIAL_IMPORT_RESULTS = {
 const TransactionsTable: FC<TransactionsTable> = ({
   transactions,
   selectedAccount,
+  disabled,
 }) => {
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
-
   const isLargeDevice = useMediaQuery("(min-width: 1024px)");
   const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
   const [submitVariantData, setSubmitVariantData] = useState<
@@ -72,7 +68,6 @@ const TransactionsTable: FC<TransactionsTable> = ({
       data: transactions,
       columns,
     });
-  const selectableCategories = useSelectableCategories({ budgetId });
 
   const onUpload = useCallback((results: typeof INITIAL_IMPORT_RESULTS) => {
     setVariant(VARIANTS.IMPORT);
@@ -106,7 +101,7 @@ const TransactionsTable: FC<TransactionsTable> = ({
     );
   }
 
-  if (!selectableCategories || !selectableCategories.length)
+  if (disabled)
     return (
       <div className="w-full pt-20 text-center">
         <h2 className="text-lg font-semibold">

@@ -19,6 +19,7 @@ interface AccountCardProps {
   accounts: Account[];
   budgetId: string;
   transactions: Transaction[];
+  disabled: boolean;
 }
 
 const AccountCard: FC<AccountCardProps> = ({
@@ -26,6 +27,7 @@ const AccountCard: FC<AccountCardProps> = ({
   accounts,
   budgetId,
   transactions,
+  disabled,
 }) => {
   const selectedAccountIndex = useMemo(
     () => accounts.findIndex((a) => a.id === selectedAccount.id),
@@ -139,7 +141,7 @@ const AccountCard: FC<AccountCardProps> = ({
         </div>
       </div>
       <div className="m-auto w-full max-w-[400px] space-y-10 md:mx-0 md:my-auto md:space-y-6 lg:justify-self-start">
-        <AccountCardFilters />
+        <AccountCardFilters disabled={disabled} />
         <div className="grid h-fit grid-cols-2 md:w-full">
           <div className="mr-2 space-y-2 px-1">
             <h3 className="text-xl font-semibold">Income:</h3>
