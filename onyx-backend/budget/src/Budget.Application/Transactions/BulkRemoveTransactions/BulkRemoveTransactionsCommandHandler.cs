@@ -12,6 +12,8 @@ internal sealed class BulkRemoveTransactionsCommandHandler : ICommandHandler<Bul
     private readonly ITransactionRepository _transactionRepository;
     private readonly IAccountRepository _accountRepository;
     private readonly ISubcategoryRepository _subcategoryRepository;
+    private readonly List<Task<Result<Subcategory>>> _subcategoryUpdateTasks = [];
+    private readonly List<Task<Result<Account>>> _accountUpdateTasks = [];
 
     public BulkRemoveTransactionsCommandHandler(ITransactionRepository transactionRepository, IAccountRepository accountRepository, ISubcategoryRepository subcategoryRepository)
     {
@@ -34,33 +36,39 @@ internal sealed class BulkRemoveTransactionsCommandHandler : ICommandHandler<Bul
 
         var tasks = transactions.Select(t => RemoveTransactionRelations(t, cancellationToken));
 
-        var removeTransactionRelationsResults = await Task.WhenAll(tasks);
+        await Task.WhenAll(tasks);
 
-        var (transactionsRemoveTasks, accountUpdateTasks, subcategoryRemoveTasks) = (
-                transactions.Select(t => _transactionRepository.RemoveAsync(t.Id, cancellationToken)),
-                removeTransactionRelationsResults.Select(x => x.accountUpdateTask),
-                removeTransactionRelationsResults.Select(x => x.subcategoryUpdateTask));
+        var transactionsRemoveTasks = transactions.Select(
+                t => _transactionRepository.RemoveAsync(
+                    t.Id,
+                    cancellationToken))
+            .ToList();
 
-        var results = await Task.WhenAll([..transactionsRemoveTasks, ..accountUpdateTasks, ..subcategoryRemoveTasks]);
+        await Task.WhenAll([..transactionsRemoveTasks, .._accountUpdateTasks, .._subcategoryUpdateTasks]);
 
-        return Result.Aggregate(results);
+        var transactionsRemoveResults = transactionsRemoveTasks.Select(t => t.Result).ToList();
+        var subcategoryUpdateResults = _subcategoryUpdateTasks.Select(t => t.Result).ToList();
+        var accountUpdateResults = _accountUpdateTasks.Select(t => t.Result).ToList();
+
+        return Result.Aggregate([.. transactionsRemoveResults, ..subcategoryUpdateResults, ..accountUpdateResults]);
     }
 
-    private async Task<(Task<Result> subcategoryUpdateTask, Task<Result> accountUpdateTask)>
+    private async Task<Result>
         RemoveTransactionRelations(
         Transaction transaction,
         CancellationToken cancellationToken)
     {
-        var (subcategoryGetResult, accountGetResult) = (
-            transaction.SubcategoryId is null ?
-                null :
-                await _subcategoryRepository.GetByIdAsync(transaction.SubcategoryId, cancellationToken),
-            await _accountRepository.GetByIdAsync(transaction.AccountId, cancellationToken));
+        var subcategoryGetResult = transaction.SubcategoryId is null ?
+            null :
+            await _subcategoryRepository.GetByIdAsync(
+                transaction.SubcategoryId,
+                cancellationToken);
+
+        var accountGetResult = await _accountRepository.GetByIdAsync(transaction.AccountId, cancellationToken);
 
         if (Result.Aggregate([subcategoryGetResult ?? Result.Success(), accountGetResult]) is var result && result.IsFailure)
         {
-            return (Task.FromResult(Result.Failure(result.Error)), 
-                Task.FromResult(Result.Failure(result.Error)));
+            return result.Error;
         }
 
         var subcategory = subcategoryGetResult?.Value;
@@ -70,14 +78,16 @@ internal sealed class BulkRemoveTransactionsCommandHandler : ICommandHandler<Bul
 
         if (removeTransactionRelationsResult.IsFailure)
         {
-            return (Task.FromResult(Result.Failure(removeTransactionRelationsResult.Error)),
-                Task.FromResult(Result.Failure(removeTransactionRelationsResult.Error)));
+            return removeTransactionRelationsResult.Error;
         }
 
-        return (
-            subcategory is null ?
-                Task.FromResult(Result.Success()) :
-                Result.CreateVoidTask(_subcategoryRepository.UpdateAsync(subcategory, cancellationToken)),
-            Result.CreateVoidTask(_accountRepository.UpdateAsync(account, cancellationToken)));
+        if (subcategory is not null)
+        {
+            _subcategoryUpdateTasks.Add(_subcategoryRepository.UpdateAsync(subcategory, cancellationToken));
+        }
+
+        _accountUpdateTasks.Add(_accountRepository.UpdateAsync(account, cancellationToken));
+
+        return Result.Success();
     }
 }

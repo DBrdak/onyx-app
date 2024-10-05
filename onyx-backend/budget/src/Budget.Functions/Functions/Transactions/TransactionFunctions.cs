@@ -98,9 +98,7 @@ public sealed class TransactionFunctions : BaseFunction
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
-        var command = new BulkRemoveTransactionsCommand(
-            request.TransactionsId.Select(Guid.Parse).ToArray(),
-            Guid.Parse(budgetId));
+        var command = new BulkRemoveTransactionsCommand(request.TransactionsId.Select(Guid.Parse).ToArray());
 
         var result = await Sender.Send(command);
 

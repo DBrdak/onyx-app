@@ -153,7 +153,7 @@ public abstract class Repository<TEntity, TEntityId>
         var doc = Document.FromJson(json);
 
         await Table.PutItemAsync(doc, cancellationToken);
-
+        
         return Result.Success(entity);
     }
 

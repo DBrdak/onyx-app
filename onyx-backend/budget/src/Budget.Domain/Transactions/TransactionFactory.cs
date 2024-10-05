@@ -9,21 +9,22 @@ namespace Budget.Domain.Transactions;
 
 public sealed class TransactionFactory
 {
-    private static Account account;
-    private static BudgetId budgetId;
+    private static Account _account;
+    private static BudgetId _budgetId;
     private Counterparty _counterparty;
     private Subcategory? _subcategory;
     private DateTime _transactedAt;
     private Money _originalAmount;
     private Money? _convertedAmount;
     private Money? _budgetAmount;
-    private bool IsForeignTransaction => _convertedAmount is not null;
+    private bool IsForeignTransaction =>
+        _convertedAmount is not null && _convertedAmount.Currency != _originalAmount.Currency;
     private bool IsOutflow => _originalAmount < 0;
 
     public TransactionFactory(Account account, BudgetId budgetId)
     {
-        TransactionFactory.account = account;
-        TransactionFactory.budgetId = budgetId;
+        _account = account;
+        _budgetId = budgetId;
     }
 
     public Result<Transaction> CreateTransaction(
@@ -44,42 +45,41 @@ public sealed class TransactionFactory
         return SwitchTransactionCreate(IsForeignTransaction, IsOutflow);
     }
 
-    private Result<Transaction>
-        SwitchTransactionCreate(bool isForeignTransaction, bool isOutflow) =>
+    private Result<Transaction> SwitchTransactionCreate(bool isForeignTransaction, bool isOutflow) =>
         (isForeignTransaction, isOutflow, _subcategory, _convertedAmount) switch
         {
             (true, true, not null, not null) => Transaction.CreateForeignOutflow(
-                account,
+                _account,
                 _subcategory,
                 _convertedAmount,
                 _originalAmount,
                 _transactedAt,
                 _counterparty,
                 _budgetAmount,
-                budgetId),
+                _budgetId),
             (true, false, _, not null) => Transaction.CreateForeignInflow(
-                account,
+                _account,
                 _convertedAmount,
                 _originalAmount,
                 _transactedAt,
                 _counterparty,
                 _budgetAmount,
-                budgetId),
+                _budgetId),
             (false, true, not null, _) => Transaction.CreatePrincipalOutflow(
-                account,
+                _account,
                 _subcategory,
                 _originalAmount,
                 _transactedAt,
                 _counterparty,
                 _budgetAmount,
-                budgetId),
+                _budgetId),
             (false, false, _, _) => Transaction.CreatePrincipalInflow(
-                account,
+                _account,
                 _originalAmount,
                 _transactedAt,
                 _counterparty,
                 _budgetAmount,
-                budgetId),
+                _budgetId),
             _ => TransactionErrors.InvalidCreateParameters
         };
 }
