@@ -148,11 +148,11 @@ internal sealed class BulkAddTransactionsCommandHandler : ICommandHandler<BulkAd
 
         //TODO Debug
         LambdaLogger.Log("transactions: " + JsonConvert.SerializeObject(createdTransactions));
-        LambdaLogger.Log("transactions: " + JsonConvert.SerializeObject(subcategories));
-        LambdaLogger.Log("transactions: " + JsonConvert.SerializeObject(account));
+        LambdaLogger.Log("subcategories: " + JsonConvert.SerializeObject(subcategories));
+        LambdaLogger.Log("account: " + JsonConvert.SerializeObject(account));
 
         var transactionsAddTask = _transactionRepository.AddRangeAsync(createdTransactions, cancellationToken);
-        var subcategoriesUpdateTask = _subcategoryRepository.UpdateRangeAsync(subcategories.Where(s => s != null)!, cancellationToken);
+        var subcategoriesUpdateTask = _subcategoryRepository.UpdateRangeAsync(subcategories.Where(s => s != null).DistinctBy(s => s.Id)!, cancellationToken);
 
         _ = await Task.WhenAll(transactionsAddTask, subcategoriesUpdateTask);
         var accountUpdateResult = await _accountRepository.UpdateAsync(account, cancellationToken);
