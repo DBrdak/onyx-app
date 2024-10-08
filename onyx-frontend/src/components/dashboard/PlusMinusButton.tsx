@@ -7,9 +7,14 @@ import { cn } from "@/lib/utils";
 interface PlusMinusButtonProps {
   state: "+" | "-";
   setState: (state: "+" | "-") => void;
+  className?: string;
 }
 
-const PlusMinusButton: FC<PlusMinusButtonProps> = ({ state, setState }) => {
+const PlusMinusButton: FC<PlusMinusButtonProps> = ({
+  state,
+  setState,
+  className,
+}) => {
   const handleClick = () => {
     setState(state === "+" ? "-" : "+");
   };
@@ -24,6 +29,7 @@ const PlusMinusButton: FC<PlusMinusButtonProps> = ({ state, setState }) => {
         state === "+"
           ? "text-primary hover:text-primary"
           : "text-destructive hover:text-destructive",
+        className,
       )}
     >
       {state === "+" ? <Plus /> : <Minus />}

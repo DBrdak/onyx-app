@@ -13,7 +13,7 @@ import {
 
 const TABLE_SIZE_OPTIONS = [
   {
-    value: "7",
+    value: "8",
     label: "Default",
   },
   {
@@ -42,13 +42,14 @@ const TransactionTableSizeFilter: FC<TransactionTableSizeFilterProps> = ({
   });
   const navigate = useNavigate();
 
-  const [size, setSize] = useState(tableSize || "7");
+  const [size, setSize] = useState(tableSize || "8");
 
   const onSelect = async (value: string) => {
     if (value === tableSize) return;
     setSize(value);
     await navigate({
       search: (prev) => ({ ...prev, tableSize: value }),
+      mask: "/budget/$budgetId/accounts/$accountId",
     });
   };
 

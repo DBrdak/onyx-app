@@ -1,14 +1,16 @@
 import { FC, useCallback, useState } from "react";
-import { flexRender } from "@tanstack/react-table";
+import { ColumnDef, flexRender } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { useParams } from "@tanstack/react-router";
 
 import { Minus, Plus } from "lucide-react";
 import CreateTransactionTableForm from "@/components/dashboard/accounts/transactionsTable/TransactionsTableCreateForm";
-import { columns } from "@/components/dashboard/accounts/transactionsTable/TransactionsTableColumns";
 import CreateTransactionButton from "@/components/dashboard/accounts/transactionsTable/TransactionTableCreateModal";
 import DeleteTransactionsButton from "@/components/dashboard/accounts/transactionsTable/TransactionsTableDeleteButton";
 import ImportTransactionsButton from "@/components/dashboard/accounts/transactionsTable/TransactionsTableImportButton";
 import ImportTableSelectStage from "@/components/dashboard/accounts/transactionsTable/importTable/ImportTableSelectStage";
 import TransactionTableSizeFilter from "@/components/dashboard/accounts/transactionsTable/TransactionTableSizeFilter";
+import ImportTableSubmitStage from "@/components/dashboard/accounts/transactionsTable/importTable/ImportTableSubmitStage";
 import {
   Table,
   TableBody,
@@ -19,6 +21,14 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  createAmountColumn,
+  createDateColumn,
+  createSelectColumn,
+  createSetSubcategoryColumn,
+  createTextColumn,
+} from "@/components/dashboard/accounts/transactionsTable/TransactionsTableColumnsDefinitions";
 
 import {
   ImportTransactionsPresubmitState,
@@ -29,8 +39,7 @@ import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import { DataTablePagination } from "@/components/ui/table-pagination";
 import { useTransactionsDataTable } from "@/lib/hooks/useTransactionsDataTable";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import ImportTableSubmitStage from "./importTable/ImportTableSubmitStage";
+import { useSetSubcategoryMutation } from "@/lib/hooks/mutations/useSetSubcategoryMutation";
 
 interface TransactionsTable {
   transactions: Transaction[];
@@ -62,6 +71,18 @@ const TransactionsTable: FC<TransactionsTable> = ({
   >([]);
   const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
   const [isCreateFormVisible, setIsCreateFormVisible] = useState(false);
+  const { budgetId, accountId } = useParams({
+    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
+  });
+  const { mutate } = useSetSubcategoryMutation({ accountId });
+  const columns: ColumnDef<Transaction>[] = [
+    createSelectColumn(),
+    createDateColumn((row) => format(new Date(row.transactedAt), "PP")),
+    createTextColumn("counterparty", "Counterparty", "counterparty.name"),
+    createSetSubcategoryColumn(budgetId, mutate),
+    createAmountColumn("amount.amount"),
+  ];
+
   const { table, globalFilter, setGlobalFilter, setRowSelection } =
     useTransactionsDataTable({
       data: transactions,
@@ -201,7 +222,7 @@ const TransactionsTable: FC<TransactionsTable> = ({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="py-3.5">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

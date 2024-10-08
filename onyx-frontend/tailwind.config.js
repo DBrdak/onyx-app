@@ -66,7 +66,7 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       gridTemplateColumns: {
-        "table-layout": "auto 0.9fr 1.2fr 0.9fr 1.15fr",
+        "table-layout": "auto 0.9fr 1.25fr 1fr 1fr",
       },
       keyframes: {
         "accordion-down": {

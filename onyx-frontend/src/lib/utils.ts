@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { endOfWeek, startOfWeek } from "date-fns";
+import { addYears, endOfWeek, isBefore, startOfWeek } from "date-fns";
 
 import { USER_LOCALE } from "./constants/locale";
 import { AxiosError } from "axios";
@@ -110,4 +110,21 @@ export const getWeekRange = (date: Date): DateRange => {
   const start = startOfWeek(date, { weekStartsOn: 1 });
   const end = endOfWeek(date, { weekStartsOn: 1 });
   return { from: start, to: end };
+};
+
+export const isDisabledDate = (date: string | Date) => {
+  const parsedDate = new Date(date);
+  const currentLocalDate = new Date();
+  const currentUtcDate = new Date(
+    Date.UTC(
+      currentLocalDate.getUTCFullYear(),
+      currentLocalDate.getUTCMonth(),
+      currentLocalDate.getUTCDate(),
+    ),
+  );
+
+  const fiveYearsAgoUtc = addYears(currentUtcDate, -5);
+  const isOlderThanFiveYearsUtc = isBefore(parsedDate, fiveYearsAgoUtc);
+  const isInFutureLocally = parsedDate > currentLocalDate;
+  return isOlderThanFiveYearsUtc || isInFutureLocally;
 };

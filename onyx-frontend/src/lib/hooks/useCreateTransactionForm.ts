@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams, useSearch } from "@tanstack/react-router";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -26,23 +26,11 @@ export const useCreateTransactionForm = ({ account }: Props) => {
   const { accDate } = useSearch({
     from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
   });
-  const accMonth = new Date(accDate).getMonth() + 1;
-  const accYear = new Date(accDate).getFullYear();
+
   const { budgetId, accountId } = useParams({
     from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
   });
   const queryClient = useQueryClient();
-
-  const isCurrentMonthSelected =
-    Number(accMonth) === new Date().getMonth() + 1 &&
-    Number(accYear) === new Date().getFullYear();
-  const dafaultTransactedAt = useMemo(
-    () =>
-      isCurrentMonthSelected
-        ? new Date()
-        : new Date(`${accYear}-${accMonth}-01`),
-    [accMonth, accYear, isCurrentMonthSelected],
-  );
 
   const form = useForm<TCreateTransactionSchema>({
     defaultValues: {
@@ -51,7 +39,7 @@ export const useCreateTransactionForm = ({ account }: Props) => {
       counterpartyName: "",
       subcategoryId: "",
       subcategoryName: "",
-      transactedAt: dafaultTransactedAt,
+      transactedAt: new Date(accDate),
       transactionSign: "-",
     },
     resolver: zodResolver(CreateTransactionSchema),
@@ -73,9 +61,9 @@ export const useCreateTransactionForm = ({ account }: Props) => {
     reset((defaultValues) => ({
       ...defaultValues,
       currency: account.balance.currency,
-      transactedAt: dafaultTransactedAt,
+      transactedAt: new Date(accDate),
     }));
-  }, [dafaultTransactedAt, reset, account.balance.currency]);
+  }, [reset, account.balance.currency, accDate]);
 
   const [
     transtactionsQueryOptions,
@@ -134,8 +122,8 @@ export const useCreateTransactionForm = ({ account }: Props) => {
       return previousTransactions;
     },
     onError: (err, _newTodo, previousTransactions) => {
-      queryClient.setQueryData(transactionsQueryKey, previousTransactions);
       console.error(err);
+      queryClient.setQueryData(transactionsQueryKey, previousTransactions);
     },
     onSettled: () => {
       Promise.all([
@@ -171,6 +159,8 @@ export const useCreateTransactionForm = ({ account }: Props) => {
       transactedAt,
     };
 
+    console.log(payload);
+
     mutate({ budgetId, payload });
     reset();
   };
@@ -199,10 +189,7 @@ export const useCreateTransactionForm = ({ account }: Props) => {
     isPending,
     selectedCurrency,
     transactionSign,
-    isCurrentMonthSelected,
     selectedSubcategoryName,
-    accMonth,
-    accYear,
     budgetId,
   };
 };

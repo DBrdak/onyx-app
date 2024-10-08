@@ -1,8 +1,9 @@
 import * as z from "zod";
-import { parse, isValid, format, addYears, isBefore } from "date-fns";
+import { parse, isValid, format } from "date-fns";
 
 import { SubcategorySchema } from "@/lib/validation/subcategory";
 import {
+  CurrencySchema,
   MoneySchema,
   RequiredString,
   ResultSchema,
@@ -10,6 +11,7 @@ import {
 import { CounterpartySchema } from "@/lib/validation/counterparty";
 import { AccountSchema } from "@/lib/validation/account";
 import { ALL_CURRENCIES } from "@/lib/constants/currency";
+import { isDisabledDate } from "../utils";
 
 export const TransactionSchema = z.object({
   id: RequiredString,
@@ -75,7 +77,7 @@ export const CreateTransactionSchema = z
       50,
       "Max length of counterparty name is 50 characters.",
     ),
-    currency: RequiredString,
+    currency: CurrencySchema,
     amount: AmountSchema,
     transactedAt: z.date(),
   })
@@ -107,28 +109,9 @@ export const ImportTransactionsSubmitStageSchema = z
         parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
       }
       return format(parsedDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
-    }).refine(
-      (dateString) => {
-        const parsedDate = new Date(dateString);
-        const currentUtcDate = new Date(
-          Date.UTC(
-            new Date().getUTCFullYear(),
-            new Date().getUTCMonth(),
-            new Date().getUTCDate(),
-            new Date().getUTCHours(),
-            new Date().getUTCMinutes(),
-            new Date().getUTCSeconds(),
-          ),
-        );
-
-        const fiveYearsAgoUtc = addYears(currentUtcDate, -5);
-
-        return isBefore(fiveYearsAgoUtc, parsedDate);
-      },
-      {
-        message: "Transaction date cannot be older than 5 years.",
-      },
-    ),
+    }).refine((dateString) => isDisabledDate(dateString), {
+      message: "Transaction date cannot be older than 5 years.",
+    }),
     counterpartyName: RequiredString,
     subcategoryId: RequiredString.nullable(),
   })

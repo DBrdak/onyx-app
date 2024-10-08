@@ -9,6 +9,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { cn, getFormattedCurrency } from "@/lib/utils";
 import { ImportTransactionsPresubmitState } from "@/lib/validation/transaction";
 import { Money } from "@/lib/validation/base";
+import { type Transaction } from "@/lib/validation/transaction";
+import { type SetSubcategoryPayload } from "@/lib/api/transaction";
+import { UseMutateFunction } from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
 
 interface BaseTableData {
   [key: string]: unknown;
@@ -162,6 +166,52 @@ export const createSubcategorySelectColumn = (
           disabled={amount.amount > 0 || disabled}
         />
       </div>
+    );
+  },
+});
+
+export const createSetSubcategoryColumn = (
+  budgetId: string,
+  subcategoryChangeHandler: UseMutateFunction<
+    AxiosResponse,
+    Error,
+    SetSubcategoryPayload
+  >,
+): ColumnDef<Transaction> => ({
+  accessorKey: "subcategory.name",
+  header: ({ column, table }) => (
+    <TransactionsTableColumnsSortButton
+      column={column}
+      label="Subcategory"
+      table={table}
+    />
+  ),
+  cell: ({ row }) => {
+    const subcategoryName = row.original.subcategory?.name;
+    const transactionId = row.original.id;
+
+    const handleSubcategoryChange = (newSubcategoryId: string) => {
+      subcategoryChangeHandler({
+        budgetId,
+        subcategoryId: newSubcategoryId,
+        transactionId,
+      });
+    };
+
+    return !subcategoryName ? (
+      <div className="pl-4 capitalize">
+        <span>N/A</span>
+      </div>
+    ) : subcategoryName === "Unknown" ? (
+      <div className="pl-4">
+        <SubcategoriesPopover
+          budgetId={budgetId}
+          onChange={handleSubcategoryChange}
+          selectedSubcategoryName={subcategoryName}
+        />
+      </div>
+    ) : (
+      <div className="pl-4 capitalize">{subcategoryName}</div>
     );
   },
 });

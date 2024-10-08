@@ -46,6 +46,7 @@ const SubcategoriesPopover: FC<SubcategoriesPopoverProps> = ({
           role="combobox"
           className="w-full justify-between"
           disabled={disabled}
+          size="sm"
         >
           {selectedSubcategoryName || "Select subcategory..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

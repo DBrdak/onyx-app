@@ -23,7 +23,7 @@ interface QueryParams {
 export interface CreateTransactionPayload {
   accountId: string;
   amount: Money;
-  transactedAt: string;
+  transactedAt: Date;
   counterpartyName: string;
   subcategoryId?: string | null;
 }
@@ -42,6 +42,12 @@ interface CreateTransactionsPayload {
   budgetId: string;
   accountId: string;
   transactions: Omit<CreateTransactionPayload, "accountId">[];
+}
+
+export interface SetSubcategoryPayload {
+  budgetId: string;
+  transactionId: string;
+  subcategoryId: string;
 }
 
 export const getTransactions = async (
@@ -128,3 +134,12 @@ export const deleteMultipleTransactions = ({
     },
   });
 };
+
+export const setSubcategory = ({
+  budgetId,
+  transactionId,
+  subcategoryId,
+}: SetSubcategoryPayload) =>
+  budgetApi.put(`/${budgetId}/transactions/${transactionId}/subcategory`, {
+    subcategoryId,
+  });

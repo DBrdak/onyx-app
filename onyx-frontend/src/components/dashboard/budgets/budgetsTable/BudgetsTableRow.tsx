@@ -90,7 +90,7 @@ const BudgetsTableRow: FC<BudgetsTableRowProps> = ({ budget }) => {
           year: DEFAULT_YEAR_STRING,
           accDate: DEFAULT_ISO_DATE,
           accPeriod: DEFAULT_PERIOD_OPTION,
-          tableSize: "7",
+          tableSize: "8",
         }}
         mask={{ to: `/budget/${id}` }}
         className="group peer col-span-9 grid w-full grid-cols-9 items-center gap-x-4 px-4 py-6 hover:bg-accent"

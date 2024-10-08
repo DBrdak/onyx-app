@@ -22,7 +22,7 @@ interface Props<TData, TValue> {
 export function useTransactionsDataTable<TData, TValue>({
   data,
   columns,
-  pageSize = 7,
+  pageSize = 8,
 }: Props<TData, TValue>) {
   const { tableSize } = useSearch({
     from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",

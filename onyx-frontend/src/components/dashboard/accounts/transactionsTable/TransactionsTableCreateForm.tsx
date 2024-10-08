@@ -35,11 +35,8 @@ const TransactionsTableCreateForm: FC<TransactionsTableCreateFormProps> = ({
     control,
     transactionSign,
     selectedCurrency,
-    isCurrentMonthSelected,
     isPending,
     selectedSubcategoryName,
-    accMonth,
-    accYear,
     clearErrors,
     budgetId,
     onSubcategoryChange,
@@ -51,23 +48,18 @@ const TransactionsTableCreateForm: FC<TransactionsTableCreateFormProps> = ({
     <Form {...form}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-table-layout gap-x-6 py-1.5"
+        className="grid grid-cols-table-layout gap-x-6 py-1"
         ref={formRef}
       >
-        <Button size="icon" type="submit" disabled={isPending}>
-          <Plus />
+        <Button className="h-9 w-9" type="submit" disabled={isPending}>
+          <Plus className="shrink-0" />
         </Button>
         <FormField
           control={form.control}
           name="transactedAt"
           render={({ field }) => (
             <FormItem className="w-full pl-1.5">
-              <CalendarInput
-                field={field}
-                isCurrentMonthSelected={isCurrentMonthSelected}
-                accMonth={Number(accMonth)}
-                accYear={Number(accYear)}
-              />
+              <CalendarInput field={field} className="h-9" />
               <FormMessage />
             </FormItem>
           )}
@@ -81,7 +73,7 @@ const TransactionsTableCreateForm: FC<TransactionsTableCreateFormProps> = ({
                 <Input
                   {...field}
                   placeholder="Counterparty..."
-                  className="bg-transparent placeholder:text-foreground"
+                  className="h-9 bg-transparent placeholder:text-foreground"
                 />
               </FormControl>
               <FormMessage />
@@ -112,6 +104,7 @@ const TransactionsTableCreateForm: FC<TransactionsTableCreateFormProps> = ({
                 <CurrencyCombobox
                   selectedValue={field.value}
                   onChange={field.onChange}
+                  className="h-9"
                 />
                 <FormMessage />
               </FormItem>
@@ -127,12 +120,13 @@ const TransactionsTableCreateForm: FC<TransactionsTableCreateFormProps> = ({
                     <PlusMinusButton
                       state={transactionSign}
                       setState={handlePlusMinusBtn}
+                      className="h-9"
                     />
                     <div className="px-1.5">
                       <AmountInput
                         field={field}
                         currency={selectedCurrency || account.balance.currency}
-                        className="border text-right"
+                        className="h-9 border text-right"
                       />
                     </div>
                   </div>
