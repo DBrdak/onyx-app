@@ -25,6 +25,7 @@ export const DATE_PERIOD_OPTIONS = [
   "day",
   "week",
   "month",
+  "range",
   "last7days",
   "last30days",
 ] as const;
@@ -41,6 +42,10 @@ export const DATE_PERIOD_SELECT = [
   {
     value: "month",
     label: "Month",
+  },
+  {
+    value: "range",
+    label: "Range",
   },
   {
     value: "last7days",

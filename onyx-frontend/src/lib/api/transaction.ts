@@ -18,6 +18,8 @@ interface QueryParams {
   subcategoryId?: string;
   date?: string;
   period?: string;
+  dateRangeStart?: string;
+  dateRangeEnd?: string;
 }
 
 export interface CreateTransactionPayload {
@@ -54,14 +56,29 @@ export const getTransactions = async (
   budgetId: string,
   search: QueryParams,
 ) => {
-  const { accountId, counterpartyId, subcategoryId, date, period } = search;
-  const searchParams = new URLSearchParams({
-    ...(accountId && { accountId }),
-    ...(counterpartyId && { counterpartyId }),
-    ...(subcategoryId && { subcategoryId }),
-    ...(date && { date }),
-    ...(period && { period }),
-  });
+  const {
+    accountId,
+    counterpartyId,
+    subcategoryId,
+    date,
+    period,
+    dateRangeEnd,
+    dateRangeStart,
+  } = search;
+
+  const searchParams = new URLSearchParams();
+
+  if (accountId) searchParams.append("accountId", accountId);
+  if (counterpartyId) searchParams.append("counterpartyId", counterpartyId);
+  if (subcategoryId) searchParams.append("subcategoryId", subcategoryId);
+
+  if (period === "range") {
+    if (dateRangeStart) searchParams.append("dateRangeStart", dateRangeStart);
+    if (dateRangeEnd) searchParams.append("dateRangeEnd", dateRangeEnd);
+  } else {
+    if (date) searchParams.append("date", date);
+    if (period) searchParams.append("period", period);
+  }
 
   let url = `/${budgetId}/transactions`;
 

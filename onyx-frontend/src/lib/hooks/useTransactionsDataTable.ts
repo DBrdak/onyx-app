@@ -24,7 +24,7 @@ export function useTransactionsDataTable<TData, TValue>({
   columns,
   pageSize = 8,
 }: Props<TData, TValue>) {
-  const { tableSize } = useSearch({
+  const search = useSearch({
     from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
   });
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -37,12 +37,12 @@ export function useTransactionsDataTable<TData, TValue>({
   const debouncedGlobalFilter = useDebounce(globalFilter, 500);
 
   useEffect(() => {
-    const size = parseInt(tableSize);
+    const size = parseInt(search.tableSize);
 
-    if (size === pagination.pageSize) return;
+    if (size === pagination.pageSize && pagination.pageIndex === 0) return;
 
-    setPagination((prev) => ({ ...prev, pageSize: size }));
-  }, [tableSize]);
+    setPagination(() => ({ pageIndex: 0, pageSize: size }));
+  }, [search]);
 
   const table = useReactTable({
     data,

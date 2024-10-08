@@ -6,14 +6,24 @@ import {
   RequiredString,
   YearStringSchema,
 } from "@/lib/validation/base";
+import { DEFAULT_ISO_DATE } from "../constants/date";
 
-export const SingleBudgetPageParamsSchema = z.object({
-  month: MonthStringSchema,
-  year: YearStringSchema,
-  accDate: IsoDateSchema,
-  accPeriod: DatePeriodSchema,
-  tableSize: z.string().default("7").catch("7"),
-});
+export const SingleBudgetPageParamsSchema = z
+  .object({
+    month: MonthStringSchema,
+    year: YearStringSchema,
+    accDate: IsoDateSchema.catch(DEFAULT_ISO_DATE).default(DEFAULT_ISO_DATE),
+    accPeriod: DatePeriodSchema,
+    tableSize: z.string().default("8").catch("8"),
+    dateRangeStart: IsoDateSchema.optional(),
+    dateRangeEnd: IsoDateSchema.optional(),
+  })
+  .refine(
+    (params) =>
+      params.accPeriod !== "range" ||
+      (params.dateRangeStart && params.dateRangeEnd),
+    { message: "no dateRangeStart and dateRangeEnd in search params" },
+  );
 
 export type SingleBudgetPageSearchParams = z.infer<
   typeof SingleBudgetPageParamsSchema

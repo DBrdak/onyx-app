@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import AccountCardFiltersDayCalendar from "@/components/dashboard/accounts/accountCard/AccountCardFiltersDayCalendar";
 import AccountCardFiltersWeekCalendar from "@/components/dashboard/accounts/accountCard/AccountCardFiltersWeekCalendar";
 import AccountCardFiltersMonthCalendar from "@/components/dashboard/accounts/accountCard/AccountCardFiltersMonthCalendar";
+import AccountCardFiltersRangeCalendar from "@/components/dashboard/accounts/accountCard/AccountCardFiltersRangeCalendar";
 import {
   Select,
   SelectContent,
@@ -16,6 +17,7 @@ import {
 
 import { DATE_PERIOD_OPTIONS, DATE_PERIOD_SELECT } from "@/lib/constants/date";
 import { getTransactionsQueryKey } from "@/lib/api/transaction";
+import { SingleBudgetPageSearchParams } from "@/lib/validation/searchParams";
 
 interface AccountCardFiltersProps {
   disabled: boolean;
@@ -43,19 +45,19 @@ const AccountCardFilters: FC<AccountCardFiltersProps> = ({ disabled }) => {
   ) => {
     setSelectedPeriod(value);
 
-    if (value === "day" || value === "week" || value === "month") return;
-
-    await navigate({
-      search: (prev) => ({
-        ...prev,
-        accPeriod: value,
-        accDate: format(new Date(), "yyyy-MM-dd"),
-      }),
-      mask: "/budget/$budgetId/accounts/$accountId",
-    });
-    await queryClient.invalidateQueries({
-      queryKey: getTransactionsQueryKey(accountId),
-    });
+    if (value === "last30days" || value === "last7days") {
+      await navigate({
+        search: (prev: SingleBudgetPageSearchParams) => ({
+          ...prev,
+          accPeriod: value,
+          accDate: format(new Date(), "yyyy-MM-dd"),
+        }),
+        mask: "/budget/$budgetId/accounts/$accountId",
+      });
+      await queryClient.invalidateQueries({
+        queryKey: getTransactionsQueryKey(accountId),
+      });
+    }
   };
 
   return (
@@ -85,6 +87,7 @@ const AccountCardFilters: FC<AccountCardFiltersProps> = ({ disabled }) => {
         {selectedPeriod === "day" && <AccountCardFiltersDayCalendar />}
         {selectedPeriod === "week" && <AccountCardFiltersWeekCalendar />}
         {selectedPeriod === "month" && <AccountCardFiltersMonthCalendar />}
+        {selectedPeriod === "range" && <AccountCardFiltersRangeCalendar />}
       </div>
     </div>
   );

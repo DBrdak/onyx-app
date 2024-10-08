@@ -18,7 +18,8 @@ export const Route = createLazyFileRoute(
 
 function Account() {
   const { accountId, budgetId } = Route.useParams();
-  const { accDate, accPeriod } = Route.useSearch();
+  const { accDate, accPeriod, dateRangeEnd, dateRangeStart } =
+    Route.useSearch();
 
   const [{ data: transactions }, { data: accounts }] = useSuspenseQueries({
     queries: [
@@ -26,6 +27,8 @@ function Account() {
         accountId,
         date: accDate,
         period: accPeriod,
+        dateRangeStart,
+        dateRangeEnd,
       }),
       getAccountsQueryOptions(budgetId),
       getCategoriesQueryOptions(budgetId),

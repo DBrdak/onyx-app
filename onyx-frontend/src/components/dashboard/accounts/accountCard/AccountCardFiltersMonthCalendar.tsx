@@ -18,6 +18,7 @@ import {
   MONTHS,
 } from "@/lib/constants/date";
 import { getTransactionsQueryKey } from "@/lib/api/transaction";
+import { SingleBudgetPageSearchParams } from "@/lib/validation/searchParams";
 
 const AccountCardFiltersMonthCalendar: FC = () => {
   const { accDate, accPeriod } = useSearch({
@@ -44,7 +45,7 @@ const AccountCardFiltersMonthCalendar: FC = () => {
     setSelectedMonth(selectedDate);
 
     await navigate({
-      search: (prev) => ({
+      search: (prev: SingleBudgetPageSearchParams) => ({
         ...prev,
         accPeriod: "month",
         accDate: format(

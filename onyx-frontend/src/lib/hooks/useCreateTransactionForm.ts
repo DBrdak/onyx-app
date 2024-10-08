@@ -159,8 +159,6 @@ export const useCreateTransactionForm = ({ account }: Props) => {
       transactedAt,
     };
 
-    console.log(payload);
-
     mutate({ budgetId, payload });
     reset();
   };

@@ -15,6 +15,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn, getWeekRange } from "@/lib/utils";
 import { getTransactionsQueryKey } from "@/lib/api/transaction";
 import { DateRange } from "react-day-picker";
+import { SingleBudgetPageSearchParams } from "@/lib/validation/searchParams";
 
 const AccountCardFiltersWeekCalendar: FC = () => {
   const { accDate, accPeriod } = useSearch({
@@ -35,7 +36,7 @@ const AccountCardFiltersWeekCalendar: FC = () => {
     setSelectedWeek(range);
 
     await navigate({
-      search: (prev) => ({
+      search: (prev: SingleBudgetPageSearchParams) => ({
         ...prev,
         accPeriod: "week",
         accDate: format(date, "yyyy-MM-dd"),

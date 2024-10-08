@@ -14,6 +14,7 @@ import { Calendar } from "@/components/ui/calendar";
 
 import { cn } from "@/lib/utils";
 import { getTransactionsQueryKey } from "@/lib/api/transaction";
+import { SingleBudgetPageSearchParams } from "@/lib/validation/searchParams";
 
 const AccountCardFiltersDayCalendar: FC = () => {
   const { accDate, accPeriod } = useSearch({
@@ -54,7 +55,7 @@ const AccountCardFiltersDayCalendar: FC = () => {
             if (!date) return;
             setSelectedDay(date);
             await navigate({
-              search: (prev) => ({
+              search: (prev: SingleBudgetPageSearchParams) => ({
                 ...prev,
                 accPeriod: "day",
                 accDate: format(date, "yyyy-MM-dd"),

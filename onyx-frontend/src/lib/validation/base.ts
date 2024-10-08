@@ -3,7 +3,6 @@ import { parseISO, isValid } from "date-fns";
 
 import {
   DATE_PERIOD_OPTIONS,
-  DEFAULT_ISO_DATE,
   DEFAULT_MONTH_STRING,
   DEFAULT_PERIOD_OPTION,
   DEFAULT_YEAR_STRING,
@@ -94,19 +93,15 @@ export const DatePeriodSchema = z
   .catch(DEFAULT_PERIOD_OPTION)
   .default(DEFAULT_PERIOD_OPTION);
 
-export const IsoDateSchema = z
-  .string()
-  .refine(
-    (val) => {
-      const parsedDate = parseISO(val);
-      return isValid(parsedDate);
-    },
-    {
-      message: "Invalid ISO 8601 date format",
-    },
-  )
-  .catch(DEFAULT_ISO_DATE)
-  .default(DEFAULT_ISO_DATE);
+export const IsoDateSchema = z.string().refine(
+  (val) => {
+    const parsedDate = parseISO(val);
+    return isValid(parsedDate);
+  },
+  {
+    message: "Invalid ISO 8601 date format",
+  },
+);
 
 export const NameSchema = z
   .string()
