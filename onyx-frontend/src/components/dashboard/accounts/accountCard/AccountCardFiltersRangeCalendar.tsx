@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
-import { format } from "date-fns";
+import { format, subYears } from "date-fns";
 
 import { CalendarIcon } from "lucide-react";
 import {
@@ -108,6 +108,7 @@ const AccountCardFiltersRangeCalendar = () => {
           onSelect={(newRange) => onRangeSelect(newRange)}
           disabled={(date) => date > new Date()}
           toDate={new Date()}
+          fromDate={subYears(new Date(), 5)}
         />
       </PopoverContent>
     </Popover>

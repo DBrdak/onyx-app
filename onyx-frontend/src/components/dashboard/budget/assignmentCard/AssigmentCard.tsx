@@ -1,7 +1,6 @@
-import { FC, useMemo } from "react";
+import { FC, useMemo, useRef } from "react";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
-import ToAssignPopover from "./AssignmentCardDatesPopover";
 import {
   Card,
   CardContent,
@@ -11,15 +10,18 @@ import {
 import { Money } from "@/lib/validation/base";
 import { cn, getFormattedCurrency } from "@/lib/utils";
 import { getToAssignQueryKey } from "@/lib/api/budget";
-import { type AvailableDates } from "@/components/dashboard/DatesMonthYearPicker";
 import DatesMonthYearPickerButtons from "../../DatesMonthYearPickerButtons";
+import MonthsCalendarPopover, {
+  AvailableDates,
+  MonthsCalendarPopoverHandle,
+} from "../../MonthsCalendarPopover";
 
-interface AssigmentCardProps {
+interface AssignmentCardProps {
   toAssign: Money;
   availableDates: AvailableDates;
 }
 
-const AssigmentCard: FC<AssigmentCardProps> = ({
+const AssignmentCard: FC<AssignmentCardProps> = ({
   toAssign,
   availableDates,
 }) => {
@@ -38,8 +40,9 @@ const AssigmentCard: FC<AssigmentCardProps> = ({
   const numericSearchParamsMonth = Number(selectedMonth);
   const numericSearchParamsYear = Number(selectedYear);
 
+  const years = Object.keys(availableDates).map((y) => Number(y));
   const months = availableDates[numericSearchParamsYear] || [];
-  const monthIndex = months.indexOf(numericSearchParamsMonth);
+  const monthIndex = months.indexOf(numericSearchParamsMonth - 1);
 
   const isMinMonth = useMemo(() => monthIndex === 0, [monthIndex]);
   const isMaxMonth = useMemo(
@@ -47,22 +50,28 @@ const AssigmentCard: FC<AssigmentCardProps> = ({
     [monthIndex, months.length],
   );
 
-  const handleMonthChange = async (newMonth: number) => {
+  const calendarRef = useRef<MonthsCalendarPopoverHandle>(null);
+
+  const handleMonthChange = async (newMonthDate: Date) => {
     await navigate({
-      search: (prev) => ({ ...prev, month: newMonth.toString() }),
-      mask: { to: `/budget/${budgetId}` },
+      search: (prev) => ({
+        ...prev,
+        month: (newMonthDate.getMonth() + 1).toString(),
+        year: newMonthDate.getFullYear().toString(),
+      }),
+      mask: "/budget/$budgetId/accounts/$accountId",
     });
     queryClient.refetchQueries({ queryKey: getToAssignQueryKey(budgetId) });
   };
 
   const handleDecreaseMonth = () => {
     if (isMinMonth || isFetching) return;
-    handleMonthChange(months[monthIndex - 1]);
+    calendarRef.current?.decreaseMonth();
   };
 
   const handleIncreaseMonth = () => {
     if (isMaxMonth || isFetching) return;
-    handleMonthChange(months[monthIndex + 1]);
+    calendarRef.current?.increaseMonth();
   };
 
   return (
@@ -70,10 +79,21 @@ const AssigmentCard: FC<AssigmentCardProps> = ({
       <div className="flex items-center justify-between p-6">
         <div className="space-y-1">
           <CardTitle className="flex items-center justify-between">
-            <ToAssignPopover
-              selectedMonth={numericSearchParamsMonth}
-              selectedYear={numericSearchParamsYear}
-              availableDates={availableDates}
+            <MonthsCalendarPopover
+              ref={calendarRef}
+              onSelect={handleMonthChange}
+              defaultMonthDate={
+                new Date(
+                  numericSearchParamsYear,
+                  numericSearchParamsMonth - 1,
+                  1,
+                )
+              }
+              availableYears={years}
+              monthSelectDisabled={(monthIndex) => !months.includes(monthIndex)}
+              decreaseYearDisabled={(nextYear) => !years.includes(nextYear)}
+              increaseYearDisabled={(nextYear) => !years.includes(nextYear)}
+              triggerClassname="text-xl border-none pl-1"
             />
           </CardTitle>
           <CardDescription className="text-sm text-muted-foreground">
@@ -104,4 +124,4 @@ const AssigmentCard: FC<AssigmentCardProps> = ({
   );
 };
 
-export default AssigmentCard;
+export default AssignmentCard;

@@ -3,7 +3,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useParams, useSearch } from "@tanstack/react-router";
 
 import { X } from "lucide-react";
-import TargetCardFormDatePicker from "./TargetCardFormDatePicker";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,12 +13,17 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import AmountInput from "@/components/dashboard/AmountInput";
+import MonthsCalendarPopover from "@/components/dashboard/MonthsCalendarPopover";
 
 import { Target } from "@/lib/validation/base";
 import { CreateTarget } from "@/lib/validation/subcategory";
 import { FormTarget } from "@/lib/api/subcategory";
 import { formatToDecimalString, formatToDotDecimal } from "@/lib/utils";
 import { useCreateTargetMutation } from "@/lib/hooks/mutations/useCreateTargetMutation";
+import {
+  DEFAULT_MONTH_NUMBER,
+  DEFAULT_YEAR_NUMBER,
+} from "@/lib/constants/date";
 
 interface TargetCardFormProps {
   currentTarget: Target | undefined | null;
@@ -60,7 +64,7 @@ const TargetCardForm: FC<TargetCardFormProps> = ({
       year: defaultYear,
     },
   });
-  const { handleSubmit, control, watch } = form;
+  const { handleSubmit, control, watch, setValue } = form;
   const inputAmount = watch("amount");
   const inputMonth = watch("month");
   const inputYear = watch("year");
@@ -127,10 +131,22 @@ const TargetCardForm: FC<TargetCardFormProps> = ({
           <FormItem className="grid grid-cols-3 items-center gap-x-1 space-y-0">
             <FormLabel className="col-span-1">Up to month:</FormLabel>
             <FormControl>
-              <div className="col-span-2 h-10 w-full rounded-md border border-input px-3 text-sm">
-                <TargetCardFormDatePicker
-                  searchMonth={searchMonth}
-                  searchYear={searchYear}
+              <div className="col-span-2 h-10 w-full rounded-md text-sm">
+                <MonthsCalendarPopover
+                  defaultMonthDate={
+                    new Date(Number(defaultYear), Number(defaultMonth) - 1, 1)
+                  }
+                  onSelect={(newMonthDate) => {
+                    setValue("month", (newMonthDate.getMonth() + 1).toString());
+                    setValue("year", newMonthDate.getFullYear().toString());
+                  }}
+                  monthSelectDisabled={(monthIndex, selectedYear) =>
+                    monthIndex < DEFAULT_MONTH_NUMBER &&
+                    selectedYear === DEFAULT_YEAR_NUMBER
+                  }
+                  decreaseYearDisabled={(nextYear) =>
+                    nextYear < DEFAULT_YEAR_NUMBER
+                  }
                 />
               </div>
             </FormControl>
