@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { ControllerRenderProps, FieldValues, Path } from "react-hook-form";
 import { format } from "date-fns";
 
@@ -12,42 +12,24 @@ import { FormControl } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 
-import { cn } from "@/lib/utils";
+import { cn, isDisabledDate } from "@/lib/utils";
 
 interface CalendarInputProps<
   TFieldValues extends FieldValues,
   TName extends Path<TFieldValues>,
 > {
   field: ControllerRenderProps<TFieldValues, TName>;
-  isCurrentMonthSelected: boolean;
-  accMonth: number;
-  accYear: number;
-}
 
+  className?: string;
+}
 const CalendarInput = <
   TFieldValues extends FieldValues,
   TName extends Path<TFieldValues>,
 >({
   field,
-  isCurrentMonthSelected,
-  accMonth,
-  accYear,
+  className,
 }: CalendarInputProps<TFieldValues, TName>) => {
   const [open, setOpen] = useState(false);
-
-  const isDateDisabled = useMemo(
-    () => (date: Date) => {
-      if (isCurrentMonthSelected) {
-        const currentDate = new Date();
-        return date > currentDate;
-      } else {
-        const isDifferentMonth =
-          date.getMonth() + 1 !== accMonth || date.getFullYear() !== accYear;
-        return isDifferentMonth;
-      }
-    },
-    [isCurrentMonthSelected, accMonth, accYear],
-  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -58,14 +40,11 @@ const CalendarInput = <
             className={cn(
               "w-full pl-3 text-left",
               !field.value && "text-muted-foreground",
+              className,
             )}
             onClick={() => setOpen(true)}
           >
-            {field.value ? (
-              format(field.value, "PPP")
-            ) : (
-              <span>Pick a date</span>
-            )}
+            {field.value ? format(field.value, "PP") : <span>Pick a date</span>}
             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
           </Button>
         </FormControl>
@@ -75,10 +54,11 @@ const CalendarInput = <
           mode="single"
           selected={field.value}
           onSelect={(date) => {
+            if (!date) return;
             field.onChange(date);
             setOpen(false);
           }}
-          disabled={isDateDisabled}
+          disabled={(date) => isDisabledDate(date)}
           initialFocus
           disableNavigation
           defaultMonth={field.value}

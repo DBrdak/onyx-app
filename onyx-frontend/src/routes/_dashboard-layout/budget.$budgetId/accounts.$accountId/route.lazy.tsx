@@ -7,8 +7,8 @@ import TransactionsTable from "@/components/dashboard/accounts/transactionsTable
 
 import { getTransactionsQueryOptions } from "@/lib/api/transaction";
 import { getAccountsQueryOptions } from "@/lib/api/account";
-import { useAccountTransactionsData } from "@/lib/hooks/useAccountTransactionsData";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
+import { useSelectableCategories } from "@/lib/hooks/useSelectableCategories";
 
 export const Route = createLazyFileRoute(
   "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
@@ -18,11 +18,17 @@ export const Route = createLazyFileRoute(
 
 function Account() {
   const { accountId, budgetId } = Route.useParams();
-  const { accMonth, accYear } = Route.useSearch();
+  const { accDate, accPeriod, dateRangeEnd, dateRangeStart } =
+    Route.useSearch();
+
   const [{ data: transactions }, { data: accounts }] = useSuspenseQueries({
     queries: [
       getTransactionsQueryOptions(budgetId, accountId, {
         accountId,
+        date: accDate,
+        period: accPeriod,
+        dateRangeStart,
+        dateRangeEnd,
       }),
       getAccountsQueryOptions(budgetId),
       getCategoriesQueryOptions(budgetId),
@@ -36,24 +42,24 @@ function Account() {
 
   if (!selectedAccount) throw new Error("Incorrect account ID");
 
-  const accountCardTransactionsData = useAccountTransactionsData(
-    transactions,
-    accMonth,
-    accYear,
-  );
+  const selectableCategories = useSelectableCategories({ budgetId });
+
+  const disabled = !selectableCategories || !selectableCategories.length;
 
   return (
-    <div>
+    <>
       <AccountCard
         selectedAccount={selectedAccount}
         accounts={accounts}
         budgetId={budgetId}
-        transactionsData={accountCardTransactionsData}
+        transactions={transactions}
+        disabled={disabled}
       />
       <TransactionsTable
         selectedAccount={selectedAccount}
-        transactions={accountCardTransactionsData.selectedDateTransactions}
+        transactions={transactions}
+        disabled={disabled}
       />
-    </div>
+    </>
   );
 }

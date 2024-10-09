@@ -13,10 +13,13 @@ interface TransactionBudget {
   transactionId: string;
 }
 interface QueryParams {
-  query?: string;
   counterpartyId?: string;
   accountId?: string;
   subcategoryId?: string;
+  date?: string;
+  period?: string;
+  dateRangeStart?: string;
+  dateRangeEnd?: string;
 }
 
 export interface CreateTransactionPayload {
@@ -37,17 +40,45 @@ interface DeleteMultipleTransactions {
   rows: Row<Transaction>[];
 }
 
+interface CreateTransactionsPayload {
+  budgetId: string;
+  accountId: string;
+  transactions: Omit<CreateTransactionPayload, "accountId">[];
+}
+
+export interface SetSubcategoryPayload {
+  budgetId: string;
+  transactionId: string;
+  subcategoryId: string;
+}
+
 export const getTransactions = async (
   budgetId: string,
   search: QueryParams,
 ) => {
-  const { accountId, counterpartyId, query, subcategoryId } = search;
-  const searchParams = new URLSearchParams({
-    ...(accountId && { accountId }),
-    ...(counterpartyId && { counterpartyId }),
-    ...(query && { query }),
-    ...(subcategoryId && { subcategoryId }),
-  });
+  const {
+    accountId,
+    counterpartyId,
+    subcategoryId,
+    date,
+    period,
+    dateRangeEnd,
+    dateRangeStart,
+  } = search;
+
+  const searchParams = new URLSearchParams();
+
+  if (accountId) searchParams.append("accountId", accountId);
+  if (counterpartyId) searchParams.append("counterpartyId", counterpartyId);
+  if (subcategoryId) searchParams.append("subcategoryId", subcategoryId);
+
+  if (period === "range") {
+    if (dateRangeStart) searchParams.append("dateRangeStart", dateRangeStart);
+    if (dateRangeEnd) searchParams.append("dateRangeEnd", dateRangeEnd);
+  } else {
+    if (date) searchParams.append("date", date);
+    if (period) searchParams.append("period", period);
+  }
 
   let url = `/${budgetId}/transactions`;
 
@@ -93,6 +124,15 @@ export const getTransactionsQueryOptions = (
 export const createTransaction = ({ budgetId, payload }: CreateTransaction) =>
   budgetApi.post(`/${budgetId}/transactions`, payload);
 
+export const createTransactions = ({
+  budgetId,
+  accountId,
+  transactions,
+}: CreateTransactionsPayload) =>
+  budgetApi.post(`/${budgetId}/accounts/${accountId}/transactions/bulk`, {
+    transactions,
+  });
+
 export const deleteTransaction = ({
   budgetId,
   transactionId,
@@ -103,9 +143,20 @@ export const deleteMultipleTransactions = ({
   budgetId,
   rows,
 }: DeleteMultipleTransactions) => {
-  const deletePromises = rows.map((r) =>
-    deleteTransaction({ budgetId, transactionId: r.original.id }),
-  );
+  const idsToDelete = rows.map((t) => t.original.id);
 
-  return Promise.all(deletePromises);
+  return budgetApi.delete(`/${budgetId}/transactions/bulk`, {
+    data: {
+      transactionsId: idsToDelete,
+    },
+  });
 };
+
+export const setSubcategory = ({
+  budgetId,
+  transactionId,
+  subcategoryId,
+}: SetSubcategoryPayload) =>
+  budgetApi.put(`/${budgetId}/transactions/${transactionId}/subcategory`, {
+    subcategoryId,
+  });

@@ -11,14 +11,22 @@ import { getCategoriesQueryOptions } from "@/lib/api/category";
 export const Route = createFileRoute(
   "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
 )({
+  loaderDeps: ({
+    search: { accDate, accPeriod, dateRangeEnd, dateRangeStart },
+  }) => ({ accDate, accPeriod, dateRangeEnd, dateRangeStart }),
   loader: async ({
     context: { queryClient },
     params: { budgetId, accountId },
+    deps: { accDate, accPeriod, dateRangeEnd, dateRangeStart },
   }) => {
     Promise.all([
       queryClient.ensureQueryData(
         getTransactionsQueryOptions(budgetId, accountId, {
           accountId,
+          date: accDate,
+          period: accPeriod,
+          dateRangeEnd,
+          dateRangeStart,
         }),
       ),
       queryClient.ensureQueryData(getAccountsQueryOptions(budgetId)),

@@ -36,8 +36,8 @@ function SingleBudget() {
   const availableDates = useMemo(() => {
     const initialDates = {
       [DEFAULT_YEAR_STRING]: new Set([
+        DEFAULT_MONTH_NUMBER - 1,
         DEFAULT_MONTH_NUMBER,
-        DEFAULT_MONTH_NUMBER + 1,
       ]),
     };
 
@@ -49,7 +49,7 @@ function SingleBudget() {
             if (!result[year]) {
               result[year] = new Set();
             }
-            result[year].add(month);
+            result[year].add(month - 1);
           }
         });
       });
@@ -68,7 +68,7 @@ function SingleBudget() {
 
   if (
     !Object.keys(availableDates).includes(year) ||
-    !availableDates[year].includes(Number(month))
+    !availableDates[year].includes(Number(month) - 1)
   ) {
     return <Navigate to="/budget" />;
   }

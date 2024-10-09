@@ -18,14 +18,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
-import {
-  DEFAULT_MONTH_STRING,
-  DEFAULT_YEAR_STRING,
-} from "@/lib/constants/date";
 import { cn } from "@/lib/utils";
 import { type Budget } from "@/lib/validation/budget";
 import { getInvitationLink } from "@/lib/api/budget";
 import { useAuthContext } from "@/lib/hooks/useAuthContext";
+import { SINGLE_BUDGET_DEFAULT_SEARCH_PARAMS } from "@/lib/constants/searchParams";
 
 interface BudgetsTableRowProps {
   budget: Budget;
@@ -83,12 +80,7 @@ const BudgetsTableRow: FC<BudgetsTableRowProps> = ({ budget }) => {
         disabled={!!optimistic || isPending}
         to={`/budget/${id}`}
         params={{ budgetId: id }}
-        search={{
-          month: DEFAULT_MONTH_STRING,
-          year: DEFAULT_YEAR_STRING,
-          accMonth: DEFAULT_MONTH_STRING,
-          accYear: DEFAULT_YEAR_STRING,
-        }}
+        search={SINGLE_BUDGET_DEFAULT_SEARCH_PARAMS}
         mask={{ to: `/budget/${id}` }}
         className="group peer col-span-9 grid w-full grid-cols-9 items-center gap-x-4 px-4 py-6 hover:bg-accent"
       >

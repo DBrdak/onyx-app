@@ -9,14 +9,18 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { cn, getFormattedCurrency } from "@/lib/utils";
 import { ImportTransactionsPresubmitState } from "@/lib/validation/transaction";
 import { Money } from "@/lib/validation/base";
+import { type Transaction } from "@/lib/validation/transaction";
+import { type SetSubcategoryPayload } from "@/lib/api/transaction";
+import { UseMutateFunction } from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
 
 interface BaseTableData {
   [key: string]: unknown;
 }
 
-export const createSelectColumn = <
-  T extends BaseTableData,
->(): ColumnDef<T> => ({
+export const createSelectColumn = <T extends BaseTableData>(
+  disabled?: boolean,
+): ColumnDef<T> => ({
   id: "select",
   header: ({ table }) => (
     <div className="flex items-center overflow-hidden">
@@ -27,6 +31,7 @@ export const createSelectColumn = <
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
+        disabled={disabled}
       />
     </div>
   ),
@@ -36,6 +41,7 @@ export const createSelectColumn = <
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
+        disabled={disabled}
       />
     </div>
   ),
@@ -122,10 +128,11 @@ export const createAmountColumn = <T extends BaseTableData>(
   },
 });
 
-export const createSubcategorySelectColumn = <T extends BaseTableData>(
+export const createSubcategorySelectColumn = (
   budgetId: string,
   setState: Dispatch<SetStateAction<ImportTransactionsPresubmitState[]>>,
-): ColumnDef<T> => ({
+  disabled?: boolean,
+): ColumnDef<ImportTransactionsPresubmitState> => ({
   accessorKey: "subcategoryId",
   id: "subcategoryId",
   header: ({ column, table }) => (
@@ -156,9 +163,55 @@ export const createSubcategorySelectColumn = <T extends BaseTableData>(
           selectedSubcategoryName={subcategoryName}
           budgetId={budgetId}
           onChange={handleChange}
-          disabled={amount.amount > 0}
+          disabled={amount.amount > 0 || disabled}
         />
       </div>
+    );
+  },
+});
+
+export const createSetSubcategoryColumn = (
+  budgetId: string,
+  subcategoryChangeHandler: UseMutateFunction<
+    AxiosResponse,
+    Error,
+    SetSubcategoryPayload
+  >,
+): ColumnDef<Transaction> => ({
+  accessorKey: "subcategory.name",
+  header: ({ column, table }) => (
+    <TransactionsTableColumnsSortButton
+      column={column}
+      label="Subcategory"
+      table={table}
+    />
+  ),
+  cell: ({ row }) => {
+    const subcategoryName = row.original.subcategory?.name;
+    const transactionId = row.original.id;
+
+    const handleSubcategoryChange = (newSubcategoryId: string) => {
+      subcategoryChangeHandler({
+        budgetId,
+        subcategoryId: newSubcategoryId,
+        transactionId,
+      });
+    };
+
+    return !subcategoryName ? (
+      <div className="pl-4 capitalize">
+        <span>N/A</span>
+      </div>
+    ) : subcategoryName === "Unknown" ? (
+      <div className="pl-4">
+        <SubcategoriesPopover
+          budgetId={budgetId}
+          onChange={handleSubcategoryChange}
+          selectedSubcategoryName={subcategoryName}
+        />
+      </div>
+    ) : (
+      <div className="pl-4 capitalize">{subcategoryName}</div>
     );
   },
 });

@@ -1,17 +1,24 @@
 import { z } from "zod";
+import { parseISO, isValid } from "date-fns";
+
 import {
+  DATE_PERIOD_OPTIONS,
   DEFAULT_MONTH_STRING,
+  DEFAULT_PERIOD_OPTION,
   DEFAULT_YEAR_STRING,
 } from "@/lib/constants/date";
-import { ACCOUNT_TYPES } from "../constants/account";
+import { ACCOUNT_TYPES } from "@/lib/constants/account";
+import { ALL_CURRENCIES } from "@/lib/constants/currency";
 
 export const ErrorSchema = z.object({
   code: z.string(),
   message: z.string(),
 });
 
+export const CurrencySchema = z.enum(ALL_CURRENCIES);
+
 export const MoneySchema = z.object({
-  currency: z.string().min(1),
+  currency: CurrencySchema,
   amount: z.number(),
 });
 
@@ -55,6 +62,9 @@ export const AssignmentSchema = z.object({
 
 export type Assignment = z.infer<typeof AssignmentSchema>;
 
+export const AccountTypeSchema = z.enum(ACCOUNT_TYPES);
+export type AccountType = z.infer<typeof AccountTypeSchema>;
+
 export const MonthStringSchema = z
   .string()
   .regex(/^\d{1,2}$/)
@@ -70,9 +80,6 @@ export const MonthStringSchema = z
   .catch(DEFAULT_MONTH_STRING)
   .default(DEFAULT_MONTH_STRING);
 
-export const AccountTypeSchema = z.enum(ACCOUNT_TYPES);
-export type AccountType = z.infer<typeof AccountTypeSchema>;
-
 export const YearStringSchema = z
   .string()
   .refine((val) => Number(val) >= 2024, {
@@ -80,6 +87,21 @@ export const YearStringSchema = z
   })
   .catch(DEFAULT_YEAR_STRING)
   .default(DEFAULT_YEAR_STRING);
+
+export const DatePeriodSchema = z
+  .enum(DATE_PERIOD_OPTIONS)
+  .catch(DEFAULT_PERIOD_OPTION)
+  .default(DEFAULT_PERIOD_OPTION);
+
+export const IsoDateSchema = z.string().refine(
+  (val) => {
+    const parsedDate = parseISO(val);
+    return isValid(parsedDate);
+  },
+  {
+    message: "Invalid ISO 8601 date format",
+  },
+);
 
 export const NameSchema = z
   .string()

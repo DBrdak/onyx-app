@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { RequiredString, ResultSchema } from "@/lib/validation/base";
+import {
+  CurrencySchema,
+  RequiredString,
+  ResultSchema,
+} from "@/lib/validation/base";
 
 export const EmailSchema = z.object({
   email: RequiredString.email("Invalid email address"),
@@ -11,7 +15,7 @@ export const UserSchema = z.object({
   id: RequiredString,
   username: RequiredString,
   email: RequiredString,
-  currency: RequiredString,
+  currency: CurrencySchema,
 });
 
 export const UserResultSchema = ResultSchema.extend({

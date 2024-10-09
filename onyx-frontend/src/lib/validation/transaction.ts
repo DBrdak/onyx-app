@@ -1,8 +1,9 @@
 import * as z from "zod";
-import { parse, isValid } from "date-fns";
+import { parse, isValid, format } from "date-fns";
 
 import { SubcategorySchema } from "@/lib/validation/subcategory";
 import {
+  CurrencySchema,
   MoneySchema,
   RequiredString,
   ResultSchema,
@@ -10,6 +11,7 @@ import {
 import { CounterpartySchema } from "@/lib/validation/counterparty";
 import { AccountSchema } from "@/lib/validation/account";
 import { ALL_CURRENCIES } from "@/lib/constants/currency";
+import { isDisabledDate } from "../utils";
 
 export const TransactionSchema = z.object({
   id: RequiredString,
@@ -75,7 +77,7 @@ export const CreateTransactionSchema = z
       50,
       "Max length of counterparty name is 50 characters.",
     ),
-    currency: RequiredString,
+    currency: CurrencySchema,
     amount: AmountSchema,
     transactedAt: z.date(),
   })
@@ -86,7 +88,7 @@ export type TCreateTransactionSchema = z.infer<typeof CreateTransactionSchema>;
 export const ImportTransactionsSelectStageSchema = z.object({
   date: DateSchema,
   counterparty: RequiredString,
-  currency: RequiredString,
+  currency: z.enum(ALL_CURRENCIES),
   amount: AmountSchema,
 });
 
@@ -98,16 +100,18 @@ export type TImportTransactionsSelectStage = z.infer<
   typeof ImportTransactionsSelectStageSchema
 >;
 
-const AmountWithValidatedCurrency = z.object({
-  amount: z.number(),
-  currency: z.enum(ALL_CURRENCIES),
-});
-
 export const ImportTransactionsSubmitStageSchema = z
   .object({
-    accountId: RequiredString,
-    amount: AmountWithValidatedCurrency,
-    transactedAt: DateSchema,
+    amount: MoneySchema,
+    transactedAt: DateSchema.transform((dateString) => {
+      let parsedDate = parse(dateString, "yyyy-MM-dd HH:mm:ss", new Date());
+      if (!isValid(parsedDate)) {
+        parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
+      }
+      return format(parsedDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+    }).refine((dateString) => isDisabledDate(dateString), {
+      message: "Transaction date cannot be older than 5 years.",
+    }),
     counterpartyName: RequiredString,
     subcategoryId: RequiredString.nullable(),
   })
