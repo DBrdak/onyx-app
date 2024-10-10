@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Models.Primitives;
 
-public record Money
+public sealed record Money
 {    
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal Amount { get; init; }

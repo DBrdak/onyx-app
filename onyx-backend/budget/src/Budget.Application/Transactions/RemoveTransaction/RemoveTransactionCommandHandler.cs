@@ -19,7 +19,6 @@ internal sealed class RemoveTransactionCommandHandler : ICommandHandler<RemoveTr
         _accountRepository = accountRepository;
     }
 
-    // TODO Money Echange
     public async Task<Result> Handle(RemoveTransactionCommand request, CancellationToken cancellationToken)
     {
         var requestTransactionId = new TransactionId(request.TransactionId);

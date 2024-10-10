@@ -17,9 +17,8 @@ namespace Budget.Infrastructure.Repositories;
 internal sealed class TransactionRepository : BaseBudgetRepository<Transaction, TransactionId>, ITransactionRepository
 {
     private Period _period = Period.Create(
-            DateTime.UtcNow.BegginingOfTheMonth()
-                .Ticks,
-            DateTime.UtcNow.Ticks)
+            DateTime.UtcNow.BegginingOfTheMonth(),
+            DateTime.UtcNow)
         .Value;
 
     public TransactionRepository(

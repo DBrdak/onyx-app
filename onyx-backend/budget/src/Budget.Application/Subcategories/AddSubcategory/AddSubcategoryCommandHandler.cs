@@ -1,4 +1,5 @@
 ﻿using Abstractions.Messaging;
+using Budget.Application.Categories.Validator;
 using Budget.Application.Subcategories.Models;
 using Budget.Domain.Categories;
 using Budget.Domain.Subcategories;
@@ -10,13 +11,16 @@ internal sealed class AddSubcategoryCommandHandler : ICommandHandler<AddSubcateg
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly ISubcategoryRepository _subcategoryRepository;
+    private readonly CategoryGlobalValidator _categoryValidator;
 
     public AddSubcategoryCommandHandler(
         ICategoryRepository categoryRepository,
-        ISubcategoryRepository subcategoryRepository)
+        ISubcategoryRepository subcategoryRepository,
+        CategoryGlobalValidator categoryValidator)
     {
         _categoryRepository = categoryRepository;
         _subcategoryRepository = subcategoryRepository;
+        _categoryValidator = categoryValidator;
     }
 
     public async Task<Result<SubcategoryModel>> Handle(
@@ -33,6 +37,13 @@ internal sealed class AddSubcategoryCommandHandler : ICommandHandler<AddSubcateg
         }
 
         var category = categoryGetResult.Value;
+
+        var categoryValidationResult = await _categoryValidator.Validate(category, cancellationToken);
+
+        if (categoryValidationResult.IsFailure)
+        {
+            return categoryValidationResult.Error;
+        }
 
         var categorySubcategoriesGetResult = await _subcategoryRepository.GetManyByIdAsync(
             category.SubcategoriesId.ToList(),

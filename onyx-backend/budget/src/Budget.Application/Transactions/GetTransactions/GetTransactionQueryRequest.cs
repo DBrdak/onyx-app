@@ -100,8 +100,8 @@ internal sealed record GetTransactionQueryRequest
         if (isValidStartDate && isValidEndDate)
         {
             var dateRangeCreateResult = Period.Create(
-                startDate.Ticks,
-                endDate.Ticks,
+                startDate,
+                endDate,
                 TimeSpan.TicksPerDay * 365);
 
             if (dateRangeCreateResult.IsFailure)

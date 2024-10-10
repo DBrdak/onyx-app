@@ -24,8 +24,10 @@ public sealed class TransactionService
         Transaction transaction,
         Subcategory subcategory,
         Subcategory unknownSubcategory) =>
-        Result.Aggregate([
-            subcategory.Transact(transaction), 
-            unknownSubcategory.RemoveTransaction(transaction)
-        ]);
+        Result.Aggregate(
+            [
+                transaction.SetSubcategory(subcategory),
+                subcategory.Transact(transaction),
+                unknownSubcategory.RemoveTransaction(transaction)
+            ]);
 }

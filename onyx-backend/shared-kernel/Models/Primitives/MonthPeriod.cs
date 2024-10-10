@@ -30,6 +30,10 @@ public sealed record MonthPeriod
 
     public Period ToDatePeriod() =>
         Period.Create(
-            new DateTime(Start.Year, Start.Month, 1).Ticks,
-            new DateTime(End.Year, End.Month, 1).Ticks).Value;
+            new DateTime(Start.Year, Start.Month, 1),
+            new DateTime(End.Year, End.Month, 1)).Value;
+
+    public bool Contains(DateTime date) =>
+        date >= new DateTime(Start.Year, Start.Month, 1) &&
+        date < new DateTime(End.Year, End.Month, 1).AddMonths(1);
 }

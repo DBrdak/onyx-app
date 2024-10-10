@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using Budget.Application.Subcategories.Models;
 using Budget.Domain.Categories;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
@@ -11,8 +12,6 @@ namespace Budget.Application.Statistics.Categories;
 public sealed record CategoriesStatistics : IStatistics
 {
     public IReadOnlyList<CategoryStatistics> CategoriesStats => _categoriesStats;
-    public Money TotalAssigned { get; private set; }
-    public Money TotalSpentAmount { get; private set; }
 
     private readonly List<CategoryStatistics> _categoriesStats = [];
     private readonly IEnumerable<Transaction> _transactions;
@@ -33,8 +32,6 @@ public sealed record CategoriesStatistics : IStatistics
         _subcategories = subcategories;
         _period = period;
         _budget = budget;
-        TotalAssigned = new Money(0, _budget.BaseCurrency);
-        TotalSpentAmount = new Money(0, _budget.BaseCurrency);
     }
 
     public void Calculate()
@@ -44,17 +41,41 @@ public sealed record CategoriesStatistics : IStatistics
             var name = category.Name.Value;
             var id = category.Id.Value;
             var subcategories = _subcategories.Where(s => category.SubcategoriesId.Any(c => c == s.Id));
-            var outcome = new Money(_transactions.Where(t => subcategories.Any(s => s.Id == t.SubcategoryId))
+            var totalSpendings = new Money(
+                _transactions.Where(
+                        t => subcategories.Any(
+                            s => s.Id == t.SubcategoryId 
+                                 && _period.Contains(t.TransactedAt)))
                 .Select(t => t.BudgetAmount).Sum(x => x.Amount), _budget.BaseCurrency);
             var assignments = _subcategories.SelectMany(s => s.Assignments.Where(a => a.Month.IsInPeriod(_period)));
-            var assignedAmount = new Money(assignments.Sum(a => a.AssignedAmount.Amount), _budget.BaseCurrency);
+            var totalAssignedAmount = new Money(assignments.Sum(a => a.AssignedAmount.Amount), _budget.BaseCurrency);
 
-            _categoriesStats.Add(new CategoryStatistics(id, name, outcome, assignedAmount));
+            var monthStats = _transactions
+                .Where(t => subcategories.Any(s => s.Id == t.SubcategoryId) && _period.Contains(t.TransactedAt))
+                .GroupBy(t => MonthDate.FromDateTime(t.TransactedAt).Value)
+                .Select(g => new CategoryMonthStats(
+                    g.Key,
+                    new Money(g.Sum(x => x.BudgetAmount.Amount), _budget.BaseCurrency),
+                    new Money(subcategories.SelectMany(s => s.Assignments.Where(a => a.Month == g.Key)).Sum(a => a.AssignedAmount.Amount), _budget.BaseCurrency)));
+
+            _categoriesStats.Add(
+                new CategoryStatistics(
+                    id,
+                    name,
+                    totalSpendings,
+                    totalAssignedAmount,
+                    monthStats,
+                    _subcategories.Select(SubcategoryModel.FromDomainModel)));
         }
-
-        TotalAssigned = new Money(_categoriesStats.Sum(x => x.AssignedAmount.Amount), _budget.BaseCurrency);
-        TotalSpentAmount = new Money(_categoriesStats.Sum(x => x.SpentAmount.Amount), _budget.BaseCurrency);
     }
 }
 
-public record CategoryStatistics(Guid CategoryId, string CategoryName, Money SpentAmount, Money AssignedAmount);
+public record CategoryStatistics(
+    Guid CategoryId,
+    string CategoryName,
+    Money TotalAssignment,
+    Money TotalSpending,
+    IEnumerable<CategoryMonthStats> MonthStats,
+    IEnumerable<SubcategoryModel> Subcategories);
+
+public sealed record CategoryMonthStats(MonthDate Month, Money SpentAmount, Money AssignedAmount);

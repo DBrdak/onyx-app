@@ -28,6 +28,6 @@ internal sealed class SubcategoryGlobalValidator
 
         return Result.FromBool(
             !isUnknownSubcategory,
-            SubcategoryValidationErrors.IsUnknownSubcategoryError);
+            SubcategoryValidationErrors.UnknownSubcategoryError);
     }
 }

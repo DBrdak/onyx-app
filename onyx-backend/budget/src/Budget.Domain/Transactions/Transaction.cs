@@ -264,6 +264,13 @@ public sealed class Transaction : BudgetOwnedEntity<TransactionId>
         return transaction;
     }
 
+    internal Result SetSubcategory(Subcategory subcategory)
+    {
+        SubcategoryId = subcategory.Id;
+
+        return Result.Success();
+    }
+
     public Result RemoveCounterparty()
     {
         CounterpartyId = null;

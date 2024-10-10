@@ -22,7 +22,7 @@ public sealed record Assignment : ValueObject
 
     internal static Result<Assignment> Create(MonthDate month, Money assignedAmount)
     {
-        if (assignedAmount <= 0)
+        if (assignedAmount < 0)
         {
             return Result.Failure<Assignment>(SubcategoryErrors.AssignmentAmountMustBePositive);
         }

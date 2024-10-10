@@ -63,7 +63,7 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
         {
             _ when query.DateRange is not null => query.DateRange,
             _ when query.Date is not null => query.QueryPeriod.ToPeriod(query.Date.Value),
-            _ => Period.Create(DateTime.UtcNow.BegginingOfTheMonth().Ticks, DateTime.UtcNow.EndOfTheMonth().Ticks).Value
+            _ => Period.Create(DateTime.UtcNow.BegginingOfTheMonth(), DateTime.UtcNow.EndOfTheMonth()).Value
         };
         
         _transactionRepository.AddPagingParameters(period);

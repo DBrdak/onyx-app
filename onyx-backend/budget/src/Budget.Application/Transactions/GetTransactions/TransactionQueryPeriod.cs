@@ -32,11 +32,11 @@ internal sealed record TransactionQueryPeriod
     public Period ToPeriod(DateTime date) =>
         this switch
         {
-            _ when this == day => Period.Create(date.StartOfTheDay().Ticks, date.EndOfTheDay().Ticks).Value,
-            _ when this == week => Period.Create(date.BegginingOfTheWeek().Ticks, date.EndOfTheWeek().Ticks).Value,
-            _ when this == month => Period.Create(date.BegginingOfTheMonth().Ticks, date.EndOfTheMonth().Ticks).Value,
-            _ when this == last7Days => Period.Create(date.StartOfTheDay().AddDays(-7).Ticks, date.Ticks).Value,
-            _ when this == last30Days => Period.Create(date.StartOfTheDay().AddDays(-30).Ticks, date.Ticks).Value,
-            _ => Period.Create(DateTime.UtcNow.BegginingOfTheMonth().Ticks, DateTime.UtcNow.EndOfTheMonth().Ticks).Value,
+            _ when this == day => Period.Create(date.StartOfTheDay(), date.EndOfTheDay()).Value,
+            _ when this == week => Period.Create(date.BegginingOfTheWeek(), date.EndOfTheWeek()).Value,
+            _ when this == month => Period.Create(date.BegginingOfTheMonth(), date.EndOfTheMonth()).Value,
+            _ when this == last7Days => Period.Create(date.StartOfTheDay().AddDays(-7), date).Value,
+            _ when this == last30Days => Period.Create(date.StartOfTheDay().AddDays(-30), date).Value,
+            _ => Period.Create(DateTime.UtcNow.BegginingOfTheMonth(), DateTime.UtcNow.EndOfTheMonth()).Value,
         };
 }
