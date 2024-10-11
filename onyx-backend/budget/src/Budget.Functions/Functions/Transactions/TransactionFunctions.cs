@@ -8,7 +8,6 @@ using Budget.Functions.Functions.Shared;
 using Budget.Functions.Functions.Transactions.Requests;
 using LambdaKernel;
 using MediatR;
-using Budget.Application.Transactions.BulkRemoveTransactions;
 using Budget.Application.Transactions.SetSubcategory;
 
 namespace Budget.Functions.Functions.Transactions;
@@ -83,22 +82,6 @@ public sealed class TransactionFunctions : BaseFunction
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
         var command = new RemoveTransactionCommand(Guid.Parse(transactionId), Guid.Parse(budgetId));
-
-        var result = await Sender.Send(command);
-
-        return result.ReturnAPIResponse();
-    }
-
-    [LambdaFunction(ResourceName = $"Transactions{nameof(BulkRemove)}")]
-    [HttpApi(LambdaHttpMethod.Delete, $"{transactionBaseRoute}/bulk")]
-    public async Task<APIGatewayHttpApiV2ProxyResponse> BulkRemove(
-        string budgetId,
-        [FromBody] TransactionsBulkRemoveRequest request,
-        APIGatewayHttpApiV2ProxyRequest requestContext)
-    {
-        ServiceProvider?.AddRequestContextAccessor(requestContext);
-
-        var command = new BulkRemoveTransactionsCommand(request.TransactionsId.Select(Guid.Parse).ToArray());
 
         var result = await Sender.Send(command);
 

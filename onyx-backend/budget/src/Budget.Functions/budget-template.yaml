@@ -554,30 +554,6 @@ Resources:
             Path: /api/v1/{budgetId}/transactions/{transactionId}
             Method: DELETE
             ApiId: !Ref BudgetApi
-  TransactionsBulkRemove:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-      SyncedEvents:
-        - RootDelete
-    Properties:
-      FunctionName: !Sub TransactionsBulkRemove_${Environment}
-      Runtime: dotnet8
-      CodeUri: .
-      MemorySize: 3008
-      EphemeralStorage:
-        Size: 3008
-      Timeout: 30
-      Role: !Ref FullAccessRoleArn
-      PackageType: Zip
-      Handler: Budget.Functions::Budget.Functions.Functions.Transactions.TransactionFunctions_BulkRemove_Generated::BulkRemove
-      Events:
-        RootDelete:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/{budgetId}/transactions/bulk
-            Method: DELETE
-            ApiId: !Ref BudgetApi
   SubcategoriesGetToAssign:
     Type: AWS::Serverless::Function
     Metadata:
@@ -886,6 +862,30 @@ Resources:
           Type: SQS
           Properties:
             Queue: !Ref RemoveUserQueueArn
+  AccountsBulkRemoveTransactions:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootDelete
+    Properties:
+      FunctionName: !Sub AccountsBulkRemoveTransactions_${Environment}
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: !Ref FullAccessRoleArn
+      PackageType: Zip
+      Handler: Budget.Functions::Budget.Functions.Functions.Accounts.AccountFunctions_BulkRemoveTransactions_Generated::BulkRemoveTransactions
+      Events:
+        RootDelete:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/{budgetId}/accounts/{accountId}/transactions/bulk
+            Method: DELETE
+            ApiId: !Ref BudgetApi
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

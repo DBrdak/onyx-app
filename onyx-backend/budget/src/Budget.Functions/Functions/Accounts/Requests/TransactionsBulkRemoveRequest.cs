@@ -1,3 +1,3 @@
-﻿namespace Budget.Functions.Functions.Transactions;
+﻿namespace Budget.Functions.Functions.Accounts.Requests;
 
 public record TransactionsBulkRemoveRequest(string[] TransactionsId);
