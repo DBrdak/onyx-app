@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Nodes;
-using Abstractions.Messaging;
-using Amazon.Lambda.Core;
+﻿using Abstractions.Messaging;
 using Budget.Application.Transactions.Models;
 using Budget.Domain.Accounts;
 using Budget.Domain.Counterparties;
@@ -9,7 +7,6 @@ using Budget.Domain.Transactions;
 using Extensions;
 using Models.Primitives;
 using Models.Responses;
-using Newtonsoft.Json;
 using Transaction = Budget.Domain.Transactions.Transaction;
 
 namespace Budget.Application.Transactions.GetTransactions;

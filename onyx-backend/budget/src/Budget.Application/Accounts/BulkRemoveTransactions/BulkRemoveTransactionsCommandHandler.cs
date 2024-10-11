@@ -1,31 +1,33 @@
 using Abstractions.Messaging;
+using Amazon.Lambda.Core;
+using Budget.Application.Accounts.Models;
 using Budget.Domain.Accounts;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
 using Models.Responses;
-using System.Transactions;
-using Budget.Application.Categories.Validator;
-using Transaction = Budget.Domain.Transactions.Transaction;
+using Newtonsoft.Json;
 
 namespace Budget.Application.Accounts.BulkRemoveTransactions;
 
-internal sealed class BulkRemoveTransactionsCommandHandler : ICommandHandler<BulkRemoveTransactionsCommand>
+internal sealed class BulkRemoveTransactionsCommandHandler : ICommandHandler<BulkRemoveTransactionsCommand, AccountModel>
 {
     private readonly ITransactionRepository _transactionRepository;
     private readonly IAccountRepository _accountRepository;
     private readonly ISubcategoryRepository _subcategoryRepository;
-    private readonly List<Task<Result<Subcategory>>> _subcategoryUpdateTasks = [];
-    private readonly List<Task<Result<Account>>> _accountUpdateTasks = [];
 
-    public BulkRemoveTransactionsCommandHandler(ITransactionRepository transactionRepository, IAccountRepository accountRepository, ISubcategoryRepository subcategoryRepository)
+    public BulkRemoveTransactionsCommandHandler(
+        ITransactionRepository transactionRepository,
+        IAccountRepository accountRepository,
+        ISubcategoryRepository subcategoryRepository)
     {
         _transactionRepository = transactionRepository;
         _accountRepository = accountRepository;
         _subcategoryRepository = subcategoryRepository;
     }
 
-    public async Task<Result> Handle(BulkRemoveTransactionsCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AccountModel>> Handle(BulkRemoveTransactionsCommand request, CancellationToken cancellationToken)
     {
+        LambdaLogger.Log("request: " + JsonConvert.SerializeObject(request));
         var requestTransactionIds = request.TransactionIds.Select(id => new TransactionId(id));
 
         var accountGetResult = await _accountRepository.GetByIdAsync(new AccountId(request.AccountId), cancellationToken);
@@ -41,7 +43,7 @@ internal sealed class BulkRemoveTransactionsCommandHandler : ICommandHandler<Bul
 
         if (getTransactionsResult.IsFailure)
         {
-            return Result.Failure(getTransactionsResult.Error);
+            return getTransactionsResult.Error;
         }
 
         var transactions = getTransactionsResult.Value.ToList();
@@ -49,6 +51,7 @@ internal sealed class BulkRemoveTransactionsCommandHandler : ICommandHandler<Bul
         var subcategoriesIds = transactions
             .Where(t => t.SubcategoryId is not null)
             .Select(t => t.SubcategoryId!)
+            .Distinct()
             .ToList();
 
         var subcategoriesGetResult = await _subcategoryRepository.GetManyByIdAsync(subcategoriesIds, cancellationToken);
@@ -85,7 +88,14 @@ internal sealed class BulkRemoveTransactionsCommandHandler : ICommandHandler<Bul
 
         var subcategoriesUpdateResult = await _subcategoryRepository.UpdateRangeAsync(subcategories, cancellationToken);
 
-        return Result.Aggregate([transactionsRemoveResult, accountUpdateResult, subcategoriesUpdateResult]);
+        var finalResult = Result.Aggregate([transactionsRemoveResult, accountUpdateResult, subcategoriesUpdateResult]);
+
+        if (finalResult.IsFailure)
+        {
+            return finalResult.Error;
+        }
+
+        return AccountModel.FromDomainModel(account);
     }
 
 }

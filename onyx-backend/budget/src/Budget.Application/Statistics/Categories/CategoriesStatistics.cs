@@ -1,11 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
-using Budget.Application.Subcategories.Models;
+﻿using Budget.Application.Subcategories.Models;
 using Budget.Domain.Categories;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
 using Models.Primitives;
-using MongoDB.Bson;
 
 namespace Budget.Application.Statistics.Categories;
 

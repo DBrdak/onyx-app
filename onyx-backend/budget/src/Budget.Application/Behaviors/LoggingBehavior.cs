@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Abstractions.Messaging;
+﻿using Abstractions.Messaging;
 using Amazon.Lambda.Core;
 using MediatR;
 using Models.Responses;
