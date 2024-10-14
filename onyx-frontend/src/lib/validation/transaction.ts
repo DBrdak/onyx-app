@@ -1,9 +1,9 @@
 import * as z from "zod";
-import { parse, isValid, format } from "date-fns";
 
 import { SubcategorySchema } from "@/lib/validation/subcategory";
 import {
   CurrencySchema,
+  DateString,
   MoneySchema,
   RequiredString,
   ResultSchema,
@@ -11,7 +11,7 @@ import {
 import { CounterpartySchema } from "@/lib/validation/counterparty";
 import { AccountSchema } from "@/lib/validation/account";
 import { ALL_CURRENCIES } from "@/lib/constants/currency";
-import { isDisabledDate } from "../utils";
+import { isInPastRange } from "../utils";
 
 export const TransactionSchema = z.object({
   id: RequiredString,
@@ -20,12 +20,17 @@ export const TransactionSchema = z.object({
   originalAmount: MoneySchema.optional(),
   account: AccountSchema,
   counterparty: CounterpartySchema,
-  transactedAt: RequiredString,
   optimistic: z.boolean().optional(),
 });
-export type Transaction = z.infer<typeof TransactionSchema>;
+
+export const TransactionReceivedSchema = TransactionSchema.extend({
+  transactedAt: DateString.transform((dateString) => new Date(dateString)),
+});
+
+export type Transaction = z.infer<typeof TransactionReceivedSchema>;
+
 export const TransactionResultSchema = ResultSchema.extend({
-  value: z.array(TransactionSchema),
+  value: z.array(TransactionReceivedSchema),
 });
 
 const AmountSchema = RequiredString.regex(
@@ -36,21 +41,6 @@ const AmountSchema = RequiredString.regex(
   .refine((v) => parseFloat(v) !== 0, {
     message: "Amount cannot be 0.",
   });
-
-const DateSchema = RequiredString.refine(
-  (dateString) => {
-    let parsedDate = parse(dateString, "yyyy-MM-dd HH:mm:ss", new Date());
-
-    if (!isValid(parsedDate)) {
-      parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
-    }
-
-    return isValid(parsedDate);
-  },
-  {
-    message: "Invalid date. Use YYYY-MM-DD or YYYY-MM-DD HH:mm:ss format.",
-  },
-);
 
 const CreateTransactionSubcategoryIdSchema = z
   .object({
@@ -86,7 +76,7 @@ export const CreateTransactionSchema = z
 export type TCreateTransactionSchema = z.infer<typeof CreateTransactionSchema>;
 
 export const ImportTransactionsSelectStageSchema = z.object({
-  date: DateSchema,
+  date: DateString,
   counterparty: RequiredString,
   currency: z.enum(ALL_CURRENCIES),
   amount: AmountSchema,
@@ -103,13 +93,9 @@ export type TImportTransactionsSelectStage = z.infer<
 export const ImportTransactionsSubmitStageSchema = z
   .object({
     amount: MoneySchema,
-    transactedAt: DateSchema.transform((dateString) => {
-      let parsedDate = parse(dateString, "yyyy-MM-dd HH:mm:ss", new Date());
-      if (!isValid(parsedDate)) {
-        parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
-      }
-      return format(parsedDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
-    }).refine((dateString) => isDisabledDate(dateString), {
+    transactedAt: DateString.transform(
+      (dateString) => new Date(dateString),
+    ).refine((dateString) => isInPastRange(dateString, 5), {
       message: "Transaction date cannot be older than 5 years.",
     }),
     counterpartyName: RequiredString,

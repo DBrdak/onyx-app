@@ -1,7 +1,7 @@
 import { z } from "zod";
 import {
   DatePeriodSchema,
-  IsoDateSchema,
+  DateString,
   MonthStringSchema,
   RequiredString,
   YearStringSchema,
@@ -12,11 +12,11 @@ export const SingleBudgetPageParamsSchema = z
   .object({
     month: MonthStringSchema,
     year: YearStringSchema,
-    accDate: IsoDateSchema.catch(DEFAULT_ISO_DATE).default(DEFAULT_ISO_DATE),
+    accDate: DateString.catch(DEFAULT_ISO_DATE).default(DEFAULT_ISO_DATE),
     accPeriod: DatePeriodSchema,
     tableSize: z.string().default("8").catch("8"),
-    dateRangeStart: IsoDateSchema.optional(),
-    dateRangeEnd: IsoDateSchema.optional(),
+    dateRangeStart: DateString.optional(),
+    dateRangeEnd: DateString.optional(),
   })
   .refine(
     (params) =>

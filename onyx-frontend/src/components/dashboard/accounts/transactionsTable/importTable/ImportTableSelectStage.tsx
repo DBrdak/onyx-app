@@ -156,7 +156,7 @@ const ImportTableSelectStage: FC<ImportTableSelectStageProps> = ({
             amount: numericAmount,
             currency: t.currency,
           },
-          transactedAt: t.date,
+          transactedAt: new Date(t.date),
           counterpartyName: t.counterparty,
           subcategoryId: (numericAmount < 0 && defaultSubcategory?.id) || null,
           subcategoryName:

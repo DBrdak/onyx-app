@@ -1,6 +1,5 @@
 import { FC, useCallback, useState } from "react";
 import { ColumnDef, flexRender } from "@tanstack/react-table";
-import { format } from "date-fns";
 import { useParams } from "@tanstack/react-router";
 
 import { Minus, Plus } from "lucide-react";
@@ -77,7 +76,7 @@ const TransactionsTable: FC<TransactionsTable> = ({
   const { mutate } = useSetSubcategoryMutation({ accountId });
   const columns: ColumnDef<Transaction>[] = [
     createSelectColumn(),
-    createDateColumn((row) => format(new Date(row.transactedAt), "PP")),
+    createDateColumn("transactedAt"),
     createTextColumn("counterparty", "Counterparty", "counterparty.name"),
     createSetSubcategoryColumn(budgetId, mutate),
     createAmountColumn("amount.amount"),

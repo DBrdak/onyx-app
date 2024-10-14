@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { parse, isValid } from "date-fns";
+import { isValid, format } from "date-fns";
 
 import TransactionsTableColumnsSortButton from "@/components/dashboard/accounts/transactionsTable/TransactionsTableColumnsSortButton";
 import SubcategoriesPopover from "@/components/dashboard/accounts/SubcategoriesPopover";
@@ -47,9 +47,9 @@ export const createSelectColumn = <T extends BaseTableData>(
   ),
 });
 export const createDateColumn = <T extends BaseTableData>(
-  accessorFn: (row: T) => string,
+  accessorKey: keyof T,
 ): ColumnDef<T> => ({
-  accessorFn,
+  accessorKey,
   id: "date",
   header: ({ column, table }) => (
     <TransactionsTableColumnsSortButton
@@ -58,14 +58,16 @@ export const createDateColumn = <T extends BaseTableData>(
       table={table}
     />
   ),
-  cell: ({ row }) => <div className="pl-4">{row.getValue("date")}</div>,
-  sortingFn: (rowA, rowB, columnId) => {
-    const parseFormattedDate = (dateString: string) => {
-      return parse(dateString, "PP", new Date());
-    };
+  cell: ({ row }) => {
+    const date: Date = row.getValue("date");
 
-    const a = parseFormattedDate(rowA.getValue(columnId));
-    const b = parseFormattedDate(rowB.getValue(columnId));
+    const formattedDate = isValid(date) ? format(date, "PP") : "Invalid date";
+
+    return <div className="pl-4">{formattedDate}</div>;
+  },
+  sortingFn: (rowA, rowB, columnId) => {
+    const a: Date = rowA.getValue(columnId);
+    const b: Date = rowB.getValue(columnId);
 
     if (!isValid(a) && !isValid(b)) return 0;
     if (!isValid(a)) return 1;

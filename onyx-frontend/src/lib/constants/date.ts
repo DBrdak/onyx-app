@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { convertLocalToISOString } from "../utils";
 
 export const MONTHS = [
   "January",
@@ -58,4 +58,4 @@ export const DATE_PERIOD_SELECT = [
 ] as const;
 
 export const DEFAULT_PERIOD_OPTION = "last30days";
-export const DEFAULT_ISO_DATE = format(new Date(), "yyyy-MM-dd");
+export const DEFAULT_ISO_DATE = convertLocalToISOString(new Date());

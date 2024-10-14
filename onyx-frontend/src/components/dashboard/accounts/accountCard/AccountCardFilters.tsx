@@ -1,7 +1,6 @@
 import { FC, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
-import { format } from "date-fns";
 
 import AccountCardFiltersDayCalendar from "@/components/dashboard/accounts/accountCard/AccountCardFiltersDayCalendar";
 import AccountCardFiltersWeekCalendar from "@/components/dashboard/accounts/accountCard/AccountCardFiltersWeekCalendar";
@@ -18,6 +17,7 @@ import {
 import { DATE_PERIOD_OPTIONS, DATE_PERIOD_SELECT } from "@/lib/constants/date";
 import { getTransactionsQueryKey } from "@/lib/api/transaction";
 import { SingleBudgetPageSearchParams } from "@/lib/validation/searchParams";
+import { convertLocalToISOString } from "@/lib/utils";
 
 interface AccountCardFiltersProps {
   disabled: boolean;
@@ -50,7 +50,7 @@ const AccountCardFilters: FC<AccountCardFiltersProps> = ({ disabled }) => {
         search: (prev: SingleBudgetPageSearchParams) => ({
           ...prev,
           accPeriod: value,
-          accDate: format(new Date(), "yyyy-MM-dd"),
+          accDate: convertLocalToISOString(new Date()),
         }),
         mask: "/budget/$budgetId/accounts/$accountId",
       });

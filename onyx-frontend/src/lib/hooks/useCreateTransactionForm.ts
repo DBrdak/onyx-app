@@ -95,7 +95,7 @@ export const useCreateTransactionForm = ({ account }: Props) => {
 
         return [
           {
-            transactedAt: transactedAt.toString(),
+            transactedAt: transactedAt,
             id: "12345",
             amount: {
               amount: amount.amount,
