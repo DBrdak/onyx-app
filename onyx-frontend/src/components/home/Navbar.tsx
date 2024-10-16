@@ -1,15 +1,14 @@
 import { Link } from "@tanstack/react-router";
 
 import Brand from "@/components/Logo";
+import UserDropdown from "@/components/dashboard/UserDropdown";
 import { buttonVariants } from "@/components/ui/button";
+
 import { cn } from "@/lib/utils";
-import { useAuthContext } from "@/lib/hooks/useAuthContext";
-import UserDropdown from "../dashboard/UserDropdown";
+import { useUser } from "@/store/auth/authStore";
 
 const Navbar = () => {
-  const {
-    auth: { user, logout },
-  } = useAuthContext();
+  const user = useUser();
 
   return (
     <div className="z-50 flex w-full items-center justify-between bg-background p-4">
@@ -19,7 +18,7 @@ const Navbar = () => {
 
       <div className="space-x-2">
         {user ? (
-          <UserDropdown user={user} logout={logout} />
+          <UserDropdown user={user} />
         ) : (
           <Link
             to="/login"

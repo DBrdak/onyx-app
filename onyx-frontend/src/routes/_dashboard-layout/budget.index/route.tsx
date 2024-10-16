@@ -5,8 +5,9 @@ import BudgetsLoadingSkeleton from "@/components/dashboard/budgets/BudgetsLoadin
 import RouteLoadingError from "@/components/RouteLoadingError";
 
 export const Route = createFileRoute("/_dashboard-layout/budget/")({
-  loader: ({ context: { queryClient } }) =>
-    queryClient.ensureQueryData(getBudgetsQueryOptions),
+  loader: ({ context: { queryClient } }) => {
+    queryClient.ensureQueryData(getBudgetsQueryOptions);
+  },
   pendingComponent: () => <BudgetsLoadingSkeleton />,
   errorComponent: ({ reset }) => <RouteLoadingError reset={reset} />,
 });

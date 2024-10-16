@@ -5,9 +5,9 @@ import BudgetsTableUserBadge from "@/components/dashboard/budgets/budgetsTable/B
 
 import { cn } from "@/lib/utils";
 import { type BudgetMember } from "@/lib/validation/user";
-import { useAuthContext } from "@/lib/hooks/useAuthContext";
 import { Budget } from "@/lib/validation/budget";
 import BudgetsTableRemoveForm from "./BudgetsTableRemoveForm";
+import { useUser } from "@/store/auth/authStore";
 
 interface BudgetsTableRemoveMembersProps {
   budget: Budget;
@@ -19,9 +19,7 @@ const BudgetsTableRemoveMembers: FC<BudgetsTableRemoveMembersProps> = ({
   const [selectedMember, setSelectedMember] = useState<BudgetMember | null>(
     null,
   );
-  const {
-    auth: { user },
-  } = useAuthContext();
+  const user = useUser();
 
   const removeDisabled = budget.budgetMembers.length < 2;
 

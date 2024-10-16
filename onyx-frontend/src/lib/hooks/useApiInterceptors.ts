@@ -3,13 +3,14 @@ import { AxiosInstance } from "axios";
 
 export const useApiInterceptors = (
   api: AxiosInstance,
-  accessToken: () => string | null,
+  accessToken: string | null,
 ) => {
   useEffect(() => {
+    if (!accessToken) return;
+
     const requestInterceptor = api.interceptors.request.use((config) => {
-      const token = accessToken();
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
       }
       return config;
     });
@@ -17,5 +18,5 @@ export const useApiInterceptors = (
     return () => {
       api.interceptors.request.eject(requestInterceptor);
     };
-  }, [api]);
+  }, [api, accessToken]);
 };

@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 
 import { ChevronDown, LoaderCircle } from "lucide-react";
 import UserAvatar from "@/components/UserAvatar";
@@ -15,27 +15,36 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { type User } from "@/lib/validation/user";
+import { useLogout } from "@/lib/hooks/auth/useLogout";
 
 interface UserDropdownProps {
   user: User;
-  logout: () => Promise<void>;
 }
 
-const UserDropdown: FC<UserDropdownProps> = ({ user, logout }) => {
+const UserDropdown: FC<UserDropdownProps> = ({ user }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+  const logout = useLogout();
+  const router = useRouter();
 
   const handleLogout = async () => {
     setIsLoading(true);
     try {
       await logout();
-      await navigate({ to: "/" });
+      await router.invalidate();
+      await router.navigate({ to: "/" });
     } catch (error) {
       console.error("Logout failed:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (isLoading)
+    return (
+      <Button variant="ghost" disabled={!user || isLoading}>
+        <LoaderCircle className="animate-spin" />
+      </Button>
+    );
 
   return (
     <Dialog>
@@ -46,11 +55,7 @@ const UserDropdown: FC<UserDropdownProps> = ({ user, logout }) => {
             className="justify-between space-x-2 rounded-full border-none p-0 pr-1 duration-500"
             disabled={!user || isLoading}
           >
-            {isLoading ? (
-              <LoaderCircle className="animate-spin" />
-            ) : (
-              <UserAvatar />
-            )}
+            <UserAvatar />
             <ChevronDown />
           </Button>
         </DropdownMenuTrigger>

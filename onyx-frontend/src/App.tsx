@@ -1,11 +1,13 @@
+import { Suspense, useMemo } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
-import { AuthProvider } from "./contexts/AuthContext";
-import { useAuthContext } from "./lib/hooks/useAuthContext";
-import { useMemo } from "react";
-import DefaultLoadingSpinner from "./components/DefaultLoadingSpinner";
+import { routeTree } from "@/routeTree.gen";
+import DefaultLoadingSpinner from "@/components/DefaultLoadingSpinner";
+import { useAuthStore } from "@/store/auth/authStore";
+import { useAuthInitialization } from "@/lib/hooks/auth/useAuthIntialization";
+import { useApiInterceptors } from "@/lib/hooks/useApiInterceptors";
+import { budgetApi, userApi } from "@/lib/axios";
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -16,7 +18,7 @@ declare module "@tanstack/react-router" {
 const queryClient = new QueryClient();
 const router = createRouter({
   routeTree,
-  context: { queryClient, auth: undefined! },
+  context: { queryClient, accessToken: null },
   defaultPreload: "intent",
   defaultPreloadStaleTime: 0,
 });
@@ -24,9 +26,9 @@ const router = createRouter({
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
+      <Suspense fallback={<DefaultLoadingSpinner />}>
         <RouterWithAuth />
-      </AuthProvider>
+      </Suspense>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
@@ -34,17 +36,23 @@ const App = () => {
 
 export default App;
 
-const RouterWithAuth = () => {
-  const { auth } = useAuthContext();
+const RouterWithAuth: React.FC = () => {
+  useAuthInitialization();
+
+  const { accessToken, isInitialized } = useAuthStore();
+
+  useApiInterceptors(budgetApi, accessToken);
+  useApiInterceptors(userApi, accessToken);
+
   const routerContext = useMemo(
     () => ({
       queryClient,
-      auth,
+      accessToken,
     }),
-    [auth.accessToken, auth.isInitialized],
+    [accessToken],
   );
 
-  if (!auth.isInitialized) {
+  if (!isInitialized) {
     return <DefaultLoadingSpinner />;
   }
 

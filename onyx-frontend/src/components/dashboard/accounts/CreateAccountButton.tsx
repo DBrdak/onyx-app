@@ -1,7 +1,6 @@
 import { FC, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouteContext } from "@tanstack/react-router";
 
 import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -41,15 +40,14 @@ import { CreateAccountPayload } from "@/lib/api/account";
 import { ACCOUNT_TYPES } from "@/lib/constants/account";
 import { formatToDotDecimal } from "@/lib/utils";
 import CurrencyCombobox from "../CurrencyCombobox";
+import { useUser } from "@/store/auth/authStore";
 
 interface CreateAccountButtonProps {
   budgetId: string;
 }
 
 const CreateAccountButton: FC<CreateAccountButtonProps> = ({ budgetId }) => {
-  const {
-    auth: { user },
-  } = useRouteContext({ from: "/_dashboard-layout" });
+  const user = useUser();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   const { toast } = useToast();

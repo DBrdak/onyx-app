@@ -5,8 +5,5 @@ export const useRefreshTokenMutation = () => {
   return useMutation({
     mutationKey: ["refreshAccessToken"],
     mutationFn: (longLivedToken: string) => refreshAccessToken(longLivedToken),
-    onError: () => {
-      localStorage.removeItem("longLivedToken");
-    },
   });
 };
