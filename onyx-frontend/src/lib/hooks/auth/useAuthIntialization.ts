@@ -1,12 +1,24 @@
 import { useEffect } from "react";
 
 import { getAuthInitializationData } from "@/lib/api/user";
-import { useAuthStore } from "@/store/auth/authStore";
-import { useLongLivedTokenStore } from "@/store/auth/longLivedTokenStore";
+import {
+  useLongLivedToken,
+  useSetLongLivedToken,
+} from "@/store/auth/longLivedTokenStore";
+import {
+  useReset,
+  useSetAccessToken,
+  useSetIsInitialized,
+  useSetUser,
+} from "@/store/auth/authStore";
 
 export const useAuthInitialization = () => {
-  const { setAccessToken, setUser, reset, setIsInitialized } = useAuthStore();
-  const { setLongLivedToken, longLivedToken } = useLongLivedTokenStore();
+  const longLivedToken = useLongLivedToken();
+  const reset = useReset();
+  const setAccessToken = useSetAccessToken();
+  const setUser = useSetUser();
+  const setLongLivedToken = useSetLongLivedToken();
+  const setIsInitialized = useSetIsInitialized();
 
   useEffect(() => {
     if (!longLivedToken) {

@@ -1,5 +1,4 @@
 import { create } from "zustand";
-
 import { User } from "@/lib/validation/user";
 
 type AuthState = {
@@ -25,4 +24,13 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
   setIsInitialized: (isInitialized) => set({ isInitialized }),
 }));
 
+export const useAccessToken = () => useAuthStore((state) => state.accessToken);
 export const useUser = () => useAuthStore((state) => state.user);
+export const useIsInitialized = () =>
+  useAuthStore((state) => state.isInitialized);
+export const useSetAccessToken = () =>
+  useAuthStore((state) => state.setAccessToken);
+export const useSetUser = () => useAuthStore((state) => state.setUser);
+export const useReset = () => useAuthStore((state) => state.reset);
+export const useSetIsInitialized = () =>
+  useAuthStore((state) => state.setIsInitialized);

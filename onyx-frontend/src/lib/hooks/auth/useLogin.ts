@@ -1,12 +1,13 @@
 import { useCallback } from "react";
 import { getUser, login } from "@/lib/api/user";
-import { useAuthStore } from "@/store/auth/authStore";
-import { useLongLivedTokenStore } from "@/store/auth/longLivedTokenStore";
+import { useSetAccessToken, useSetUser } from "@/store/auth/authStore";
+import { useSetLongLivedToken } from "@/store/auth/longLivedTokenStore";
 import { getErrorMessage } from "@/lib/utils";
 
 export const useLogin = () => {
-  const { setAccessToken, setUser } = useAuthStore();
-  const { setLongLivedToken } = useLongLivedTokenStore();
+  const setAccessToken = useSetAccessToken();
+  const setUser = useSetUser();
+  const setLongLivedToken = useSetLongLivedToken();
 
   const performLogin = useCallback(
     async (email: string, password: string): Promise<void> => {

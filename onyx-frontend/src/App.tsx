@@ -4,7 +4,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "@/routeTree.gen";
 import DefaultLoadingSpinner from "@/components/DefaultLoadingSpinner";
-import { useAuthStore } from "@/store/auth/authStore";
+import { useAccessToken, useIsInitialized } from "@/store/auth/authStore";
 import { useAuthInitialization } from "@/lib/hooks/auth/useAuthIntialization";
 import { useApiInterceptors } from "@/lib/hooks/useApiInterceptors";
 import { budgetApi, userApi } from "@/lib/axios";
@@ -39,7 +39,8 @@ export default App;
 const RouterWithAuth: React.FC = () => {
   useAuthInitialization();
 
-  const { accessToken, isInitialized } = useAuthStore();
+  const accessToken = useAccessToken();
+  const isInitialized = useIsInitialized();
 
   useApiInterceptors(budgetApi, accessToken);
   useApiInterceptors(userApi, accessToken);

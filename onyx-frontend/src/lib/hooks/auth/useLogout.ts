@@ -1,13 +1,13 @@
 import { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { useAuthStore } from "@/store/auth/authStore";
-import { useLongLivedTokenStore } from "@/store/auth/longLivedTokenStore";
+import { useReset } from "@/store/auth/authStore";
+import { useRemoveLongLivedToken } from "@/store/auth/longLivedTokenStore";
 import { userApi } from "@/lib/axios";
 
 export const useLogout = () => {
-  const { reset } = useAuthStore();
-  const { removeLongLivedToken } = useLongLivedTokenStore();
+  const reset = useReset();
+  const removeLongLivedToken = useRemoveLongLivedToken();
   const queryClient = useQueryClient();
 
   const logout = useCallback(async () => {
