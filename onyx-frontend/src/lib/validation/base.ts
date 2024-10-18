@@ -19,6 +19,8 @@ export const ErrorSchema = z.object({
 
 export const CurrencySchema = z.enum(ALL_CURRENCIES);
 
+export type Currency = z.infer<typeof CurrencySchema>;
+
 export const MoneySchema = z.object({
   currency: CurrencySchema,
   amount: z.number(),

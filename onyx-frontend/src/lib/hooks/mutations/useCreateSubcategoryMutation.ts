@@ -7,7 +7,7 @@ import { capitalize } from "@/lib/utils";
 interface SubcategoryMutationProps {
   budgetId: string;
   parentCategoryId: string;
-  onMutationError: () => void;
+  onMutationError: (err: Error) => void;
   onMutationSuccess: () => void;
 }
 
@@ -56,13 +56,14 @@ export const useCreateSubcategoryMutation = ({
 
       return { previousCategories };
     },
-    onError: (_err, _newTodo, context) => {
+    onError: (err, _newTodo, context) => {
       if (!context) return context;
       queryClient.setQueryData(
         getCategoriesQueryOptions(budgetId).queryKey,
         context.previousCategories,
       );
-      onMutationError();
+      console.log("create subcategory error", err);
+      onMutationError(err);
     },
     onSettled: () => {
       queryClient.invalidateQueries({

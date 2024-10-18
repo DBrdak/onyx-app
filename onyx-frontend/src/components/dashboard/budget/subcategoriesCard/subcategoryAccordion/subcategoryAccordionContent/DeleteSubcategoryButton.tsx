@@ -16,6 +16,7 @@ import {
   useSelectedBudgetId,
   useSelectedSubcategoryId,
 } from "@/store/dashboard/budgetStore";
+import { getErrorMessage } from "@/lib/utils";
 
 const DeleteSubcategoryButton: FC = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -26,7 +27,7 @@ const DeleteSubcategoryButton: FC = () => {
     setIsDeleteDialogOpen(true);
   };
 
-  const { mutate, isError } = useDeleteSubcategoryMutation({
+  const { mutate, isError, error } = useDeleteSubcategoryMutation({
     budgetId,
     onMutationError,
   });
@@ -58,7 +59,7 @@ const DeleteSubcategoryButton: FC = () => {
         <DialogFooter className="items-center">
           {isError && (
             <p className="text-end text-sm text-destructive">
-              Something went wrong. Please try again.
+              {getErrorMessage(error)}
             </p>
           )}
           <Button type="submit" variant="destructive" onClick={onDelete}>

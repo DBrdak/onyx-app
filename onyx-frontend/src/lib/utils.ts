@@ -21,34 +21,29 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const getErrorMessage = (error: unknown): string => {
-  const message = "Something went wrong";
+  const defaultMessage = "Something went wrong. Please try again.";
 
   if (error instanceof AxiosError) {
-    if (error.response?.data?.error?.message) {
-      return error.response.data.error.message;
-    } else if (error.response?.data?.message) {
-      return error.response.data.message;
-    } else if (error.message) {
-      return error.message;
+    const status = error.response?.status;
+    const customMessage = error.response?.data?.error?.message;
+
+    if (status === 400 && customMessage) {
+      return customMessage;
+    }
+
+    switch (status) {
+      case 404:
+        return "Resource not found.";
+      case 500:
+        return "Server error. Please try again later.";
     }
   }
 
   if (error instanceof Error) {
-    return error.message;
+    return error.message || defaultMessage;
   }
 
-  if (typeof error === "object" && error !== null && "message" in error) {
-    const err = error as { message: unknown };
-    if (typeof err.message === "string") {
-      return err.message;
-    }
-  }
-
-  if (typeof error === "string") {
-    return error;
-  }
-
-  return message;
+  return defaultMessage;
 };
 
 export const validateResponse = <T>(

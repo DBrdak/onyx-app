@@ -15,6 +15,7 @@ import { editSubcategoryName } from "@/lib/api/subcategory";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { useSelectedBudgetId } from "@/store/dashboard/budgetStore";
+import { getErrorMessage } from "@/lib/utils";
 
 interface SubcategoryAccordionNameFormProps {
   subcategory: Subcategory;
@@ -53,10 +54,11 @@ const SubcategoryAccordionNameForm: FC<SubcategoryAccordionNameFormProps> = ({
     },
     onError: (error) => {
       console.error("Mutation error:", error);
+      const description = getErrorMessage(error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Oops... Something went wrong. Please try again later.",
+        description,
       });
       setTimeout(() => setFocus("name"), 0);
     },

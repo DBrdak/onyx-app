@@ -19,6 +19,7 @@ import {
 } from "@/lib/validation/category";
 import { useCreateCategoryMutation } from "@/lib/hooks/mutations/useCreateCategoryMutation";
 import { useSelectedBudgetId } from "@/store/dashboard/budgetStore";
+import { getErrorMessage } from "@/lib/utils";
 
 interface Props {
   categoriesCount: number;
@@ -41,10 +42,10 @@ const CreateCategory: FC<Props> = ({ categoriesCount }) => {
     setError,
   } = form;
 
-  const onMutationError = () => {
+  const onMutationError = (err: Error) => {
+    const message = getErrorMessage(err);
     setError("name", {
-      type: "network",
-      message: "Something went wrong. Please try again.",
+      message,
     });
   };
 

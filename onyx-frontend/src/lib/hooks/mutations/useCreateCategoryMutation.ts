@@ -5,7 +5,7 @@ import { capitalize } from "@/lib/utils";
 
 interface CategoryMutationProps {
   budgetId: string;
-  onMutationError: () => void;
+  onMutationError: (err: Error) => void;
   onMutationSuccess: () => void;
 }
 
@@ -48,9 +48,10 @@ export const useCreateCategoryMutation = ({
         queryKey,
       });
     },
-    onError: (_err, _newTodo, context) => {
+    onError: (err, _newTodo, context) => {
+      console.error("create category error", err);
       queryClient.setQueryData(queryKey, context);
-      onMutationError();
+      onMutationError(err);
     },
     onSuccess: () => {
       onMutationSuccess();

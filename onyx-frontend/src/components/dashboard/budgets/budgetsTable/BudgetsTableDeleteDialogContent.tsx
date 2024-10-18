@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { RequiredString } from "@/lib/validation/base";
 import { type Budget } from "@/lib/validation/budget";
 import { deleteBudget, getBudgetsQueryOptions } from "@/lib/api/budget";
+import { getErrorMessage } from "@/lib/utils";
 
 interface BudgetsTableDeleteDialogContentProps {
   setDialogOpen: Dispatch<SetStateAction<boolean>>;
@@ -48,9 +49,11 @@ const BudgetsTableDeleteDialogContent: FC<
     ),
   });
 
+  const { setError } = form;
+
   const nameInputValue = form.watch("name");
 
-  const { mutate: performDelete, isError: isDeleteError } = useMutation({
+  const { mutate: performDelete } = useMutation({
     mutationKey: ["deleteBudget", budget.id],
     mutationFn: deleteBudget,
     onSettled: async () => {
@@ -60,7 +63,11 @@ const BudgetsTableDeleteDialogContent: FC<
     },
     onError: (err) => {
       console.error("Deleting budget error", err);
+      const message = getErrorMessage(err);
       setDialogOpen(true);
+      setError("name", {
+        message,
+      });
     },
   });
 
@@ -68,14 +75,6 @@ const BudgetsTableDeleteDialogContent: FC<
     performDelete(budget.id);
     setDialogOpen(false);
   };
-
-  useEffect(() => {
-    if (isDeleteError) {
-      form.setError("name", {
-        message: "Something went wrong, please try again.",
-      });
-    }
-  }, [isDeleteError, form]);
 
   return (
     <DialogContent>

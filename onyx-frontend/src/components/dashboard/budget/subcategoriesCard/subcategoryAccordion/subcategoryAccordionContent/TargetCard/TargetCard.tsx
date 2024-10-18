@@ -6,10 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Subcategory } from "@/lib/validation/subcategory";
 import { useBudgetMonth } from "@/store/dashboard/budgetStore";
+import { Currency } from "@/lib/validation/base";
 
 interface TargetCardProps {
   subcategory: Subcategory;
-  currencyToDisplay: string;
+  currencyToDisplay: Currency;
 }
 
 const TargetCard: FC<TargetCardProps> = ({

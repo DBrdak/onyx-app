@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createBudget, getBudgetsQueryOptions } from "@/lib/api/budget";
 
 interface CreateBudgetMutationProps {
-  onMutationError: () => void;
+  onMutationError: (error: Error) => void;
   onMutationSuccess: () => void;
 }
 
@@ -33,6 +33,7 @@ export const useCreateBudgetMutation = ({
           ...old,
           {
             id: "12345",
+            slug: budgetName,
             name: budgetName,
             currency: budgetCurrency,
             budgetMembers: [
@@ -57,7 +58,7 @@ export const useCreateBudgetMutation = ({
     onError: (err, _newTodo, context) => {
       console.log(err);
       queryClient.setQueryData(queryKey, context);
-      onMutationError();
+      onMutationError(err);
     },
     onSuccess: () => {
       onMutationSuccess();

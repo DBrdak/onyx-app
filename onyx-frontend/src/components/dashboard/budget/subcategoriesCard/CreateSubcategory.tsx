@@ -20,6 +20,7 @@ import {
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { useCreateSubcategoryMutation } from "@/lib/hooks/mutations/useCreateSubcategoryMutation";
 import { useSelectedBudgetId } from "@/store/dashboard/budgetStore";
+import { getErrorMessage } from "@/lib/utils";
 
 interface CreateSubcategoryProps {
   parentCategoryId: string;
@@ -37,10 +38,10 @@ const CreateSubcategory: FC<CreateSubcategoryProps> = ({
   });
   const { handleSubmit, control, clearErrors, reset, setError } = form;
 
-  const onMutationError = () => {
+  const onMutationError = (err: Error) => {
+    const message = getErrorMessage(err);
     setError("name", {
-      type: "network",
-      message: "Something went wrong. Please try again.",
+      message,
     });
   };
 

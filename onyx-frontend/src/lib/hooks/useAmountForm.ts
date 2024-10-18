@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
-import { formatToDecimalString } from "@/lib/utils";
+import { formatToDecimalString, getErrorMessage } from "@/lib/utils";
 import { getToAssignQueryOptions } from "../api/budget";
 
 const useAmountForm = ({
@@ -50,9 +50,10 @@ const useAmountForm = ({
     },
     onError: (error) => {
       console.error("Mutation error:", error);
+      const description = getErrorMessage(error);
       toast({
         title: "Error",
-        description: "Oops... Something went wrong. Please try again later.",
+        description,
       });
     },
   });

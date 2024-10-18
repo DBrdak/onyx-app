@@ -6,10 +6,11 @@ import SubcategoryDescriptionForm from "@/components/dashboard/budget/subcategor
 
 import { Subcategory } from "@/lib/validation/subcategory";
 import { Button } from "@/components/ui/button";
+import { Currency } from "@/lib/validation/base";
 
 interface SubcategoryAccordionContentProps {
   subcategory: Subcategory;
-  currencyToDisplay: string;
+  currencyToDisplay: Currency;
   setIsNameEditActive: (state: boolean) => void;
 }
 

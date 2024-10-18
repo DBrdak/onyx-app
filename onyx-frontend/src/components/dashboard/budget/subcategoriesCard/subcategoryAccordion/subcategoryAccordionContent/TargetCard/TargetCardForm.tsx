@@ -14,10 +14,14 @@ import { useToast } from "@/components/ui/use-toast";
 import AmountInput from "@/components/dashboard/AmountInput";
 import MonthsCalendarPopover from "@/components/dashboard/MonthsCalendarPopover";
 
-import { Target } from "@/lib/validation/base";
+import { Currency, Target } from "@/lib/validation/base";
 import { CreateTarget } from "@/lib/validation/subcategory";
 import { FormTarget } from "@/lib/api/subcategory";
-import { formatToDecimalString, formatToDotDecimal } from "@/lib/utils";
+import {
+  formatToDecimalString,
+  formatToDotDecimal,
+  getErrorMessage,
+} from "@/lib/utils";
 import { useCreateTargetMutation } from "@/lib/hooks/mutations/useCreateTargetMutation";
 import {
   DEFAULT_MONTH_NUMBER,
@@ -33,7 +37,7 @@ interface TargetCardFormProps {
   currentTarget: Target | undefined | null;
   setIsCreating: (state: boolean) => void;
   subcategoryId: string;
-  currencyToDisplay: string;
+  currencyToDisplay: Currency;
 }
 
 const TargetCardForm: FC<TargetCardFormProps> = ({
@@ -70,12 +74,13 @@ const TargetCardForm: FC<TargetCardFormProps> = ({
   const inputMonth = watch("month");
   const inputYear = watch("year");
 
-  const onMutationError = () => {
+  const onMutationError = (err: Error) => {
     setIsCreating(true);
+    const description = getErrorMessage(err);
     toast({
       title: "Error",
       variant: "destructive",
-      description: "Oops... Something went wrong. Please try again later.",
+      description,
     });
   };
 

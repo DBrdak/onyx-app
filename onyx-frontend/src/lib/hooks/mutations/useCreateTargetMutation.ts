@@ -3,11 +3,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { createTarget } from "@/lib/api/subcategory";
 import { DEFAULT_MONTH_NUMBER } from "@/lib/constants/date";
+import { Currency } from "@/lib/validation/base";
 
 interface TargetMutationProps {
   budgetId: string;
-  currency: string;
-  onMutationError: () => void;
+  currency: Currency;
+  onMutationError: (err: Error) => void;
 }
 
 export const useCreateTargetMutation = ({
@@ -77,7 +78,7 @@ export const useCreateTargetMutation = ({
     onError: (err, _newTodo, context) => {
       console.log(err);
       queryClient.setQueryData(queryKey, context);
-      onMutationError();
+      onMutationError(err);
     },
   });
 };

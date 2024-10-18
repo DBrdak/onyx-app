@@ -8,7 +8,7 @@ import SubcategoryAccordionNameForm from "@/components/dashboard/budget/subcateg
 
 import { Subcategory } from "@/lib/validation/subcategory";
 import { cn, getFormattedCurrency } from "@/lib/utils";
-import { Money } from "@/lib/validation/base";
+import { Currency, Money } from "@/lib/validation/base";
 import { getToAssignQueryKey } from "@/lib/api/budget";
 import {
   useBudgetActions,
@@ -17,6 +17,7 @@ import {
   useSelectedBudgetId,
   useSelectedSubcategoryId,
 } from "@/store/dashboard/budgetStore";
+import { useUser } from "@/store/auth/authStore";
 
 interface SubcategoryAccordionProps {
   subcategory: Subcategory;
@@ -30,6 +31,7 @@ const SubcategoryAccordion: FC<SubcategoryAccordionProps> = ({
   const selectedSubcategoryId = useSelectedSubcategoryId();
   const month = useBudgetMonth();
   const year = useBudgetYear();
+  const user = useUser();
   const budgetToAssign = queryClient.getQueryData<Money>(
     getToAssignQueryKey(budgetId),
   );
@@ -60,7 +62,9 @@ const SubcategoryAccordion: FC<SubcategoryAccordionProps> = ({
   );
 
   const currencyToDisplay =
-    currentlyAssigned?.actualAmount.currency || budgetToAssign?.currency || "";
+    currentlyAssigned?.actualAmount.currency ||
+    budgetToAssign?.currency ||
+    (user?.currency as Currency);
 
   return (
     <li
