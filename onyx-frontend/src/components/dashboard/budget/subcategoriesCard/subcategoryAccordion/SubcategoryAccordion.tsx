@@ -1,6 +1,5 @@
-import { FC, MouseEvent, useRef, useState } from "react";
+import { FC, MouseEvent, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useParams, useSearch } from "@tanstack/react-router";
 
 import { ChevronRight } from "lucide-react";
 import SubcategoryAccordionContent from "@/components/dashboard/budget/subcategoriesCard/subcategoryAccordion/subcategoryAccordionContent/SubcategoryAccordionContent";
@@ -11,33 +10,35 @@ import { Subcategory } from "@/lib/validation/subcategory";
 import { cn, getFormattedCurrency } from "@/lib/utils";
 import { Money } from "@/lib/validation/base";
 import { getToAssignQueryKey } from "@/lib/api/budget";
+import {
+  useBudgetActions,
+  useBudgetMonth,
+  useBudgetYear,
+  useSelectedBudgetId,
+  useSelectedSubcategoryId,
+} from "@/store/dashboard/budgetStore";
 
 interface SubcategoryAccordionProps {
   subcategory: Subcategory;
-  setActiveSubcategory: (id: string | null) => void;
-  activeSubcategory: string | null;
 }
 
 const SubcategoryAccordion: FC<SubcategoryAccordionProps> = ({
   subcategory,
-  setActiveSubcategory,
-  activeSubcategory,
 }) => {
   const queryClient = useQueryClient();
-  const { budgetId: selectedBudget } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
-  const { month, year } = useSearch({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+  const budgetId = useSelectedBudgetId();
+  const selectedSubcategoryId = useSelectedSubcategoryId();
+  const month = useBudgetMonth();
+  const year = useBudgetYear();
   const budgetToAssign = queryClient.getQueryData<Money>(
-    getToAssignQueryKey(selectedBudget),
+    getToAssignQueryKey(budgetId),
   );
+  const { setSelectedSubcategoryId } = useBudgetActions();
 
   const [isNameEditActive, setIsNameEditActive] = useState(false);
 
   const assignFormRef = useRef<HTMLDivElement>(null);
-  const isActive = activeSubcategory === subcategory.id;
+  const isActive = selectedSubcategoryId === subcategory.id;
 
   const onExpandClick = (
     e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
@@ -46,14 +47,18 @@ const SubcategoryAccordion: FC<SubcategoryAccordionProps> = ({
       e.target as Node,
     );
     if (isAssignFormClicked || isNameEditActive) return;
-    setActiveSubcategory(isActive ? null : subcategory.id);
+    setSelectedSubcategoryId(isActive ? null : subcategory.id);
   };
 
-  const currentlyAssigned = subcategory.assignments?.find(
-    (asignment) =>
-      asignment.month.month === Number(month) &&
-      asignment.month.year === Number(year),
+  const currentlyAssigned = useMemo(
+    () =>
+      subcategory.assignments?.find(
+        (asignment) =>
+          asignment.month.month === month && asignment.month.year === year,
+      ),
+    [subcategory, month, year],
   );
+
   const currencyToDisplay =
     currentlyAssigned?.actualAmount.currency || budgetToAssign?.currency || "";
 
@@ -95,8 +100,8 @@ const SubcategoryAccordion: FC<SubcategoryAccordionProps> = ({
             {currencyToDisplay && (
               <SubcategoryAccordionAssignmentForm
                 defaultAmount={currentlyAssigned?.assignedAmount.amount}
-                subcategoryId={subcategory.id}
                 currencyToDisplay={currencyToDisplay}
+                subcategoryId={subcategory.id}
               />
             )}
           </div>

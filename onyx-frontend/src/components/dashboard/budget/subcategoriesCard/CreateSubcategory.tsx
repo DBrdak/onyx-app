@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams } from "@tanstack/react-router";
 
 import { ChevronRight, Plus } from "lucide-react";
 import {
@@ -20,6 +19,7 @@ import {
 } from "@/lib/validation/subcategory";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { useCreateSubcategoryMutation } from "@/lib/hooks/mutations/useCreateSubcategoryMutation";
+import { useSelectedBudgetId } from "@/store/dashboard/budgetStore";
 
 interface CreateSubcategoryProps {
   parentCategoryId: string;
@@ -28,9 +28,7 @@ interface CreateSubcategoryProps {
 const CreateSubcategory: FC<CreateSubcategoryProps> = ({
   parentCategoryId,
 }) => {
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+  const budgetId = useSelectedBudgetId();
   const form = useForm<CreateSubcategory>({
     defaultValues: {
       name: "",

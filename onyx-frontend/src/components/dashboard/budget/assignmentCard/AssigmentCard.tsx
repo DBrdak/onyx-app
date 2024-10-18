@@ -1,6 +1,5 @@
 import { FC, useMemo, useRef } from "react";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
-import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import {
   Card,
   CardContent,
@@ -15,6 +14,12 @@ import MonthsCalendarPopover, {
   AvailableDates,
   MonthsCalendarPopoverHandle,
 } from "../../MonthsCalendarPopover";
+import {
+  useBudgetActions,
+  useBudgetMonth,
+  useBudgetYear,
+  useSelectedBudgetId,
+} from "@/store/dashboard/budgetStore";
 
 interface AssignmentCardProps {
   toAssign: Money;
@@ -26,23 +31,17 @@ const AssignmentCard: FC<AssignmentCardProps> = ({
   availableDates,
 }) => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
   const { amount, currency } = toAssign;
-  const { month: selectedMonth, year: selectedYear } = useSearch({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+  const budgetId = useSelectedBudgetId();
+  const month = useBudgetMonth();
+  const year = useBudgetYear();
+  const { setBudgetMonth, setBudgetYear } = useBudgetActions();
 
   const isFetching = useIsFetching({ queryKey: ["toAssign", budgetId] }) > 0;
 
-  const numericSearchParamsMonth = Number(selectedMonth);
-  const numericSearchParamsYear = Number(selectedYear);
-
   const years = Object.keys(availableDates).map((y) => Number(y));
-  const months = availableDates[numericSearchParamsYear] || [];
-  const monthIndex = months.indexOf(numericSearchParamsMonth - 1);
+  const months = availableDates[year] || [];
+  const monthIndex = months.indexOf(month - 1);
 
   const isMinMonth = useMemo(() => monthIndex === 0, [monthIndex]);
   const isMaxMonth = useMemo(
@@ -53,15 +52,11 @@ const AssignmentCard: FC<AssignmentCardProps> = ({
   const calendarRef = useRef<MonthsCalendarPopoverHandle>(null);
 
   const handleMonthChange = async (newMonthDate: Date) => {
-    await navigate({
-      search: (prev) => ({
-        ...prev,
-        month: (newMonthDate.getMonth() + 1).toString(),
-        year: newMonthDate.getFullYear().toString(),
-      }),
-      mask: "/budget/$budgetId/accounts/$accountId",
+    setBudgetMonth(newMonthDate.getMonth() + 1);
+    setBudgetYear(newMonthDate.getFullYear());
+    await queryClient.invalidateQueries({
+      queryKey: getToAssignQueryKey(budgetId),
     });
-    queryClient.refetchQueries({ queryKey: getToAssignQueryKey(budgetId) });
   };
 
   const handleDecreaseMonth = () => {
@@ -82,13 +77,7 @@ const AssignmentCard: FC<AssignmentCardProps> = ({
             <MonthsCalendarPopover
               ref={calendarRef}
               onSelect={handleMonthChange}
-              defaultMonthDate={
-                new Date(
-                  numericSearchParamsYear,
-                  numericSearchParamsMonth - 1,
-                  1,
-                )
-              }
+              defaultMonthDate={new Date(year, month - 1, 1)}
               availableYears={years}
               monthSelectDisabled={(monthIndex) => !months.includes(monthIndex)}
               decreaseYearDisabled={(nextYear) => !years.includes(nextYear)}

@@ -15,8 +15,8 @@ const useAmountForm = ({
 }: {
   defaultAmount: number;
   budgetId: string;
-  month: string;
-  year: string;
+  month: string | number;
+  year: string | number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mutationFn: (args: any) => Promise<any>;
 }) => {

@@ -1,7 +1,6 @@
 import { FC, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "@tanstack/react-router";
 
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -15,6 +14,7 @@ import {
 import { editSubcategoryName } from "@/lib/api/subcategory";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
+import { useSelectedBudgetId } from "@/store/dashboard/budgetStore";
 
 interface SubcategoryAccordionNameFormProps {
   subcategory: Subcategory;
@@ -28,9 +28,7 @@ const SubcategoryAccordionNameForm: FC<SubcategoryAccordionNameFormProps> = ({
   setIsNameEditActive,
 }) => {
   const queryClient = useQueryClient();
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+  const budgetId = useSelectedBudgetId();
   const { toast } = useToast();
   const form = useForm<CreateSubcategory>({
     defaultValues: {

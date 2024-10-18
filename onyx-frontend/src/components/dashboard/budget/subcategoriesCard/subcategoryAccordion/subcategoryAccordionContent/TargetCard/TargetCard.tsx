@@ -5,7 +5,7 @@ import TargetCardForm from "./TargetCardForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Subcategory } from "@/lib/validation/subcategory";
-import { useSearch } from "@tanstack/react-router";
+import { useBudgetMonth } from "@/store/dashboard/budgetStore";
 
 interface TargetCardProps {
   subcategory: Subcategory;
@@ -16,13 +16,10 @@ const TargetCard: FC<TargetCardProps> = ({
   subcategory,
   currencyToDisplay,
 }) => {
-  const { month } = useSearch({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+  const month = useBudgetMonth();
   const [isCreating, setIsCreating] = useState(false);
-
   const currentTarget = subcategory.target;
-  const isAvailable = new Date().getMonth() + 1 <= parseInt(month);
+  const isAvailable = new Date().getMonth() + 1 <= month;
 
   return (
     <Card className="overflow-hidden rounded-lg border">

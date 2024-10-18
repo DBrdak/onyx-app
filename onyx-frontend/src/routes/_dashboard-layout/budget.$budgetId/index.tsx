@@ -7,17 +7,28 @@ import { SingleBudgetPageParamsSchema } from "@/lib/validation/searchParams";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { getToAssignQueryOptions } from "@/lib/api/budget";
 import { getAccountsQueryOptions } from "@/lib/api/account";
+import {
+  getBudgetMonth,
+  getBudgetYear,
+  getSelectedBudgetId,
+  setSelectedBudgetId,
+} from "@/store/dashboard/budgetStore";
+import { resetAllStores } from "@/store/dashboard/boundDashboardStore";
 
 export const Route = createFileRoute("/_dashboard-layout/budget/$budgetId/")({
-  loaderDeps: ({ search: { month, year } }) => ({
-    month,
-    year,
-  }),
-  loader: ({
-    context: { queryClient },
-    params: { budgetId },
-    deps: { month, year },
-  }) => {
+  beforeLoad: async ({ params: { budgetId } }) => {
+    const selectedBudgetId = getSelectedBudgetId();
+
+    if (selectedBudgetId === budgetId) return;
+
+    resetAllStores();
+    setSelectedBudgetId(budgetId);
+  },
+  loader: ({ context: { queryClient } }) => {
+    const budgetId = getSelectedBudgetId();
+    const month = getBudgetMonth();
+    const year = getBudgetYear();
+
     Promise.all([
       queryClient.ensureQueryData(getCategoriesQueryOptions(budgetId)),
       queryClient.ensureQueryData(

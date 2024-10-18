@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams } from "@tanstack/react-router";
 
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,15 +18,14 @@ import {
   CreateCategorySchema,
 } from "@/lib/validation/category";
 import { useCreateCategoryMutation } from "@/lib/hooks/mutations/useCreateCategoryMutation";
+import { useSelectedBudgetId } from "@/store/dashboard/budgetStore";
 
 interface Props {
   categoriesCount: number;
 }
 
 const CreateCategory: FC<Props> = ({ categoriesCount }) => {
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+  const budgetId = useSelectedBudgetId();
   const form = useForm<CreateCategory>({
     resolver: zodResolver(CreateCategorySchema),
     defaultValues: {

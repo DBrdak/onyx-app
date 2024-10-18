@@ -22,7 +22,7 @@ const SubcategoryAccordionContent: FC<SubcategoryAccordionContentProps> = ({
     <div className="grid gap-x-4 gap-y-4 p-4 md:grid-cols-2 md:gap-y-0">
       <div className="flex h-full flex-col space-y-4">
         <div className="flex w-full justify-end space-x-2">
-          <DeleteSubcategoryButton subcategoryId={subcategory.id} />
+          <DeleteSubcategoryButton />
           <Button
             onClick={() => setIsNameEditActive(true)}
             className="w-full"

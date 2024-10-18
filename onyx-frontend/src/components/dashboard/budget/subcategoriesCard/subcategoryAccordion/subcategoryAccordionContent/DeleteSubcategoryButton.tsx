@@ -1,5 +1,4 @@
 import { FC, useState } from "react";
-import { useParams } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,18 +12,15 @@ import {
 } from "@/components/ui/dialog";
 
 import { useDeleteSubcategoryMutation } from "@/lib/hooks/mutations/useDeleteSubcategoryMutation";
+import {
+  useSelectedBudgetId,
+  useSelectedSubcategoryId,
+} from "@/store/dashboard/budgetStore";
 
-interface DeleteSubcategoryButtonProps {
-  subcategoryId: string;
-}
-
-const DeleteSubcategoryButton: FC<DeleteSubcategoryButtonProps> = ({
-  subcategoryId,
-}) => {
+const DeleteSubcategoryButton: FC = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+  const budgetId = useSelectedBudgetId();
+  const subcategoryId = useSelectedSubcategoryId();
 
   const onMutationError = () => {
     setIsDeleteDialogOpen(true);
@@ -36,6 +32,7 @@ const DeleteSubcategoryButton: FC<DeleteSubcategoryButtonProps> = ({
   });
 
   const onDelete = () => {
+    if (!subcategoryId) return;
     mutate({ budgetId, subcategoryId });
     setIsDeleteDialogOpen(false);
   };

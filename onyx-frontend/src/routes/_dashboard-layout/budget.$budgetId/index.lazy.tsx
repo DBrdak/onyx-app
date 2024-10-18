@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useSuspenseQueries } from "@tanstack/react-query";
 import { Navigate, createLazyFileRoute } from "@tanstack/react-router";
 
@@ -12,6 +12,12 @@ import {
   DEFAULT_MONTH_NUMBER,
   DEFAULT_YEAR_STRING,
 } from "@/lib/constants/date";
+import {
+  useBudgetMonth,
+  useBudgetYear,
+  useSelectedBudgetId,
+  useSelectedCategoryId,
+} from "@/store/dashboard/budgetStore";
 
 export const Route = createLazyFileRoute(
   "/_dashboard-layout/budget/$budgetId/",
@@ -20,17 +26,20 @@ export const Route = createLazyFileRoute(
 });
 
 function SingleBudget() {
-  const [activeCategoryId, setActiveCategoryId] = useState("");
-  const { budgetId } = Route.useParams();
-  const { month, year } = Route.useSearch();
+  const budgetId = useSelectedBudgetId();
+  const month = useBudgetMonth();
+  const year = useBudgetYear();
+  const selectedCategoryId = useSelectedCategoryId();
   const [{ data: categories }, { data: toAssign }] = useSuspenseQueries({
     queries: [
       getCategoriesQueryOptions(budgetId),
       getToAssignQueryOptions({ budgetId, month, year }),
     ],
   });
-  const activeCategoryData = categories.find(
-    (category) => category.id === activeCategoryId,
+
+  const activeCategoryData = useMemo(
+    () => categories.find((category) => category.id === selectedCategoryId),
+    [categories, selectedCategoryId],
   );
 
   const availableDates = useMemo(() => {
@@ -67,21 +76,17 @@ function SingleBudget() {
   }, [categories]);
 
   if (
-    !Object.keys(availableDates).includes(year) ||
+    !Object.keys(availableDates).includes(year.toString()) ||
     !availableDates[year].includes(Number(month) - 1)
   ) {
     return <Navigate to="/budget" />;
   }
 
   return (
-    <div className="grid h-full grid-cols-1 gap-x-8 gap-y-4 overflow-hidden rounded-md lg:grid-cols-5">
+    <div className="grid h-full w-full grid-cols-1 gap-x-8 gap-y-4 overflow-hidden rounded-md lg:grid-cols-5">
       <div className="flex h-full flex-col space-y-4 lg:col-span-2">
         <AssignmentCard toAssign={toAssign} availableDates={availableDates} />
-        <CategoriesCard
-          activeCategoryId={activeCategoryId}
-          setActiveCategoryId={setActiveCategoryId}
-          categories={categories}
-        />
+        <CategoriesCard categories={categories} />
       </div>
       {activeCategoryData && (
         <SubcategoriesCard activeCategory={activeCategoryData} />
