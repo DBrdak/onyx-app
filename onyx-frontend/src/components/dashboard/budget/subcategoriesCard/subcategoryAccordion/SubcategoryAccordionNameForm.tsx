@@ -14,7 +14,7 @@ import {
 import { editSubcategoryName } from "@/lib/api/subcategory";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
-import { useSelectedBudgetId } from "@/store/dashboard/budgetStore";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
 import { getErrorMessage } from "@/lib/utils";
 
 interface SubcategoryAccordionNameFormProps {
@@ -29,7 +29,7 @@ const SubcategoryAccordionNameForm: FC<SubcategoryAccordionNameFormProps> = ({
   setIsNameEditActive,
 }) => {
   const queryClient = useQueryClient();
-  const budgetId = useSelectedBudgetId();
+  const budgetId = useBudgetId();
   const { toast } = useToast();
   const form = useForm<CreateSubcategory>({
     defaultValues: {

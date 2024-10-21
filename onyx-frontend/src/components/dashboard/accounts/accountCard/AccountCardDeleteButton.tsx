@@ -1,5 +1,4 @@
 import { FC, useState } from "react";
-import { useParams } from "@tanstack/react-router";
 
 import { Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { useDeleteAccountMutation } from "@/lib/hooks/mutations/useDeleteAccountMutation";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
 
 interface AccountCardDeleteButtonProps {
   accountId: string;
@@ -26,9 +26,7 @@ const AccountCardDeleteButton: FC<AccountCardDeleteButtonProps> = ({
   disabled,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
+  const budgetId = useBudgetId();
 
   const onMutationSuccess = () => {
     setIsDeleteDialogOpen(false);

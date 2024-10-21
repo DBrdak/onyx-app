@@ -13,10 +13,10 @@ import {
   DEFAULT_YEAR_STRING,
 } from "@/lib/constants/date";
 import {
+  useBudgetId,
   useBudgetMonth,
   useBudgetYear,
-  useSelectedBudgetId,
-  useSelectedCategoryId,
+  useCategoryId,
 } from "@/store/dashboard/budgetStore";
 
 export const Route = createLazyFileRoute(
@@ -26,10 +26,10 @@ export const Route = createLazyFileRoute(
 });
 
 function SingleBudget() {
-  const budgetId = useSelectedBudgetId();
+  const budgetId = useBudgetId();
   const month = useBudgetMonth();
   const year = useBudgetYear();
-  const selectedCategoryId = useSelectedCategoryId();
+  const selectedCategoryId = useCategoryId();
   const [{ data: categories }, { data: toAssign }] = useSuspenseQueries({
     queries: [
       getCategoriesQueryOptions(budgetId),

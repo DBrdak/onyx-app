@@ -9,6 +9,14 @@ import { getTransactionsQueryOptions } from "@/lib/api/transaction";
 import { getAccountsQueryOptions } from "@/lib/api/account";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { useSelectableCategories } from "@/lib/hooks/useSelectableCategories";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
+import {
+  useAccountDate,
+  useAccountDateRangeEnd,
+  useAccountDateRangeStart,
+  useAccountId,
+  useAccountPeriod,
+} from "@/store/dashboard/accountStore";
 
 export const Route = createLazyFileRoute(
   "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
@@ -17,9 +25,12 @@ export const Route = createLazyFileRoute(
 });
 
 function Account() {
-  const { accountId, budgetId } = Route.useParams();
-  const { accDate, accPeriod, dateRangeEnd, dateRangeStart } =
-    Route.useSearch();
+  const budgetId = useBudgetId();
+  const accountId = useAccountId();
+  const accDate = useAccountDate();
+  const accPeriod = useAccountPeriod();
+  const dateRangeStart = useAccountDateRangeStart();
+  const dateRangeEnd = useAccountDateRangeEnd();
 
   const [{ data: transactions }, { data: accounts }] = useSuspenseQueries({
     queries: [
@@ -51,7 +62,6 @@ function Account() {
       <AccountCard
         selectedAccount={selectedAccount}
         accounts={accounts}
-        budgetId={budgetId}
         transactions={transactions}
         disabled={disabled}
       />

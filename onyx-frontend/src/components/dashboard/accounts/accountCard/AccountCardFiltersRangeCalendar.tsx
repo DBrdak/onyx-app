@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import { format, subYears } from "date-fns";
 
 import { CalendarIcon } from "lucide-react";
@@ -12,26 +11,32 @@ import {
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 
-import { cn } from "@/lib/utils";
+import { cn, convertLocalToISOString } from "@/lib/utils";
 import { type DateRange } from "react-day-picker";
 import { getTransactionsQueryKey } from "@/lib/api/transaction";
+import {
+  useAccountActions,
+  useAccountDateRangeEnd,
+  useAccountDateRangeStart,
+  useAccountId,
+  useAccountPeriod,
+} from "@/store/dashboard/accountStore";
 
 const AccountCardFiltersRangeCalendar = () => {
-  const { accountId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
-  const { accPeriod, dateRangeEnd, dateRangeStart } = useSearch({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  const dateRangeStart = useAccountDateRangeStart();
+  const dateRangeEnd = useAccountDateRangeEnd();
+  const accPeriod = useAccountPeriod();
+  const accountId = useAccountId();
+  const { setAccountDateRangeEnd, setAccountDateRangeStart, setAccountPeriod } =
+    useAccountActions();
 
   const [open, setOpen] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange | undefined>(
-    accPeriod === "range"
+    accPeriod === "range" && dateRangeStart && dateRangeEnd
       ? {
-          from: new Date(dateRangeStart!),
-          to: new Date(dateRangeEnd!),
+          from: new Date(dateRangeStart),
+          to: new Date(dateRangeEnd),
         }
       : undefined,
   );
@@ -51,22 +56,16 @@ const AccountCardFiltersRangeCalendar = () => {
     }
 
     const formattedStartDate = newDateRange.from
-      ? format(newDateRange.from, "yyyy-MM-dd")
+      ? convertLocalToISOString(newDateRange.from)
       : "";
     const formattedEndDate = newDateRange.to
-      ? format(newDateRange.to, "yyyy-MM-dd")
+      ? convertLocalToISOString(newDateRange.to)
       : "";
 
     if (formattedStartDate && formattedEndDate) {
-      await navigate({
-        search: (prev) => ({
-          ...prev,
-          accPeriod: "range",
-          dateRangeStart: formattedStartDate,
-          dateRangeEnd: formattedEndDate,
-        }),
-        mask: "/budget/$budgetId/accounts/$accountId",
-      });
+      setAccountPeriod("range");
+      setAccountDateRangeStart(formattedStartDate);
+      setAccountDateRangeEnd(formattedEndDate);
       await queryClient.invalidateQueries({
         queryKey: getTransactionsQueryKey(accountId),
       });
@@ -95,9 +94,11 @@ const AccountCardFiltersRangeCalendar = () => {
               format(dateRange.from, "dd/MM/yyyy")
             )
           ) : (
-            <span>Pick a range</span>
+            <>
+              <span>Pick a range</span>
+              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+            </>
           )}
-          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">

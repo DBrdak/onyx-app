@@ -38,7 +38,7 @@ import {
 import { useCreateAccountMutation } from "@/lib/hooks/mutations/useCreateAccountMutation";
 import { CreateAccountPayload } from "@/lib/api/account";
 import { ACCOUNT_TYPES } from "@/lib/constants/account";
-import { formatToDotDecimal } from "@/lib/utils";
+import { formatToDotDecimal, getErrorMessage } from "@/lib/utils";
 import CurrencyCombobox from "../CurrencyCombobox";
 import { useUser } from "@/store/auth/authStore";
 
@@ -69,11 +69,12 @@ const CreateAccountButton: FC<CreateAccountButtonProps> = ({ budgetId }) => {
     setIsCreateDialogOpen(false);
   };
 
-  const onMutationError = () => {
+  const onMutationError = (err: Error) => {
+    const description = getErrorMessage(err);
     toast({
       title: "Error",
       variant: "destructive",
-      description: "Oops... Something went wrong. Please try again later.",
+      description,
     });
   };
 

@@ -1,5 +1,4 @@
 import { FC, useState } from "react";
-import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { format, subYears } from "date-fns";
 
@@ -12,37 +11,32 @@ import {
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 
-import { cn, getWeekRange } from "@/lib/utils";
+import { cn, convertLocalToISOString, getWeekRange } from "@/lib/utils";
 import { getTransactionsQueryKey } from "@/lib/api/transaction";
 import { DateRange } from "react-day-picker";
-import { SingleBudgetPageSearchParams } from "@/lib/validation/searchParams";
+import {
+  useAccountActions,
+  useAccountDate,
+  useAccountId,
+  useAccountPeriod,
+} from "@/store/dashboard/accountStore";
 
 const AccountCardFiltersWeekCalendar: FC = () => {
-  const { accDate, accPeriod } = useSearch({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
-  const { accountId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
+  const queryClient = useQueryClient();
+  const accPeriod = useAccountPeriod();
+  const accDate = useAccountDate();
+  const accountId = useAccountId();
+  const { setAccountPeriod, setAccountDate } = useAccountActions();
   const [open, setOpen] = useState(false);
   const [selectedWeek, setSelectedWeek] = useState<DateRange | undefined>(
     accPeriod === "week" ? getWeekRange(new Date(accDate)) : undefined,
   );
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const handleDayClick = async (date: Date) => {
     const range = getWeekRange(date);
     setSelectedWeek(range);
-
-    await navigate({
-      search: (prev: SingleBudgetPageSearchParams) => ({
-        ...prev,
-        accPeriod: "week",
-        accDate: format(date, "yyyy-MM-dd"),
-      }),
-      mask: "/budget/$budgetId/accounts/$accountId",
-    });
+    setAccountPeriod("week");
+    setAccountDate(convertLocalToISOString(date));
     await queryClient.invalidateQueries({
       queryKey: getTransactionsQueryKey(accountId),
     });
@@ -91,7 +85,6 @@ const AccountCardFiltersWeekCalendar: FC = () => {
             selected: isDayInSelectedWeek,
           }}
           disabled={(date) => date > new Date()}
-          captionLayout="dropdown-buttons"
           toDate={new Date()}
           fromDate={subYears(new Date(), 5)}
         />

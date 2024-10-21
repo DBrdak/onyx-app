@@ -1,6 +1,5 @@
 import { FC, useCallback, useState } from "react";
 import { ColumnDef, flexRender } from "@tanstack/react-table";
-import { useParams } from "@tanstack/react-router";
 
 import { Minus, Plus } from "lucide-react";
 import CreateTransactionTableForm from "@/components/dashboard/accounts/transactionsTable/TransactionsTableCreateForm";
@@ -39,6 +38,8 @@ import { cn } from "@/lib/utils";
 import { DataTablePagination } from "@/components/ui/table-pagination";
 import { useTransactionsDataTable } from "@/lib/hooks/useTransactionsDataTable";
 import { useSetSubcategoryMutation } from "@/lib/hooks/mutations/useSetSubcategoryMutation";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
+import { useAccountId } from "@/store/dashboard/accountStore";
 
 interface TransactionsTable {
   transactions: Transaction[];
@@ -70,9 +71,8 @@ const TransactionsTable: FC<TransactionsTable> = ({
   >([]);
   const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
   const [isCreateFormVisible, setIsCreateFormVisible] = useState(false);
-  const { budgetId, accountId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
+  const budgetId = useBudgetId();
+  const accountId = useAccountId();
   const { mutate } = useSetSubcategoryMutation({ accountId });
   const columns: ColumnDef<Transaction>[] = [
     createSelectColumn(),

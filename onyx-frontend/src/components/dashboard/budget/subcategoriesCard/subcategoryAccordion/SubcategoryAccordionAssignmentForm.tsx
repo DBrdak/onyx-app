@@ -11,7 +11,7 @@ import { formatToDotDecimal } from "@/lib/utils";
 import {
   useBudgetMonth,
   useBudgetYear,
-  useSelectedBudgetId,
+  useBudgetId,
 } from "@/store/dashboard/budgetStore";
 
 interface SubcategoryAccordionAssignmentFormProps {
@@ -23,7 +23,7 @@ interface SubcategoryAccordionAssignmentFormProps {
 const SubcategoryAccordionAssignmentForm: FC<
   SubcategoryAccordionAssignmentFormProps
 > = ({ defaultAmount, currencyToDisplay, subcategoryId }) => {
-  const selectedBudget = useSelectedBudgetId();
+  const selectedBudget = useBudgetId();
   const month = useBudgetMonth();
   const year = useBudgetYear();
 

@@ -47,11 +47,8 @@ const TransactionTableCreateModal: FC<TransactionTableCreateModalProps> = ({
     setFocus,
     transactionSign,
     selectedCurrency,
-    isCurrentMonthSelected,
     isPending,
     selectedSubcategoryName,
-    accMonth,
-    accYear,
     budgetId,
   } = useCreateTransactionForm({ account });
 
@@ -133,12 +130,7 @@ const TransactionTableCreateModal: FC<TransactionTableCreateModalProps> = ({
                   render={({ field }) => (
                     <FormItem className="flex flex-col pt-2">
                       <FormLabel>Transacted at:</FormLabel>
-                      <CalendarInput
-                        field={field}
-                        isCurrentMonthSelected={isCurrentMonthSelected}
-                        accMonth={Number(accMonth)}
-                        accYear={Number(accYear)}
-                      />
+                      <CalendarInput field={field} />
                       <FormMessage />
                     </FormItem>
                   )}

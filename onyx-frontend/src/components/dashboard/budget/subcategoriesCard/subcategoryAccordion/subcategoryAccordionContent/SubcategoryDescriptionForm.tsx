@@ -14,7 +14,7 @@ import {
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { createSubcategoryDescription } from "@/lib/api/subcategory";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
-import { useSelectedBudgetId } from "@/store/dashboard/budgetStore";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
 import { getErrorMessage } from "@/lib/utils";
 
 interface SubcategoryDescriptionFormProps {
@@ -25,7 +25,7 @@ const SubcategoryDescriptionForm: FC<SubcategoryDescriptionFormProps> = ({
   subcategory,
 }) => {
   const queryClient = useQueryClient();
-  const budgetId = useSelectedBudgetId();
+  const budgetId = useBudgetId();
   const { toast } = useToast();
   const form = useForm<CreateDescription>({
     defaultValues: {

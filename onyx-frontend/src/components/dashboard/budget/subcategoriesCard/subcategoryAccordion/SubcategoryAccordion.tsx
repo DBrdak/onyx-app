@@ -14,8 +14,8 @@ import {
   useBudgetActions,
   useBudgetMonth,
   useBudgetYear,
-  useSelectedBudgetId,
-  useSelectedSubcategoryId,
+  useBudgetId,
+  useSubcategoryId,
 } from "@/store/dashboard/budgetStore";
 import { useUser } from "@/store/auth/authStore";
 
@@ -27,15 +27,15 @@ const SubcategoryAccordion: FC<SubcategoryAccordionProps> = ({
   subcategory,
 }) => {
   const queryClient = useQueryClient();
-  const budgetId = useSelectedBudgetId();
-  const selectedSubcategoryId = useSelectedSubcategoryId();
+  const budgetId = useBudgetId();
+  const selectedSubcategoryId = useSubcategoryId();
   const month = useBudgetMonth();
   const year = useBudgetYear();
   const user = useUser();
   const budgetToAssign = queryClient.getQueryData<Money>(
     getToAssignQueryKey(budgetId),
   );
-  const { setSelectedSubcategoryId } = useBudgetActions();
+  const { setSubcategoryId } = useBudgetActions();
 
   const [isNameEditActive, setIsNameEditActive] = useState(false);
 
@@ -49,7 +49,7 @@ const SubcategoryAccordion: FC<SubcategoryAccordionProps> = ({
       e.target as Node,
     );
     if (isAssignFormClicked || isNameEditActive) return;
-    setSelectedSubcategoryId(isActive ? null : subcategory.id);
+    setSubcategoryId(isActive ? null : subcategory.id);
   };
 
   const currentlyAssigned = useMemo(

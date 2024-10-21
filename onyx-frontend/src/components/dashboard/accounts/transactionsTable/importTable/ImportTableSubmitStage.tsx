@@ -1,7 +1,5 @@
 import { Dispatch, FC, SetStateAction, useMemo } from "react";
-import { useParams } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { ArrowLeft } from "lucide-react";
@@ -21,7 +19,7 @@ import {
   createTextColumn,
 } from "@/components/dashboard/accounts/transactionsTable/TransactionsTableColumnsDefinitions";
 
-import { cn } from "@/lib/utils";
+import { cn, getErrorMessage } from "@/lib/utils";
 import {
   ImportTransactionsPresubmitState,
   ImportTransactionsSubmitStageArraySchema,
@@ -34,6 +32,8 @@ import {
 import LoadingButton from "@/components/LoadingButton";
 import { getAccountsQueryOptions } from "@/lib/api/account";
 import { VARIANTS } from "../TransactionsTable";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
+import { useAccountId } from "@/store/dashboard/accountStore";
 
 interface ImportTableSubmitStageProps {
   data: ImportTransactionsPresubmitState[];
@@ -50,9 +50,8 @@ const ImportTableSubmitStage: FC<ImportTableSubmitStageProps> = ({
   setVariant,
   setDefaultTableVariant,
 }) => {
-  const { budgetId, accountId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
+  const budgetId = useBudgetId();
+  const accountId = useAccountId();
   const queryClient = useQueryClient();
 
   const { toast } = useToast();
@@ -61,10 +60,11 @@ const ImportTableSubmitStage: FC<ImportTableSubmitStageProps> = ({
     mutationFn: createTransactions,
     onError: (err) => {
       console.log(err);
+      const description = getErrorMessage(err);
       return toast({
         title: "Error",
         variant: "destructive",
-        description: "Please try again later.",
+        description,
       });
     },
     onSuccess: async () => {
@@ -115,7 +115,7 @@ const ImportTableSubmitStage: FC<ImportTableSubmitStageProps> = ({
   const columns: ColumnDef<ImportTransactionsPresubmitState>[] = useMemo(
     () => [
       createSelectColumn(isPending),
-      createDateColumn((row) => format(new Date(row.transactedAt), "PP")),
+      createDateColumn("transactedAt"),
       createTextColumn("counterparty", "Counterparty", "counterpartyName"),
       createSubcategorySelectColumn(budgetId, setSubmitVariantData, isPending),
       createAmountColumn("amount.amount"),

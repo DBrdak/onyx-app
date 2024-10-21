@@ -1,5 +1,4 @@
 import { FC, useState } from "react";
-import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { format, subYears } from "date-fns";
 
@@ -14,33 +13,28 @@ import { Calendar } from "@/components/ui/calendar";
 
 import { cn, convertLocalToISOString } from "@/lib/utils";
 import { getTransactionsQueryKey } from "@/lib/api/transaction";
-import { SingleBudgetPageSearchParams } from "@/lib/validation/searchParams";
+import {
+  useAccountActions,
+  useAccountDate,
+  useAccountId,
+  useAccountPeriod,
+} from "@/store/dashboard/accountStore";
 
 const AccountCardFiltersDayCalendar: FC = () => {
-  const { accDate, accPeriod } = useSearch({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
-  const { accountId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
+  const queryClient = useQueryClient();
+  const accPeriod = useAccountPeriod();
+  const accDate = useAccountDate();
+  const accountId = useAccountId();
+  const { setAccountDate } = useAccountActions();
   const [open, setOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState(
     accPeriod === "day" ? new Date(accDate) : "",
   );
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const onDateSelected = async (date: Date | undefined) => {
     if (!date) return;
     setSelectedDay(date);
-    await navigate({
-      search: (prev: SingleBudgetPageSearchParams) => ({
-        ...prev,
-        accPeriod: "day",
-        accDate: convertLocalToISOString(date),
-      }),
-      mask: "/budget/$budgetId/accounts/$accountId",
-    });
+    setAccountDate(convertLocalToISOString(date));
     await queryClient.invalidateQueries({
       queryKey: getTransactionsQueryKey(accountId),
     });

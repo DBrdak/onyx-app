@@ -10,7 +10,7 @@ import { useNavigate } from "@tanstack/react-router";
 interface CreateAccountMutationProps {
   budgetId: string;
   onMutationSuccess: () => void;
-  onMutationError: () => void;
+  onMutationError: (err: Error) => void;
 }
 
 export const useCreateAccountMutation = ({
@@ -26,7 +26,7 @@ export const useCreateAccountMutation = ({
     mutationFn: createAccount,
     onError: (err) => {
       console.error("Mutation error:", err);
-      onMutationError();
+      onMutationError(err);
     },
     onSuccess: async ({ accountId }) => {
       const queryKey = getAccountsQueryOptions(budgetId).queryKey;

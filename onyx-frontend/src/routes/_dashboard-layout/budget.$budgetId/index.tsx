@@ -8,24 +8,18 @@ import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { getToAssignQueryOptions } from "@/lib/api/budget";
 import { getAccountsQueryOptions } from "@/lib/api/account";
 import {
+  getBudgetId,
   getBudgetMonth,
   getBudgetYear,
-  getSelectedBudgetId,
-  setSelectedBudgetId,
 } from "@/store/dashboard/budgetStore";
-import { resetAllStores } from "@/store/dashboard/boundDashboardStore";
+import { initializeBudgetStore } from "@/store/dashboard/boundDashboardStore";
 
 export const Route = createFileRoute("/_dashboard-layout/budget/$budgetId/")({
   beforeLoad: async ({ params: { budgetId } }) => {
-    const selectedBudgetId = getSelectedBudgetId();
-
-    if (selectedBudgetId === budgetId) return;
-
-    resetAllStores();
-    setSelectedBudgetId(budgetId);
+    initializeBudgetStore(budgetId);
   },
   loader: ({ context: { queryClient } }) => {
-    const budgetId = getSelectedBudgetId();
+    const budgetId = getBudgetId();
     const month = getBudgetMonth();
     const year = getBudgetYear();
 

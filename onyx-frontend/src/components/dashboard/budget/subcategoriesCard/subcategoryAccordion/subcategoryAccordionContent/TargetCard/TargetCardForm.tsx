@@ -30,7 +30,7 @@ import {
 import {
   useBudgetMonth,
   useBudgetYear,
-  useSelectedBudgetId,
+  useBudgetId,
 } from "@/store/dashboard/budgetStore";
 
 interface TargetCardFormProps {
@@ -46,7 +46,7 @@ const TargetCardForm: FC<TargetCardFormProps> = ({
   subcategoryId,
   currencyToDisplay,
 }) => {
-  const selectedBudget = useSelectedBudgetId();
+  const selectedBudget = useBudgetId();
   const selectedMonth = useBudgetMonth();
   const selectedYear = useBudgetYear();
   const { toast } = useToast();

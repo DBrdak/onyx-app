@@ -19,6 +19,7 @@ import { getAccountsQueryOptions } from "@/lib/api/account";
 import { Account } from "@/lib/validation/account";
 import { SingleBudgetPageSearchParams } from "@/lib/validation/searchParams";
 import { useUser } from "@/store/auth/authStore";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
 
 export const Route = createLazyFileRoute("/_dashboard-layout")({
   component: Layout,
@@ -28,11 +29,14 @@ function Layout() {
   const user = useUser();
   const isDesktop = useMediaQuery("(min-width: 1280px)");
   const { pathname } = useLocation();
-  const isBudgetSelected = pathname.startsWith("/budget/");
-  const budgetId = pathname.split("/")[2] as string | undefined;
+  const isBudgetListOpen = pathname.endsWith("/budget");
+  const budgetId = useBudgetId();
+  const isBudgetSelected = !isBudgetListOpen && budgetId;
+
   const { isError: isSingleBudgetLoadingError } =
     useSingleBudgetLoadingState(budgetId);
-  const linksAvailable = isBudgetSelected && !isSingleBudgetLoadingError;
+
+  const linksAvailable = !!isBudgetSelected && !isSingleBudgetLoadingError;
 
   const { data: accounts = [] } = useQuery({
     ...getAccountsQueryOptions(budgetId!),
@@ -110,14 +114,11 @@ function Layout() {
                     to={`/budget/${budgetId}/accounts/${account.id}`}
                     params={{ budgetId: budgetId!, accountId: account.id }}
                     search={(prev) => prev as SingleBudgetPageSearchParams}
-                    mask={{
-                      to: `/budget/${budgetId}/accounts/${account.id}`,
-                    }}
                     className="rounded-l-full py-4 pl-9 text-sm font-semibold transition-all duration-300 hover:bg-accent hover:text-foreground"
                     activeProps={{
                       className: "bg-background text-foreground",
                     }}
-                    preload="intent"
+                    preload={false}
                   >
                     {account.name}
                   </Link>

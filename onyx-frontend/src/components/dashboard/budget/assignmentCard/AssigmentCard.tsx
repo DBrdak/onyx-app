@@ -16,9 +16,9 @@ import MonthsCalendarPopover, {
 } from "../../MonthsCalendarPopover";
 import {
   useBudgetActions,
+  useBudgetId,
   useBudgetMonth,
   useBudgetYear,
-  useSelectedBudgetId,
 } from "@/store/dashboard/budgetStore";
 
 interface AssignmentCardProps {
@@ -32,7 +32,7 @@ const AssignmentCard: FC<AssignmentCardProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const { amount, currency } = toAssign;
-  const budgetId = useSelectedBudgetId();
+  const budgetId = useBudgetId();
   const month = useBudgetMonth();
   const year = useBudgetYear();
   const { setBudgetMonth, setBudgetYear } = useBudgetActions();

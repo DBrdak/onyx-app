@@ -18,8 +18,8 @@ interface QueryParams {
   subcategoryId?: string;
   date?: string;
   period?: string;
-  dateRangeStart?: string;
-  dateRangeEnd?: string;
+  dateRangeStart?: string | null;
+  dateRangeEnd?: string | null;
 }
 
 export interface CreateTransactionPayload {

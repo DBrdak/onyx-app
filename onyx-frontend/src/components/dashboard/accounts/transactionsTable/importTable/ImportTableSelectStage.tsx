@@ -7,7 +7,6 @@ import {
   useState,
 } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useParams } from "@tanstack/react-router";
 
 import ImportTableSelectStageHeadSelect from "@/components/dashboard/accounts/transactionsTable/importTable/ImportTableSelectStageHeadSelect";
 import { Button } from "@/components/ui/button";
@@ -26,6 +25,7 @@ import {
 } from "@/lib/validation/transaction";
 import { VARIANTS } from "@/components/dashboard/accounts/transactionsTable/TransactionsTable";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
 
 interface ImportTableSelectStageProps {
   data: string[][];
@@ -50,9 +50,7 @@ const ImportTableSelectStage: FC<ImportTableSelectStageProps> = ({
 }) => {
   const [selectedColumns, setSelectedColumns] = useState<SelectedColumns>({});
 
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
+  const budgetId = useBudgetId();
   const queryClient = useQueryClient();
   const { toast } = useToast();
 

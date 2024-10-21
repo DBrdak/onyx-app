@@ -2,7 +2,6 @@ import { FC, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import AccountCardBalanceForm from "@/components/dashboard/accounts/accountCard/AccountCardBalanceForm";
 import AccountCardNameForm from "@/components/dashboard/accounts/accountCard/AccountCardNameForm";
 import AccountCardDeleteButton from "@/components/dashboard/accounts/accountCard/AccountCardDeleteButton";
 import AccountCardFilters from "@/components/dashboard/accounts/accountCard/AccountCardFilters";
@@ -13,11 +12,11 @@ import { type Account } from "@/lib/validation/account";
 import { type Transaction } from "@/lib/validation/transaction";
 import { useIsFetching } from "@tanstack/react-query";
 import { getTransactionsQueryKey } from "@/lib/api/transaction";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
 
 interface AccountCardProps {
   selectedAccount: Account;
   accounts: Account[];
-  budgetId: string;
   transactions: Transaction[];
   disabled: boolean;
 }
@@ -25,10 +24,10 @@ interface AccountCardProps {
 const AccountCard: FC<AccountCardProps> = ({
   selectedAccount,
   accounts,
-  budgetId,
   transactions,
   disabled,
 }) => {
+  const budgetId = useBudgetId();
   const selectedAccountIndex = useMemo(
     () => accounts.findIndex((a) => a.id === selectedAccount.id),
     [accounts, selectedAccount.id],
@@ -39,24 +38,28 @@ const AccountCard: FC<AccountCardProps> = ({
   const prevAccountId =
     selectedAccountIndex !== 0 && accounts[selectedAccountIndex - 1].id;
 
-  const { expenses, income } = transactions.reduce(
-    (a, c) => {
-      const {
-        amount: { amount },
-      } = c;
+  const { expenses, income } = useMemo(
+    () =>
+      transactions.reduce(
+        (a, c) => {
+          const {
+            amount: { amount },
+          } = c;
 
-      if (amount < 0) {
-        a.expenses += amount;
-      } else {
-        a.income += amount;
-      }
+          if (amount < 0) {
+            a.expenses += amount;
+          } else {
+            a.income += amount;
+          }
 
-      return a;
-    },
-    {
-      expenses: 0,
-      income: 0,
-    },
+          return a;
+        },
+        {
+          expenses: 0,
+          income: 0,
+        },
+      ),
+    [transactions],
   );
 
   const isFetchingTransactions =
@@ -84,6 +87,7 @@ const AccountCard: FC<AccountCardProps> = ({
             mask={{
               to: `/budget/${budgetId}/accounts/${nextAccountId}`,
             }}
+            preload={false}
           >
             <ArrowRight />
           </Link>
@@ -103,6 +107,7 @@ const AccountCard: FC<AccountCardProps> = ({
             mask={{
               to: `/budget/${budgetId}/accounts/${prevAccountId}`,
             }}
+            preload={false}
           >
             <ArrowLeft />
           </Link>
@@ -125,13 +130,9 @@ const AccountCard: FC<AccountCardProps> = ({
         </div>
         <div className="pl-3">
           <span className="text-xs">BALANCE</span>
-          <div className="-ml-1">
-            <AccountCardBalanceForm
-              balance={selectedAccount.balance}
-              accountId={selectedAccount.id}
-              disabled={isFetchingTransactions}
-            />
-          </div>
+          <p className="text-2xl font-light">
+            {selectedAccount.balance.amount} {selectedAccount.balance.currency}
+          </p>
         </div>
         <div className="flex w-full justify-end space-x-4 pr-3">
           <span className="text-sm">Account type:</span>

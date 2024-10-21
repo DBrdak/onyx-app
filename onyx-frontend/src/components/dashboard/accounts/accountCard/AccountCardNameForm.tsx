@@ -12,7 +12,8 @@ import {
 } from "@/lib/validation/account";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { editAccountName, getAccountsQueryOptions } from "@/lib/api/account";
-import { useParams } from "@tanstack/react-router";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
+import { getErrorMessage } from "@/lib/utils";
 
 interface AccountCardNameFormProps {
   defaultName: string;
@@ -26,9 +27,7 @@ const AccountCardNameForm: FC<AccountCardNameFormProps> = ({
   disabled,
 }) => {
   const queryClient = useQueryClient();
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
+  const budgetId = useBudgetId();
   const form = useForm<TEditAccountSchema>({
     defaultValues: {
       name: defaultName,
@@ -53,10 +52,11 @@ const AccountCardNameForm: FC<AccountCardNameFormProps> = ({
     },
     onError: (error) => {
       console.error("Mutation error:", error);
+      const description = getErrorMessage(error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Oops... Something went wrong. Please try again later.",
+        description,
       });
       setTimeout(() => setFocus("name"), 0);
     },

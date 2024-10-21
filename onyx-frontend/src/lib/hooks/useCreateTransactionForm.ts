@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useParams, useSearch } from "@tanstack/react-router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -17,19 +16,17 @@ import { getAccountsQueryOptions } from "@/lib/api/account";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { formatToDotDecimal } from "@/lib/utils";
 import { type Account } from "@/lib/validation/account";
+import { useAccountDate, useAccountId } from "@/store/dashboard/accountStore";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
 
 interface Props {
   account: Account;
 }
 
 export const useCreateTransactionForm = ({ account }: Props) => {
-  const { accDate } = useSearch({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
-
-  const { budgetId, accountId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
+  const accDate = useAccountDate();
+  const budgetId = useBudgetId();
+  const accountId = useAccountId();
   const queryClient = useQueryClient();
 
   const form = useForm<TCreateTransactionSchema>({

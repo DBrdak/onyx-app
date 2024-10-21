@@ -1,5 +1,4 @@
-import { FC, useState } from "react";
-import { useNavigate, useSearch } from "@tanstack/react-router";
+import { FC } from "react";
 
 import {
   Select,
@@ -10,6 +9,10 @@ import {
   SelectLabel,
   SelectGroup,
 } from "@/components/ui/select";
+import {
+  useAccountActions,
+  useAccountTableSize,
+} from "@/store/dashboard/accountStore";
 
 const TABLE_SIZE_OPTIONS = [
   {
@@ -37,24 +40,19 @@ interface TransactionTableSizeFilterProps {
 const TransactionTableSizeFilter: FC<TransactionTableSizeFilterProps> = ({
   disabled,
 }) => {
-  const { tableSize } = useSearch({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
-  const navigate = useNavigate();
-
-  const [size, setSize] = useState(tableSize || "8");
+  const tableSize = useAccountTableSize();
+  const { setAccountTableSize } = useAccountActions();
 
   const onSelect = async (value: string) => {
-    if (value === tableSize) return;
-    setSize(value);
-    await navigate({
-      search: (prev) => ({ ...prev, tableSize: value }),
-      mask: "/budget/$budgetId/accounts/$accountId",
-    });
+    if (value === tableSize.toString()) return;
+    setAccountTableSize(parseInt(value));
   };
 
   return (
-    <Select value={size} onValueChange={(value) => onSelect(value)}>
+    <Select
+      value={tableSize.toString()}
+      onValueChange={(value) => onSelect(value)}
+    >
       <SelectTrigger className="md:max-w-28" disabled={disabled}>
         <SelectValue placeholder="Table size" />
       </SelectTrigger>

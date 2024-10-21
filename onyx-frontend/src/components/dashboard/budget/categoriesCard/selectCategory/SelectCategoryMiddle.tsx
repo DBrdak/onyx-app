@@ -24,7 +24,7 @@ import {
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { cn } from "@/lib/utils";
 import { type SelectCategorySectionProps } from "@/components/dashboard/budget/categoriesCard/selectCategory/SelectCategory";
-import { useSelectedBudgetId } from "@/store/dashboard/budgetStore";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
 
 const SelectCategoryMiddle: FC<SelectCategorySectionProps> = ({
   isEdit,
@@ -32,7 +32,7 @@ const SelectCategoryMiddle: FC<SelectCategorySectionProps> = ({
   category,
   setIsEdit,
 }) => {
-  const budgetId = useSelectedBudgetId();
+  const budgetId = useBudgetId();
   const form = useForm<CreateCategory>({
     resolver: zodResolver(CreateCategorySchema),
     defaultValues: {

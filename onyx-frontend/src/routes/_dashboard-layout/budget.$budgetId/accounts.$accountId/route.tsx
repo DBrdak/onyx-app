@@ -7,18 +7,30 @@ import { getAccountsQueryOptions } from "@/lib/api/account";
 import { getTransactionsQueryOptions } from "@/lib/api/transaction";
 import { SingleBudgetPageParamsSchema } from "@/lib/validation/searchParams";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
+import { initializeBudgetStore } from "@/store/dashboard/boundDashboardStore";
+import {
+  getAccountDate,
+  getAccountDateRangeEnd,
+  getAccountDateRangeStart,
+  getAccountPeriod,
+  initializeAccountId,
+} from "@/store/dashboard/accountStore";
 
 export const Route = createFileRoute(
   "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
 )({
-  loaderDeps: ({
-    search: { accDate, accPeriod, dateRangeEnd, dateRangeStart },
-  }) => ({ accDate, accPeriod, dateRangeEnd, dateRangeStart }),
+  beforeLoad: ({ params: { budgetId, accountId } }) => {
+    initializeBudgetStore(budgetId);
+    initializeAccountId(accountId);
+  },
   loader: async ({
     context: { queryClient },
     params: { budgetId, accountId },
-    deps: { accDate, accPeriod, dateRangeEnd, dateRangeStart },
   }) => {
+    const accDate = getAccountDate();
+    const accPeriod = getAccountPeriod();
+    const dateRangeEnd = getAccountDateRangeEnd();
+    const dateRangeStart = getAccountDateRangeStart();
     Promise.all([
       queryClient.ensureQueryData(
         getTransactionsQueryOptions(budgetId, accountId, {
