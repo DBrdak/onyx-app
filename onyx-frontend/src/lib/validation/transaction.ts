@@ -76,7 +76,7 @@ export const CreateTransactionSchema = z
 export type TCreateTransactionSchema = z.infer<typeof CreateTransactionSchema>;
 
 export const ImportTransactionsSelectStageSchema = z.object({
-  date: DateString,
+  date: DateString.transform((dateString) => new Date(dateString)),
   counterparty: RequiredString,
   currency: z.enum(ALL_CURRENCIES),
   amount: AmountSchema,
@@ -93,9 +93,7 @@ export type TImportTransactionsSelectStage = z.infer<
 export const ImportTransactionsSubmitStageSchema = z
   .object({
     amount: MoneySchema,
-    transactedAt: DateString.transform(
-      (dateString) => new Date(dateString),
-    ).refine((dateString) => isInPastRange(dateString, 5), {
+    transactedAt: z.date().refine((date) => isInPastRange(date, 5), {
       message: "Transaction date cannot be older than 5 years.",
     }),
     counterpartyName: RequiredString,
