@@ -21,7 +21,6 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { type Budget } from "@/lib/validation/budget";
 import { getInvitationLink } from "@/lib/api/budget";
-import { SINGLE_BUDGET_DEFAULT_SEARCH_PARAMS } from "@/lib/constants/searchParams";
 import { useUser } from "@/store/auth/authStore";
 
 interface BudgetsTableRowProps {
@@ -35,7 +34,7 @@ enum OPTION {
 }
 
 const BudgetsTableRow: FC<BudgetsTableRowProps> = ({ budget }) => {
-  const { id, name, currency, budgetMembers, optimistic } = budget;
+  const { id, slug, name, currency, budgetMembers, optimistic } = budget;
   const user = useUser();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [option, setOption] = useState(OPTION.none);
@@ -76,9 +75,8 @@ const BudgetsTableRow: FC<BudgetsTableRowProps> = ({ budget }) => {
     >
       <Link
         disabled={!!optimistic || isPending}
-        to={`/budget/${id}`}
-        params={{ budgetId: id }}
-        search={SINGLE_BUDGET_DEFAULT_SEARCH_PARAMS}
+        to={`/budget/${slug}`}
+        params={{ budgetSlug: slug }}
         className="group peer col-span-9 grid w-full grid-cols-9 items-center gap-x-4 px-4 py-6 hover:bg-accent"
       >
         <div className="col-span-3 min-w-[150px]">{name}</div>

@@ -27,19 +27,19 @@ import {
   createSetSubcategoryColumn,
   createTextColumn,
 } from "@/components/dashboard/accounts/transactionsTable/TransactionsTableColumnsDefinitions";
+import { DataTablePagination } from "@/components/ui/table-pagination";
 
 import {
   ImportTransactionsPresubmitState,
   Transaction,
 } from "@/lib/validation/transaction";
-import { Account } from "@/lib/validation/account";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
-import { DataTablePagination } from "@/components/ui/table-pagination";
 import { useTransactionsDataTable } from "@/lib/hooks/useTransactionsDataTable";
 import { useSetSubcategoryMutation } from "@/lib/hooks/mutations/useSetSubcategoryMutation";
 import { useBudgetId } from "@/store/dashboard/budgetStore";
 import { useAccountId } from "@/store/dashboard/accountStore";
+import { type Account } from "@/lib/validation/account";
 
 interface TransactionsTable {
   transactions: Transaction[];

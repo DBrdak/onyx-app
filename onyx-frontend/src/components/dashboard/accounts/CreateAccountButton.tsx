@@ -41,14 +41,12 @@ import { ACCOUNT_TYPES } from "@/lib/constants/account";
 import { formatToDotDecimal, getErrorMessage } from "@/lib/utils";
 import CurrencyCombobox from "../CurrencyCombobox";
 import { useUser } from "@/store/auth/authStore";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
 
-interface CreateAccountButtonProps {
-  budgetId: string;
-}
-
-const CreateAccountButton: FC<CreateAccountButtonProps> = ({ budgetId }) => {
+const CreateAccountButton: FC = () => {
   const user = useUser();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const budgetId = useBudgetId();
 
   const { toast } = useToast();
   const form = useForm<TCreateAccountForm>({
@@ -79,7 +77,6 @@ const CreateAccountButton: FC<CreateAccountButtonProps> = ({ budgetId }) => {
   };
 
   const { mutate, isPending } = useCreateAccountMutation({
-    budgetId,
     onMutationSuccess,
     onMutationError,
   });

@@ -19,7 +19,7 @@ import {
 } from "@/store/dashboard/accountStore";
 
 export const Route = createLazyFileRoute(
-  "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
+  "/_dashboard-layout/budget/$budgetSlug/accounts/$accountSlug",
 )({
   component: Account,
 });

@@ -4,6 +4,7 @@ import { DatePeriodValue, DEFAULT_ISO_DATE } from "@/lib/constants/date";
 
 interface State {
   accountId: string;
+  accountSlug: string;
   accountDate: string;
   accountPeriod: DatePeriodValue;
   accountDateRangeStart: string | null;
@@ -13,8 +14,9 @@ interface State {
 
 interface Actions {
   reset: () => void;
-  initializeAccount: (accountId: string) => void;
+  initializeAccount: (accountId: string, accountSlug: string) => void;
   setAccountId: (accountId: string) => void;
+  setAccountSlug: (accountSlug: string) => void;
   setAccountDate: (accountDate: string) => void;
   setAccountPeriod: (accountPeriod: DatePeriodValue) => void;
   setAccountDateRangeStart: (accountDateRangeStart: string | null) => void;
@@ -24,6 +26,7 @@ interface Actions {
 
 const DEFAULT_ACCOUNT_STATE: State = {
   accountId: "",
+  accountSlug: "",
   accountDate: DEFAULT_ISO_DATE,
   accountPeriod: "last30days",
   accountDateRangeEnd: null,
@@ -46,14 +49,15 @@ export const useAccountStore = create<State & Actions>()(
         set({ accountDateRangeStart }),
       setAccountDateRangeEnd: (accountDateRangeEnd) =>
         set({ accountDateRangeEnd }),
-      initializeAccount: (accountId) => {
+      initializeAccount: (accountId, accountSlug) => {
         const currentAccountId = get().accountId;
 
         if (currentAccountId === accountId) return;
 
-        set({ ...DEFAULT_ACCOUNT_STATE, accountId });
+        set({ ...DEFAULT_ACCOUNT_STATE, accountId, accountSlug });
       },
       setAccountTableSize: (accountTableSize) => set({ accountTableSize }),
+      setAccountSlug: (accountSlug) => set({ accountSlug }),
     }),
     {
       name: "accountStore",
@@ -108,3 +112,4 @@ export const getAccountDateRangeEnd = () =>
   useAccountStore.getState().accountDateRangeEnd;
 
 export const initializeAccountId = useAccountStore.getState().initializeAccount;
+export const setAccountSlug = useAccountStore.getState().setAccountSlug;

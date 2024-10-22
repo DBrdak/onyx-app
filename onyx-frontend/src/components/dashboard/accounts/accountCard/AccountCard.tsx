@@ -12,7 +12,7 @@ import { type Account } from "@/lib/validation/account";
 import { type Transaction } from "@/lib/validation/transaction";
 import { useIsFetching } from "@tanstack/react-query";
 import { getTransactionsQueryKey } from "@/lib/api/transaction";
-import { useBudgetId } from "@/store/dashboard/budgetStore";
+import { useBudgetSlug } from "@/store/dashboard/budgetStore";
 
 interface AccountCardProps {
   selectedAccount: Account;
@@ -27,16 +27,16 @@ const AccountCard: FC<AccountCardProps> = ({
   transactions,
   disabled,
 }) => {
-  const budgetId = useBudgetId();
+  const budgetSlug = useBudgetSlug();
   const selectedAccountIndex = useMemo(
     () => accounts.findIndex((a) => a.id === selectedAccount.id),
     [accounts, selectedAccount.id],
   );
-  const nextAccountId =
+  const nextAccountSlug =
     selectedAccountIndex < accounts.length - 1 &&
-    accounts[selectedAccountIndex + 1].id;
-  const prevAccountId =
-    selectedAccountIndex !== 0 && accounts[selectedAccountIndex - 1].id;
+    accounts[selectedAccountIndex + 1].slug;
+  const prevAccountSlug =
+    selectedAccountIndex !== 0 && accounts[selectedAccountIndex - 1].slug;
 
   const { expenses, income } = useMemo(
     () =>
@@ -73,7 +73,7 @@ const AccountCard: FC<AccountCardProps> = ({
         selectedAccount.optimistic && "opacity-50",
       )}
     >
-      {nextAccountId && (
+      {nextAccountSlug && (
         <Button
           variant="outline"
           size="icon"
@@ -82,10 +82,10 @@ const AccountCard: FC<AccountCardProps> = ({
           disabled={isFetchingTransactions}
         >
           <Link
-            to={`/budget/${budgetId}/accounts/${nextAccountId}`}
+            to={`/budget/${budgetSlug}/accounts/${nextAccountSlug}`}
             search={(prev) => prev}
             mask={{
-              to: `/budget/${budgetId}/accounts/${nextAccountId}`,
+              to: `/budget/${budgetSlug}/accounts/${nextAccountSlug}`,
             }}
             preload={false}
           >
@@ -93,7 +93,7 @@ const AccountCard: FC<AccountCardProps> = ({
           </Link>
         </Button>
       )}
-      {prevAccountId && (
+      {prevAccountSlug && (
         <Button
           variant="outline"
           size="icon"
@@ -102,10 +102,10 @@ const AccountCard: FC<AccountCardProps> = ({
           disabled={isFetchingTransactions}
         >
           <Link
-            to={`/budget/${budgetId}/accounts/${prevAccountId}`}
+            to={`/budget/${budgetSlug}/accounts/${prevAccountSlug}`}
             search={(prev) => prev}
             mask={{
-              to: `/budget/${budgetId}/accounts/${prevAccountId}`,
+              to: `/budget/${budgetSlug}/accounts/${prevAccountSlug}`,
             }}
             preload={false}
           >

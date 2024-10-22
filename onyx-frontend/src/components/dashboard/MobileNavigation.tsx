@@ -22,21 +22,21 @@ import {
 
 import { Account } from "@/lib/validation/account";
 import { cn } from "@/lib/utils";
+import { useBudgetSlug } from "@/store/dashboard/budgetStore";
 
 interface MobileNavigationProps {
   linksAvailable: boolean;
-  budgetId: string | undefined;
   accounts: Account[];
 }
 
 const MobileNavigation: FC<MobileNavigationProps> = ({
   linksAvailable,
-  budgetId,
   accounts,
 }) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const budgetSlug = useBudgetSlug();
 
   const onBackToBudgetsClick = () => {
     navigate({ to: "/budget" });
@@ -45,27 +45,21 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
 
   const onButgetsLinkClick = () => {
     navigate({
-      to: budgetId ? "/budget/$budgetId" : "/budget",
-      search: (prev) => prev,
-      mask: { to: budgetId ? "/budget/$budgetId" : "/budget" },
+      to: budgetSlug ? "/budget/$budgetSlug" : "/budget",
     });
     setIsNavOpen(false);
   };
 
   const onAccountLinkClick = (id: string) => {
     navigate({
-      to: `/budget/${budgetId}/accounts/${id}`,
-      search: (prev) => prev,
-      mask: `/budget/${budgetId}/accounts/${id}`,
+      to: `/budget/${budgetSlug}/accounts/${id}`,
     });
     setIsNavOpen(false);
   };
 
   const onBudgetLayoutLinkClick = (route: string) => {
     navigate({
-      to: `/budget/${budgetId}/${route}`,
-      search: (prev) => prev,
-      mask: `/budget/${budgetId}/${route}`,
+      to: `/budget/${budgetSlug}/${route}`,
     });
     setIsNavOpen(false);
   };
@@ -78,7 +72,7 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
   };
 
   const isBudgetLinkSelected = (pathname: string) =>
-    pathname === `/budget/${budgetId}` || pathname === "/budget";
+    pathname === `/budget/${budgetSlug}` || pathname === "/budget";
 
   const isRouteLinkSelected = (route: string) => pathname.includes(route);
 
@@ -100,7 +94,7 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
         </SheetHeader>
         <div className="flex flex-grow flex-col justify-between overflow-y-auto py-12">
           <div className="flex flex-col space-y-4">
-            {budgetId && (
+            {budgetSlug && linksAvailable && (
               <Button
                 onClick={onBackToBudgetsClick}
                 size="lg"
@@ -122,15 +116,12 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
               )}
             >
               <Wallet />
-              <span>{budgetId ? "Budget" : "Budgets"}</span>
+              <span>{budgetSlug && linksAvailable ? "Budget" : "Budgets"}</span>
             </Button>
 
             {linksAvailable && (
               <>
-                <AccountsLinksAccordion
-                  accountsLength={accounts.length}
-                  budgetId={budgetId!}
-                >
+                <AccountsLinksAccordion accountsLength={accounts.length}>
                   {accounts.map((a) => (
                     <Button
                       key={a.id}

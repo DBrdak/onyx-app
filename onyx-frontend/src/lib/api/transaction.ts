@@ -86,6 +86,8 @@ export const getTransactions = async (
     url += `?${searchParams.toString()}`;
   }
 
+  console.log(url);
+
   try {
     const { data } = await budgetApi.get(url);
     const validatedData = TransactionResultSchema.safeParse(data);

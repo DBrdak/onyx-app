@@ -11,7 +11,7 @@ import {
   PaginationState,
 } from "@tanstack/react-table";
 import { useDebounce } from "./useDebounce";
-import { useSearch } from "@tanstack/react-router";
+import { useAccountTableSize } from "@/store/dashboard/accountStore";
 
 interface Props<TData, TValue> {
   data: TData[];
@@ -24,9 +24,7 @@ export function useTransactionsDataTable<TData, TValue>({
   columns,
   pageSize = 8,
 }: Props<TData, TValue>) {
-  const search = useSearch({
-    from: "/_dashboard-layout/budget/$budgetId/accounts/$accountId",
-  });
+  const tableSize = useAccountTableSize();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -37,12 +35,10 @@ export function useTransactionsDataTable<TData, TValue>({
   const debouncedGlobalFilter = useDebounce(globalFilter, 500);
 
   useEffect(() => {
-    const size = parseInt(search.tableSize);
+    if (tableSize === pagination.pageSize && pagination.pageIndex === 0) return;
 
-    if (size === pagination.pageSize && pagination.pageIndex === 0) return;
-
-    setPagination(() => ({ pageIndex: 0, pageSize: size }));
-  }, [search]);
+    setPagination(() => ({ pageIndex: 0, pageSize: tableSize }));
+  }, [tableSize]);
 
   const table = useReactTable({
     data,

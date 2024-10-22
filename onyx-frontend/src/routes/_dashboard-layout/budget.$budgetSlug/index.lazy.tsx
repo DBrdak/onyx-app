@@ -20,7 +20,7 @@ import {
 } from "@/store/dashboard/budgetStore";
 
 export const Route = createLazyFileRoute(
-  "/_dashboard-layout/budget/$budgetId/",
+  "/_dashboard-layout/budget/$budgetSlug/",
 )({
   component: SingleBudget,
 });

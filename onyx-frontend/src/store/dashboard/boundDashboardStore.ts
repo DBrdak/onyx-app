@@ -4,7 +4,7 @@ import { useAccountStore } from "./accountStore";
 
 interface Actions {
   resetAllStores: () => void;
-  initializeBudgetStore: (budgetId: string) => void;
+  initializeBudgetStore: (budgetId: string, budgetSlug: string) => void;
 }
 
 export const useDashboardStore = create<Actions>((set, get) => ({
@@ -12,7 +12,7 @@ export const useDashboardStore = create<Actions>((set, get) => ({
     useBudgetStore.getState().reset();
     useAccountStore.getState().reset();
   },
-  initializeBudgetStore: (budgetId) => {
+  initializeBudgetStore: (budgetId, budgetSlug) => {
     const currentlySelectedBudgetId = useBudgetStore.getState().budgetId;
 
     if (currentlySelectedBudgetId === budgetId) return;
@@ -20,7 +20,9 @@ export const useDashboardStore = create<Actions>((set, get) => ({
     get().resetAllStores();
 
     const setNewBudgetId = useBudgetStore.getState().setBudgetId;
+    const setNewBudgetSlug = useBudgetStore.getState().setBudgetSlug;
     setNewBudgetId(budgetId);
+    setNewBudgetSlug(budgetSlug);
   },
 }));
 

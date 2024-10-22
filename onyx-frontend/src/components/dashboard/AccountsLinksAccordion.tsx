@@ -8,9 +8,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface AccountsLinksAccordionProps {
-  budgetId: string;
   accountsLength: number;
   children: ReactNode;
 }
@@ -18,7 +18,6 @@ interface AccountsLinksAccordionProps {
 const AccountsLinksAccordion: FC<AccountsLinksAccordionProps> = ({
   accountsLength,
   children,
-  budgetId,
 }) => {
   return (
     <Accordion type="single" collapsible>
@@ -32,11 +31,13 @@ const AccountsLinksAccordion: FC<AccountsLinksAccordionProps> = ({
           </span>
         </AccordionTrigger>
         <AccordionContent className="pb-2">
-          <div className="flex flex-col space-y-2 py-2">
-            {children}
-            {accountsLength > 0 && <div className="h-1 border-t" />}
-            <CreateAccountButton budgetId={budgetId} />
-          </div>
+          <ScrollArea className="h-[350px]">
+            <div className="flex flex-col space-y-2 py-2">
+              {children}
+              {accountsLength > 0 && <div className="h-1 border-t" />}
+              <CreateAccountButton />
+            </div>
+          </ScrollArea>
         </AccordionContent>
       </AccordionItem>
     </Accordion>
