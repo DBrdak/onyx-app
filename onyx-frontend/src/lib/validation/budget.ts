@@ -10,9 +10,10 @@ import { CounterpartySchema } from "@/lib/validation/counterparty";
 import { BudgetMemberSchema } from "@/lib/validation/user";
 
 export const BudgetSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  currency: z.string(),
+  id: RequiredString,
+  slug: RequiredString,
+  name: RequiredString,
+  currency: RequiredString,
   budgetMembers: z.array(BudgetMemberSchema),
   optimistic: z.boolean().optional(),
 });

@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useParams } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -15,6 +14,8 @@ import {
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { createSubcategoryDescription } from "@/lib/api/subcategory";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
+import { getErrorMessage } from "@/lib/utils";
 
 interface SubcategoryDescriptionFormProps {
   subcategory: Subcategory;
@@ -24,9 +25,7 @@ const SubcategoryDescriptionForm: FC<SubcategoryDescriptionFormProps> = ({
   subcategory,
 }) => {
   const queryClient = useQueryClient();
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+  const budgetId = useBudgetId();
   const { toast } = useToast();
   const form = useForm<CreateDescription>({
     defaultValues: {
@@ -50,10 +49,11 @@ const SubcategoryDescriptionForm: FC<SubcategoryDescriptionFormProps> = ({
     },
     onError: (error) => {
       console.error("Mutation error:", error);
+      const description = getErrorMessage(error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Oops... Something went wrong. Please try again later.",
+        description,
       });
       setTimeout(() => setFocus("description"), 0);
     },

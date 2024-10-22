@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
-import { useParams, useSearch } from "@tanstack/react-router";
 
 import AmountInput from "@/components/dashboard/AmountInput";
 import { Form, FormField, FormItem } from "@/components/ui/form";
@@ -9,22 +8,24 @@ import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { FormAssignment, assign } from "@/lib/api/subcategory";
 import useAmountForm from "@/lib/hooks/useAmountForm";
 import { formatToDotDecimal } from "@/lib/utils";
+import {
+  useBudgetMonth,
+  useBudgetYear,
+  useBudgetId,
+} from "@/store/dashboard/budgetStore";
 
 interface SubcategoryAccordionAssignmentFormProps {
   defaultAmount: number | undefined;
-  subcategoryId: string;
   currencyToDisplay: string;
+  subcategoryId: string;
 }
 
 const SubcategoryAccordionAssignmentForm: FC<
   SubcategoryAccordionAssignmentFormProps
-> = ({ defaultAmount, subcategoryId, currencyToDisplay }) => {
-  const { budgetId: selectedBudget } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
-  const { month, year } = useSearch({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+> = ({ defaultAmount, currencyToDisplay, subcategoryId }) => {
+  const selectedBudget = useBudgetId();
+  const month = useBudgetMonth();
+  const year = useBudgetYear();
 
   const { control, form, handleSubmit, isDirty, mutate } = useAmountForm({
     defaultAmount: defaultAmount || 0,
@@ -42,8 +43,8 @@ const SubcategoryAccordionAssignmentForm: FC<
     const assignment: FormAssignment = {
       assignedAmount: Number(amountFormatted),
       assignmentMonth: {
-        month: Number(month),
-        year: Number(year),
+        month: month,
+        year: year,
       },
     };
     mutate({ budgetId: selectedBudget, subcategoryId, assignment });

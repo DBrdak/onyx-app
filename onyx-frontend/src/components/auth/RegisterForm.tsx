@@ -25,11 +25,13 @@ import { getErrorMessage } from "@/lib/utils";
 interface RegisterFormProps {
   setFormVariant: Dispatch<SetStateAction<FormVariant>>;
   setDefaultEmail: Dispatch<SetStateAction<string>>;
+  setSwitchButtonsDisabled: (disabled: boolean) => void;
 }
 
 const RegisterForm: FC<RegisterFormProps> = ({
   setFormVariant,
   setDefaultEmail,
+  setSwitchButtonsDisabled,
 }) => {
   const { toast } = useToast();
   const form = useForm<TRegisterSchema>({
@@ -80,7 +82,9 @@ const RegisterForm: FC<RegisterFormProps> = ({
     email,
     currency,
   }) => {
+    setSwitchButtonsDisabled(true);
     await mutateAsync({ username, currency, email, password });
+    setSwitchButtonsDisabled(false);
   };
 
   return (

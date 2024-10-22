@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,6 +17,7 @@ import LoadingButton from "@/components/LoadingButton";
 import { RequiredString } from "@/lib/validation/base";
 import { BudgetMember } from "@/lib/validation/user";
 import { getBudgetsQueryOptions, removeBudgetMember } from "@/lib/api/budget";
+import { getErrorMessage } from "@/lib/utils";
 
 interface BudgetsTableRemoveFormProps {
   member: BudgetMember | null;
@@ -46,11 +47,7 @@ const BudgetsTableRemoveForm: FC<BudgetsTableRemoveFormProps> = ({
 
   const nameInputValue = form.watch("name");
 
-  const {
-    mutate: performRemove,
-    isError: isDeleteError,
-    isPending,
-  } = useMutation({
+  const { mutate: performRemove, isPending } = useMutation({
     mutationKey: ["removeMember", member?.id],
     mutationFn: removeBudgetMember,
     onSettled: async () => {
@@ -60,6 +57,10 @@ const BudgetsTableRemoveForm: FC<BudgetsTableRemoveFormProps> = ({
     },
     onError: (err) => {
       console.error("Deleting budget error", err);
+      const message = getErrorMessage(err);
+      form.setError("name", {
+        message,
+      });
     },
     onSuccess: () => {
       setSelectedMember(null);
@@ -74,14 +75,6 @@ const BudgetsTableRemoveForm: FC<BudgetsTableRemoveFormProps> = ({
       });
     }
   };
-
-  useEffect(() => {
-    if (isDeleteError) {
-      form.setError("name", {
-        message: "Something went wrong, please try again.",
-      });
-    }
-  }, [isDeleteError, form]);
 
   return (
     <Form {...form}>

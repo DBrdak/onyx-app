@@ -1,7 +1,6 @@
 import { FC, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "@tanstack/react-router";
 
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -15,6 +14,8 @@ import {
 import { editSubcategoryName } from "@/lib/api/subcategory";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
+import { getErrorMessage } from "@/lib/utils";
 
 interface SubcategoryAccordionNameFormProps {
   subcategory: Subcategory;
@@ -28,9 +29,7 @@ const SubcategoryAccordionNameForm: FC<SubcategoryAccordionNameFormProps> = ({
   setIsNameEditActive,
 }) => {
   const queryClient = useQueryClient();
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+  const budgetId = useBudgetId();
   const { toast } = useToast();
   const form = useForm<CreateSubcategory>({
     defaultValues: {
@@ -55,10 +54,11 @@ const SubcategoryAccordionNameForm: FC<SubcategoryAccordionNameFormProps> = ({
     },
     onError: (error) => {
       console.error("Mutation error:", error);
+      const description = getErrorMessage(error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Oops... Something went wrong. Please try again later.",
+        description,
       });
       setTimeout(() => setFocus("name"), 0);
     },

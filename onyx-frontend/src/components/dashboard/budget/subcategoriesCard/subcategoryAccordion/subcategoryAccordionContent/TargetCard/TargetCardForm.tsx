@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useParams, useSearch } from "@tanstack/react-router";
 
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,21 +14,30 @@ import { useToast } from "@/components/ui/use-toast";
 import AmountInput from "@/components/dashboard/AmountInput";
 import MonthsCalendarPopover from "@/components/dashboard/MonthsCalendarPopover";
 
-import { Target } from "@/lib/validation/base";
+import { Currency, Target } from "@/lib/validation/base";
 import { CreateTarget } from "@/lib/validation/subcategory";
 import { FormTarget } from "@/lib/api/subcategory";
-import { formatToDecimalString, formatToDotDecimal } from "@/lib/utils";
+import {
+  formatToDecimalString,
+  formatToDotDecimal,
+  getErrorMessage,
+} from "@/lib/utils";
 import { useCreateTargetMutation } from "@/lib/hooks/mutations/useCreateTargetMutation";
 import {
   DEFAULT_MONTH_NUMBER,
   DEFAULT_YEAR_NUMBER,
 } from "@/lib/constants/date";
+import {
+  useBudgetMonth,
+  useBudgetYear,
+  useBudgetId,
+} from "@/store/dashboard/budgetStore";
 
 interface TargetCardFormProps {
   currentTarget: Target | undefined | null;
   setIsCreating: (state: boolean) => void;
   subcategoryId: string;
-  currencyToDisplay: string;
+  currencyToDisplay: Currency;
 }
 
 const TargetCardForm: FC<TargetCardFormProps> = ({
@@ -38,12 +46,9 @@ const TargetCardForm: FC<TargetCardFormProps> = ({
   subcategoryId,
   currencyToDisplay,
 }) => {
-  const { budgetId: selectedBudget } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
-  const { month: searchMonth, year: searchYear } = useSearch({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+  const selectedBudget = useBudgetId();
+  const selectedMonth = useBudgetMonth();
+  const selectedYear = useBudgetYear();
   const { toast } = useToast();
 
   const isEditing = !!currentTarget;
@@ -51,17 +56,17 @@ const TargetCardForm: FC<TargetCardFormProps> = ({
     currentTarget?.targetAmount.amount || 0,
   );
   const defaultMonth = currentTarget
-    ? currentTarget.upToMonth.month.toString()
-    : searchMonth;
+    ? currentTarget.upToMonth.month
+    : selectedMonth;
   const defaultYear = currentTarget
-    ? currentTarget.upToMonth.year.toString()
-    : searchYear;
+    ? currentTarget.upToMonth.year
+    : selectedYear;
 
   const form = useForm<CreateTarget>({
     defaultValues: {
       amount: defaultAmount,
-      month: defaultMonth,
-      year: defaultYear,
+      month: defaultMonth.toString(),
+      year: defaultYear.toString(),
     },
   });
   const { handleSubmit, control, watch, setValue } = form;
@@ -69,12 +74,13 @@ const TargetCardForm: FC<TargetCardFormProps> = ({
   const inputMonth = watch("month");
   const inputYear = watch("year");
 
-  const onMutationError = () => {
+  const onMutationError = (err: Error) => {
     setIsCreating(true);
+    const description = getErrorMessage(err);
     toast({
       title: "Error",
       variant: "destructive",
-      description: "Oops... Something went wrong. Please try again later.",
+      description,
     });
   };
 
@@ -156,8 +162,8 @@ const TargetCardForm: FC<TargetCardFormProps> = ({
               type="submit"
               disabled={
                 (Number(inputAmount) === Number(defaultAmount) &&
-                  inputMonth === defaultMonth &&
-                  inputYear === defaultYear) ||
+                  inputMonth === defaultMonth.toString() &&
+                  inputYear === defaultYear.toString()) ||
                 inputAmount === "0.00" ||
                 inputAmount === "0.0" ||
                 inputAmount === "0" ||

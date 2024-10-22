@@ -7,11 +7,10 @@ import MiddleSection from "@/components/dashboard/budget/categoriesCard/selectCa
 import { cn } from "@/lib/utils";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { type Category } from "@/lib/validation/category";
+import { useBudgetActions, useCategoryId } from "@/store/dashboard/budgetStore";
 
 interface SelectCategoryProps {
-  activeCategoryId: string;
   category: Category;
-  onSelect: () => void;
 }
 
 export interface SelectCategorySectionProps {
@@ -21,18 +20,21 @@ export interface SelectCategorySectionProps {
   isSelected: boolean;
 }
 
-const SelectCategory: FC<SelectCategoryProps> = ({
-  activeCategoryId,
-  category,
-  onSelect,
-}) => {
+const SelectCategory: FC<SelectCategoryProps> = ({ category }) => {
   const [isEdit, setIsEdit] = useState(false);
   const { id, optimistic } = category;
-  const isSelected = activeCategoryId === id;
+  const selectedCategoryId = useCategoryId();
+  const { setCategoryId } = useBudgetActions();
+  const isSelected = selectedCategoryId === id;
 
   const selectRef = useClickOutside<HTMLLIElement>(() => {
     setIsEdit(false);
   });
+
+  const onSelect = () => {
+    if (optimistic) return;
+    setCategoryId(id);
+  };
 
   return (
     <li

@@ -2,7 +2,6 @@ import { FC, useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "@tanstack/react-router";
 
 import { Check } from "lucide-react";
 import {
@@ -23,8 +22,9 @@ import {
   getCategoriesQueryOptions,
 } from "@/lib/api/category";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
-import { capitalize, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { type SelectCategorySectionProps } from "@/components/dashboard/budget/categoriesCard/selectCategory/SelectCategory";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
 
 const SelectCategoryMiddle: FC<SelectCategorySectionProps> = ({
   isEdit,
@@ -32,9 +32,7 @@ const SelectCategoryMiddle: FC<SelectCategorySectionProps> = ({
   category,
   setIsEdit,
 }) => {
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+  const budgetId = useBudgetId();
   const form = useForm<CreateCategory>({
     resolver: zodResolver(CreateCategorySchema),
     defaultValues: {
@@ -125,12 +123,12 @@ const SelectCategoryMiddle: FC<SelectCategorySectionProps> = ({
   return (
     <p
       className={cn(
-        "w-full translate-x-0 truncate pr-6 transition-transform duration-300 ease-in-out",
+        "w-full translate-x-0 truncate pr-6 capitalize transition-transform duration-300 ease-in-out",
         isSelected && "max-w-64 translate-x-6",
         isPending && "opacity-50",
       )}
     >
-      {isPending ? capitalize(variables.newName) : category.name}
+      {isPending ? variables.newName : category.name}
     </p>
   );
 };

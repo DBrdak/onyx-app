@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { useRouter, useSearch } from "@tanstack/react-router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,22 +17,24 @@ import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-import { useAuthContext } from "@/lib/hooks/useAuthContext";
 import { LoginSchema, TLoginSchema } from "@/lib/validation/user";
 import { getErrorMessage } from "@/lib/utils";
 import { FormVariant } from "@/routes/_auth/login.lazy";
+import { useLogin } from "@/lib/hooks/auth/useLogin";
 
 interface LoginFormProps {
   setFormVariant: (variant: FormVariant) => void;
+  setSwitchButtonsDisabled: (disabled: boolean) => void;
 }
 
-const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
+const LoginForm: FC<LoginFormProps> = ({
+  setFormVariant,
+  setSwitchButtonsDisabled,
+}) => {
   const router = useRouter();
   const { redirect } = useSearch({ from: "/_auth/login" });
   const { toast } = useToast();
-  const {
-    auth: { login, accessToken },
-  } = useAuthContext();
+  const login = useLogin();
 
   const form = useForm<TLoginSchema>({
     resolver: zodResolver(LoginSchema),
@@ -51,8 +53,17 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
 
   const onSubmit: SubmitHandler<TLoginSchema> = async (data) => {
     try {
+      setSwitchButtonsDisabled(true);
       await login(data.email, data.password);
+      await router.invalidate();
+
+      if (redirect) {
+        await router.history.push(redirect);
+      } else {
+        await router.navigate({ to: "/budget" });
+      }
     } catch (error) {
+      console.error("Login failed", error);
       const message = getErrorMessage(error);
 
       if (message === "User not found") {
@@ -72,22 +83,10 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
           description: "Oops... Something went wrong. Please try again",
         });
       }
+    } finally {
+      setSwitchButtonsDisabled(false);
     }
   };
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      if (accessToken) {
-        if (redirect) {
-          await router.history.push(redirect);
-        } else {
-          await router.navigate({ to: "/budget" });
-        }
-      }
-    };
-
-    checkAuth();
-  }, [accessToken]);
 
   return (
     <Form {...form}>
@@ -101,7 +100,7 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
-              <Input {...field} placeholder="Email" />
+              <Input {...field} placeholder="Email" disabled={isSubmitting} />
               <FormMessage />
             </FormItem>
           )}
@@ -112,7 +111,7 @@ const LoginForm: FC<LoginFormProps> = ({ setFormVariant }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Password</FormLabel>
-              <PasswordInput {...field} />
+              <PasswordInput {...field} disabled={isSubmitting} />
               <FormMessage />
             </FormItem>
           )}

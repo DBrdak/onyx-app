@@ -12,7 +12,7 @@ import { FormControl } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 
-import { cn, isDisabledDate } from "@/lib/utils";
+import { cn, isInPastRange } from "@/lib/utils";
 
 interface CalendarInputProps<
   TFieldValues extends FieldValues,
@@ -58,7 +58,7 @@ const CalendarInput = <
             field.onChange(date);
             setOpen(false);
           }}
-          disabled={(date) => isDisabledDate(date)}
+          disabled={(date) => !isInPastRange(date, 5)}
           initialFocus
           disableNavigation
           defaultMonth={field.value}

@@ -31,11 +31,13 @@ import { getErrorMessage } from "@/lib/utils";
 interface ForgotNewFormProps {
   defaultEmail: string;
   setFormVariant: Dispatch<SetStateAction<FormVariant>>;
+  setSwitchButtonsDisabled: (disabled: boolean) => void;
 }
 
 const ForgotNewForm: FC<ForgotNewFormProps> = ({
   defaultEmail,
   setFormVariant,
+  setSwitchButtonsDisabled,
 }) => {
   const form = useForm<TForgotPasswordNewSchema>({
     resolver: zodResolver(ForgotPasswordNewSchema),
@@ -81,6 +83,7 @@ const ForgotNewForm: FC<ForgotNewFormProps> = ({
     password,
     verificationCode,
   }) => {
+    setSwitchButtonsDisabled(true);
     const payload: ForgotPasswordNewPayload = {
       email,
       newPassword: password,
@@ -88,6 +91,7 @@ const ForgotNewForm: FC<ForgotNewFormProps> = ({
     };
 
     await mutateAsync(payload);
+    setSwitchButtonsDisabled(false);
   };
 
   return (

@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { budgetApi } from "@/lib/axios";
-import { getErrorMessage, validateResponse } from "@/lib/utils";
+import { validateResponse } from "@/lib/utils";
 import {
   Account,
   AccountResultSchema,
@@ -44,26 +44,8 @@ export const getAccountsQueryOptions = (budgetId: string) =>
   });
 
 export const createAccount = async ({ budgetId, payload }: CreateAccount) => {
-  try {
-    const { data } = await budgetApi.post(`/${budgetId}/accounts`, payload);
-    const validatedData = SingleAccountResultSchema.safeParse(data);
-    if (!validatedData.success) {
-      console.log(validatedData.error?.issues);
-      throw new Error("Invalid data type.");
-    }
-
-    const { value, isFailure, error } = validatedData.data;
-    if (isFailure) {
-      throw new Error(error.message);
-    }
-
-    return {
-      accountId: value.id,
-    };
-  } catch (error) {
-    console.error(getErrorMessage(error));
-    throw new Error(getErrorMessage(error));
-  }
+  const { data } = await budgetApi.post(`/${budgetId}/accounts`, payload);
+  return validateResponse<Account>(SingleAccountResultSchema, data);
 };
 
 export const editBalance = ({ budgetId, newBalance, accountId }: EditBalance) =>

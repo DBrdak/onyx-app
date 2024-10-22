@@ -12,14 +12,13 @@ import { ToAssignSchema } from "@/lib/validation/subcategory";
 import { Money } from "@/lib/validation/base";
 
 interface GetToAssign {
-  month: string;
-  year: string;
+  month: string | number;
+  year: string | number;
   budgetId: string;
 }
 
 const getBudgets = async () => {
   const { data } = await budgetApi.get("/budgets");
-
   return validateResponse<Budget[]>(BudgetResultSchema, data);
 };
 

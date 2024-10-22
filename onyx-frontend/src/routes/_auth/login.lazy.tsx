@@ -30,6 +30,7 @@ export enum FormVariant {
 function Login() {
   const [formVariant, setFormVariant] = useState(FormVariant.login);
   const [defaultEmail, setDefaultEmail] = useState("");
+  const [switchButtonsDisabled, setSwitchButtonsDisabled] = useState(false);
 
   return (
     <div className="grid h-full grid-cols-1 md:min-h-screen md:grid-cols-2 ">
@@ -50,6 +51,7 @@ function Login() {
         >
           <div className="flex flex-col items-center space-y-3 md:flex-row md:space-x-1 md:space-y-0">
             <Button
+              disabled={switchButtonsDisabled}
               onClick={() => setFormVariant(FormVariant.login)}
               className={cn(
                 "h-auto w-full px-1 text-xl font-medium",
@@ -59,8 +61,11 @@ function Login() {
             >
               Sign in
             </Button>
-            <p className="text-xl">or</p>
+            <p className={cn("text-xl", switchButtonsDisabled && "opacity-50")}>
+              or
+            </p>
             <Button
+              disabled={switchButtonsDisabled}
               onClick={() => setFormVariant(FormVariant.register)}
               className={cn(
                 "h-auto w-full px-1 text-xl font-medium",
@@ -78,31 +83,38 @@ function Login() {
             )}
           >
             {formVariant === FormVariant.login && (
-              <LoginForm setFormVariant={setFormVariant} />
+              <LoginForm
+                setFormVariant={setFormVariant}
+                setSwitchButtonsDisabled={setSwitchButtonsDisabled}
+              />
             )}
             {formVariant === FormVariant.forgotRequest && (
               <ForgotForm
                 setDefaultEmail={setDefaultEmail}
                 setFormVariant={() => setFormVariant(FormVariant.forgotNew)}
                 mutationFn={forgotPasswordRequest}
+                setSwitchButtonsDisabled={setSwitchButtonsDisabled}
               />
             )}
             {formVariant === FormVariant.forgotNew && (
               <ForgotNewForm
                 defaultEmail={defaultEmail}
                 setFormVariant={setFormVariant}
+                setSwitchButtonsDisabled={setSwitchButtonsDisabled}
               />
             )}
             {formVariant === FormVariant.register && (
               <RegisterForm
                 setFormVariant={setFormVariant}
                 setDefaultEmail={setDefaultEmail}
+                setSwitchButtonsDisabled={setSwitchButtonsDisabled}
               />
             )}
             {formVariant === FormVariant.verify && (
               <VerifyForm
                 setFormVariant={setFormVariant}
                 defaultEmail={defaultEmail}
+                setSwitchButtonsDisabled={setSwitchButtonsDisabled}
               />
             )}
             {formVariant === FormVariant.forgotVerify && (
@@ -110,6 +122,7 @@ function Login() {
                 setFormVariant={() => setFormVariant(FormVariant.verify)}
                 setDefaultEmail={setDefaultEmail}
                 mutationFn={forgotVerify}
+                setSwitchButtonsDisabled={setSwitchButtonsDisabled}
               />
             )}
           </div>

@@ -10,6 +10,7 @@ import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { NameInputSchema, type TNameInputSchema } from "@/lib/validation/base";
 import { type Budget } from "@/lib/validation/budget";
 import { editBudgetName, getBudgetsQueryOptions } from "@/lib/api/budget";
+import { getErrorMessage } from "@/lib/utils";
 
 interface BudgetsTableEditNameFormProps {
   budget: Budget;
@@ -46,8 +47,9 @@ const BudgetsTableEditNameForm: FC<BudgetsTableEditNameFormProps> = ({
     },
     onError: (error) => {
       console.error("Mutation error:", error);
+      const message = getErrorMessage(error);
       setError("name", {
-        message: "Oops... Something went wrong. Please try again later.",
+        message,
       });
     },
   });

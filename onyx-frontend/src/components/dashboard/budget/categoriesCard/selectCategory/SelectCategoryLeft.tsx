@@ -1,5 +1,4 @@
 import { FC, useState } from "react";
-import { useParams } from "@tanstack/react-router";
 
 import { Settings, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,6 +20,7 @@ import {
 
 import { type SelectCategorySectionProps } from "@/components/dashboard/budget/categoriesCard/selectCategory/SelectCategory";
 import { useDeleteCategoryMutation } from "@/lib/hooks/mutations/useDeleteCategoryMutation";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
 
 const SelectCategoryLeft: FC<SelectCategorySectionProps> = ({
   category,
@@ -29,9 +29,7 @@ const SelectCategoryLeft: FC<SelectCategorySectionProps> = ({
   isSelected,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+  const budgetId = useBudgetId();
 
   const onMutationError = () => {
     setIsDeleteDialogOpen(true);

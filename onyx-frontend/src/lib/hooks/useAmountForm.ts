@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
-import { formatToDecimalString } from "@/lib/utils";
+import { formatToDecimalString, getErrorMessage } from "@/lib/utils";
 import { getToAssignQueryOptions } from "../api/budget";
 
 const useAmountForm = ({
@@ -15,8 +15,8 @@ const useAmountForm = ({
 }: {
   defaultAmount: number;
   budgetId: string;
-  month: string;
-  year: string;
+  month: string | number;
+  year: string | number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mutationFn: (args: any) => Promise<any>;
 }) => {
@@ -50,9 +50,10 @@ const useAmountForm = ({
     },
     onError: (error) => {
       console.error("Mutation error:", error);
+      const description = getErrorMessage(error);
       toast({
         title: "Error",
-        description: "Oops... Something went wrong. Please try again later.",
+        description,
       });
     },
   });

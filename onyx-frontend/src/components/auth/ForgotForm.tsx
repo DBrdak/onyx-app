@@ -21,12 +21,14 @@ interface ForgotFormProps {
   setDefaultEmail: Dispatch<SetStateAction<string>>;
   setFormVariant: () => void;
   mutationFn: (email: string) => Promise<void>;
+  setSwitchButtonsDisabled: (disabled: boolean) => void;
 }
 
 const ForgotForm: FC<ForgotFormProps> = ({
   setDefaultEmail,
   setFormVariant,
   mutationFn,
+  setSwitchButtonsDisabled,
 }) => {
   const { toast } = useToast();
 
@@ -74,7 +76,9 @@ const ForgotForm: FC<ForgotFormProps> = ({
   });
 
   const onSubmit: SubmitHandler<TEmailSchema> = async (data) => {
+    setSwitchButtonsDisabled(true);
     await mutateAsync(data.email);
+    setSwitchButtonsDisabled(false);
   };
 
   return (

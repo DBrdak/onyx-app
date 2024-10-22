@@ -9,8 +9,9 @@ import {
 } from "@/lib/validation/base";
 
 export const AccountSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1),
+  id: RequiredString,
+  slug: RequiredString,
+  name: RequiredString,
   balance: MoneySchema,
   type: AccountTypeSchema,
   optimistic: z.boolean().optional(),

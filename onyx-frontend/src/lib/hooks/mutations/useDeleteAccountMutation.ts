@@ -1,12 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { deleteAccount, getAccountsQueryOptions } from "@/lib/api/account";
-import { SingleBudgetPageSearchParams } from "@/lib/validation/searchParams";
-import {
-  DEFAULT_MONTH_STRING,
-  DEFAULT_YEAR_STRING,
-} from "@/lib/constants/date";
-import { Account } from "@/lib/validation/account";
+import { useAccountActions } from "@/store/dashboard/accountStore";
+import { useBudgetSlug } from "@/store/dashboard/budgetStore";
 
 interface DeleteAccountMutationProps {
   budgetId: string;
@@ -20,49 +16,30 @@ export const useDeleteAccountMutation = ({
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const queryKey = getAccountsQueryOptions(budgetId).queryKey;
-
-  const handleNavigation = (accounts: Account[] | undefined) => {
-    const defaultSearchParams = {
-      accMonth: DEFAULT_MONTH_STRING,
-      accYear: DEFAULT_YEAR_STRING,
-    };
-
-    if (!accounts || accounts.length === 0) {
-      const url = `/budget/${budgetId}`;
-      navigate({
-        to: url,
-        search: (prev: SingleBudgetPageSearchParams) => ({
-          ...prev,
-          ...defaultSearchParams,
-        }),
-        mask: {
-          to: url,
-        },
-      });
-    } else {
-      const lastAccountId = accounts[accounts.length - 1].id;
-      const url = `/budget/${budgetId}/accounts/${lastAccountId}`;
-      navigate({
-        to: url,
-        search: (prev: SingleBudgetPageSearchParams) => ({
-          ...prev,
-          ...defaultSearchParams,
-        }),
-        mask: {
-          to: url,
-        },
-      });
-    }
-  };
+  const { reset } = useAccountActions();
+  const budgetSlug = useBudgetSlug();
 
   return useMutation({
     mutationKey: ["deleteAccount"],
     mutationFn: deleteAccount,
     onSuccess: async () => {
-      await queryClient.fetchQuery({ queryKey });
+      await queryClient.invalidateQueries({ queryKey });
       const accounts = queryClient.getQueryData(queryKey);
       onMutationSuccess();
-      handleNavigation(accounts);
+
+      if (!accounts || accounts.length === 0) {
+        reset();
+        await navigate({
+          to: "/budget/$budgetSlug",
+          params: { budgetSlug },
+        });
+      } else {
+        const accountSlug = accounts[0].slug;
+        await navigate({
+          to: "/budget/$budgetSlug/accounts/$accountSlug",
+          params: { budgetSlug, accountSlug },
+        });
+      }
     },
     onError: (error) => {
       console.error("Failed to delete account:", error);

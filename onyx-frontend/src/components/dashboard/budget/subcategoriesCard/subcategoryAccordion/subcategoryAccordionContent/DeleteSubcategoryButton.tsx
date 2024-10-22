@@ -1,5 +1,4 @@
 import { FC, useState } from "react";
-import { useParams } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,29 +12,25 @@ import {
 } from "@/components/ui/dialog";
 
 import { useDeleteSubcategoryMutation } from "@/lib/hooks/mutations/useDeleteSubcategoryMutation";
+import { useBudgetId, useSubcategoryId } from "@/store/dashboard/budgetStore";
+import { getErrorMessage } from "@/lib/utils";
 
-interface DeleteSubcategoryButtonProps {
-  subcategoryId: string;
-}
-
-const DeleteSubcategoryButton: FC<DeleteSubcategoryButtonProps> = ({
-  subcategoryId,
-}) => {
+const DeleteSubcategoryButton: FC = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+  const budgetId = useBudgetId();
+  const subcategoryId = useSubcategoryId();
 
   const onMutationError = () => {
     setIsDeleteDialogOpen(true);
   };
 
-  const { mutate, isError } = useDeleteSubcategoryMutation({
+  const { mutate, isError, error } = useDeleteSubcategoryMutation({
     budgetId,
     onMutationError,
   });
 
   const onDelete = () => {
+    if (!subcategoryId) return;
     mutate({ budgetId, subcategoryId });
     setIsDeleteDialogOpen(false);
   };
@@ -61,7 +56,7 @@ const DeleteSubcategoryButton: FC<DeleteSubcategoryButtonProps> = ({
         <DialogFooter className="items-center">
           {isError && (
             <p className="text-end text-sm text-destructive">
-              Something went wrong. Please try again.
+              {getErrorMessage(error)}
             </p>
           )}
           <Button type="submit" variant="destructive" onClick={onDelete}>

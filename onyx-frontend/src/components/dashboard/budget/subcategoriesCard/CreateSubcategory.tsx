@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams } from "@tanstack/react-router";
 
 import { ChevronRight, Plus } from "lucide-react";
 import {
@@ -20,6 +19,8 @@ import {
 } from "@/lib/validation/subcategory";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { useCreateSubcategoryMutation } from "@/lib/hooks/mutations/useCreateSubcategoryMutation";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
+import { getErrorMessage } from "@/lib/utils";
 
 interface CreateSubcategoryProps {
   parentCategoryId: string;
@@ -28,9 +29,7 @@ interface CreateSubcategoryProps {
 const CreateSubcategory: FC<CreateSubcategoryProps> = ({
   parentCategoryId,
 }) => {
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+  const budgetId = useBudgetId();
   const form = useForm<CreateSubcategory>({
     defaultValues: {
       name: "",
@@ -39,10 +38,10 @@ const CreateSubcategory: FC<CreateSubcategoryProps> = ({
   });
   const { handleSubmit, control, clearErrors, reset, setError } = form;
 
-  const onMutationError = () => {
+  const onMutationError = (err: Error) => {
+    const message = getErrorMessage(err);
     setError("name", {
-      type: "network",
-      message: "Something went wrong. Please try again.",
+      message,
     });
   };
 

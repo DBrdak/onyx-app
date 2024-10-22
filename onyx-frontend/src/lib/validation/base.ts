@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { parseISO, isValid } from "date-fns";
 
 import {
   DATE_PERIOD_OPTIONS,
@@ -9,6 +8,9 @@ import {
 } from "@/lib/constants/date";
 import { ACCOUNT_TYPES } from "@/lib/constants/account";
 import { ALL_CURRENCIES } from "@/lib/constants/currency";
+import { isValidIsoDate } from "@/lib/utils";
+
+export const RequiredString = z.string().min(1, "Required.");
 
 export const ErrorSchema = z.object({
   code: z.string(),
@@ -16,6 +18,8 @@ export const ErrorSchema = z.object({
 });
 
 export const CurrencySchema = z.enum(ALL_CURRENCIES);
+
+export type Currency = z.infer<typeof CurrencySchema>;
 
 export const MoneySchema = z.object({
   currency: CurrencySchema,
@@ -93,14 +97,9 @@ export const DatePeriodSchema = z
   .catch(DEFAULT_PERIOD_OPTION)
   .default(DEFAULT_PERIOD_OPTION);
 
-export const IsoDateSchema = z.string().refine(
-  (val) => {
-    const parsedDate = parseISO(val);
-    return isValid(parsedDate);
-  },
-  {
-    message: "Invalid ISO 8601 date format",
-  },
+export const DateString = RequiredString.refine(
+  (dateString) => isValidIsoDate(dateString),
+  { message: "Transaction date is invalid." },
 );
 
 export const NameSchema = z
@@ -113,8 +112,6 @@ export const NameInputSchema = z.object({
 });
 
 export type TNameInputSchema = z.infer<typeof NameInputSchema>;
-
-export const RequiredString = z.string().min(1, "Required.");
 
 export const amountLiveValidation = (value: string) => {
   // Replace empty input with '0'

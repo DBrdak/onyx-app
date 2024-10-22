@@ -27,8 +27,24 @@ export type VerifyPayload = EmailVerificationPayload;
 
 export const refreshAccessToken = async (longLivedToken: string) => {
   const response = await identityApi.put("/auth/refresh", { longLivedToken });
-  const validatedData = TokenResultSchema.parse(response.data);
-  return validatedData.value;
+  return validateResponse<Token>(TokenResultSchema, response.data);
+};
+
+export const getAuthInitializationData = async (longLivedToken: string) => {
+  const { accessToken, longLivedToken: newLongLivedToken } =
+    await refreshAccessToken(longLivedToken);
+
+  if (!accessToken || !newLongLivedToken) {
+    throw new Error("Initialize app refresh token api error");
+  }
+
+  const user = await getUser(accessToken);
+
+  if (!user) {
+    throw new Error("Initialize app get user data error");
+  }
+
+  return { accessToken, longLivedToken: newLongLivedToken, user };
 };
 
 export const login = async ({
@@ -46,8 +62,12 @@ export const login = async ({
   return validateResponse<Token>(TokenResultSchema, response.data);
 };
 
-export const getUser = async () => {
-  const response = await userApi.get("/user");
+export const getUser = async (accessToken: string) => {
+  const response = await userApi.get("/user", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
   return validateResponse<User>(UserResultSchema, response.data);
 };
 

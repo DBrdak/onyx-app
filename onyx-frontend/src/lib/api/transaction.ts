@@ -18,8 +18,8 @@ interface QueryParams {
   subcategoryId?: string;
   date?: string;
   period?: string;
-  dateRangeStart?: string;
-  dateRangeEnd?: string;
+  dateRangeStart?: string | null;
+  dateRangeEnd?: string | null;
 }
 
 export interface CreateTransactionPayload {
@@ -85,6 +85,8 @@ export const getTransactions = async (
   if (searchParams.toString()) {
     url += `?${searchParams.toString()}`;
   }
+
+  console.log(url);
 
   try {
     const { data } = await budgetApi.get(url);

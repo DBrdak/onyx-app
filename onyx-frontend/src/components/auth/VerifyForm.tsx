@@ -27,9 +27,14 @@ import { getErrorMessage } from "@/lib/utils";
 interface VerifyFormProps {
   defaultEmail: string;
   setFormVariant: Dispatch<SetStateAction<FormVariant>>;
+  setSwitchButtonsDisabled: (disabled: boolean) => void;
 }
 
-const VerifyForm: FC<VerifyFormProps> = ({ defaultEmail, setFormVariant }) => {
+const VerifyForm: FC<VerifyFormProps> = ({
+  defaultEmail,
+  setFormVariant,
+  setSwitchButtonsDisabled,
+}) => {
   const form = useForm<TVerifySchema>({
     resolver: zodResolver(VerifySchema),
     defaultValues: {
@@ -69,7 +74,9 @@ const VerifyForm: FC<VerifyFormProps> = ({ defaultEmail, setFormVariant }) => {
     email,
     verificationCode,
   }) => {
+    setSwitchButtonsDisabled(true);
     await mutateAsync({ email, verificationCode });
+    setSwitchButtonsDisabled(false);
   };
 
   return (

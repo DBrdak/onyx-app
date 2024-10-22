@@ -18,6 +18,7 @@ import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { useCreateBudgetMutation } from "@/lib/hooks/mutations/useCreateBudgetMutation";
 import { CreateBudget, CreateBudgetSchema } from "@/lib/validation/budget";
 import { type User } from "@/lib/validation/user";
+import { getErrorMessage } from "@/lib/utils";
 
 interface BudgetsTableCreateFormProps {
   setIsCreating: (state: boolean) => void;
@@ -45,10 +46,10 @@ const BudgetsTableCreateForm: FC<BudgetsTableCreateFormProps> = ({
     setError,
   } = form;
 
-  const onMutationError = () => {
+  const onMutationError = (error: Error) => {
+    const message = getErrorMessage(error);
     setError("name", {
-      type: "network",
-      message: "Something went wrong. Please try again.",
+      message,
     });
   };
 

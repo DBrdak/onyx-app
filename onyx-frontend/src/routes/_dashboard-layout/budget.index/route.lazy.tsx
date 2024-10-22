@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 import BudgetsTable from "@/components/dashboard/budgets/budgetsTable/BudgetsTable";
+import { useToast } from "@/components/ui/use-toast";
 
 import { getBudgetsQueryOptions } from "@/lib/api/budget";
 
@@ -12,6 +14,17 @@ export const Route = createLazyFileRoute("/_dashboard-layout/budget/")({
 function Budget() {
   const budgetsQuery = useSuspenseQuery(getBudgetsQueryOptions);
   const { data: budgets } = budgetsQuery;
+  const { message } = Route.useSearch();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (message) {
+      toast({
+        variant: "destructive",
+        description: message,
+      });
+    }
+  }, []);
 
   return (
     <div className="h-full overflow-y-auto scrollbar-thin lg:overflow-y-hidden lg:p-8">

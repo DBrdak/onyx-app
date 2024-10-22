@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams } from "@tanstack/react-router";
 
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,15 +18,15 @@ import {
   CreateCategorySchema,
 } from "@/lib/validation/category";
 import { useCreateCategoryMutation } from "@/lib/hooks/mutations/useCreateCategoryMutation";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
+import { getErrorMessage } from "@/lib/utils";
 
 interface Props {
   categoriesCount: number;
 }
 
 const CreateCategory: FC<Props> = ({ categoriesCount }) => {
-  const { budgetId } = useParams({
-    from: "/_dashboard-layout/budget/$budgetId/",
-  });
+  const budgetId = useBudgetId();
   const form = useForm<CreateCategory>({
     resolver: zodResolver(CreateCategorySchema),
     defaultValues: {
@@ -43,10 +42,10 @@ const CreateCategory: FC<Props> = ({ categoriesCount }) => {
     setError,
   } = form;
 
-  const onMutationError = () => {
+  const onMutationError = (err: Error) => {
+    const message = getErrorMessage(err);
     setError("name", {
-      type: "network",
-      message: "Something went wrong. Please try again.",
+      message,
     });
   };
 

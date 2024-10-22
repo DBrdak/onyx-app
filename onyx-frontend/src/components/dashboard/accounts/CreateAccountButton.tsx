@@ -1,7 +1,6 @@
 import { FC, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouteContext } from "@tanstack/react-router";
 
 import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -39,18 +38,15 @@ import {
 import { useCreateAccountMutation } from "@/lib/hooks/mutations/useCreateAccountMutation";
 import { CreateAccountPayload } from "@/lib/api/account";
 import { ACCOUNT_TYPES } from "@/lib/constants/account";
-import { formatToDotDecimal } from "@/lib/utils";
+import { formatToDotDecimal, getErrorMessage } from "@/lib/utils";
 import CurrencyCombobox from "../CurrencyCombobox";
+import { useUser } from "@/store/auth/authStore";
+import { useBudgetId } from "@/store/dashboard/budgetStore";
 
-interface CreateAccountButtonProps {
-  budgetId: string;
-}
-
-const CreateAccountButton: FC<CreateAccountButtonProps> = ({ budgetId }) => {
-  const {
-    auth: { user },
-  } = useRouteContext({ from: "/_dashboard-layout" });
+const CreateAccountButton: FC = () => {
+  const user = useUser();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const budgetId = useBudgetId();
 
   const { toast } = useToast();
   const form = useForm<TCreateAccountForm>({
@@ -71,16 +67,16 @@ const CreateAccountButton: FC<CreateAccountButtonProps> = ({ budgetId }) => {
     setIsCreateDialogOpen(false);
   };
 
-  const onMutationError = () => {
+  const onMutationError = (err: Error) => {
+    const description = getErrorMessage(err);
     toast({
       title: "Error",
       variant: "destructive",
-      description: "Oops... Something went wrong. Please try again later.",
+      description,
     });
   };
 
   const { mutate, isPending } = useCreateAccountMutation({
-    budgetId,
     onMutationSuccess,
     onMutationError,
   });
