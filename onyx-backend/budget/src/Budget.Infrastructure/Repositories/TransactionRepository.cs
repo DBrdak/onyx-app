@@ -1,4 +1,5 @@
 ﻿using Amazon.DynamoDBv2.DocumentModel;
+using Amazon.Lambda.Core;
 using Budget.Application.Abstractions.Identity;
 using Budget.Domain.Accounts;
 using Budget.Domain.Counterparties;
@@ -8,6 +9,7 @@ using Budget.Infrastructure.Data.DataModels.Transactions;
 using Extensions;
 using Models.Primitives;
 using Models.Responses;
+using Newtonsoft.Json;
 using SharedDAL;
 using SharedDAL.DataModels.Abstractions;
 
@@ -47,7 +49,9 @@ internal sealed class TransactionRepository : BaseBudgetRepository<Transaction, 
         scanFilter.AddCondition(nameof(TransactionDataModel.TransactedAt), ScanOperator.Between, _period.Start, _period.End);
         scanFilter.AddCondition(nameof(TransactionDataModel.AccountId), ScanOperator.Equal, accountId.Value);
 
-        return await GetWhereAsync(scanFilter, cancellationToken);
+        var a = await GetWhereAsync(scanFilter, cancellationToken);
+
+        return a;
     }
 
     public async Task<Result<IEnumerable<Transaction>>> GetByCounterpartyAsync(

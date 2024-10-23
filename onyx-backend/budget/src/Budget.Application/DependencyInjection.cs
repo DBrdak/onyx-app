@@ -1,4 +1,5 @@
 ﻿using Budget.Application.Behaviors;
+using Budget.Application.Categories.Validator;
 using Budget.Application.Subcategories.Validator;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,5 +17,6 @@ public static class DependencyInjection
             });
 
         services.AddTransient<SubcategoryGlobalValidator>();
+        services.AddTransient<CategoryGlobalValidator>();
     }
 }

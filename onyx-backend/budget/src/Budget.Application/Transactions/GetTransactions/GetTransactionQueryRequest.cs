@@ -1,4 +1,6 @@
-﻿using Models.Primitives;
+﻿using System.Globalization;
+using Amazon.Lambda.Core;
+using Models.Primitives;
 using Models.Responses;
 
 namespace Budget.Application.Transactions.GetTransactions;
@@ -88,9 +90,24 @@ internal sealed record GetTransactionQueryRequest
     {
         Period? dateRange = null;
         var period = TransactionQueryPeriod.FromString(request.Period);
-        var isValidDate = DateTime.TryParse(request.Date, out var date);
-        var isValidStartDate = DateTime.TryParse(request.DateRangeStart, out var startDate);
-        var isValidEndDate = DateTime.TryParse(request.DateRangeEnd, out var endDate);
+        var isValidDate = DateTimeOffset.TryParseExact(
+            request.Date,
+            "O",
+            null,
+            DateTimeStyles.None,
+            out var date);
+        var isValidStartDate = DateTimeOffset.TryParseExact(
+            request.DateRangeStart,
+            "O",
+            null,
+            DateTimeStyles.None,
+            out var startDate);
+        var isValidEndDate = DateTimeOffset.TryParseExact(
+            request.DateRangeEnd,
+            "O",
+            null,
+            DateTimeStyles.None,
+            out var endDate);
 
         if (!isValidDate && (!isValidStartDate || !isValidEndDate))
         {
@@ -100,33 +117,33 @@ internal sealed record GetTransactionQueryRequest
         if (isValidStartDate && isValidEndDate)
         {
             var dateRangeCreateResult = Period.Create(
-                startDate,
-                endDate,
+                startDate.DateTime,
+                endDate.DateTime,
                 TimeSpan.TicksPerDay * 365);
 
             if (dateRangeCreateResult.IsFailure)
             {
                 return dateRangeCreateResult.Error;
             }
-
+            
             dateRange = dateRangeCreateResult.Value;
         }
 
         return request switch
         {
             _ when request.AccountId.HasValue && dateRange is null &&
-                   !string.IsNullOrWhiteSpace(request.AccountId.Value.ToString()) => Account(date, period),
+                   !string.IsNullOrWhiteSpace(request.AccountId.Value.ToString()) => Account(date.DateTime, period),
             _ when request.SubcategoryId.HasValue && dateRange is null &&
-                   !string.IsNullOrWhiteSpace(request.SubcategoryId.Value.ToString()) => Subcategory(date, period),
+                   !string.IsNullOrWhiteSpace(request.SubcategoryId.Value.ToString()) => Subcategory(date.DateTime, period),
             _ when request.CounterpartyId.HasValue && dateRange is null &&
-                   !string.IsNullOrWhiteSpace(request.CounterpartyId.Value.ToString()) => Counterparty(date, period),
+                   !string.IsNullOrWhiteSpace(request.CounterpartyId.Value.ToString()) => Counterparty(date.DateTime, period),
             _ when request.AccountId.HasValue && dateRange is not null &&
                    !string.IsNullOrWhiteSpace(request.AccountId.Value.ToString()) => Account(dateRange),
             _ when request.SubcategoryId.HasValue && dateRange is not null &&
                    !string.IsNullOrWhiteSpace(request.SubcategoryId.Value.ToString()) => Subcategory(dateRange),
             _ when request.CounterpartyId.HasValue && dateRange is not null &&
                    !string.IsNullOrWhiteSpace(request.CounterpartyId.Value.ToString()) => Counterparty(dateRange),
-            _ => dateRange is not null ? All(dateRange) : All(date, period),
+            _ => dateRange is not null ? All(dateRange) : All(date.DateTime, period),
         };
     }
 }

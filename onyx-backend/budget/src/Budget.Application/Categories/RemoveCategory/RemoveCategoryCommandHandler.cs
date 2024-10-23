@@ -26,23 +26,12 @@ internal sealed class RemoveCategoryCommandHandler : ICommandHandler<RemoveCateg
         }
 
         var category = categoryGetResult.Value;
-        var subcategoriesToRemove = category.SubcategoriesId;
 
-        return await RemoveCategoryAndAssociates(subcategoriesToRemove, category, cancellationToken);
-    }
+        if (category.SubcategoriesId.Any())
+        {
+            return RemoveCategoriesErrors.MustBeEmpty;
+        }
 
-    private async Task<Result> RemoveCategoryAndAssociates(
-        IReadOnlyCollection<SubcategoryId> subcategoriesToRemove,
-        Category category,
-        CancellationToken cancellationToken)
-    {
-        var subcategoriesRemoveTask = _subcategoryRepository.RemoveRangeAsync(subcategoriesToRemove, cancellationToken);
-        var categoryRemoveTask = _categoryRepository.RemoveAsync(category.Id, cancellationToken);
-
-        var results = await Task.WhenAll(subcategoriesRemoveTask, categoryRemoveTask);
-
-        var failureResult = results.FirstOrDefault(x => x.IsFailure);
-
-        return failureResult ?? Result.Success();
+        return await _categoryRepository.RemoveAsync(category.Id, cancellationToken);
     }
 }

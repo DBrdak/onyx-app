@@ -27,7 +27,6 @@ internal sealed class BulkRemoveTransactionsCommandHandler : ICommandHandler<Bul
 
     public async Task<Result<AccountModel>> Handle(BulkRemoveTransactionsCommand request, CancellationToken cancellationToken)
     {
-        LambdaLogger.Log("request: " + JsonConvert.SerializeObject(request));
         var requestTransactionIds = request.TransactionIds.Select(id => new TransactionId(id));
 
         var accountGetResult = await _accountRepository.GetByIdAsync(new AccountId(request.AccountId), cancellationToken);

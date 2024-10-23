@@ -43,7 +43,11 @@ internal sealed class RemoveAccountCommandHandler : ICommandHandler<RemoveAccoun
         }
 
         var relatedSubcategoriesGetResult = await _subcategoryRepository.GetManyByIdAsync(
-            relatedTransactions.Where(t => t.SubcategoryId is not null).Select(t => t.SubcategoryId),
+            relatedTransactions
+                .Where(t => t.SubcategoryId is not null)
+                .Select(t => t.SubcategoryId)
+                .Select(s => s!)
+                .Distinct(),
             cancellationToken);
 
         if (relatedSubcategoriesGetResult.IsFailure)
@@ -82,6 +86,7 @@ internal sealed class RemoveAccountCommandHandler : ICommandHandler<RemoveAccoun
         var relatedSubcategoriesUpdateTask = _subcategoryRepository.UpdateRangeAsync(
             relatedSubcategories,
             cancellationToken);
+
         var accountRemoveTask = _accountRepository.RemoveAsync(accountId, cancellationToken);
 
         var results = await Task.WhenAll(
