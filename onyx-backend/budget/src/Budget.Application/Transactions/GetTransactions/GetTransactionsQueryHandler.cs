@@ -7,6 +7,9 @@ using Budget.Domain.Transactions;
 using Extensions;
 using Models.Primitives;
 using Models.Responses;
+using System.Globalization;
+using Amazon.Lambda.Core;
+using Microsoft.Extensions.Logging;
 using Transaction = Budget.Domain.Transactions.Transaction;
 
 namespace Budget.Application.Transactions.GetTransactions;
@@ -32,50 +35,57 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
 
     public async Task<Result<IEnumerable<TransactionModel>>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
     {
-        if ((string.IsNullOrWhiteSpace(request.Period) ||
-            string.IsNullOrWhiteSpace(request.Date)) &&
-             (string.IsNullOrWhiteSpace(request.DateRangeStart) ||
-              string.IsNullOrWhiteSpace(request.DateRangeEnd)))
+        if (string.IsNullOrWhiteSpace(request.DateRangeStart) ||
+            string.IsNullOrWhiteSpace(request.DateRangeEnd))
         {
             return GetTransactionErrors.NullFilters;
         }
 
-        var queryCreateResult = GetTransactionQueryRequest.FromRequest(request);
+        Period? dateRange = null;
+        var isValidStartDate = DateTimeOffset.TryParseExact(
+            request.DateRangeStart,
+            "O",
+            null,
+            DateTimeStyles.None,
+            out var startDate);
+        var isValidEndDate = DateTimeOffset.TryParseExact(
+            request.DateRangeEnd,
+            "O",
+            null,
+            DateTimeStyles.None,
+            out var endDate);
 
-        if (queryCreateResult.IsFailure)
+        if (!isValidStartDate || !isValidEndDate)
         {
-            return queryCreateResult.Error;
+            return GetTransactionErrors.InvalidDate;
         }
 
-        var query = queryCreateResult.Value;
-
-        var isRequestValid = IsQueryValid(query, request);
-
-        if (!isRequestValid)
+        if (isValidStartDate && isValidEndDate)
         {
-            return GetTransactionErrors.InvalidQueryValues;
+            var dateRangeCreateResult = Period.Create(
+                startDate,
+                endDate,
+                TimeSpan.TicksPerDay * 365);
+
+            if (dateRangeCreateResult.IsFailure)
+            {
+                return dateRangeCreateResult.Error;
+            }
+
+            dateRange = dateRangeCreateResult.Value;
         }
-
-        var period = query switch
-        {
-            _ when query.DateRange is not null => query.DateRange,
-            _ when query.Date is not null => query.QueryPeriod.ToPeriod(query.Date.Value),
-            _ => Period.Create(DateTime.UtcNow.BegginingOfTheMonth(), DateTime.UtcNow.EndOfTheMonth()).Value
-        };
         
-        _transactionRepository.AddPagingParameters(period);
+        _transactionRepository.AddPagingParameters(dateRange!);
 
-        var transactionsGetTask = query switch
+        var transactionsGetTask = request switch
         {
-            _ when query.Entity == GetTransactionQueryRequest.AllEntity =>
-                _transactionRepository.GetAllPagedAsync(cancellationToken),
-            _ when query.Entity == GetTransactionQueryRequest.AccountEntity =>
+            _ when request.AccountId is not null =>
                 _transactionRepository.GetByAccountAsync(new (request.AccountId!.Value), cancellationToken),
-            _ when query.Entity == GetTransactionQueryRequest.SubcategoryEntity =>
+            _ when request.SubcategoryId is not null  =>
                 _transactionRepository.GetBySubcategoryAsync(new(request.SubcategoryId!.Value), cancellationToken),
-            _ when query.Entity == GetTransactionQueryRequest.CounterpartyEntity =>
+            _ when request.CounterpartyId is not null =>
                 _transactionRepository.GetByCounterpartyAsync(new(request.CounterpartyId!.Value), cancellationToken),
-            _ => Task.FromResult(Result.Failure<IEnumerable<Transaction>>(Error.InvalidValue))
+            _ => _transactionRepository.GetAllPagedAsync(cancellationToken)
         };
 
         var transactionsGetResult = await transactionsGetTask;
@@ -151,18 +161,4 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
 
         return tasks;
     }
-
-    private static bool IsQueryValid(GetTransactionQueryRequest query, GetTransactionsQuery request) =>
-        query switch
-        {
-            _ when query.Entity == GetTransactionQueryRequest.AllEntity =>
-                true,
-            _ when query.Entity == GetTransactionQueryRequest.AccountEntity =>
-                request.AccountId is not null,
-            _ when query.Entity == GetTransactionQueryRequest.SubcategoryEntity =>
-                request.SubcategoryId is not null,
-            _ when query.Entity == GetTransactionQueryRequest.CounterpartyEntity =>
-                request.CounterpartyId is not null,
-            _ => false
-        };
 }

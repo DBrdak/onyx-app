@@ -13,7 +13,7 @@ public sealed record Period
         End = end;
     }
 
-    public static Result<Period> Create(DateTime start, DateTime end, long? maxPeriod = null)
+    public static Result<Period> Create(DateTimeOffset start, DateTimeOffset end, long? maxPeriod = null)
     {
         var startTicks = start.ToUniversalTime().Ticks;
         var endTicks = end.ToUniversalTime().Ticks;

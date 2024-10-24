@@ -28,8 +28,6 @@ public sealed class TransactionFunctions : BaseFunction
         [FromQuery] string? counterpartyId,
         [FromQuery] string? accountId,
         [FromQuery] string? subcategoryId,
-        [FromQuery] string? date,
-        [FromQuery] string? period,
         [FromQuery] string? dateRangeStart,
         [FromQuery] string? dateRangeEnd,
         APIGatewayHttpApiV2ProxyRequest requestContext)
@@ -40,8 +38,6 @@ public sealed class TransactionFunctions : BaseFunction
             counterpartyId is null ? null : Guid.Parse(counterpartyId),
             accountId is null ? null : Guid.Parse(accountId),
             subcategoryId is null ? null : Guid.Parse(subcategoryId),
-            date,
-            period,
             dateRangeStart, 
             dateRangeEnd);
 
