@@ -8,7 +8,7 @@ import {
 } from "@/lib/constants/date";
 import { ACCOUNT_TYPES } from "@/lib/constants/account";
 import { ALL_CURRENCIES } from "@/lib/constants/currency";
-import { isValidIsoDate } from "@/lib/utils";
+import { isValidIsoDate } from "../dates";
 
 export const RequiredString = z.string().min(1, "Required.");
 

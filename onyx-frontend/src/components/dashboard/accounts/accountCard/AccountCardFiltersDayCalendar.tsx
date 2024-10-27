@@ -1,6 +1,5 @@
-import { FC, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { format, subYears } from "date-fns";
+import { FC, memo, useState } from "react";
+import { endOfDay, format, startOfDay, subYears } from "date-fns";
 
 import { CalendarIcon } from "lucide-react";
 import {
@@ -11,33 +10,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 
-import { cn, convertLocalToISOString } from "@/lib/utils";
-import { getTransactionsQueryKey } from "@/lib/api/transaction";
+import { cn } from "@/lib/utils";
 import {
   useAccountActions,
-  useAccountDate,
-  useAccountId,
+  useAccountDateRangeStart,
   useAccountPeriod,
 } from "@/store/dashboard/accountStore";
 
 const AccountCardFiltersDayCalendar: FC = () => {
-  const queryClient = useQueryClient();
   const accPeriod = useAccountPeriod();
-  const accDate = useAccountDate();
-  const accountId = useAccountId();
-  const { setAccountDate } = useAccountActions();
+  const dayStart = useAccountDateRangeStart();
+  const { setAccountDateRangeStart, setAccountDateRangeEnd, setAccountPeriod } =
+    useAccountActions();
+
   const [open, setOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState(
-    accPeriod === "day" ? new Date(accDate) : "",
+    accPeriod === "day" ? dayStart : undefined,
   );
 
-  const onDateSelected = async (date: Date | undefined) => {
+  const onDateSelected = (date: Date | undefined) => {
     if (!date) return;
     setSelectedDay(date);
-    setAccountDate(convertLocalToISOString(date));
-    await queryClient.invalidateQueries({
-      queryKey: getTransactionsQueryKey(accountId),
-    });
+    setAccountPeriod("day");
+    setAccountDateRangeStart(startOfDay(date));
+    setAccountDateRangeEnd(endOfDay(date));
     setOpen(false);
   };
 
@@ -66,10 +62,14 @@ const AccountCardFiltersDayCalendar: FC = () => {
           disabled={(date) => date > new Date()}
           toDate={new Date()}
           fromDate={subYears(new Date(), 5)}
+          weekStartsOn={1}
         />
       </PopoverContent>
     </Popover>
   );
 };
 
-export default AccountCardFiltersDayCalendar;
+const MemoizedAccountCardFiltersDayCalendar = memo(
+  AccountCardFiltersDayCalendar,
+);
+export default MemoizedAccountCardFiltersDayCalendar;

@@ -1,5 +1,4 @@
-import { FC, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { FC, memo, useState } from "react";
 import { format, subYears } from "date-fns";
 
 import { CalendarIcon } from "lucide-react";
@@ -11,35 +10,40 @@ import {
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 
-import { cn, convertLocalToISOString, getWeekRange } from "@/lib/utils";
-import { getTransactionsQueryKey } from "@/lib/api/transaction";
+import { cn } from "@/lib/utils";
 import { DateRange } from "react-day-picker";
 import {
   useAccountActions,
-  useAccountDate,
-  useAccountId,
+  useAccountDateRangeEnd,
+  useAccountDateRangeStart,
   useAccountPeriod,
 } from "@/store/dashboard/accountStore";
+import { getWeekRange } from "@/lib/dates";
 
 const AccountCardFiltersWeekCalendar: FC = () => {
-  const queryClient = useQueryClient();
   const accPeriod = useAccountPeriod();
-  const accDate = useAccountDate();
-  const accountId = useAccountId();
-  const { setAccountPeriod, setAccountDate } = useAccountActions();
+  const weekRangeStart = useAccountDateRangeStart();
+  const weekRangeEnd = useAccountDateRangeEnd();
+  const { setAccountPeriod, setAccountDateRangeStart, setAccountDateRangeEnd } =
+    useAccountActions();
+
   const [open, setOpen] = useState(false);
   const [selectedWeek, setSelectedWeek] = useState<DateRange | undefined>(
-    accPeriod === "week" ? getWeekRange(new Date(accDate)) : undefined,
+    accPeriod === "week"
+      ? {
+          from: weekRangeStart,
+          to: weekRangeEnd,
+        }
+      : undefined,
   );
 
-  const handleDayClick = async (date: Date) => {
+  const handleDayClick = (date: Date) => {
     const range = getWeekRange(date);
+    if (!range.from || !range.to) return;
     setSelectedWeek(range);
     setAccountPeriod("week");
-    setAccountDate(convertLocalToISOString(date));
-    await queryClient.invalidateQueries({
-      queryKey: getTransactionsQueryKey(accountId),
-    });
+    setAccountDateRangeStart(range.from);
+    setAccountDateRangeEnd(range.to);
     setOpen(false);
   };
 
@@ -93,4 +97,7 @@ const AccountCardFiltersWeekCalendar: FC = () => {
   );
 };
 
-export default AccountCardFiltersWeekCalendar;
+const MemoizedAccountCardFiltersWeekCalendar = memo(
+  AccountCardFiltersWeekCalendar,
+);
+export default MemoizedAccountCardFiltersWeekCalendar;

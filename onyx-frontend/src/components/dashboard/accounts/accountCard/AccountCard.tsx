@@ -28,13 +28,16 @@ const AccountCard: FC<AccountCardProps> = ({
   disabled,
 }) => {
   const budgetSlug = useBudgetSlug();
+
   const selectedAccountIndex = useMemo(
     () => accounts.findIndex((a) => a.id === selectedAccount.id),
     [accounts, selectedAccount.id],
   );
+
   const nextAccountSlug =
     selectedAccountIndex < accounts.length - 1 &&
     accounts[selectedAccountIndex + 1].slug;
+
   const prevAccountSlug =
     selectedAccountIndex !== 0 && accounts[selectedAccountIndex - 1].slug;
 
@@ -114,7 +117,7 @@ const AccountCard: FC<AccountCardProps> = ({
         </Button>
       )}
 
-      <div className="w-full max-w-[400px] space-y-2 justify-self-center rounded-xl bg-gradient-to-b from-primary via-primary to-primaryDark p-4 text-primary-foreground shadow-lg shadow-primaryDark/50 md:justify-self-end">
+      <div className="w-full max-w-[360px] space-y-2 justify-self-center rounded-xl bg-gradient-to-b from-primary via-primary to-primaryDark p-4 text-primary-foreground shadow-lg shadow-primaryDark/50 md:justify-self-end">
         <div className="flex items-center space-x-2 text-lg text-primary-foreground md:text-2xl">
           <div className="flex-1">
             <AccountCardNameForm

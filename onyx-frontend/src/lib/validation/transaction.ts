@@ -11,7 +11,7 @@ import {
 import { CounterpartySchema } from "@/lib/validation/counterparty";
 import { AccountSchema } from "@/lib/validation/account";
 import { ALL_CURRENCIES } from "@/lib/constants/currency";
-import { isInPastRange } from "../utils";
+import { isInPastRange } from "../dates";
 
 export const TransactionSchema = z.object({
   id: RequiredString,

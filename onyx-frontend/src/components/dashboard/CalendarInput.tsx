@@ -12,7 +12,8 @@ import { FormControl } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 
-import { cn, isInPastRange } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { isInPastRange } from "@/lib/dates";
 
 interface CalendarInputProps<
   TFieldValues extends FieldValues,
@@ -44,7 +45,11 @@ const CalendarInput = <
             )}
             onClick={() => setOpen(true)}
           >
-            {field.value ? format(field.value, "PP") : <span>Pick a date</span>}
+            {field.value ? (
+              format(new Date(field.value), "PP")
+            ) : (
+              <span>Pick a date</span>
+            )}
             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
           </Button>
         </FormControl>
@@ -62,6 +67,7 @@ const CalendarInput = <
           initialFocus
           disableNavigation
           defaultMonth={field.value}
+          weekStartsOn={1}
         />
       </PopoverContent>
     </Popover>

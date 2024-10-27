@@ -8,11 +8,9 @@ import { getTransactionsQueryOptions } from "@/lib/api/transaction";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { initializeBudgetStore } from "@/store/dashboard/boundDashboardStore";
 import {
-  getAccountDate,
   getAccountDateRangeEnd,
   getAccountDateRangeStart,
   getAccountId,
-  getAccountPeriod,
   initializeAccountId,
 } from "@/store/dashboard/accountStore";
 import { getBudgetId } from "@/store/dashboard/budgetStore";
@@ -35,7 +33,7 @@ export const Route = createFileRoute(
     if (!accounts || accounts.length === 0) {
       throw redirect({
         to: "/budget",
-        search: { message: "You do not have any created budgets." },
+        search: { message: "You do not have any created accounts." },
         mask: {
           to: "/budget",
         },
@@ -59,20 +57,17 @@ export const Route = createFileRoute(
     initializeAccountId(account.id, accountSlug);
   },
   loader: async ({ context: { queryClient } }) => {
-    const accDate = getAccountDate();
-    const accPeriod = getAccountPeriod();
     const dateRangeEnd = getAccountDateRangeEnd();
     const dateRangeStart = getAccountDateRangeStart();
     const budgetId = getBudgetId();
     const accountId = getAccountId();
+
     Promise.all([
       queryClient.ensureQueryData(
         getTransactionsQueryOptions(budgetId, accountId, {
           accountId,
-          date: accDate,
-          period: accPeriod,
-          dateRangeEnd,
           dateRangeStart,
+          dateRangeEnd,
         }),
       ),
       queryClient.ensureQueryData(getAccountsQueryOptions(budgetId)),

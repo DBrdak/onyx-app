@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { createCategory, getCategoriesQueryOptions } from "@/lib/api/category";
-import { capitalize } from "@/lib/utils";
 
 interface CategoryMutationProps {
   budgetId: string;
@@ -34,7 +33,7 @@ export const useCreateCategoryMutation = ({
           ...old,
           {
             id: "12345",
-            name: capitalize(newCategory.name),
+            name: newCategory.name,
             subcategories: [],
             optimistic: true,
           },

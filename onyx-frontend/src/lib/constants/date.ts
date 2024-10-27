@@ -1,5 +1,3 @@
-import { convertLocalToISOString } from "../utils";
-
 export const MONTHS = [
   "January",
   "February",
@@ -60,4 +58,3 @@ export const DATE_PERIOD_SELECT = [
 export type DatePeriodValue = (typeof DATE_PERIOD_SELECT)[number]["value"];
 
 export const DEFAULT_PERIOD_OPTION = "last30days";
-export const DEFAULT_ISO_DATE = convertLocalToISOString(new Date());

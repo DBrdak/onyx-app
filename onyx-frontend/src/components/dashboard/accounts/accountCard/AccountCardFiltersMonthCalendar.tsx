@@ -1,7 +1,5 @@
-import { FC } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { FC, memo } from "react";
 
-import { getTransactionsQueryKey } from "@/lib/api/transaction";
 import MonthsCalendarPopover from "../../MonthsCalendarPopover";
 import {
   DEFAULT_MONTH_NUMBER,
@@ -9,30 +7,28 @@ import {
 } from "@/lib/constants/date";
 import {
   useAccountActions,
-  useAccountDate,
-  useAccountId,
+  useAccountDateRangeStart,
   useAccountPeriod,
 } from "@/store/dashboard/accountStore";
-import { convertLocalToISOString } from "@/lib/utils";
+import { getMonthRange } from "@/lib/dates";
 
 const AccountCardFiltersMonthCalendar: FC = () => {
-  const queryClient = useQueryClient();
   const accPeriod = useAccountPeriod();
-  const accDate = useAccountDate();
-  const accountId = useAccountId();
-  const { setAccountPeriod, setAccountDate } = useAccountActions();
+  const monthFrom = useAccountDateRangeStart();
+  const { setAccountPeriod, setAccountDateRangeStart, setAccountDateRangeEnd } =
+    useAccountActions();
 
-  const handleMonthSelect = async (newMonthDate: Date) => {
+  const handleMonthSelect = (newMonthDate: Date) => {
+    const { from, to } = getMonthRange(newMonthDate);
+    if (!from || !to) return;
     setAccountPeriod("month");
-    setAccountDate(convertLocalToISOString(newMonthDate));
-    await queryClient.invalidateQueries({
-      queryKey: getTransactionsQueryKey(accountId),
-    });
+    setAccountDateRangeStart(from);
+    setAccountDateRangeEnd(to);
   };
 
   return (
     <MonthsCalendarPopover
-      defaultMonthDate={accPeriod === "month" ? new Date(accDate) : undefined}
+      defaultMonthDate={accPeriod === "month" ? new Date(monthFrom) : undefined}
       onSelect={(newMonthDate) => handleMonthSelect(newMonthDate)}
       monthSelectDisabled={(monthIndex, selectedYear) =>
         monthIndex > DEFAULT_MONTH_NUMBER - 1 &&
@@ -43,4 +39,7 @@ const AccountCardFiltersMonthCalendar: FC = () => {
   );
 };
 
-export default AccountCardFiltersMonthCalendar;
+const MemoizedAccountCardFiltersMonthCalendar = memo(
+  AccountCardFiltersMonthCalendar,
+);
+export default MemoizedAccountCardFiltersMonthCalendar;

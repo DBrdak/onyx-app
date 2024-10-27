@@ -50,7 +50,7 @@ const SelectCategory: FC<SelectCategoryProps> = ({ category }) => {
       <div
         className={cn("flex h-14 w-full items-center px-4", isEdit && "px-2")}
       >
-        <div className="flex flex-1 items-center truncate">
+        <div className="flex flex-1 items-center truncate capitalize">
           <SelectCategoryLeft
             category={category}
             isEdit={isEdit}
