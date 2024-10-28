@@ -82,6 +82,10 @@ function Layout() {
                     className: "bg-background text-foreground",
                   }}
                   preload="intent"
+                  activeOptions={{
+                    exact: true,
+                    includeSearch: false,
+                  }}
                 >
                   <span className="space-x-4 overflow-hidden">
                     <Wallet className="inline-flex size-6 shrink-0" />

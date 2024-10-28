@@ -1,5 +1,5 @@
 import { FC, useMemo, useRef } from "react";
-import { useIsFetching, useQueryClient } from "@tanstack/react-query";
+import { useIsFetching } from "@tanstack/react-query";
 import {
   Card,
   CardContent,
@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/card";
 import { Money } from "@/lib/validation/base";
 import { cn, getFormattedCurrency } from "@/lib/utils";
-import { getToAssignQueryKey } from "@/lib/api/budget";
 import DatesMonthYearPickerButtons from "../../DatesMonthYearPickerButtons";
 import MonthsCalendarPopover, {
   AvailableDates,
@@ -30,7 +29,6 @@ const AssignmentCard: FC<AssignmentCardProps> = ({
   toAssign,
   availableDates,
 }) => {
-  const queryClient = useQueryClient();
   const { amount, currency } = toAssign;
   const budgetId = useBudgetId();
   const month = useBudgetMonth();
@@ -54,9 +52,6 @@ const AssignmentCard: FC<AssignmentCardProps> = ({
   const handleMonthChange = async (newMonthDate: Date) => {
     setBudgetMonth(newMonthDate.getMonth() + 1);
     setBudgetYear(newMonthDate.getFullYear());
-    await queryClient.invalidateQueries({
-      queryKey: getToAssignQueryKey(budgetId),
-    });
   };
 
   const handleDecreaseMonth = () => {

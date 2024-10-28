@@ -14,20 +14,27 @@ import {
 } from "@/lib/api/transaction";
 import { getAccountsQueryOptions } from "@/lib/api/account";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
-import { formatToDotDecimal } from "@/lib/utils";
+import { formatToDotDecimal, getErrorMessage } from "@/lib/utils";
 import { type Account } from "@/lib/validation/account";
-import { useAccountDate, useAccountId } from "@/store/dashboard/accountStore";
+import {
+  useAccountDateRangeEnd,
+  useAccountDateRangeStart,
+  useAccountId,
+} from "@/store/dashboard/accountStore";
 import { useBudgetId } from "@/store/dashboard/budgetStore";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Props {
   account: Account;
 }
 
 export const useCreateTransactionForm = ({ account }: Props) => {
-  const accDate = useAccountDate();
   const budgetId = useBudgetId();
   const accountId = useAccountId();
   const queryClient = useQueryClient();
+  const dateRangeEnd = useAccountDateRangeEnd();
+  const dateRangeStart = useAccountDateRangeStart();
+  const { toast } = useToast();
 
   const form = useForm<TCreateTransactionSchema>({
     defaultValues: {
@@ -36,7 +43,7 @@ export const useCreateTransactionForm = ({ account }: Props) => {
       counterpartyName: "",
       subcategoryId: "",
       subcategoryName: "",
-      transactedAt: new Date(accDate),
+      transactedAt: new Date(),
       transactionSign: "-",
     },
     resolver: zodResolver(CreateTransactionSchema),
@@ -53,14 +60,15 @@ export const useCreateTransactionForm = ({ account }: Props) => {
   const selectedCurrency = watch("currency");
   const transactionSign = watch("transactionSign");
   const selectedSubcategoryName = watch("subcategoryName");
+  const currentlySelectedDate = watch("transactedAt");
 
   useEffect(() => {
     reset((defaultValues) => ({
       ...defaultValues,
       currency: account.balance.currency,
-      transactedAt: new Date(accDate),
+      transactedAt: currentlySelectedDate,
     }));
-  }, [reset, account.balance.currency, accDate]);
+  }, [reset, account.balance.currency]);
 
   const [
     transtactionsQueryOptions,
@@ -69,6 +77,8 @@ export const useCreateTransactionForm = ({ account }: Props) => {
   ] = [
     getTransactionsQueryOptions(budgetId, accountId, {
       accountId,
+      dateRangeStart,
+      dateRangeEnd,
     }),
     getAccountsQueryOptions(budgetId),
     getCategoriesQueryOptions(budgetId),
@@ -121,6 +131,11 @@ export const useCreateTransactionForm = ({ account }: Props) => {
     onError: (err, _newTodo, previousTransactions) => {
       console.error(err);
       queryClient.setQueryData(transactionsQueryKey, previousTransactions);
+      const description = getErrorMessage(err);
+      toast({
+        variant: "destructive",
+        description,
+      });
     },
     onSettled: () => {
       Promise.all([
@@ -157,7 +172,13 @@ export const useCreateTransactionForm = ({ account }: Props) => {
     };
 
     mutate({ budgetId, payload });
-    reset();
+    reset({
+      ...data,
+      amount: "0.00",
+      counterpartyName: "",
+      subcategoryId: "",
+      subcategoryName: "",
+    });
   };
 
   const handlePlusMinusBtn = useCallback(

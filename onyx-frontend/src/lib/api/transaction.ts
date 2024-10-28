@@ -7,6 +7,7 @@ import { getErrorMessage } from "@/lib/utils";
 import { queryOptions } from "@tanstack/react-query";
 import { Money } from "@/lib/validation/base";
 import { Row } from "@tanstack/react-table";
+import { formatDateToValidString } from "../dates";
 
 interface TransactionBudget {
   budgetId: string;
@@ -16,10 +17,8 @@ interface QueryParams {
   counterpartyId?: string;
   accountId?: string;
   subcategoryId?: string;
-  date?: string;
-  period?: string;
-  dateRangeStart?: string | null;
-  dateRangeEnd?: string | null;
+  dateRangeStart: Date;
+  dateRangeEnd: Date;
 }
 
 export interface CreateTransactionPayload {
@@ -60,37 +59,43 @@ export const getTransactions = async (
     accountId,
     counterpartyId,
     subcategoryId,
-    date,
-    period,
     dateRangeEnd,
     dateRangeStart,
   } = search;
 
   const searchParams = new URLSearchParams();
+  const dateRangeStartString = formatDateToValidString(dateRangeStart);
+  const dateRangeEndString = formatDateToValidString(dateRangeEnd);
 
-  if (accountId) searchParams.append("accountId", accountId);
-  if (counterpartyId) searchParams.append("counterpartyId", counterpartyId);
-  if (subcategoryId) searchParams.append("subcategoryId", subcategoryId);
+  const customEncode = (param: string) => {
+    if (param.includes("T")) {
+      return param.replace(/\+/g, "%2B");
+    }
+    return encodeURIComponent(param);
+  };
 
-  if (period === "range") {
-    if (dateRangeStart) searchParams.append("dateRangeStart", dateRangeStart);
-    if (dateRangeEnd) searchParams.append("dateRangeEnd", dateRangeEnd);
-  } else {
-    if (date) searchParams.append("date", date);
-    if (period) searchParams.append("period", period);
-  }
+  if (accountId) searchParams.append("accountId", customEncode(accountId));
+  if (counterpartyId)
+    searchParams.append("counterpartyId", customEncode(counterpartyId));
+  if (subcategoryId)
+    searchParams.append("subcategoryId", customEncode(subcategoryId));
+
+  if (dateRangeStartString)
+    searchParams.append("dateRangeStart", customEncode(dateRangeStartString));
+  if (dateRangeEndString)
+    searchParams.append("dateRangeEnd", customEncode(dateRangeEndString));
 
   let url = `/${budgetId}/transactions`;
 
-  if (searchParams.toString()) {
-    url += `?${searchParams.toString()}`;
+  const queryString = searchParams.toString();
+  if (queryString) {
+    url += `?${queryString}`;
   }
-
-  console.log(url);
 
   try {
     const { data } = await budgetApi.get(url);
     const validatedData = TransactionResultSchema.safeParse(data);
+
     if (!validatedData.success) {
       console.log(validatedData.error?.issues);
       throw new Error("Invalid data type.");
@@ -103,7 +108,7 @@ export const getTransactions = async (
 
     return value;
   } catch (error) {
-    console.error(getErrorMessage(error));
+    console.error(error);
     throw new Error(getErrorMessage(error));
   }
 };

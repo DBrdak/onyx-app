@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { format, subYears } from "date-fns";
+import { FC, memo, useState } from "react";
+import { endOfDay, format, startOfDay, subYears } from "date-fns";
 
 import { CalendarIcon } from "lucide-react";
 import {
@@ -11,23 +10,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 
-import { cn, convertLocalToISOString } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { type DateRange } from "react-day-picker";
-import { getTransactionsQueryKey } from "@/lib/api/transaction";
 import {
   useAccountActions,
   useAccountDateRangeEnd,
   useAccountDateRangeStart,
-  useAccountId,
   useAccountPeriod,
 } from "@/store/dashboard/accountStore";
 
-const AccountCardFiltersRangeCalendar = () => {
-  const queryClient = useQueryClient();
+const AccountCardFiltersRangeCalendar: FC = () => {
   const dateRangeStart = useAccountDateRangeStart();
   const dateRangeEnd = useAccountDateRangeEnd();
   const accPeriod = useAccountPeriod();
-  const accountId = useAccountId();
   const { setAccountDateRangeEnd, setAccountDateRangeStart, setAccountPeriod } =
     useAccountActions();
 
@@ -41,7 +36,7 @@ const AccountCardFiltersRangeCalendar = () => {
       : undefined,
   );
 
-  const onRangeSelect = async (newDateRange: DateRange | undefined) => {
+  const onRangeSelect = (newDateRange: DateRange | undefined) => {
     if (!newDateRange) return;
 
     if (
@@ -55,20 +50,10 @@ const AccountCardFiltersRangeCalendar = () => {
       setDateRange(newDateRange);
     }
 
-    const formattedStartDate = newDateRange.from
-      ? convertLocalToISOString(newDateRange.from)
-      : "";
-    const formattedEndDate = newDateRange.to
-      ? convertLocalToISOString(newDateRange.to)
-      : "";
-
-    if (formattedStartDate && formattedEndDate) {
+    if (newDateRange.from && newDateRange.to) {
       setAccountPeriod("range");
-      setAccountDateRangeStart(formattedStartDate);
-      setAccountDateRangeEnd(formattedEndDate);
-      await queryClient.invalidateQueries({
-        queryKey: getTransactionsQueryKey(accountId),
-      });
+      setAccountDateRangeStart(startOfDay(newDateRange.from));
+      setAccountDateRangeEnd(endOfDay(newDateRange.to));
       setOpen(false);
     }
   };
@@ -110,10 +95,14 @@ const AccountCardFiltersRangeCalendar = () => {
           disabled={(date) => date > new Date()}
           toDate={new Date()}
           fromDate={subYears(new Date(), 5)}
+          weekStartsOn={1}
         />
       </PopoverContent>
     </Popover>
   );
 };
 
-export default AccountCardFiltersRangeCalendar;
+const MemoizedAccountCardFiltersRangeCalendar = memo(
+  AccountCardFiltersRangeCalendar,
+);
+export default MemoizedAccountCardFiltersRangeCalendar;

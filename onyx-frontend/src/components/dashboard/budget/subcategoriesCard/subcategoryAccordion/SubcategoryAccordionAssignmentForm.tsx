@@ -18,11 +18,12 @@ interface SubcategoryAccordionAssignmentFormProps {
   defaultAmount: number | undefined;
   currencyToDisplay: string;
   subcategoryId: string;
+  disabled?: boolean;
 }
 
 const SubcategoryAccordionAssignmentForm: FC<
   SubcategoryAccordionAssignmentFormProps
-> = ({ defaultAmount, currencyToDisplay, subcategoryId }) => {
+> = ({ defaultAmount, currencyToDisplay, subcategoryId, disabled }) => {
   const selectedBudget = useBudgetId();
   const month = useBudgetMonth();
   const year = useBudgetYear();
@@ -36,6 +37,7 @@ const SubcategoryAccordionAssignmentForm: FC<
   });
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    if (disabled) return;
     const { amount } = data;
     const amountFormatted = formatToDotDecimal(amount);
     if (Number(amountFormatted) === Number(defaultAmount)) return;
@@ -68,6 +70,7 @@ const SubcategoryAccordionAssignmentForm: FC<
                 field={field}
                 currency={currencyToDisplay}
                 className="h-8 border-none bg-transparent px-1 text-right"
+                disabled={disabled}
               />
             </FormItem>
           )}

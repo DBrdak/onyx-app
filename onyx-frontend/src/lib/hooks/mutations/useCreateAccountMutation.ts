@@ -25,9 +25,9 @@ export const useCreateAccountMutation = ({
       onMutationError(err);
     },
     onSuccess: async ({ slug }) => {
-      onMutationSuccess();
       const queryKey = getAccountsQueryOptions(budgetId).queryKey;
-      await queryClient.invalidateQueries({ queryKey });
+      await queryClient.fetchQuery({ queryKey });
+      onMutationSuccess();
       await navigate({
         to: "/budget/$budgetSlug/accounts/$accountSlug",
         params: { budgetSlug, accountSlug: slug },

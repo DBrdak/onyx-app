@@ -12,8 +12,9 @@ import {
 } from "@/lib/validation/account";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { editAccountName, getAccountsQueryOptions } from "@/lib/api/account";
-import { useBudgetId } from "@/store/dashboard/budgetStore";
+import { useBudgetId, useBudgetSlug } from "@/store/dashboard/budgetStore";
 import { getErrorMessage } from "@/lib/utils";
+import { useNavigate } from "@tanstack/react-router";
 
 interface AccountCardNameFormProps {
   defaultName: string;
@@ -28,6 +29,8 @@ const AccountCardNameForm: FC<AccountCardNameFormProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const budgetId = useBudgetId();
+  const budgetSlug = useBudgetSlug();
+  const navigate = useNavigate();
   const form = useForm<TEditAccountSchema>({
     defaultValues: {
       name: defaultName,
@@ -45,11 +48,6 @@ const AccountCardNameForm: FC<AccountCardNameFormProps> = ({
 
   const { mutate, isError } = useMutation({
     mutationFn: editAccountName,
-    onSettled: async () => {
-      return await queryClient.invalidateQueries(
-        getAccountsQueryOptions(budgetId),
-      );
-    },
     onError: (error) => {
       console.error("Mutation error:", error);
       const description = getErrorMessage(error);
@@ -59,6 +57,16 @@ const AccountCardNameForm: FC<AccountCardNameFormProps> = ({
         description,
       });
       setTimeout(() => setFocus("name"), 0);
+    },
+    onSuccess: async (res) => {
+      await queryClient.fetchQuery(getAccountsQueryOptions(budgetId));
+      await navigate({
+        to: "/budget/$budgetSlug/accounts/$accountSlug",
+        params: {
+          budgetSlug,
+          accountSlug: res.slug,
+        },
+      });
     },
   });
 

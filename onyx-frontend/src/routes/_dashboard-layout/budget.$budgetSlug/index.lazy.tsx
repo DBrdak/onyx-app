@@ -1,12 +1,12 @@
-import { useMemo } from "react";
-import { useSuspenseQueries } from "@tanstack/react-query";
+import { useEffect, useMemo, useRef } from "react";
+import { useQueryClient, useSuspenseQueries } from "@tanstack/react-query";
 import { Navigate, createLazyFileRoute } from "@tanstack/react-router";
 
 import AssignmentCard from "@/components/dashboard/budget/assignmentCard/AssigmentCard";
 import CategoriesCard from "@/components/dashboard/budget/categoriesCard/CategoriesCard";
 import SubcategoriesCard from "@/components/dashboard/budget/subcategoriesCard/SubcategoriesCard";
 
-import { getToAssignQueryOptions } from "@/lib/api/budget";
+import { getToAssignQueryKey, getToAssignQueryOptions } from "@/lib/api/budget";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
 import {
   DEFAULT_MONTH_NUMBER,
@@ -26,16 +26,32 @@ export const Route = createLazyFileRoute(
 });
 
 function SingleBudget() {
+  const queryClient = useQueryClient();
   const budgetId = useBudgetId();
   const month = useBudgetMonth();
   const year = useBudgetYear();
   const selectedCategoryId = useCategoryId();
+
   const [{ data: categories }, { data: toAssign }] = useSuspenseQueries({
     queries: [
       getCategoriesQueryOptions(budgetId),
       getToAssignQueryOptions({ budgetId, month, year }),
     ],
   });
+
+  const hasMounted = useRef(false);
+
+  useEffect(() => {
+    if (hasMounted.current) {
+      if (month && year) {
+        queryClient.invalidateQueries({
+          queryKey: getToAssignQueryKey(budgetId),
+        });
+      }
+    } else {
+      hasMounted.current = true;
+    }
+  }, [month, year]);
 
   const activeCategoryData = useMemo(
     () => categories.find((category) => category.id === selectedCategoryId),

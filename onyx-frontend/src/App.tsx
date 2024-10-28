@@ -3,7 +3,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "@/routeTree.gen";
+
+import GlobalLoadingError from "@/components/GlobalLoadingError";
 import DefaultLoadingSpinner from "@/components/DefaultLoadingSpinner";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import DefaultNotFoundComponent from "@/components/DefaultNotFoundComponent";
+
 import { useAccessToken, useIsInitialized } from "@/store/auth/authStore";
 import { useAuthInitialization } from "@/lib/hooks/auth/useAuthIntialization";
 import { useApiInterceptors } from "@/lib/hooks/useApiInterceptors";
@@ -21,16 +26,20 @@ const router = createRouter({
   context: { queryClient, accessToken: null },
   defaultPreload: "intent",
   defaultPreloadStaleTime: 0,
+  defaultErrorComponent: () => <GlobalLoadingError />,
+  defaultNotFoundComponent: () => <DefaultNotFoundComponent />,
 });
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Suspense fallback={<DefaultLoadingSpinner />}>
-        <RouterWithAuth />
-      </Suspense>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <Suspense fallback={<DefaultLoadingSpinner />}>
+          <RouterWithAuth />
+        </Suspense>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 };
 

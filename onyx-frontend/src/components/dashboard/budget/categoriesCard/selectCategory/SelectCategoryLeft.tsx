@@ -12,7 +12,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -21,12 +20,14 @@ import {
 import { type SelectCategorySectionProps } from "@/components/dashboard/budget/categoriesCard/selectCategory/SelectCategory";
 import { useDeleteCategoryMutation } from "@/lib/hooks/mutations/useDeleteCategoryMutation";
 import { useBudgetId } from "@/store/dashboard/budgetStore";
+import DialogFooterWithErrorHandle from "@/components/DialogFooterWithErrorHandle";
 
 const SelectCategoryLeft: FC<SelectCategorySectionProps> = ({
   category,
   isEdit,
   setIsEdit,
   isSelected,
+  disabled,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const budgetId = useBudgetId();
@@ -35,7 +36,7 @@ const SelectCategoryLeft: FC<SelectCategorySectionProps> = ({
     setIsDeleteDialogOpen(true);
   };
 
-  const { mutate, isError } = useDeleteCategoryMutation({
+  const { mutate, isError, error, reset } = useDeleteCategoryMutation({
     budgetId,
     onMutationError,
   });
@@ -56,7 +57,10 @@ const SelectCategoryLeft: FC<SelectCategorySectionProps> = ({
     return (
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DropdownMenu>
-          <DropdownMenuTrigger className="outline-none">
+          <DropdownMenuTrigger
+            className="outline-none disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={disabled}
+          >
             <Settings />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -76,16 +80,12 @@ const SelectCategoryLeft: FC<SelectCategorySectionProps> = ({
               category and remove all your assigments.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="items-center">
-            {isError && (
-              <p className="text-end text-sm text-destructive">
-                Something went wrong. Please try again.
-              </p>
-            )}
-            <Button type="submit" variant="destructive" onClick={onDelete}>
-              Delete
-            </Button>
-          </DialogFooter>
+          <DialogFooterWithErrorHandle
+            error={error}
+            isError={isError}
+            onDelete={onDelete}
+            reset={reset}
+          />
         </DialogContent>
       </Dialog>
     );

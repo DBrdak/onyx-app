@@ -9,7 +9,7 @@ import BudgetsTableEditNameForm from "./BudgetsTableEditNameForm";
 import { BudgetInvitationLink, type Budget } from "@/lib/validation/budget";
 import CopyToClipboard from "../../CopyToClipboard";
 import BudgetsTableRemoveMembers from "./BudgetsTableRemoveMembers";
-import { convertSecondsToDaysHours } from "@/lib/utils";
+import { convertSecondsToDaysHours } from "@/lib/dates";
 
 interface BudgetsTableManageDialogContentProps {
   budget: Budget;

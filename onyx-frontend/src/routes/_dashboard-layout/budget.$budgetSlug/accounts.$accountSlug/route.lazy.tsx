@@ -1,21 +1,22 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useSuspenseQueries } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQueries } from "@tanstack/react-query";
 
 import AccountCard from "@/components/dashboard/accounts/accountCard/AccountCard";
 import TransactionsTable from "@/components/dashboard/accounts/transactionsTable/TransactionsTable";
 
-import { getTransactionsQueryOptions } from "@/lib/api/transaction";
+import {
+  getTransactionsQueryKey,
+  getTransactionsQueryOptions,
+} from "@/lib/api/transaction";
 import { getAccountsQueryOptions } from "@/lib/api/account";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { useSelectableCategories } from "@/lib/hooks/useSelectableCategories";
 import { useBudgetId } from "@/store/dashboard/budgetStore";
 import {
-  useAccountDate,
   useAccountDateRangeEnd,
   useAccountDateRangeStart,
   useAccountId,
-  useAccountPeriod,
 } from "@/store/dashboard/accountStore";
 
 export const Route = createLazyFileRoute(
@@ -25,10 +26,10 @@ export const Route = createLazyFileRoute(
 });
 
 function Account() {
+  const queryClient = useQueryClient();
+
   const budgetId = useBudgetId();
   const accountId = useAccountId();
-  const accDate = useAccountDate();
-  const accPeriod = useAccountPeriod();
   const dateRangeStart = useAccountDateRangeStart();
   const dateRangeEnd = useAccountDateRangeEnd();
 
@@ -36,10 +37,8 @@ function Account() {
     queries: [
       getTransactionsQueryOptions(budgetId, accountId, {
         accountId,
-        date: accDate,
-        period: accPeriod,
-        dateRangeStart,
         dateRangeEnd,
+        dateRangeStart,
       }),
       getAccountsQueryOptions(budgetId),
       getCategoriesQueryOptions(budgetId),
@@ -50,6 +49,20 @@ function Account() {
     () => accounts.find((acc) => acc.id === accountId),
     [accountId, accounts],
   );
+
+  const hasMounted = useRef(false);
+
+  useEffect(() => {
+    if (hasMounted.current) {
+      if (dateRangeStart && dateRangeEnd) {
+        queryClient.invalidateQueries({
+          queryKey: getTransactionsQueryKey(accountId),
+        });
+      }
+    } else {
+      hasMounted.current = true;
+    }
+  }, [dateRangeStart, dateRangeEnd]);
 
   if (!selectedAccount) throw new Error("Incorrect account ID");
 

@@ -1,5 +1,4 @@
-import { FC, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { FC, useEffect, useState } from "react";
 
 import AccountCardFiltersDayCalendar from "@/components/dashboard/accounts/accountCard/AccountCardFiltersDayCalendar";
 import AccountCardFiltersWeekCalendar from "@/components/dashboard/accounts/accountCard/AccountCardFiltersWeekCalendar";
@@ -14,36 +13,42 @@ import {
 } from "@/components/ui/select";
 
 import { DATE_PERIOD_OPTIONS, DATE_PERIOD_SELECT } from "@/lib/constants/date";
-import { getTransactionsQueryKey } from "@/lib/api/transaction";
 
 import {
   useAccountActions,
-  useAccountId,
   useAccountPeriod,
 } from "@/store/dashboard/accountStore";
-import { convertLocalToISOString } from "@/lib/utils";
+import { getLastDays } from "@/lib/dates";
 
 interface AccountCardFiltersProps {
   disabled: boolean;
 }
 
 const AccountCardFilters: FC<AccountCardFiltersProps> = ({ disabled }) => {
-  const queryClient = useQueryClient();
   const accPeriod = useAccountPeriod();
-  const accountId = useAccountId();
-  const { setAccountPeriod, setAccountDate } = useAccountActions();
-  const [localPeriod, setLocalPeriod] = useState(accPeriod);
+  const { setAccountPeriod, setAccountDateRangeEnd, setAccountDateRangeStart } =
+    useAccountActions();
 
-  const handleSelectChange = async (
-    value: (typeof DATE_PERIOD_OPTIONS)[number],
-  ) => {
+  const [localPeriod, setLocalPeriod] = useState(() => accPeriod);
+
+  useEffect(() => {
+    if (localPeriod !== accPeriod) {
+      setLocalPeriod(accPeriod);
+    }
+  }, [accPeriod]);
+
+  const handleSelectChange = (value: (typeof DATE_PERIOD_OPTIONS)[number]) => {
     setLocalPeriod(value);
+
     if (value === "last30days" || value === "last7days") {
+      const { from, to } = getLastDays(
+        new Date(),
+        value === "last30days" ? 30 : 7,
+      );
+      if (!from || !to) return;
       setAccountPeriod(value);
-      setAccountDate(convertLocalToISOString(new Date()));
-      await queryClient.invalidateQueries({
-        queryKey: getTransactionsQueryKey(accountId),
-      });
+      setAccountDateRangeStart(from);
+      setAccountDateRangeEnd(to);
     }
   };
 
