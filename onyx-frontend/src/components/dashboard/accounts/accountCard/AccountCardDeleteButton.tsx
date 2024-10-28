@@ -2,12 +2,10 @@ import { FC, useState } from "react";
 
 import { Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import LoadingButton from "@/components/LoadingButton";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -15,6 +13,7 @@ import {
 
 import { useDeleteAccountMutation } from "@/lib/hooks/mutations/useDeleteAccountMutation";
 import { useBudgetId } from "@/store/dashboard/budgetStore";
+import DialogFooterWithErrorHandle from "@/components/DialogFooterWithErrorHandle";
 
 interface AccountCardDeleteButtonProps {
   accountId: string;
@@ -32,10 +31,12 @@ const AccountCardDeleteButton: FC<AccountCardDeleteButtonProps> = ({
     setIsDeleteDialogOpen(false);
   };
 
-  const { mutate, isError, isPending } = useDeleteAccountMutation({
-    budgetId,
-    onMutationSuccess,
-  });
+  const { mutate, isError, isPending, error, reset } = useDeleteAccountMutation(
+    {
+      budgetId,
+      onMutationSuccess,
+    },
+  );
 
   const onDelete = () => {
     mutate({ accountId, budgetId });
@@ -61,21 +62,13 @@ const AccountCardDeleteButton: FC<AccountCardDeleteButtonProps> = ({
             account and remove all data connected.
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="items-center">
-          {isError && (
-            <p className="text-end text-sm text-destructive">
-              Something went wrong. Please try again.
-            </p>
-          )}
-          <LoadingButton
-            type="submit"
-            variant="destructive"
-            onClick={onDelete}
-            isLoading={isPending}
-          >
-            Delete
-          </LoadingButton>
-        </DialogFooter>
+        <DialogFooterWithErrorHandle
+          error={error}
+          isError={isError}
+          onDelete={onDelete}
+          isLoading={isPending}
+          reset={reset}
+        />
       </DialogContent>
     </Dialog>
   );

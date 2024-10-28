@@ -172,7 +172,13 @@ export const useCreateTransactionForm = ({ account }: Props) => {
     };
 
     mutate({ budgetId, payload });
-    reset();
+    reset({
+      ...data,
+      amount: "0.00",
+      counterpartyName: "",
+      subcategoryId: "",
+      subcategoryName: "",
+    });
   };
 
   const handlePlusMinusBtn = useCallback(

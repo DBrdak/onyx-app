@@ -5,23 +5,27 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import DialogFooterWithErrorHandle from "@/components/DialogFooterWithErrorHandle";
 
 interface DeleteTransactionDialogProps {
   rowsToDeleteLength: number;
   isError: boolean;
   onDelete: () => void;
+  error: Error | null;
+  reset?: () => void;
 }
 
 const DeleteTransactionDialog: FC<DeleteTransactionDialogProps> = ({
   rowsToDeleteLength,
   isError,
   onDelete,
+  error,
+  reset,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -52,16 +56,12 @@ const DeleteTransactionDialog: FC<DeleteTransactionDialogProps> = ({
             selected transactions.
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="items-center">
-          {isError && (
-            <p className="text-end text-sm text-destructive">
-              Something went wrong. Please try again.
-            </p>
-          )}
-          <Button type="submit" variant="destructive" onClick={handleDelete}>
-            Delete
-          </Button>
-        </DialogFooter>
+        <DialogFooterWithErrorHandle
+          error={error}
+          isError={isError}
+          onDelete={handleDelete}
+          reset={reset}
+        />
       </DialogContent>
     </Dialog>
   );

@@ -22,7 +22,7 @@ import {
   getCategoriesQueryOptions,
 } from "@/lib/api/category";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
-import { cn } from "@/lib/utils";
+import { cn, getErrorMessage } from "@/lib/utils";
 import { type SelectCategorySectionProps } from "@/components/dashboard/budget/categoriesCard/selectCategory/SelectCategory";
 import { useBudgetId } from "@/store/dashboard/budgetStore";
 
@@ -58,10 +58,10 @@ const SelectCategoryMiddle: FC<SelectCategorySectionProps> = ({
   const { mutate, isPending, variables } = useMutation({
     mutationKey: ["editCategory", category.id],
     mutationFn: editCategoryName,
-    onError: () => {
+    onError: (err) => {
+      const message = getErrorMessage(err);
       setError("name", {
-        type: "network",
-        message: "Error occured. Try again.",
+        message,
       });
     },
     onSettled: async (_newName, error) => {
@@ -106,7 +106,7 @@ const SelectCategoryMiddle: FC<SelectCategorySectionProps> = ({
                     placeholder="Add category..."
                     {...field}
                     ref={inputRef}
-                    className="h-8 w-full bg-transparent outline-none"
+                    className="h-7 w-full bg-transparent outline-none"
                   />
                 </FormControl>
                 <FormMessage className="max-w-fit rounded-md bg-destructive px-2 text-primary-foreground" />

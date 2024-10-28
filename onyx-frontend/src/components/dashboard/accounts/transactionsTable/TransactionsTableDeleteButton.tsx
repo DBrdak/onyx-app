@@ -19,7 +19,7 @@ const TransactionsTableDeleteButton: FC<TransactionsTableDeleteButtonProps> = ({
   const budgetId = useBudgetId();
   const accountId = useAccountId();
 
-  const { mutate, isError } = useDeleteTransactionsMutation({
+  const { mutate, isError, error, reset } = useDeleteTransactionsMutation({
     budgetId,
     accountId,
   });
@@ -34,6 +34,8 @@ const TransactionsTableDeleteButton: FC<TransactionsTableDeleteButtonProps> = ({
       isError={isError}
       onDelete={onDelete}
       rowsToDeleteLength={rows.length}
+      error={error}
+      reset={reset}
     />
   );
 };

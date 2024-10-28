@@ -97,7 +97,6 @@ const ImportTableSubmitStage: FC<ImportTableSubmitStageProps> = ({
         });
       }
 
-      console.log(validatedData.error.errors);
       return toast({
         title: "Data error",
         variant: "destructive",
@@ -163,6 +162,7 @@ const ImportTableSubmitStage: FC<ImportTableSubmitStageProps> = ({
               rowsToDeleteLength={selectedRows.length}
               onDelete={onSelectedRowsDelete}
               isError={false}
+              error={null}
             />
           </div>
         </div>
