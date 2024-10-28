@@ -51,12 +51,16 @@ export const createAccount = async ({ budgetId, payload }: CreateAccount) => {
 export const editBalance = ({ budgetId, newBalance, accountId }: EditBalance) =>
   budgetApi.put(`/${budgetId}/accounts/${accountId}`, { newBalance });
 
-export const editAccountName = ({
+export const editAccountName = async ({
   budgetId,
   newName,
   accountId,
-}: EditAccountName) =>
-  budgetApi.put(`/${budgetId}/accounts/${accountId}`, { newName });
+}: EditAccountName) => {
+  const { data } = await budgetApi.put(`/${budgetId}/accounts/${accountId}`, {
+    newName,
+  });
+  return validateResponse<Account>(SingleAccountResultSchema, data);
+};
 
 export const deleteAccount = ({ budgetId, accountId }: EditBase) =>
   budgetApi.delete(`/${budgetId}/accounts/${accountId}`);

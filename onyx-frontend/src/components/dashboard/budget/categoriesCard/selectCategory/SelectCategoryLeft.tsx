@@ -27,6 +27,7 @@ const SelectCategoryLeft: FC<SelectCategorySectionProps> = ({
   isEdit,
   setIsEdit,
   isSelected,
+  disabled,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const budgetId = useBudgetId();
@@ -56,7 +57,10 @@ const SelectCategoryLeft: FC<SelectCategorySectionProps> = ({
     return (
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DropdownMenu>
-          <DropdownMenuTrigger className="outline-none">
+          <DropdownMenuTrigger
+            className="outline-none disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={disabled}
+          >
             <Settings />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">

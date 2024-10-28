@@ -18,11 +18,12 @@ export interface SelectCategorySectionProps {
   isEdit: boolean;
   setIsEdit: (state: boolean) => void;
   isSelected: boolean;
+  disabled?: boolean;
 }
 
 const SelectCategory: FC<SelectCategoryProps> = ({ category }) => {
   const [isEdit, setIsEdit] = useState(false);
-  const { id, optimistic } = category;
+  const { id, optimistic, name } = category;
   const selectedCategoryId = useCategoryId();
   const { setCategoryId } = useBudgetActions();
   const isSelected = selectedCategoryId === id;
@@ -35,6 +36,8 @@ const SelectCategory: FC<SelectCategoryProps> = ({ category }) => {
     if (optimistic) return;
     setCategoryId(id);
   };
+
+  const dropdownCategoryOptionsDisabled = name === "Uncategorized";
 
   return (
     <li
@@ -56,6 +59,7 @@ const SelectCategory: FC<SelectCategoryProps> = ({ category }) => {
             isEdit={isEdit}
             isSelected={isSelected}
             setIsEdit={setIsEdit}
+            disabled={dropdownCategoryOptionsDisabled}
           />
           <MiddleSection
             category={category}

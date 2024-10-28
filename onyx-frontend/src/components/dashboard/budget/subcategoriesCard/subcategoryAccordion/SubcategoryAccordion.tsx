@@ -41,6 +41,7 @@ const SubcategoryAccordion: FC<SubcategoryAccordionProps> = ({
 
   const assignFormRef = useRef<HTMLDivElement>(null);
   const isActive = selectedSubcategoryId === subcategory.id;
+  const isDisabled = subcategory.name === "Unknown";
 
   const onExpandClick = (
     e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
@@ -48,7 +49,7 @@ const SubcategoryAccordion: FC<SubcategoryAccordionProps> = ({
     const isAssignFormClicked = assignFormRef.current?.contains(
       e.target as Node,
     );
-    if (isAssignFormClicked || isNameEditActive) return;
+    if (isAssignFormClicked || isNameEditActive || isDisabled) return;
     setSubcategoryId(isActive ? null : subcategory.id);
   };
 
@@ -71,6 +72,7 @@ const SubcategoryAccordion: FC<SubcategoryAccordionProps> = ({
       className={cn(
         isActive && "border-b last-of-type:border-none",
         subcategory.optimistic && "opacity-50",
+        isDisabled && "cursor-not-allowed opacity-50",
       )}
     >
       <div
@@ -78,6 +80,7 @@ const SubcategoryAccordion: FC<SubcategoryAccordionProps> = ({
         className={cn(
           "grid cursor-pointer grid-cols-3 items-center space-x-4 p-3 text-sm transition-all duration-200 hover:bg-accent",
           isActive && "border-b",
+          isDisabled && "cursor-not-allowed",
         )}
       >
         <div className="col-span-1 flex items-center md:space-x-4">
@@ -106,6 +109,7 @@ const SubcategoryAccordion: FC<SubcategoryAccordionProps> = ({
                 defaultAmount={currentlyAssigned?.assignedAmount.amount}
                 currencyToDisplay={currencyToDisplay}
                 subcategoryId={subcategory.id}
+                disabled={isDisabled}
               />
             )}
           </div>
