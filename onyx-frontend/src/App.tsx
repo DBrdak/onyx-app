@@ -7,6 +7,7 @@ import { routeTree } from "@/routeTree.gen";
 import GlobalLoadingError from "@/components/GlobalLoadingError";
 import DefaultLoadingSpinner from "@/components/DefaultLoadingSpinner";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import DefaultNotFoundComponent from "@/components/DefaultNotFoundComponent";
 
 import { useAccessToken, useIsInitialized } from "@/store/auth/authStore";
 import { useAuthInitialization } from "@/lib/hooks/auth/useAuthIntialization";
@@ -26,6 +27,7 @@ const router = createRouter({
   defaultPreload: "intent",
   defaultPreloadStaleTime: 0,
   defaultErrorComponent: () => <GlobalLoadingError />,
+  defaultNotFoundComponent: () => <DefaultNotFoundComponent />,
 });
 
 const App = () => {

@@ -41,9 +41,12 @@ const UserDropdown: FC<UserDropdownProps> = ({ user }) => {
 
   if (isLoading)
     return (
-      <Button variant="ghost" disabled={!user || isLoading}>
-        <LoaderCircle className="animate-spin" />
-      </Button>
+      <>
+        <div className="fixed inset-0 z-50 bg-muted/20" />
+        <Button variant="ghost" disabled={!user || isLoading}>
+          <LoaderCircle className="animate-spin" />
+        </Button>
+      </>
     );
 
   return (
