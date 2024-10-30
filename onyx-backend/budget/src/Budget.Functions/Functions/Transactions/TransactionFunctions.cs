@@ -38,8 +38,8 @@ public sealed class TransactionFunctions : BaseFunction
             counterpartyId is null ? null : Guid.Parse(counterpartyId),
             accountId is null ? null : Guid.Parse(accountId),
             subcategoryId is null ? null : Guid.Parse(subcategoryId),
-            dateRangeStart, 
-            dateRangeEnd);
+            dateRangeStart?.Replace("%2B", "+"), 
+            dateRangeEnd?.Replace("%2B", "+"));
 
         var result = await Sender.Send(transactionsQuery);
 

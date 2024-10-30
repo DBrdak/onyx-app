@@ -40,17 +40,16 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
         {
             return GetTransactionErrors.NullFilters;
         }
-
-        Period? dateRange = null;
+        LambdaLogger.Log($"DateRangeStart: {request.DateRangeStart}");
         var isValidStartDate = DateTimeOffset.TryParseExact(
             request.DateRangeStart,
-            "O",
+            "yyyy-MM-dd'T'HH:mm:sszzzz",
             null,
             DateTimeStyles.None,
             out var startDate);
         var isValidEndDate = DateTimeOffset.TryParseExact(
             request.DateRangeEnd,
-            "O",
+            "yyyy-MM-dd'T'HH:mm:sszzzz",
             null,
             DateTimeStyles.None,
             out var endDate);
@@ -60,22 +59,19 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
             return GetTransactionErrors.InvalidDate;
         }
 
-        if (isValidStartDate && isValidEndDate)
+        var dateRangeCreateResult = Period.Create(
+            startDate,
+            endDate,
+            TimeSpan.TicksPerDay * 365);
+
+        if (dateRangeCreateResult.IsFailure)
         {
-            var dateRangeCreateResult = Period.Create(
-                startDate,
-                endDate,
-                TimeSpan.TicksPerDay * 365);
-
-            if (dateRangeCreateResult.IsFailure)
-            {
-                return dateRangeCreateResult.Error;
-            }
-
-            dateRange = dateRangeCreateResult.Value;
+            return dateRangeCreateResult.Error;
         }
+
+        var dateRange = dateRangeCreateResult.Value;
         
-        _transactionRepository.AddPagingParameters(dateRange!);
+        _transactionRepository.AddPagingParameters(dateRange);
 
         var transactionsGetTask = request switch
         {

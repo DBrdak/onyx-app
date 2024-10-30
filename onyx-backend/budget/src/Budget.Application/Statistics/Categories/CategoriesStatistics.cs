@@ -1,4 +1,5 @@
-﻿using Budget.Application.Subcategories.Models;
+﻿using Budget.Application.Contracts.Models;
+using Budget.Application.Subcategories.Models;
 using Budget.Domain.Categories;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
@@ -59,8 +60,8 @@ public sealed record CategoriesStatistics : IStatistics
                 new CategoryStatistics(
                     id,
                     name,
-                    totalSpendings,
-                    totalAssignedAmount,
+                    MoneyModel.FromDomainModel(totalSpendings),
+                    MoneyModel.FromDomainModel(totalAssignedAmount),
                     monthStats,
                     _subcategories.Select(SubcategoryModel.FromDomainModel)));
         }
@@ -70,8 +71,8 @@ public sealed record CategoriesStatistics : IStatistics
 public record CategoryStatistics(
     Guid CategoryId,
     string CategoryName,
-    Money TotalAssignment,
-    Money TotalSpending,
+    MoneyModel TotalAssignment,
+    MoneyModel TotalSpending,
     IEnumerable<CategoryMonthStats> MonthStats,
     IEnumerable<SubcategoryModel> Subcategories);
 
