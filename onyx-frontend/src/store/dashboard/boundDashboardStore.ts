@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { useBudgetStore } from "./budgetStore";
 import { useAccountStore } from "./accountStore";
+import { useStatisticsStore } from "./statisticsStore";
 
 interface Actions {
   resetAllStores: () => void;
@@ -11,6 +12,7 @@ export const useDashboardStore = create<Actions>((set, get) => ({
   resetAllStores: () => {
     useBudgetStore.getState().reset();
     useAccountStore.getState().reset();
+    useStatisticsStore.getState().reset();
   },
   initializeBudgetStore: (budgetId, budgetSlug) => {
     const currentlySelectedBudgetId = useBudgetStore.getState().budgetId;
