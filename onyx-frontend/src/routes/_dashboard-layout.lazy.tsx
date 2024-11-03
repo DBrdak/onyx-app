@@ -7,7 +7,7 @@ import {
 
 import { AreaChart, HelpCircle, Undo2, Wallet } from "lucide-react";
 import Logo from "@/components/Logo";
-import UserDropdown from "@/components/dashboard/UserDropdown";
+import UserDropdown from "@/components/userDropdown/UserDropdown";
 import MobileNavigation from "@/components/dashboard/MobileNavigation";
 import AccountsLinksAccordion from "@/components/dashboard/AccountsLinksAccordion";
 

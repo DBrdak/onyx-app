@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
 import Brand from "@/components/Logo";
-import UserDropdown from "@/components/dashboard/UserDropdown";
+import UserDropdown from "@/components/userDropdown/UserDropdown";
 import { buttonVariants } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
