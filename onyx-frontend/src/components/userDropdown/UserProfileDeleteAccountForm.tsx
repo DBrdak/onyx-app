@@ -24,6 +24,7 @@ import { getErrorMessage } from "@/lib/utils";
 import { resetAllMemoryStores } from "@/store/initializeMemoryStore";
 import { useUserProfileStore } from "@/store/ui/userProfileStore";
 import { resetAllPersistedStores } from "@/store/resetPersistedStores";
+import { useAuthStore } from "@/store/auth/authStore";
 
 interface UserProfileDeleteAccountFormProps {}
 
@@ -35,6 +36,7 @@ const UserProfileDeleteAccountForm: FC<
 
   const setProfileVariant = useUserProfileStore.use.setProfileVariant();
   const setIsDeleting = useUserProfileStore.use.setIsDeleting();
+  const setIsInitialized = useAuthStore.use.setIsInitialized();
 
   const form = useForm<TRequiredValueStringSchema>({
     defaultValues: {
@@ -64,6 +66,7 @@ const UserProfileDeleteAccountForm: FC<
       queryClient.clear();
       resetAllMemoryStores();
       resetAllPersistedStores();
+      setIsInitialized(true);
       await router.invalidate();
       await router.navigate({ to: "/" });
     },
