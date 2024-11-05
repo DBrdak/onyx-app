@@ -6,11 +6,11 @@ import StatisticsDateNavbar from "@/components/dashboard/statistics/statisticsDa
 import StatisticsCategoryBarChart from "@/components/dashboard/statistics/StatisticsCategoryBarChart";
 
 import { getCategoryStatsQueryOptions } from "@/lib/api/statistics";
-import { useBudgetId } from "@/store/dashboard/budgetStore";
 import {
   useStatisticsDateRangeEnd,
   useStatisticsDateRangeStart,
 } from "@/store/dashboard/statisticsStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 export const Route = createLazyFileRoute(
   "/_dashboard-layout/budget/$budgetSlug/statistics",
@@ -20,7 +20,7 @@ export const Route = createLazyFileRoute(
 
 function Statistics() {
   const queryClient = useQueryClient();
-  const budgetId = useBudgetId();
+  const budgetId = useBudgetStore.use.budgetId();
   const dateRangeStart = useStatisticsDateRangeStart();
   const dateRangeEnd = useStatisticsDateRangeEnd();
 

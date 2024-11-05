@@ -150,7 +150,7 @@ function Layout() {
                 activeProps={{
                   className: "bg-background text-foreground",
                 }}
-                preload="intent"
+                preload={false}
                 activeOptions={{ exact: true }}
               >
                 <span className="space-x-4 overflow-hidden">

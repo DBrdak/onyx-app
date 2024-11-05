@@ -7,17 +7,19 @@ import MonthsCalendarPopover, {
 import { Card } from "@/components/ui/card";
 
 import {
-  useStatisticsActions,
   useStatisticsDateRangeEnd,
   useStatisticsDateRangeStart,
+  useStatisticsStore,
 } from "@/store/dashboard/statisticsStore";
 
 const StatisticsDateNavbar: FC = () => {
   const statisticsDateRangeStart = useStatisticsDateRangeStart();
   const statisticsDateRangeEnd = useStatisticsDateRangeEnd();
   const selectedYear = statisticsDateRangeStart.getFullYear().toString();
-  const { setStatisticsDateRangeEnd, setStatisticsDateRangeStart } =
-    useStatisticsActions();
+  const setStatisticsDateRangeEnd =
+    useStatisticsStore.use.setStatisticsDateRangeEnd();
+  const setStatisticsDateRangeStart =
+    useStatisticsStore.use.setStatisticsDateRangeStart();
 
   const [tempSelectedYear, setTempSelectedYear] = useState(selectedYear);
   const [tempSelectedMonthFrom, setTempSelectedMonthFrom] = useState<
