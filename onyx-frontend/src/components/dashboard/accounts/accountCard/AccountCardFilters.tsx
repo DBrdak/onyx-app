@@ -14,20 +14,19 @@ import {
 
 import { DATE_PERIOD_OPTIONS, DATE_PERIOD_SELECT } from "@/lib/constants/date";
 
-import {
-  useAccountActions,
-  useAccountPeriod,
-} from "@/store/dashboard/accountStore";
 import { getLastDays } from "@/lib/dates";
+import { useAccountStore } from "@/store/dashboard/accountStore";
 
 interface AccountCardFiltersProps {
   disabled: boolean;
 }
 
 const AccountCardFilters: FC<AccountCardFiltersProps> = ({ disabled }) => {
-  const accPeriod = useAccountPeriod();
-  const { setAccountPeriod, setAccountDateRangeEnd, setAccountDateRangeStart } =
-    useAccountActions();
+  const accPeriod = useAccountStore.use.accountPeriod();
+  const setAccountPeriod = useAccountStore.use.setAccountPeriod();
+  const setAccountDateRangeStart =
+    useAccountStore.use.setAccountDateRangeStart();
+  const setAccountDateRangeEnd = useAccountStore.use.setAccountDateRangeEnd();
 
   const [localPeriod, setLocalPeriod] = useState(() => accPeriod);
 

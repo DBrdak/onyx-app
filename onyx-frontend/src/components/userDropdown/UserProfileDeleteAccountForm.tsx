@@ -15,17 +15,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { useUserProfileActions } from "@/store/ui/userProfileStore";
 import {
   RequiredStringValueSchema,
   TRequiredValueStringSchema,
 } from "@/lib/validation/base";
 import { deleteUser } from "@/lib/api/user";
 import { getErrorMessage } from "@/lib/utils";
-import { useReset } from "@/store/auth/authStore";
-import { useRemoveLongLivedToken } from "@/store/auth/longLivedTokenStore";
-import { resetAllUiStores } from "@/store/ui/boundUiStores";
-import { resetAllStores } from "@/store/dashboard/boundDashboardStore";
+import { resetAllMemoryStores } from "@/store/initializeMemoryStore";
+import { useUserProfileStore } from "@/store/ui/userProfileStore";
+import { resetAllPersistedStores } from "@/store/resetPersistedStores";
 
 interface UserProfileDeleteAccountFormProps {}
 
@@ -35,9 +33,8 @@ const UserProfileDeleteAccountForm: FC<
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const { setProfileVariant, setIsDeleting } = useUserProfileActions();
-  const resetAuthStore = useReset();
-  const removeLongLivedToken = useRemoveLongLivedToken();
+  const setProfileVariant = useUserProfileStore.use.setProfileVariant();
+  const setIsDeleting = useUserProfileStore.use.setIsDeleting();
 
   const form = useForm<TRequiredValueStringSchema>({
     defaultValues: {
@@ -65,10 +62,8 @@ const UserProfileDeleteAccountForm: FC<
     onSuccess: async () => {
       setIsDeleting(true);
       queryClient.clear();
-      resetAllUiStores();
-      resetAllStores();
-      resetAuthStore();
-      removeLongLivedToken();
+      resetAllMemoryStores();
+      resetAllPersistedStores();
       await router.invalidate();
       await router.navigate({ to: "/" });
     },

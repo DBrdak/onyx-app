@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { type Budget } from "@/lib/validation/budget";
 import { getInvitationLink } from "@/lib/api/budget";
-import { useUser } from "@/store/auth/authStore";
+import { useAuthStore } from "@/store/auth/authStore";
 
 interface BudgetsTableRowProps {
   budget: Budget;
@@ -35,7 +35,7 @@ enum OPTION {
 
 const BudgetsTableRow: FC<BudgetsTableRowProps> = ({ budget }) => {
   const { id, slug, name, currency, budgetMembers, optimistic } = budget;
-  const user = useUser();
+  const user = useAuthStore.use.user();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [option, setOption] = useState(OPTION.none);
 

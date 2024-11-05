@@ -1,7 +1,9 @@
-import { create } from "zustand";
-import { startOfYear } from "date-fns";
-import { persist } from "zustand/middleware";
 import { useMemo } from "react";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { startOfYear } from "date-fns";
+
+import { createSelectors } from "@/store/createSelectors";
 
 interface State {
   statisticsDateRangeStart: Date;
@@ -19,7 +21,7 @@ const DEFAULT_STATISTICS_STATE: State = {
   statisticsDateRangeEnd: new Date(),
 };
 
-export const useStatisticsStore = create<State & Actions>()(
+const statisticsStore = create<State & Actions>()(
   persist(
     (set) => ({
       ...DEFAULT_STATISTICS_STATE,
@@ -38,36 +40,21 @@ export const useStatisticsStore = create<State & Actions>()(
   ),
 );
 
+export const useStatisticsStore = createSelectors(statisticsStore);
+
 export const useStatisticsDateRangeStart = () => {
-  const dateRangeStartString = useStatisticsStore(
-    (state) => state.statisticsDateRangeStart,
-  );
+  const dateRangeStartString =
+    useStatisticsStore.use.statisticsDateRangeStart();
   return useMemo(() => new Date(dateRangeStartString), [dateRangeStartString]);
 };
 export const useStatisticsDateRangeEnd = () => {
-  const dateRangeEndString = useStatisticsStore(
-    (state) => state.statisticsDateRangeEnd,
-  );
+  const dateRangeEndString = useStatisticsStore.use.statisticsDateRangeEnd();
   return useMemo(() => new Date(dateRangeEndString), [dateRangeEndString]);
 };
 
-export const useStatisticsActions = () => {
-  const setStatisticsDateRangeStart = useStatisticsStore(
-    (state) => state.setStatisticsDateRangeStart,
-  );
-  const setStatisticsDateRangeEnd = useStatisticsStore(
-    (state) => state.setStatisticsDateRangeEnd,
-  );
-  const reset = useStatisticsStore((state) => state.reset);
-
-  return {
-    setStatisticsDateRangeStart,
-    setStatisticsDateRangeEnd,
-    reset,
-  };
-};
-
 export const getStatisticsDateRangeStart = () =>
-  new Date(useStatisticsStore.getState().statisticsDateRangeStart);
+  new Date(statisticsStore.getState().statisticsDateRangeStart);
 export const getStatisticsDateRangeEnd = () =>
-  new Date(useStatisticsStore.getState().statisticsDateRangeEnd);
+  new Date(statisticsStore.getState().statisticsDateRangeEnd);
+
+export const resetStatisticsStore = () => statisticsStore.getState().reset();

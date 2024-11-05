@@ -19,18 +19,18 @@ import { type Account } from "@/lib/validation/account";
 import {
   useAccountDateRangeEnd,
   useAccountDateRangeStart,
-  useAccountId,
+  useAccountStore,
 } from "@/store/dashboard/accountStore";
-import { useBudgetId } from "@/store/dashboard/budgetStore";
 import { useToast } from "@/components/ui/use-toast";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 interface Props {
   account: Account;
 }
 
 export const useCreateTransactionForm = ({ account }: Props) => {
-  const budgetId = useBudgetId();
-  const accountId = useAccountId();
+  const budgetId = useBudgetStore.use.budgetId();
+  const accountId = useAccountStore.use.accountId();
   const queryClient = useQueryClient();
   const dateRangeEnd = useAccountDateRangeEnd();
   const dateRangeStart = useAccountDateRangeStart();

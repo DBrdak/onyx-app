@@ -9,10 +9,7 @@ import {
   SelectLabel,
   SelectGroup,
 } from "@/components/ui/select";
-import {
-  useAccountActions,
-  useAccountTableSize,
-} from "@/store/dashboard/accountStore";
+import { useAccountStore } from "@/store/dashboard/accountStore";
 
 const TABLE_SIZE_OPTIONS = [
   {
@@ -40,8 +37,8 @@ interface TransactionTableSizeFilterProps {
 const TransactionTableSizeFilter: FC<TransactionTableSizeFilterProps> = ({
   disabled,
 }) => {
-  const tableSize = useAccountTableSize();
-  const { setAccountTableSize } = useAccountActions();
+  const tableSize = useAccountStore.use.accountTableSize();
+  const setAccountTableSize = useAccountStore.use.setAccountTableSize();
 
   const onSelect = async (value: string) => {
     if (value === tableSize.toString()) return;

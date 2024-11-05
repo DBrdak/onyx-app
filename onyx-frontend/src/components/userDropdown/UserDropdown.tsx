@@ -16,14 +16,14 @@ import {
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { type User } from "@/lib/validation/user";
 import { useLogout } from "@/lib/hooks/auth/useLogout";
-import { useUserProfileIsDeleting } from "@/store/ui/userProfileStore";
+import { useUserProfileStore } from "@/store/ui/userProfileStore";
 
 interface UserDropdownProps {
   user: User;
 }
 
 const UserDropdown: FC<UserDropdownProps> = ({ user }) => {
-  const isDeletingUser = useUserProfileIsDeleting();
+  const isDeletingUser = useUserProfileStore.use.isDeleting();
   const [isLoading, setIsLoading] = useState(false);
   const logout = useLogout();
   const router = useRouter();

@@ -6,17 +6,18 @@ import {
   DEFAULT_YEAR_NUMBER,
 } from "@/lib/constants/date";
 import {
-  useAccountActions,
   useAccountDateRangeStart,
-  useAccountPeriod,
+  useAccountStore,
 } from "@/store/dashboard/accountStore";
 import { getMonthRange } from "@/lib/dates";
 
 const AccountCardFiltersMonthCalendar: FC = () => {
-  const accPeriod = useAccountPeriod();
+  const accPeriod = useAccountStore.use.accountPeriod();
   const monthFrom = useAccountDateRangeStart();
-  const { setAccountPeriod, setAccountDateRangeStart, setAccountDateRangeEnd } =
-    useAccountActions();
+  const setAccountPeriod = useAccountStore.use.setAccountPeriod();
+  const setAccountDateRangeStart =
+    useAccountStore.use.setAccountDateRangeStart();
+  const setAccountDateRangeEnd = useAccountStore.use.setAccountDateRangeEnd();
 
   const handleMonthSelect = (newMonthDate: Date) => {
     const { from, to } = getMonthRange(newMonthDate);

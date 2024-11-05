@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { type BudgetMember } from "@/lib/validation/user";
 import { Budget } from "@/lib/validation/budget";
 import BudgetsTableRemoveForm from "./BudgetsTableRemoveForm";
-import { useUser } from "@/store/auth/authStore";
+import { useAuthStore } from "@/store/auth/authStore";
 
 interface BudgetsTableRemoveMembersProps {
   budget: Budget;
@@ -19,7 +19,7 @@ const BudgetsTableRemoveMembers: FC<BudgetsTableRemoveMembersProps> = ({
   const [selectedMember, setSelectedMember] = useState<BudgetMember | null>(
     null,
   );
-  const user = useUser();
+  const user = useAuthStore.use.user();
 
   const removeDisabled = budget.budgetMembers.length < 2;
 

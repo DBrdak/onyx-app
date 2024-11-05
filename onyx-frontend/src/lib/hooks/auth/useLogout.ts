@@ -1,25 +1,22 @@
 import { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { useReset } from "@/store/auth/authStore";
-import { useRemoveLongLivedToken } from "@/store/auth/longLivedTokenStore";
 import { userApi } from "@/lib/axios";
-import { resetAllUiStores } from "@/store/ui/boundUiStores";
-import { resetAllStores } from "@/store/dashboard/boundDashboardStore";
+import { useAuthStore } from "@/store/auth/authStore";
+import { resetAllMemoryStores } from "@/store/initializeMemoryStore";
+import { resetAllPersistedStores } from "@/store/resetPersistedStores";
 
 export const useLogout = () => {
-  const reset = useReset();
-  const removeLongLivedToken = useRemoveLongLivedToken();
   const queryClient = useQueryClient();
+  const setIsInitialized = useAuthStore.use.setIsInitialized();
 
   const logout = useCallback(async () => {
     await userApi.put("/user/logout");
-    reset();
-    removeLongLivedToken();
     queryClient.clear();
-    resetAllStores();
-    resetAllUiStores();
-  }, [queryClient, removeLongLivedToken, reset]);
+    resetAllMemoryStores();
+    resetAllPersistedStores();
+    setIsInitialized(true);
+  }, [queryClient, setIsInitialized]);
 
   return logout;
 };

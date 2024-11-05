@@ -6,7 +6,6 @@ import { useMutation } from "@tanstack/react-query";
 import CurrencyCombobox from "@/components/dashboard/CurrencyCombobox";
 import { Form, FormField } from "@/components/ui/form";
 
-import { useSetUser } from "@/store/auth/authStore";
 import {
   type TNameInputSchema,
   type Currency,
@@ -14,6 +13,7 @@ import {
 } from "@/lib/validation/base";
 import { editUser } from "@/lib/api/user";
 import { getErrorMessage } from "@/lib/utils";
+import { useAuthStore } from "@/store/auth/authStore";
 
 interface UserProfileEditCurrencyFormProps {
   defaultCurrency: Currency;
@@ -22,7 +22,7 @@ interface UserProfileEditCurrencyFormProps {
 const UserProfileEditCurrencyForm: FC<UserProfileEditCurrencyFormProps> = ({
   defaultCurrency,
 }) => {
-  const setUser = useSetUser();
+  const setUser = useAuthStore.use.setUser();
 
   const form = useForm<TNameInputSchema>({
     defaultValues: {

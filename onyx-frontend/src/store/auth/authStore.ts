@@ -1,5 +1,7 @@
-import { create } from "zustand";
-import { User } from "@/lib/validation/user";
+import { create } from "@/store/initializeMemoryStore";
+import { createSelectors } from "@/store/createSelectors";
+
+import { type User } from "@/lib/validation/user";
 
 type AuthState = {
   accessToken: string | null;
@@ -14,23 +16,20 @@ type AuthActions = {
   setIsInitialized: (initialized: boolean) => void;
 };
 
-export const useAuthStore = create<AuthState & AuthActions>((set) => ({
+const DEFAULT_AUTH_STATE = {
   accessToken: null,
   user: null,
   isInitialized: false,
+};
+
+const authStore = create<AuthState & AuthActions>()((set) => ({
+  ...DEFAULT_AUTH_STATE,
   setAccessToken: (token) => set({ accessToken: token }),
   setUser: (user) => set({ user }),
-  reset: () => set({ user: null, accessToken: null, isInitialized: true }),
+  reset: () => set(DEFAULT_AUTH_STATE),
   setIsInitialized: (isInitialized) => set({ isInitialized }),
 }));
 
-export const useAccessToken = () => useAuthStore((state) => state.accessToken);
-export const useUser = () => useAuthStore((state) => state.user);
-export const useIsInitialized = () =>
-  useAuthStore((state) => state.isInitialized);
-export const useSetAccessToken = () =>
-  useAuthStore((state) => state.setAccessToken);
-export const useSetUser = () => useAuthStore((state) => state.setUser);
-export const useReset = () => useAuthStore((state) => state.reset);
-export const useSetIsInitialized = () =>
-  useAuthStore((state) => state.setIsInitialized);
+export const useAuthStore = createSelectors(authStore);
+
+export const resetAuthStore = () => authStore.getState().reset();

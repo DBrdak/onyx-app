@@ -37,9 +37,9 @@ import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import { useTransactionsDataTable } from "@/lib/hooks/useTransactionsDataTable";
 import { useSetSubcategoryMutation } from "@/lib/hooks/mutations/useSetSubcategoryMutation";
-import { useBudgetId } from "@/store/dashboard/budgetStore";
-import { useAccountId } from "@/store/dashboard/accountStore";
 import { type Account } from "@/lib/validation/account";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
+import { useAccountStore } from "@/store/dashboard/accountStore";
 
 interface TransactionsTable {
   transactions: Transaction[];
@@ -71,8 +71,8 @@ const TransactionsTable: FC<TransactionsTable> = ({
   >([]);
   const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
   const [isCreateFormVisible, setIsCreateFormVisible] = useState(false);
-  const budgetId = useBudgetId();
-  const accountId = useAccountId();
+  const budgetId = useBudgetStore.use.budgetId();
+  const accountId = useAccountStore.use.accountId();
   const { mutate } = useSetSubcategoryMutation({ accountId });
   const columns: ColumnDef<Transaction>[] = [
     createSelectColumn(),

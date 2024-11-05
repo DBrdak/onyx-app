@@ -5,8 +5,8 @@ import TargetCardForm from "./TargetCardForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Subcategory } from "@/lib/validation/subcategory";
-import { useBudgetMonth } from "@/store/dashboard/budgetStore";
 import { Currency } from "@/lib/validation/base";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 interface TargetCardProps {
   subcategory: Subcategory;
@@ -17,7 +17,7 @@ const TargetCard: FC<TargetCardProps> = ({
   subcategory,
   currencyToDisplay,
 }) => {
-  const month = useBudgetMonth();
+  const month = useBudgetStore.use.budgetMonth();
   const [isCreating, setIsCreating] = useState(false);
   const currentTarget = subcategory.target;
   const isAvailable = new Date().getMonth() + 1 <= month;

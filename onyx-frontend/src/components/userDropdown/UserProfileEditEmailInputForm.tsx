@@ -3,6 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 
+import UserProfileDialogNavigation from "@/components/userDropdown/UserProfileDialogNavigation";
 import LoadingButton from "@/components/LoadingButton";
 import {
   Form,
@@ -17,11 +18,7 @@ import { Input } from "@/components/ui/input";
 import { EditEmailSchema, type TEditEmailSchema } from "@/lib/validation/user";
 import { changeEmail } from "@/lib/api/user";
 import { getErrorMessage } from "@/lib/utils";
-import {
-  useUserProfileActions,
-  useUserProfileNewEmail,
-} from "@/store/ui/userProfileStore";
-import UserProfileDialogNavigation from "./UserProfileDialogNavigation";
+import { useUserProfileStore } from "@/store/ui/userProfileStore";
 
 interface UserProfileEditEmailInputFormProps {
   defaultEmail: string;
@@ -30,8 +27,9 @@ interface UserProfileEditEmailInputFormProps {
 const UserProfileEditEmailInputForm: FC<UserProfileEditEmailInputFormProps> = ({
   defaultEmail,
 }) => {
-  const storedEmail = useUserProfileNewEmail();
-  const { setNewEmail, setProfileVariant } = useUserProfileActions();
+  const storedEmail = useUserProfileStore.use.newEmail();
+  const setNewEmail = useUserProfileStore.use.setNewEmail();
+  const setProfileVariant = useUserProfileStore.use.setProfileVariant();
 
   const form = useForm<TEditEmailSchema>({
     defaultValues: {

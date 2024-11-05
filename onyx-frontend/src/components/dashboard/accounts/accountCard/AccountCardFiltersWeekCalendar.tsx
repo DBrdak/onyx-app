@@ -13,19 +13,20 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { DateRange } from "react-day-picker";
 import {
-  useAccountActions,
   useAccountDateRangeEnd,
   useAccountDateRangeStart,
-  useAccountPeriod,
+  useAccountStore,
 } from "@/store/dashboard/accountStore";
 import { getWeekRange } from "@/lib/dates";
 
 const AccountCardFiltersWeekCalendar: FC = () => {
-  const accPeriod = useAccountPeriod();
+  const accPeriod = useAccountStore.use.accountPeriod();
   const weekRangeStart = useAccountDateRangeStart();
   const weekRangeEnd = useAccountDateRangeEnd();
-  const { setAccountPeriod, setAccountDateRangeStart, setAccountDateRangeEnd } =
-    useAccountActions();
+  const setAccountPeriod = useAccountStore.use.setAccountPeriod();
+  const setAccountDateRangeStart =
+    useAccountStore.use.setAccountDateRangeStart();
+  const setAccountDateRangeEnd = useAccountStore.use.setAccountDateRangeEnd();
 
   const [open, setOpen] = useState(false);
   const [selectedWeek, setSelectedWeek] = useState<DateRange | undefined>(

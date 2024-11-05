@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
 import { type Budget } from "@/lib/validation/budget";
-import { useUser } from "@/store/auth/authStore";
+import { useAuthStore } from "@/store/auth/authStore";
 
 interface BudgetsTableProps {
   budgets: Budget[];
@@ -16,7 +16,7 @@ interface BudgetsTableProps {
 
 const BudgetsTable: FC<BudgetsTableProps> = ({ budgets }) => {
   const [isCreating, setIsCreating] = useState(false);
-  const user = useUser();
+  const user = useAuthStore.use.user();
 
   const noBudgets = budgets.length === 0 || !budgets;
 

@@ -23,17 +23,15 @@ import { VerifySchema, type TVerifySchema } from "@/lib/validation/user";
 import { editUser } from "@/lib/api/user";
 import { useMutation } from "@tanstack/react-query";
 import { getErrorMessage } from "@/lib/utils";
-import {
-  useUserProfileActions,
-  useUserProfileNewEmail,
-} from "@/store/ui/userProfileStore";
 import UserProfileDialogNavigation from "./UserProfileDialogNavigation";
-import { useSetUser } from "@/store/auth/authStore";
+import { useAuthStore } from "@/store/auth/authStore";
+import { useUserProfileStore } from "@/store/ui/userProfileStore";
 
 const UserProfileEditEmailSubmitForm: FC = () => {
-  const newEmail = useUserProfileNewEmail();
-  const { setNewEmail, setProfileVariant } = useUserProfileActions();
-  const setUser = useSetUser();
+  const newEmail = useUserProfileStore.use.newEmail();
+  const setNewEmail = useUserProfileStore.use.setNewEmail();
+  const setProfileVariant = useUserProfileStore.use.setProfileVariant();
+  const setUser = useAuthStore.use.setUser();
 
   const form = useForm<TVerifySchema>({
     resolver: zodResolver(VerifySchema),

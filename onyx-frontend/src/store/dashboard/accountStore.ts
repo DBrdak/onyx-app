@@ -1,8 +1,10 @@
+import { useMemo } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+
 import { DatePeriodValue } from "@/lib/constants/date";
 import { getLastDays } from "@/lib/dates";
-import { useMemo } from "react";
+import { createSelectors } from "@/store/createSelectors";
 
 interface State {
   accountId: string;
@@ -33,7 +35,7 @@ const DEFAULT_ACCOUNT_STATE: State = {
   accountTableSize: 8,
 };
 
-export const useAccountStore = create<State & Actions>()(
+export const accountStore = create<State & Actions>()(
   persist(
     (set, get) => ({
       ...DEFAULT_ACCOUNT_STATE,
@@ -63,50 +65,25 @@ export const useAccountStore = create<State & Actions>()(
   ),
 );
 
-export const useAccountId = () => useAccountStore((state) => state.accountId);
-export const useAccountPeriod = () =>
-  useAccountStore((state) => state.accountPeriod);
+export const useAccountStore = createSelectors(accountStore);
+
 export const useAccountDateRangeStart = () => {
-  const dateString = useAccountStore((state) => state.accountDateRangeStart);
+  const dateString = useAccountStore.use.accountDateRangeStart();
   return useMemo(() => new Date(dateString), [dateString]);
 };
 export const useAccountDateRangeEnd = () => {
-  const dateString = useAccountStore((state) => state.accountDateRangeEnd);
+  const dateString = useAccountStore.use.accountDateRangeEnd();
   return useMemo(() => new Date(dateString), [dateString]);
 };
-export const useAccountTableSize = () =>
-  useAccountStore((state) => state.accountTableSize);
 
-export const useAccountActions = () => {
-  const setAccountId = useAccountStore((state) => state.setAccountId);
-  const setAccountPeriod = useAccountStore((state) => state.setAccountPeriod);
-  const setAccountDateRangeStart = useAccountStore(
-    (state) => state.setAccountDateRangeStart,
-  );
-  const setAccountDateRangeEnd = useAccountStore(
-    (state) => state.setAccountDateRangeEnd,
-  );
-  const reset = useAccountStore((state) => state.reset);
-  const setAccountTableSize = useAccountStore(
-    (state) => state.setAccountTableSize,
-  );
-
-  return {
-    setAccountId,
-    setAccountPeriod,
-    setAccountDateRangeStart,
-    setAccountDateRangeEnd,
-    reset,
-    setAccountTableSize,
-  };
-};
-
-export const getAccountId = () => useAccountStore.getState().accountId;
-export const getAccountPeriod = () => useAccountStore.getState().accountPeriod;
+export const getAccountId = () => accountStore.getState().accountId;
+export const getAccountPeriod = () => accountStore.getState().accountPeriod;
 export const getAccountDateRangeStart = () =>
-  new Date(useAccountStore.getState().accountDateRangeStart);
+  new Date(accountStore.getState().accountDateRangeStart);
 export const getAccountDateRangeEnd = () =>
-  new Date(useAccountStore.getState().accountDateRangeEnd);
+  new Date(accountStore.getState().accountDateRangeEnd);
 
-export const initializeAccountId = useAccountStore.getState().initializeAccount;
-export const setAccountSlug = useAccountStore.getState().setAccountSlug;
+export const initializeAccountId = accountStore.getState().initializeAccount;
+export const setAccountSlug = accountStore.getState().setAccountSlug;
+
+export const resetAccountStore = () => accountStore.getState().reset();

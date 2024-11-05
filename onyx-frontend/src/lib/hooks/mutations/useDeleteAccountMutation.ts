@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { deleteAccount, getAccountsQueryOptions } from "@/lib/api/account";
-import { useAccountActions } from "@/store/dashboard/accountStore";
-import { useBudgetSlug } from "@/store/dashboard/budgetStore";
+import { useAccountStore } from "@/store/dashboard/accountStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 interface DeleteAccountMutationProps {
   budgetId: string;
@@ -16,8 +16,8 @@ export const useDeleteAccountMutation = ({
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const queryKey = getAccountsQueryOptions(budgetId).queryKey;
-  const { reset } = useAccountActions();
-  const budgetSlug = useBudgetSlug();
+  const reset = useAccountStore.use.reset();
+  const budgetSlug = useBudgetStore.use.budgetSlug();
 
   return useMutation({
     mutationKey: ["deleteAccount"],

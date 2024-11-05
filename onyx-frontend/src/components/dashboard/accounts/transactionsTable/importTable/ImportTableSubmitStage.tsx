@@ -32,8 +32,8 @@ import {
 import LoadingButton from "@/components/LoadingButton";
 import { getAccountsQueryOptions } from "@/lib/api/account";
 import { VARIANTS } from "../TransactionsTable";
-import { useBudgetId } from "@/store/dashboard/budgetStore";
-import { useAccountId } from "@/store/dashboard/accountStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
+import { useAccountStore } from "@/store/dashboard/accountStore";
 
 interface ImportTableSubmitStageProps {
   data: ImportTransactionsPresubmitState[];
@@ -50,8 +50,8 @@ const ImportTableSubmitStage: FC<ImportTableSubmitStageProps> = ({
   setVariant,
   setDefaultTableVariant,
 }) => {
-  const budgetId = useBudgetId();
-  const accountId = useAccountId();
+  const budgetId = useBudgetStore.use.budgetId();
+  const accountId = useAccountStore.use.accountId();
   const queryClient = useQueryClient();
 
   const { toast } = useToast();

@@ -13,12 +13,7 @@ import MonthsCalendarPopover, {
   AvailableDates,
   MonthsCalendarPopoverHandle,
 } from "../../MonthsCalendarPopover";
-import {
-  useBudgetActions,
-  useBudgetId,
-  useBudgetMonth,
-  useBudgetYear,
-} from "@/store/dashboard/budgetStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 interface AssignmentCardProps {
   toAssign: Money;
@@ -30,10 +25,11 @@ const AssignmentCard: FC<AssignmentCardProps> = ({
   availableDates,
 }) => {
   const { amount, currency } = toAssign;
-  const budgetId = useBudgetId();
-  const month = useBudgetMonth();
-  const year = useBudgetYear();
-  const { setBudgetMonth, setBudgetYear } = useBudgetActions();
+  const budgetId = useBudgetStore.use.budgetId();
+  const month = useBudgetStore.use.budgetMonth();
+  const year = useBudgetStore.use.budgetYear();
+  const setBudgetMonth = useBudgetStore.use.setBudgetMonth();
+  const setBudgetYear = useBudgetStore.use.setBudgetYear();
 
   const isFetching = useIsFetching({ queryKey: ["toAssign", budgetId] }) > 0;
 

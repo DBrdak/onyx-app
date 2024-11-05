@@ -4,17 +4,17 @@ import UserProfileEditNameForm from "@/components/userDropdown/UserProfileEditNa
 import UserProfileEditCurrencyForm from "@/components/userDropdown/UserProfileEditCurrencyForm";
 import { DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 import { User } from "@/lib/validation/user";
-import { useUserProfileActions } from "@/store/ui/userProfileStore";
-import { Input } from "../ui/input";
+import { useUserProfileStore } from "@/store/ui/userProfileStore";
 
 interface UserProfileDefaultProps {
   user: User;
 }
 
 const UserProfileDefault: FC<UserProfileDefaultProps> = ({ user }) => {
-  const { setProfileVariant } = useUserProfileActions();
+  const setProfileVariant = useUserProfileStore.use.setProfileVariant();
 
   return (
     <>

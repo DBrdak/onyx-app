@@ -18,15 +18,15 @@ import {
   CreateCategorySchema,
 } from "@/lib/validation/category";
 import { useCreateCategoryMutation } from "@/lib/hooks/mutations/useCreateCategoryMutation";
-import { useBudgetId } from "@/store/dashboard/budgetStore";
 import { getErrorMessage } from "@/lib/utils";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 interface Props {
   categoriesCount: number;
 }
 
 const CreateCategory: FC<Props> = ({ categoriesCount }) => {
-  const budgetId = useBudgetId();
+  const budgetId = useBudgetStore.use.budgetId();
   const form = useForm<CreateCategory>({
     resolver: zodResolver(CreateCategorySchema),
     defaultValues: {

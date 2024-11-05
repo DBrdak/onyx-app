@@ -1,28 +1,23 @@
 import { useEffect } from "react";
 
 import { getAuthInitializationData } from "@/lib/api/user";
-import {
-  useLongLivedToken,
-  useSetLongLivedToken,
-} from "@/store/auth/longLivedTokenStore";
-import {
-  useReset,
-  useSetAccessToken,
-  useSetIsInitialized,
-  useSetUser,
-} from "@/store/auth/authStore";
+import { useAuthStore } from "@/store/auth/authStore";
+import { useLongLivedTokenStore } from "@/store/auth/longLivedTokenStore";
 
 export const useAuthInitialization = () => {
-  const longLivedToken = useLongLivedToken();
-  const reset = useReset();
-  const setAccessToken = useSetAccessToken();
-  const setUser = useSetUser();
-  const setLongLivedToken = useSetLongLivedToken();
-  const setIsInitialized = useSetIsInitialized();
+  const longLivedToken = useLongLivedTokenStore.use.longLivedToken();
+  const setLongLivedToken = useLongLivedTokenStore.use.setLongLivedToken();
+
+  const reset = useAuthStore.use.reset();
+  const setIsInitialized = useAuthStore.use.setIsInitialized();
+  const setAccessToken = useAuthStore.use.setAccessToken();
+  const setUser = useAuthStore.use.setUser();
 
   useEffect(() => {
     if (!longLivedToken) {
-      return reset();
+      reset();
+      setIsInitialized(true);
+      return;
     }
 
     const initAuth = async () => {
@@ -39,6 +34,7 @@ export const useAuthInitialization = () => {
       } catch (error) {
         console.error("Initialization failed:", error);
         reset();
+        setIsInitialized(true);
       }
     };
 

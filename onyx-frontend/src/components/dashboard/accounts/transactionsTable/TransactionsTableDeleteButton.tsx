@@ -4,8 +4,8 @@ import { Row, RowSelectionState } from "@tanstack/react-table";
 import { Transaction } from "@/lib/validation/transaction";
 import { useDeleteTransactionsMutation } from "@/lib/hooks/mutations/useDeleteTransactionsMutation";
 import DeleteTransactionDialog from "../DeleteTransactionDialog";
-import { useBudgetId } from "@/store/dashboard/budgetStore";
-import { useAccountId } from "@/store/dashboard/accountStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
+import { useAccountStore } from "@/store/dashboard/accountStore";
 
 interface TransactionsTableDeleteButtonProps {
   rows: Row<Transaction>[];
@@ -16,8 +16,8 @@ const TransactionsTableDeleteButton: FC<TransactionsTableDeleteButtonProps> = ({
   rows,
   setRowsSelection,
 }) => {
-  const budgetId = useBudgetId();
-  const accountId = useAccountId();
+  const budgetId = useBudgetStore.use.budgetId();
+  const accountId = useAccountStore.use.accountId();
 
   const { mutate, isError, error, reset } = useDeleteTransactionsMutation({
     budgetId,

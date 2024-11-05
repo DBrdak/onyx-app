@@ -10,14 +10,8 @@ import { Subcategory } from "@/lib/validation/subcategory";
 import { cn, getFormattedCurrency } from "@/lib/utils";
 import { Currency, Money } from "@/lib/validation/base";
 import { getToAssignQueryKey } from "@/lib/api/budget";
-import {
-  useBudgetActions,
-  useBudgetMonth,
-  useBudgetYear,
-  useBudgetId,
-  useSubcategoryId,
-} from "@/store/dashboard/budgetStore";
-import { useUser } from "@/store/auth/authStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
+import { useAuthStore } from "@/store/auth/authStore";
 
 interface SubcategoryAccordionProps {
   subcategory: Subcategory;
@@ -27,15 +21,15 @@ const SubcategoryAccordion: FC<SubcategoryAccordionProps> = ({
   subcategory,
 }) => {
   const queryClient = useQueryClient();
-  const budgetId = useBudgetId();
-  const selectedSubcategoryId = useSubcategoryId();
-  const month = useBudgetMonth();
-  const year = useBudgetYear();
-  const user = useUser();
+  const budgetId = useBudgetStore.use.budgetId();
+  const selectedSubcategoryId = useBudgetStore.use.subcategoryId();
+  const month = useBudgetStore.use.budgetMonth();
+  const year = useBudgetStore.use.budgetYear();
+  const user = useAuthStore.use.user();
   const budgetToAssign = queryClient.getQueryData<Money>(
     getToAssignQueryKey(budgetId),
   );
-  const { setSubcategoryId } = useBudgetActions();
+  const setSubcategoryId = useBudgetStore.use.setSubcategoryId();
 
   const [isNameEditActive, setIsNameEditActive] = useState(false);
 

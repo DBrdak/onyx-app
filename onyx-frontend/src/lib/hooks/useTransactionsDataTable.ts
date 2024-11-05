@@ -11,7 +11,7 @@ import {
   PaginationState,
 } from "@tanstack/react-table";
 import { useDebounce } from "./useDebounce";
-import { useAccountTableSize } from "@/store/dashboard/accountStore";
+import { useAccountStore } from "@/store/dashboard/accountStore";
 
 interface Props<TData, TValue> {
   data: TData[];
@@ -24,7 +24,7 @@ export function useTransactionsDataTable<TData, TValue>({
   columns,
   pageSize = 8,
 }: Props<TData, TValue>) {
-  const tableSize = useAccountTableSize();
+  const tableSize = useAccountStore.use.accountTableSize();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,

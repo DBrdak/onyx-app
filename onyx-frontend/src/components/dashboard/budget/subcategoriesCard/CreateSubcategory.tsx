@@ -19,8 +19,8 @@ import {
 } from "@/lib/validation/subcategory";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { useCreateSubcategoryMutation } from "@/lib/hooks/mutations/useCreateSubcategoryMutation";
-import { useBudgetId } from "@/store/dashboard/budgetStore";
 import { getErrorMessage } from "@/lib/utils";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 interface CreateSubcategoryProps {
   parentCategoryId: string;
@@ -29,7 +29,7 @@ interface CreateSubcategoryProps {
 const CreateSubcategory: FC<CreateSubcategoryProps> = ({
   parentCategoryId,
 }) => {
-  const budgetId = useBudgetId();
+  const budgetId = useBudgetStore.use.budgetId();
   const form = useForm<CreateSubcategory>({
     defaultValues: {
       name: "",

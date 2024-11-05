@@ -17,20 +17,20 @@ import { useSingleBudgetLoadingState } from "@/lib/hooks/useSingleBudgetLoadingS
 import { useQuery } from "@tanstack/react-query";
 import { getAccountsQueryOptions } from "@/lib/api/account";
 import { Account } from "@/lib/validation/account";
-import { useUser } from "@/store/auth/authStore";
-import { useBudgetId, useBudgetSlug } from "@/store/dashboard/budgetStore";
+import { useAuthStore } from "@/store/auth/authStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 export const Route = createLazyFileRoute("/_dashboard-layout")({
   component: Layout,
 });
 
 function Layout() {
-  const user = useUser();
+  const user = useAuthStore.use.user();
   const isDesktop = useMediaQuery("(min-width: 1280px)");
   const { pathname } = useLocation();
   const isBudgetListOpen = pathname.endsWith("/budget");
-  const budgetId = useBudgetId();
-  const budgetSlug = useBudgetSlug();
+  const budgetId = useBudgetStore.use.budgetId();
+  const budgetSlug = useBudgetStore.use.budgetSlug();
   const isBudgetSelected = !isBudgetListOpen && budgetId && budgetSlug;
 
   const { isError: isSingleBudgetLoadingError } =
@@ -182,7 +182,7 @@ const MobileLayout = ({
   linksAvailable: boolean;
   accounts: Account[];
 }) => {
-  const user = useUser();
+  const user = useAuthStore.use.user();
 
   return (
     <>

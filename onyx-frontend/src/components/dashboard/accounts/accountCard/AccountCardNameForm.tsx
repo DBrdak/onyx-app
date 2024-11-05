@@ -12,9 +12,9 @@ import {
 } from "@/lib/validation/account";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { editAccountName, getAccountsQueryOptions } from "@/lib/api/account";
-import { useBudgetId, useBudgetSlug } from "@/store/dashboard/budgetStore";
 import { getErrorMessage } from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 interface AccountCardNameFormProps {
   defaultName: string;
@@ -28,8 +28,8 @@ const AccountCardNameForm: FC<AccountCardNameFormProps> = ({
   disabled,
 }) => {
   const queryClient = useQueryClient();
-  const budgetId = useBudgetId();
-  const budgetSlug = useBudgetSlug();
+  const budgetId = useBudgetStore.use.budgetId();
+  const budgetSlug = useBudgetStore.use.budgetSlug();
   const navigate = useNavigate();
   const form = useForm<TEditAccountSchema>({
     defaultValues: {

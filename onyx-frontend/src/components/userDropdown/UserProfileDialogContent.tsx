@@ -5,9 +5,9 @@ import UserProfileDefault from "@/components/userDropdown/UserProfileDefault";
 import UserProfileEditEmailInputForm from "@/components/userDropdown/UserProfileEditEmailInputForm";
 
 import { type User } from "@/lib/validation/user";
-import { useUserProfileVariant } from "@/store/ui/userProfileStore";
 import UserProfileEditEmailSubmitForm from "./UserProfileEditEmailSubmitForm";
 import UserProfileDeleteAccountForm from "./UserProfileDeleteAccountForm";
+import { useUserProfileStore } from "@/store/ui/userProfileStore";
 
 interface UserProfileDialogContentProps {
   user: User;
@@ -16,7 +16,7 @@ interface UserProfileDialogContentProps {
 const UserProfileDialogContent: FC<UserProfileDialogContentProps> = ({
   user,
 }) => {
-  const userProfileVariant = useUserProfileVariant();
+  const userProfileVariant = useUserProfileStore.use.profileVariant();
 
   return (
     <UnderlinedDialogContent title="Profile">

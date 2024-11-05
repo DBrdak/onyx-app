@@ -40,13 +40,13 @@ import { CreateAccountPayload } from "@/lib/api/account";
 import { ACCOUNT_TYPES } from "@/lib/constants/account";
 import { formatToDotDecimal, getErrorMessage } from "@/lib/utils";
 import CurrencyCombobox from "../CurrencyCombobox";
-import { useUser } from "@/store/auth/authStore";
-import { useBudgetId } from "@/store/dashboard/budgetStore";
+import { useAuthStore } from "@/store/auth/authStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 const CreateAccountButton: FC = () => {
-  const user = useUser();
+  const user = useAuthStore.use.user();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const budgetId = useBudgetId();
+  const budgetId = useBudgetStore.use.budgetId();
 
   const { toast } = useToast();
   const form = useForm<TCreateAccountForm>({

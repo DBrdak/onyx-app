@@ -10,7 +10,7 @@ import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { NameInputSchema, type TNameInputSchema } from "@/lib/validation/base";
 import { getErrorMessage } from "@/lib/utils";
 import { editUser } from "@/lib/api/user";
-import { useSetUser } from "@/store/auth/authStore";
+import { useAuthStore } from "@/store/auth/authStore";
 
 interface UserProfileEditNameFormProps {
   defaultName: string;
@@ -19,7 +19,7 @@ interface UserProfileEditNameFormProps {
 const UserProfileEditNameForm: FC<UserProfileEditNameFormProps> = ({
   defaultName,
 }) => {
-  const setUser = useSetUser();
+  const setUser = useAuthStore.use.setUser();
 
   const form = useForm<TNameInputSchema>({
     defaultValues: {

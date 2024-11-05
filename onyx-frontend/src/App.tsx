@@ -9,10 +9,10 @@ import DefaultLoadingSpinner from "@/components/DefaultLoadingSpinner";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import DefaultNotFoundComponent from "@/components/DefaultNotFoundComponent";
 
-import { useAccessToken, useIsInitialized } from "@/store/auth/authStore";
 import { useAuthInitialization } from "@/lib/hooks/auth/useAuthIntialization";
 import { useApiInterceptors } from "@/lib/hooks/useApiInterceptors";
 import { budgetApi, userApi } from "@/lib/axios";
+import { useAuthStore } from "@/store/auth/authStore";
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -48,8 +48,8 @@ export default App;
 const RouterWithAuth: React.FC = () => {
   useAuthInitialization();
 
-  const accessToken = useAccessToken();
-  const isInitialized = useIsInitialized();
+  const accessToken = useAuthStore.use.accessToken();
+  const isInitialized = useAuthStore.use.isInitialized();
 
   useApiInterceptors(budgetApi, accessToken);
   useApiInterceptors(userApi, accessToken);
