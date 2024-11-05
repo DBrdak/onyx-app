@@ -17,7 +17,7 @@ export const getErrorMessage = (error: unknown): string => {
     const status = error.response?.status;
     const customMessage = error.response?.data?.error?.message;
 
-    if (status === 400 && customMessage) {
+    if ((status === 400 || status === 401) && customMessage) {
       return customMessage;
     }
 

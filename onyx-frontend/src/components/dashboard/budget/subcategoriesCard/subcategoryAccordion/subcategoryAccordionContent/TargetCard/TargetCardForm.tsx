@@ -27,11 +27,7 @@ import {
   DEFAULT_MONTH_NUMBER,
   DEFAULT_YEAR_NUMBER,
 } from "@/lib/constants/date";
-import {
-  useBudgetMonth,
-  useBudgetYear,
-  useBudgetId,
-} from "@/store/dashboard/budgetStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 interface TargetCardFormProps {
   currentTarget: Target | undefined | null;
@@ -46,9 +42,9 @@ const TargetCardForm: FC<TargetCardFormProps> = ({
   subcategoryId,
   currencyToDisplay,
 }) => {
-  const selectedBudget = useBudgetId();
-  const selectedMonth = useBudgetMonth();
-  const selectedYear = useBudgetYear();
+  const selectedBudget = useBudgetStore.use.budgetId();
+  const selectedMonth = useBudgetStore.use.budgetMonth();
+  const selectedYear = useBudgetStore.use.budgetYear();
   const { toast } = useToast();
 
   const isEditing = !!currentTarget;

@@ -13,14 +13,22 @@ import {
   getBudgetId,
   getBudgetMonth,
   getBudgetYear,
+  setBudgetId,
+  setBudgetSlug,
 } from "@/store/dashboard/budgetStore";
-import { initializeBudgetStore } from "@/store/dashboard/boundDashboardStore";
+import { resetAllDashboardStores } from "@/store/dashboard/resetPersistedDashboardStores";
 import { type QueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_dashboard-layout/budget/$budgetSlug/")({
   beforeLoad: async ({ params: { budgetSlug }, context: { queryClient } }) => {
     const budget = await findBudgetBySlug(queryClient, budgetSlug);
-    initializeBudgetStore(budget.id, budgetSlug);
+    const currentBudgetId = getBudgetId();
+
+    if (budget.id === currentBudgetId) return;
+
+    resetAllDashboardStores();
+    setBudgetId(budget.id);
+    setBudgetSlug(budget.slug);
   },
   loader: ({ context: { queryClient } }) => {
     const budgetId = getBudgetId();

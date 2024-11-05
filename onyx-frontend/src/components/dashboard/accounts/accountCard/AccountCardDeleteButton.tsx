@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/dialog";
 
 import { useDeleteAccountMutation } from "@/lib/hooks/mutations/useDeleteAccountMutation";
-import { useBudgetId } from "@/store/dashboard/budgetStore";
 import DialogFooterWithErrorHandle from "@/components/DialogFooterWithErrorHandle";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 interface AccountCardDeleteButtonProps {
   accountId: string;
@@ -25,7 +25,7 @@ const AccountCardDeleteButton: FC<AccountCardDeleteButtonProps> = ({
   disabled,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const budgetId = useBudgetId();
+  const budgetId = useBudgetStore.use.budgetId();
 
   const onMutationSuccess = () => {
     setIsDeleteDialogOpen(false);

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { createSelectors } from "@/store/createSelectors";
 
 interface LongLivedTokenState {
   longLivedToken: string | null;
@@ -10,7 +11,7 @@ interface LongLivedTokenActions {
   removeLongLivedToken: () => void;
 }
 
-export const useLongLivedTokenStore = create<
+export const longLivedTokenStore = create<
   LongLivedTokenState & LongLivedTokenActions
 >()(
   persist(
@@ -26,9 +27,7 @@ export const useLongLivedTokenStore = create<
   ),
 );
 
-export const useLongLivedToken = () =>
-  useLongLivedTokenStore((state) => state.longLivedToken);
-export const useSetLongLivedToken = () =>
-  useLongLivedTokenStore((state) => state.setLongLivedToken);
-export const useRemoveLongLivedToken = () =>
-  useLongLivedTokenStore((state) => state.removeLongLivedToken);
+export const useLongLivedTokenStore = createSelectors(longLivedTokenStore);
+
+export const resetLongLivedToken = () =>
+  longLivedTokenStore.getState().removeLongLivedToken();

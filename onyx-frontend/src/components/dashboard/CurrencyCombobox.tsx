@@ -18,12 +18,13 @@ import {
 
 import { OTHER_CORRENCY, POPULAR_CURRENCY } from "@/lib/constants/currency";
 import { cn } from "@/lib/utils";
+import { Currency } from "@/lib/validation/base";
 
 interface CurrencyComboboxProps {
   disabled?: boolean;
   className?: string;
   selectedValue: string;
-  onChange: (value: string) => void;
+  onChange: (value: Currency) => void;
 }
 
 const CurrencyCombobox: FC<CurrencyComboboxProps> = ({
@@ -34,7 +35,7 @@ const CurrencyCombobox: FC<CurrencyComboboxProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
 
-  const handleChange = (value: string) => {
+  const handleChange = (value: Currency) => {
     onChange(value);
     setOpen(false);
   };
@@ -65,7 +66,7 @@ const CurrencyCombobox: FC<CurrencyComboboxProps> = ({
                 <CommandItem
                   value={c.label}
                   key={c.value}
-                  onSelect={(value) => handleChange(value)}
+                  onSelect={(value) => handleChange(value as Currency)}
                 >
                   <Check
                     className={cn(
@@ -82,7 +83,7 @@ const CurrencyCombobox: FC<CurrencyComboboxProps> = ({
                 <CommandItem
                   value={c.label}
                   key={c.value}
-                  onSelect={(value) => handleChange(value)}
+                  onSelect={(value) => handleChange(value as Currency)}
                 >
                   <Check
                     className={cn(

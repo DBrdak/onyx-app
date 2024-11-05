@@ -23,6 +23,13 @@ export interface RegisterPayload {
   currency: string;
 }
 
+export interface EditUserPayload {
+  newEmail?: string;
+  newUsername?: string;
+  newCurrency?: string;
+  verificationCode?: string;
+}
+
 export type VerifyPayload = EmailVerificationPayload;
 
 export const refreshAccessToken = async (longLivedToken: string) => {
@@ -70,6 +77,25 @@ export const getUser = async (accessToken: string) => {
   });
   return validateResponse<User>(UserResultSchema, response.data);
 };
+
+export const getAuthenticatedUser = async () => {
+  const response = await userApi.get("/user");
+  return validateResponse<User>(UserResultSchema, response.data);
+};
+
+export const editUser = async (payload: EditUserPayload) => {
+  const response = await userApi.put("/user", payload);
+  return validateResponse<User>(UserResultSchema, response.data);
+};
+
+export const deleteUser = (password: string) =>
+  userApi.delete("/user/remove", {
+    data: {
+      password,
+    },
+  });
+
+export const changeEmail = () => userApi.put("/user/change-email");
 
 export const forgotPasswordRequest = (email: string): Promise<void> =>
   identityApi.put("/auth/forgot-password/request", { email });

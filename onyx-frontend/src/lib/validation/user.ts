@@ -83,3 +83,15 @@ export const VerifySchema = EmailSchema.extend({
 });
 
 export type TVerifySchema = z.infer<typeof VerifySchema>;
+
+export const EditEmailSchema = z
+  .object({
+    currentEmail: RequiredString.email(),
+    newEmail: RequiredString.email(),
+  })
+  .refine(({ currentEmail, newEmail }) => currentEmail !== newEmail, {
+    message: "Your new email is the same as the current one.",
+    path: ["newEmail"],
+  });
+
+export type TEditEmailSchema = z.infer<typeof EditEmailSchema>;

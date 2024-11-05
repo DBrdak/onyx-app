@@ -19,8 +19,8 @@ import {
 
 import { type SelectCategorySectionProps } from "@/components/dashboard/budget/categoriesCard/selectCategory/SelectCategory";
 import { useDeleteCategoryMutation } from "@/lib/hooks/mutations/useDeleteCategoryMutation";
-import { useBudgetId } from "@/store/dashboard/budgetStore";
 import DialogFooterWithErrorHandle from "@/components/DialogFooterWithErrorHandle";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 const SelectCategoryLeft: FC<SelectCategorySectionProps> = ({
   category,
@@ -30,7 +30,7 @@ const SelectCategoryLeft: FC<SelectCategorySectionProps> = ({
   disabled,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const budgetId = useBudgetId();
+  const budgetId = useBudgetStore.use.budgetId();
 
   const onMutationError = () => {
     setIsDeleteDialogOpen(true);

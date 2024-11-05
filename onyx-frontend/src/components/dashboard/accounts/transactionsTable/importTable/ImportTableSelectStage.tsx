@@ -25,7 +25,7 @@ import {
 } from "@/lib/validation/transaction";
 import { VARIANTS } from "@/components/dashboard/accounts/transactionsTable/TransactionsTable";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
-import { useBudgetId } from "@/store/dashboard/budgetStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 interface ImportTableSelectStageProps {
   data: string[][];
@@ -50,7 +50,7 @@ const ImportTableSelectStage: FC<ImportTableSelectStageProps> = ({
 }) => {
   const [selectedColumns, setSelectedColumns] = useState<SelectedColumns>({});
 
-  const budgetId = useBudgetId();
+  const budgetId = useBudgetStore.use.budgetId();
   const queryClient = useQueryClient();
   const { toast } = useToast();
 

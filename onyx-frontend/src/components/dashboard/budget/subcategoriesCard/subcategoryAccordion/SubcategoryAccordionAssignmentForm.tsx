@@ -8,11 +8,7 @@ import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { FormAssignment, assign } from "@/lib/api/subcategory";
 import useAmountForm from "@/lib/hooks/useAmountForm";
 import { formatToDotDecimal } from "@/lib/utils";
-import {
-  useBudgetMonth,
-  useBudgetYear,
-  useBudgetId,
-} from "@/store/dashboard/budgetStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 interface SubcategoryAccordionAssignmentFormProps {
   defaultAmount: number | undefined;
@@ -24,9 +20,9 @@ interface SubcategoryAccordionAssignmentFormProps {
 const SubcategoryAccordionAssignmentForm: FC<
   SubcategoryAccordionAssignmentFormProps
 > = ({ defaultAmount, currencyToDisplay, subcategoryId, disabled }) => {
-  const selectedBudget = useBudgetId();
-  const month = useBudgetMonth();
-  const year = useBudgetYear();
+  const selectedBudget = useBudgetStore.use.budgetId();
+  const month = useBudgetStore.use.budgetMonth();
+  const year = useBudgetStore.use.budgetYear();
 
   const { control, form, handleSubmit, isDirty, mutate } = useAmountForm({
     defaultAmount: defaultAmount || 0,

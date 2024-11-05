@@ -2,8 +2,8 @@ import { FC, useState } from "react";
 import { useRouter } from "@tanstack/react-router";
 
 import { ChevronDown, LoaderCircle } from "lucide-react";
-import UserAvatar from "@/components/UserAvatar";
-import UserProfileDialogContent from "@/components/dashboard/UserProfileDialogContent";
+import UserAvatar from "@/components/userDropdown/UserAvatar";
+import UserProfileDialogContent from "@/components/userDropdown/UserProfileDialogContent";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,12 +16,14 @@ import {
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { type User } from "@/lib/validation/user";
 import { useLogout } from "@/lib/hooks/auth/useLogout";
+import { useUserProfileStore } from "@/store/ui/userProfileStore";
 
 interface UserDropdownProps {
   user: User;
 }
 
 const UserDropdown: FC<UserDropdownProps> = ({ user }) => {
+  const isDeletingUser = useUserProfileStore.use.isDeleting();
   const [isLoading, setIsLoading] = useState(false);
   const logout = useLogout();
   const router = useRouter();
@@ -39,7 +41,7 @@ const UserDropdown: FC<UserDropdownProps> = ({ user }) => {
     }
   };
 
-  if (isLoading)
+  if (isLoading || isDeletingUser)
     return (
       <>
         <div className="fixed inset-0 z-50 bg-muted/20" />

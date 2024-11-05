@@ -12,6 +12,14 @@ import { isValidIsoDate } from "../dates";
 
 export const RequiredString = z.string().min(1, "Required.");
 
+export const RequiredStringValueSchema = z.object({
+  value: RequiredString,
+});
+
+export type TRequiredValueStringSchema = z.infer<
+  typeof RequiredStringValueSchema
+>;
+
 export const ErrorSchema = z.object({
   code: z.string(),
   message: z.string(),

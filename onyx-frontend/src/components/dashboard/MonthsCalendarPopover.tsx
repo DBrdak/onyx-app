@@ -30,6 +30,7 @@ interface MonthsCalendarPopoverProps {
 export interface MonthsCalendarPopoverHandle {
   increaseMonth: () => void;
   decreaseMonth: () => void;
+  removeSelectedDate: () => void;
 }
 
 const MonthsCalendarPopover = forwardRef<
@@ -88,6 +89,7 @@ const MonthsCalendarPopover = forwardRef<
     useImperativeHandle(ref, () => ({
       increaseMonth: () => changeMonth(1),
       decreaseMonth: () => changeMonth(-1),
+      removeSelectedDate: () => setSelectedDate(undefined),
     }));
 
     const goToPreviousYear = () => {

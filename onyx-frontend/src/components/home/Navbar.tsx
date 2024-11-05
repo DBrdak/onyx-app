@@ -1,14 +1,14 @@
 import { Link } from "@tanstack/react-router";
 
 import Brand from "@/components/Logo";
-import UserDropdown from "@/components/dashboard/UserDropdown";
+import UserDropdown from "@/components/userDropdown/UserDropdown";
 import { buttonVariants } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
-import { useUser } from "@/store/auth/authStore";
+import { useAuthStore } from "@/store/auth/authStore";
 
 const Navbar = () => {
-  const user = useUser();
+  const user = useAuthStore.use.user();
 
   return (
     <div className="z-50 flex w-full items-center justify-between bg-background p-4">

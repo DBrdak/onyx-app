@@ -12,7 +12,7 @@ import { type Account } from "@/lib/validation/account";
 import { type Transaction } from "@/lib/validation/transaction";
 import { useIsFetching } from "@tanstack/react-query";
 import { getTransactionsQueryKey } from "@/lib/api/transaction";
-import { useBudgetSlug } from "@/store/dashboard/budgetStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 interface AccountCardProps {
   selectedAccount: Account;
@@ -27,7 +27,7 @@ const AccountCard: FC<AccountCardProps> = ({
   transactions,
   disabled,
 }) => {
-  const budgetSlug = useBudgetSlug();
+  const budgetSlug = useBudgetStore.use.budgetSlug();
 
   const selectedAccountIndex = useMemo(
     () => accounts.findIndex((a) => a.id === selectedAccount.id),

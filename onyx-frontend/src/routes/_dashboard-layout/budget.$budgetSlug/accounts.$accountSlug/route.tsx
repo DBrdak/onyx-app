@@ -6,15 +6,19 @@ import AccountsLoadingSkeleton from "@/components/dashboard/accounts/AccountsLoa
 import { getAccountsQueryOptions } from "@/lib/api/account";
 import { getTransactionsQueryOptions } from "@/lib/api/transaction";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
-import { initializeBudgetStore } from "@/store/dashboard/boundDashboardStore";
 import {
   getAccountDateRangeEnd,
   getAccountDateRangeStart,
   getAccountId,
   initializeAccountId,
 } from "@/store/dashboard/accountStore";
-import { getBudgetId } from "@/store/dashboard/budgetStore";
+import {
+  getBudgetId,
+  setBudgetId,
+  setBudgetSlug,
+} from "@/store/dashboard/budgetStore";
 import { findBudgetBySlug } from "..";
+import { resetAllDashboardStores } from "@/store/dashboard/resetPersistedDashboardStores";
 
 export const Route = createFileRoute(
   "/_dashboard-layout/budget/$budgetSlug/accounts/$accountSlug",
@@ -24,7 +28,13 @@ export const Route = createFileRoute(
     context: { queryClient },
   }) => {
     const budget = await findBudgetBySlug(queryClient, budgetSlug);
-    initializeBudgetStore(budget.id, budgetSlug);
+    const currentBudgetId = getBudgetId();
+
+    if (budget.id !== currentBudgetId) {
+      resetAllDashboardStores();
+      setBudgetId(budget.id);
+      setBudgetSlug(budget.slug);
+    }
 
     const accounts =
       queryClient.getQueryData(getAccountsQueryOptions(budget.id).queryKey) ??

@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
 
-import UserAvatar from "@/components/UserAvatar";
+import UserAvatar from "@/components/userDropdown/UserAvatar";
 import { Badge } from "@/components/ui/badge";
 
 interface BudgetsTableUserBadgeProps {

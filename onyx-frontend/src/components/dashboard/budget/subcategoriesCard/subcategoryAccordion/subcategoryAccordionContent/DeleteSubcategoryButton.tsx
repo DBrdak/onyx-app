@@ -12,12 +12,12 @@ import {
 } from "@/components/ui/dialog";
 
 import { useDeleteSubcategoryMutation } from "@/lib/hooks/mutations/useDeleteSubcategoryMutation";
-import { useBudgetId, useSubcategoryId } from "@/store/dashboard/budgetStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 const DeleteSubcategoryButton: FC = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const budgetId = useBudgetId();
-  const subcategoryId = useSubcategoryId();
+  const budgetId = useBudgetStore.use.budgetId();
+  const subcategoryId = useBudgetStore.use.subcategoryId();
 
   const onMutationError = () => {
     setIsDeleteDialogOpen(true);

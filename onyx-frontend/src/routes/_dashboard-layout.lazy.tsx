@@ -7,7 +7,7 @@ import {
 
 import { AreaChart, HelpCircle, Undo2, Wallet } from "lucide-react";
 import Logo from "@/components/Logo";
-import UserDropdown from "@/components/dashboard/UserDropdown";
+import UserDropdown from "@/components/userDropdown/UserDropdown";
 import MobileNavigation from "@/components/dashboard/MobileNavigation";
 import AccountsLinksAccordion from "@/components/dashboard/AccountsLinksAccordion";
 
@@ -17,20 +17,20 @@ import { useSingleBudgetLoadingState } from "@/lib/hooks/useSingleBudgetLoadingS
 import { useQuery } from "@tanstack/react-query";
 import { getAccountsQueryOptions } from "@/lib/api/account";
 import { Account } from "@/lib/validation/account";
-import { useUser } from "@/store/auth/authStore";
-import { useBudgetId, useBudgetSlug } from "@/store/dashboard/budgetStore";
+import { useAuthStore } from "@/store/auth/authStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 export const Route = createLazyFileRoute("/_dashboard-layout")({
   component: Layout,
 });
 
 function Layout() {
-  const user = useUser();
+  const user = useAuthStore.use.user();
   const isDesktop = useMediaQuery("(min-width: 1280px)");
   const { pathname } = useLocation();
   const isBudgetListOpen = pathname.endsWith("/budget");
-  const budgetId = useBudgetId();
-  const budgetSlug = useBudgetSlug();
+  const budgetId = useBudgetStore.use.budgetId();
+  const budgetSlug = useBudgetStore.use.budgetSlug();
   const isBudgetSelected = !isBudgetListOpen && budgetId && budgetSlug;
 
   const { isError: isSingleBudgetLoadingError } =
@@ -150,7 +150,7 @@ function Layout() {
                 activeProps={{
                   className: "bg-background text-foreground",
                 }}
-                preload="intent"
+                preload={false}
                 activeOptions={{ exact: true }}
               >
                 <span className="space-x-4 overflow-hidden">
@@ -182,7 +182,7 @@ const MobileLayout = ({
   linksAvailable: boolean;
   accounts: Account[];
 }) => {
-  const user = useUser();
+  const user = useAuthStore.use.user();
 
   return (
     <>

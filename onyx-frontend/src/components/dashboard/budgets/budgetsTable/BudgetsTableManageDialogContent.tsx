@@ -1,15 +1,12 @@
 import { FC } from "react";
 
-import {
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { DialogTitle } from "@/components/ui/dialog";
 import BudgetsTableEditNameForm from "./BudgetsTableEditNameForm";
 import { BudgetInvitationLink, type Budget } from "@/lib/validation/budget";
 import CopyToClipboard from "../../CopyToClipboard";
 import BudgetsTableRemoveMembers from "./BudgetsTableRemoveMembers";
 import { convertSecondsToDaysHours } from "@/lib/dates";
+import UnderlinedDialogContent from "@/components/UnderlinedDialogContent";
 
 interface BudgetsTableManageDialogContentProps {
   budget: Budget;
@@ -21,14 +18,7 @@ const BudgetsTableManageDialogContent: FC<
   BudgetsTableManageDialogContentProps
 > = ({ budget, invitationLink, isInvitationLinkLoading }) => {
   return (
-    <DialogContent
-      className="space-y-4"
-      onOpenAutoFocus={(e) => e.preventDefault()}
-    >
-      <DialogHeader className="border-b border-primary pb-4 pt-2">
-        <DialogTitle className="text-center">Manage Budget</DialogTitle>
-      </DialogHeader>
-
+    <UnderlinedDialogContent title="Manage Budget">
       <div className="space-y-4">
         <DialogTitle>Edit name</DialogTitle>
         <BudgetsTableEditNameForm budget={budget} />
@@ -55,7 +45,7 @@ const BudgetsTableManageDialogContent: FC<
           )}
         </div>
       </div>
-    </DialogContent>
+    </UnderlinedDialogContent>
   );
 };
 

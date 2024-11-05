@@ -22,7 +22,7 @@ import {
 
 import { Account } from "@/lib/validation/account";
 import { cn } from "@/lib/utils";
-import { useBudgetSlug } from "@/store/dashboard/budgetStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 interface MobileNavigationProps {
   linksAvailable: boolean;
@@ -36,7 +36,7 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
   const [isNavOpen, setIsNavOpen] = useState(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const budgetSlug = useBudgetSlug();
+  const budgetSlug = useBudgetStore.use.budgetSlug();
 
   const onBackToBudgetsClick = () => {
     navigate({ to: "/budget" });

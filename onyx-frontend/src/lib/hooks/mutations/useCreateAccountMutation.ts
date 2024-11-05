@@ -1,5 +1,5 @@
 import { createAccount, getAccountsQueryOptions } from "@/lib/api/account";
-import { useBudgetId, useBudgetSlug } from "@/store/dashboard/budgetStore";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 
@@ -14,8 +14,8 @@ export const useCreateAccountMutation = ({
 }: CreateAccountMutationProps) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const budgetSlug = useBudgetSlug();
-  const budgetId = useBudgetId();
+  const budgetSlug = useBudgetStore.use.budgetSlug();
+  const budgetId = useBudgetStore.use.budgetId();
 
   return useMutation({
     mutationKey: ["createAccount"],

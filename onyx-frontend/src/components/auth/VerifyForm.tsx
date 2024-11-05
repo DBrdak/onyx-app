@@ -11,6 +11,7 @@ import {
   FormLabel,
   FormMessage,
   FormControl,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -91,7 +92,12 @@ const VerifyForm: FC<VerifyFormProps> = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
-              <Input {...field} placeholder="Email" />
+              <Input
+                {...field}
+                placeholder="Email"
+                disabled
+                className="disabled:opacity-100"
+              />
               <FormMessage />
             </FormItem>
           )}
@@ -114,6 +120,9 @@ const VerifyForm: FC<VerifyFormProps> = ({
                   </InputOTPGroup>
                 </InputOTP>
               </FormControl>
+              <FormDescription>
+                Verification code has been sent to the email described above.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

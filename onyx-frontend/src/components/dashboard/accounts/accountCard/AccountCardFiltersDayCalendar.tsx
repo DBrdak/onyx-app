@@ -12,16 +12,17 @@ import { Calendar } from "@/components/ui/calendar";
 
 import { cn } from "@/lib/utils";
 import {
-  useAccountActions,
   useAccountDateRangeStart,
-  useAccountPeriod,
+  useAccountStore,
 } from "@/store/dashboard/accountStore";
 
 const AccountCardFiltersDayCalendar: FC = () => {
-  const accPeriod = useAccountPeriod();
+  const accPeriod = useAccountStore.use.accountPeriod();
   const dayStart = useAccountDateRangeStart();
-  const { setAccountDateRangeStart, setAccountDateRangeEnd, setAccountPeriod } =
-    useAccountActions();
+  const setAccountPeriod = useAccountStore.use.setAccountPeriod();
+  const setAccountDateRangeStart =
+    useAccountStore.use.setAccountDateRangeStart();
+  const setAccountDateRangeEnd = useAccountStore.use.setAccountDateRangeEnd();
 
   const [open, setOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState(
