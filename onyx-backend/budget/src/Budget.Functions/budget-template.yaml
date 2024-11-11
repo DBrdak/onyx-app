@@ -818,30 +818,6 @@ Resources:
             Path: /api/v1/budgets/{token}
             Method: GET
             ApiId: !Ref BudgetApi
-  StatsGetCategoriesStats:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-      SyncedEvents:
-        - RootGet
-    Properties:
-      FunctionName: !Sub StatsGetCategoriesStats_${Environment}
-      Runtime: dotnet8
-      CodeUri: .
-      MemorySize: 3008
-      EphemeralStorage:
-        Size: 3008
-      Timeout: 30
-      Role: !Ref FullAccessRoleArn
-      PackageType: Zip
-      Handler: Budget.Functions::Budget.Functions.Functions.Statistics.StatsFunctions_GetCategoriesStats_Generated::GetCategoriesStats
-      Events:
-        RootGet:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/{budgetId}/stats/categories
-            Method: GET
-            ApiId: !Ref BudgetApi
   PurgeUserBudgetData:
     Type: AWS::Serverless::Function
     Metadata:
@@ -885,6 +861,30 @@ Resources:
           Properties:
             Path: /api/v1/{budgetId}/accounts/{accountId}/transactions/bulk
             Method: DELETE
+            ApiId: !Ref BudgetApi
+  GetStatisticalData:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootGet
+    Properties:
+      FunctionName: !Sub GetStatisticalData_${Environment}
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: !Ref FullAccessRoleArn
+      PackageType: Zip
+      Handler: Budget.Functions::Budget.Functions.Functions.Statistics.StatsFunctions_GetStatisticalData_Generated::GetStatisticalData
+      Events:
+        RootGet:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/{budgetId}/stats
+            Method: GET
             ApiId: !Ref BudgetApi
 Outputs:
   ApiURL:

@@ -1,7 +1,7 @@
 ﻿using Amazon.Lambda.Annotations;
 using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.APIGatewayEvents;
-using Budget.Application.Statistics.Categories.GetCategoryStats;
+using Budget.Application.Statistics;
 using Budget.Functions.Functions.Shared;
 using LambdaKernel;
 using MediatR;
@@ -16,22 +16,18 @@ internal class StatsFunctions : BaseFunction
     {
     }
 
-    [LambdaFunction(ResourceName = $"Stats{nameof(GetCategoriesStats)}")]
-    [HttpApi(LambdaHttpMethod.Get, $"{statsBaseRoute}/categories")]
-    public async Task<APIGatewayHttpApiV2ProxyResponse> GetCategoriesStats(
+    [LambdaFunction(ResourceName = $"{nameof(GetStatisticalData)}")]
+    [HttpApi(LambdaHttpMethod.Get, $"{statsBaseRoute}")]
+    public async Task<APIGatewayHttpApiV2ProxyResponse> GetStatisticalData(
         string budgetId,
-        [FromQuery]int fromYear,
-        [FromQuery] int fromMonth,
-        [FromQuery] int toYear,
-        [FromQuery] int toMonth,
         APIGatewayHttpApiV2ProxyRequest requestContext)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
-        var query = new GetCategoryStatsQuery(fromMonth, fromYear, toMonth, toYear);
+        var query = new GetStatisticalDataQuery();
 
         var result = await Sender.Send(query);
 
-        return result.ReturnAPIResponse(200, 400);
+        return result.ReturnAPIResponse(200, 404);
     }
 }
