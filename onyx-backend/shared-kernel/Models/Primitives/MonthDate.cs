@@ -12,6 +12,7 @@ public sealed record MonthDate
     /// </summary>
     public int Month { get; init; }
     public int Year { get; init; }
+    public long BegginingOfTheMonthEpoch => new DateTimeOffset(Year, Month, 1, 0, 0, 0, TimeSpan.Zero).ToUnixTimeMilliseconds();
     private const int maxMonth = 12;
     private const int minMonth = 1;
 
@@ -84,6 +85,22 @@ public sealed record MonthDate
 
         return Math.Abs(totalMonths2 - totalMonths1);
     }
+
+    public static readonly IReadOnlyDictionary<int, string> MonthNames = new Dictionary<int,string>
+    {
+        {1, "January"},
+        {2, "February"},
+        {3, "March"},
+        {4, "April"},
+        {5, "May"},
+        {6, "June"},
+        {7, "July"},
+        {8, "August"},
+        {9, "September"},
+        {10, "October"},
+        {11, "November"},
+        {12, "December"}
+    };
 
     // Operators
     public static MonthDate operator ++(MonthDate date) =>

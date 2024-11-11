@@ -47,7 +47,7 @@ internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserComma
                 user.ChangeUsername(request.NewUsername),
             _ when !string.IsNullOrWhiteSpace(request.NewEmail) &&
                    !string.IsNullOrWhiteSpace(request.VerificationCode) =>
-                user.ChangeEmail(request.NewEmail, request.VerificationCode),
+                await UpdateEmail(request.NewEmail, request.VerificationCode, user),
             _ => new Error("UpdateUserCommand.InvalidInput", "Invalid input for user update")
         };
 
