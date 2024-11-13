@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Models.Responses;
+using Newtonsoft.Json.Linq;
 
 namespace Identity.Infrastructure.Authentication;
 
@@ -134,6 +135,16 @@ internal sealed class JwtService : IJwtService
         {
             return Result.Failure<string>(tokenCreationFailedError);
         }
+    }
+
+    public string GetEmailFromGoogleToken(string googleToken)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jwtToken = handler.ReadJwtToken(googleToken);
+
+        var emailClaim = jwtToken.Claims.FirstOrDefault(c => c.Type.ToLower() == "email");
+
+        return emailClaim?.Value;
     }
 
     public Result<string> GetUserIdFromToken(string encodedToken)

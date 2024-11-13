@@ -1,8 +1,5 @@
-﻿using System.Transactions;
-using Budget.Application.Contracts.Models;
-using Budget.Application.Statistics.Categories;
+﻿using Budget.Application.Contracts.Models;
 using Budget.Application.Statistics.Shared;
-using Budget.Domain.Transactions;
 using Models.Primitives;
 using Transaction = Budget.Domain.Transactions.Transaction;
 

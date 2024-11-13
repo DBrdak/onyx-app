@@ -1,11 +1,9 @@
 using Abstractions.Messaging;
-using Amazon.Lambda.Core;
 using Budget.Application.Accounts.Models;
 using Budget.Domain.Accounts;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
 using Models.Responses;
-using Newtonsoft.Json;
 
 namespace Budget.Application.Accounts.BulkRemoveTransactions;
 

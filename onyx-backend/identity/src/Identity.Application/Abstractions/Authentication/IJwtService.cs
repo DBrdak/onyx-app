@@ -13,4 +13,6 @@ public interface IJwtService
     Result<string> GenerateLongLivedToken(UserId userId);
 
     Result<string> GetBudgetsIdsFromToken(string token);
+
+    string GetEmailFromGoogleToken(string googleToken);
 }

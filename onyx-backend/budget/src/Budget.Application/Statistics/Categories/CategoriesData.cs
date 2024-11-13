@@ -1,20 +1,16 @@
 ﻿using Budget.Application.Contracts.Models;
 using Budget.Application.Statistics.Shared;
-using Budget.Application.Subcategories.Models;
 using Budget.Domain.Categories;
 using Budget.Domain.Subcategories;
-using Budget.Domain.Transactions;
 using Models.Primitives;
-using System.Transactions;
-using System.Xml.Linq;
 
 namespace Budget.Application.Statistics.Categories;
 
 public sealed record CategoriesData : IStatisticalData
 {
-    public IReadOnlyList<CategoriesMonthlyData> MonthlyData => _monthlyData;
+    public IReadOnlyDictionary<string, IEnumerable<CategoryMonthlyData>> Data => _data;
 
-    private readonly List<CategoriesMonthlyData> _monthlyData = [];
+    private readonly Dictionary<string, IEnumerable<CategoryMonthlyData>> _data = [];
     private readonly IEnumerable<Category> _categories;
     private readonly IEnumerable<Subcategory> _subcategories;
     private readonly Domain.Budgets.Budget _budget;
@@ -31,41 +27,51 @@ public sealed record CategoriesData : IStatisticalData
 
     public void Calculate()
     {
-        if (!_subcategories.Any() || 
-            !_subcategories.SelectMany(s => s.Assignments).Any())
+        foreach (var category in _categories)
         {
-            return;
+            var groupedAssignments = _subcategories
+                .Where(s => category.SubcategoriesId.Contains(s.Id))
+                .SelectMany(s => s.Assignments)
+                .GroupBy(a => a.Month)
+                .OrderBy(g => g.Key.BegginingOfTheMonthEpoch)
+                .ToList();
+
+            if (!groupedAssignments.Any())
+            {
+                continue;
+            }
+
+            var monthlyData = groupedAssignments.Select(
+                group => new CategoryMonthlyData(
+                    MonthModel.FromDomainModel(group.Key),
+                    MoneyModel.FromDomainModel(
+                        new Money(group.Sum(a => a.ActualAmount.Amount), _budget.BaseCurrency)),
+                    MoneyModel.FromDomainModel(
+                        new Money(group.Sum(a => a.ActualAmount.Amount), _budget.BaseCurrency))));
+
+            _data.Add(category.Name.Value, monthlyData);
         }
 
-        var chronologigalMonths = _subcategories
+        var allGroupedAssignments = _subcategories
+            .Where(s => _categories.Select(c => c.SubcategoriesId.Contains(s.Id)).Any())
             .SelectMany(s => s.Assignments)
-            .Select(a => a.Month)
-            .OrderBy(month => month.BegginingOfTheMonthEpoch)
+            .GroupBy(a => a.Month)
+            .OrderBy(g => g.Key.BegginingOfTheMonthEpoch)
             .ToList();
 
-        var periodCreateResult = MonthPeriod.Create(chronologigalMonths.First(), chronologigalMonths.Last());
-
-        if (periodCreateResult.IsFailure)
+        if (!allGroupedAssignments.Any())
         {
             return;
         }
 
-        var period = periodCreateResult.Value;
+        var allMonthlyData = allGroupedAssignments.Select(
+            group => new CategoryMonthlyData(
+                MonthModel.FromDomainModel(group.Key),
+                MoneyModel.FromDomainModel(
+                    new Money(group.Sum(a => a.ActualAmount.Amount), _budget.BaseCurrency)),
+                MoneyModel.FromDomainModel(
+                    new Money(group.Sum(a => a.ActualAmount.Amount), _budget.BaseCurrency))));
 
-        foreach (var month in period.ToMonthsArray())
-        {
-            var categoriesMonthlyData = (from category in _categories
-                let name = category.Name.Value
-                let subcategories = _subcategories.Where(s => category.SubcategoriesId.Any(c => c == s.Id))
-                let assignments = _subcategories.SelectMany(s => s.Assignments.Where(a => a.Month == month)).ToList()
-                let spentAmount = new Money(assignments.Sum(a => a.ActualAmount.Amount), _budget.BaseCurrency)
-                let assignedAmount = new Money(assignments.Sum(a => a.AssignedAmount.Amount), _budget.BaseCurrency)
-                select new CategoryMonthlyData(
-                    name,
-                    MoneyModel.FromDomainModel(spentAmount),
-                    MoneyModel.FromDomainModel(assignedAmount))).ToList();
-
-            _monthlyData.Add(new CategoriesMonthlyData(month, categoriesMonthlyData));
-        }
+        _data.Add("all", allMonthlyData);
     }
 }

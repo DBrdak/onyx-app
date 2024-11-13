@@ -1,5 +1,4 @@
 ﻿using Amazon.DynamoDBv2.DocumentModel;
-using Amazon.Lambda.Core;
 using Budget.Application.Abstractions.Identity;
 using Budget.Domain.Accounts;
 using Budget.Domain.Counterparties;
@@ -9,7 +8,6 @@ using Budget.Infrastructure.Data.DataModels.Transactions;
 using Extensions;
 using Models.Primitives;
 using Models.Responses;
-using Newtonsoft.Json;
 using SharedDAL;
 using SharedDAL.DataModels.Abstractions;
 

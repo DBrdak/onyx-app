@@ -4,12 +4,10 @@ using Budget.Domain.Accounts;
 using Budget.Domain.Counterparties;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
-using Extensions;
 using Models.Primitives;
 using Models.Responses;
 using System.Globalization;
 using Amazon.Lambda.Core;
-using Microsoft.Extensions.Logging;
 using Transaction = Budget.Domain.Transactions.Transaction;
 
 namespace Budget.Application.Transactions.GetTransactions;

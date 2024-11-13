@@ -407,6 +407,54 @@ Resources:
       Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Access.AccessFunction_FunctionHandler_Generated::FunctionHandler
+  GoogleLogin:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootGet
+    Properties:
+      FunctionName: !Sub GoogleLogin_${Environment}
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: !Ref FullAccessRoleArn
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_GoogleLogin_Generated::GoogleLogin
+      Events:
+        RootGet:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/auth/google/login
+            Method: GET
+            ApiId: !Ref IdentityApi
+  GoogleCallback:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootPost
+    Properties:
+      FunctionName: !Sub GoogleCallback_${Environment}
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: !Ref FullAccessRoleArn
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_GoogleCallback_Generated::GoogleCallback
+      Events:
+        RootPost:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/auth/google/callback
+            Method: POST
+            ApiId: !Ref IdentityApi
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

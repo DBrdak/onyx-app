@@ -8,7 +8,6 @@ using Budget.Domain.Categories;
 using Budget.Domain.Counterparties;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
-using Models.Primitives;
 
 namespace Budget.Application.Statistics.Shared;
 
