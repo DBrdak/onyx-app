@@ -129,7 +129,7 @@ public sealed class AuthFunctions : BaseFunction
 
 
     [LambdaFunction(ResourceName = nameof(GoogleCallback))]
-    [HttpApi(LambdaHttpMethod.Post, $"{authBaseRoute}/google/callback")]
+    [HttpApi(LambdaHttpMethod.Get, $"{authBaseRoute}/google/callback")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GoogleCallback(APIGatewayHttpApiV2ProxyRequest request)
     {
         _ = request.QueryStringParameters.TryGetValue("code", out var code);

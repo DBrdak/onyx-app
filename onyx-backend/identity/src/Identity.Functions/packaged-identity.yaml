@@ -68,7 +68,7 @@ Resources:
       FunctionName:
         Fn::Sub: Login_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -98,7 +98,7 @@ Resources:
       FunctionName:
         Fn::Sub: Register_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -128,7 +128,7 @@ Resources:
       FunctionName:
         Fn::Sub: VerifyEmail_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -158,7 +158,7 @@ Resources:
       FunctionName:
         Fn::Sub: ResendEmail_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -188,7 +188,7 @@ Resources:
       FunctionName:
         Fn::Sub: Refresh_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -218,7 +218,7 @@ Resources:
       FunctionName:
         Fn::Sub: ForgotPassword_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -248,7 +248,7 @@ Resources:
       FunctionName:
         Fn::Sub: NewPassword_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -278,7 +278,7 @@ Resources:
       FunctionName:
         Fn::Sub: GetUser_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -306,7 +306,7 @@ Resources:
       FunctionName:
         Fn::Sub: UpdateUser_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -334,7 +334,7 @@ Resources:
       FunctionName:
         Fn::Sub: RequestEmailChange_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -362,7 +362,7 @@ Resources:
       FunctionName:
         Fn::Sub: Logout_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -390,7 +390,7 @@ Resources:
       FunctionName:
         Fn::Sub: RemoveUser_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -416,7 +416,7 @@ Resources:
       FunctionName:
         Fn::Sub: AddBudgetIdForUser_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -440,7 +440,7 @@ Resources:
       FunctionName:
         Fn::Sub: RemoveBudgetIdForUser_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -464,7 +464,7 @@ Resources:
       FunctionName:
         Fn::Sub: LambdaAuthorizer_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -484,7 +484,7 @@ Resources:
       FunctionName:
         Fn::Sub: GoogleLogin_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -501,18 +501,20 @@ Resources:
             Method: GET
             ApiId:
               Ref: IdentityApi
+            Auth:
+              Authorizer: NONE
   GoogleCallback:
     Type: AWS::Serverless::Function
     Metadata:
       SamResourceId: GoogleCallback
       SyncedEvents:
-      - RootPost
+      - RootGet
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
         Fn::Sub: GoogleCallback_${Environment}
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/fc756e28ecf394d44524b7c046e17d64
+      CodeUri: s3://onyx-default/ebc266dd41da8d3ead73d4d0fe4c8247
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -522,13 +524,11 @@ Resources:
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_GoogleCallback_Generated::GoogleCallback
       Events:
-        RootPost:
+        RootGet:
           Type: HttpApi
           Properties:
             Path: /api/v1/auth/google/callback
-            Method: POST
-            ApiId:
-              Ref: IdentityApi
+            Method: GET
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

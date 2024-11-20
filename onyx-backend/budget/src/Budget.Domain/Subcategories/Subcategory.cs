@@ -140,17 +140,21 @@ public sealed class Subcategory : BudgetOwnedEntity<SubcategoryId>
 
         if (assignment is null)
         {
-            var monthDate = MonthDate.FromDateTime(transaction.TransactedAt);
-            assignment = Assign(
-                    monthDate.Value.Month,
-                    monthDate.Value.Year,
-                    new(
-                        0,
-                        transaction.BudgetAmount.Currency))
-                .Value;
+            var monthDate = MonthDate.FromDateTime(transaction.TransactedAt).Value;
+
+            if (monthDate == MonthDate.Current)
+            {
+                assignment = Assign(
+                        monthDate.Month,
+                        monthDate.Year,
+                        new(
+                            0,
+                            transaction.BudgetAmount.Currency))
+                    .Value;
+            }
         }
 
-        assignment.Transact(transaction);
+        assignment?.Transact(transaction);
 
         Target?.Transact(transaction);
 

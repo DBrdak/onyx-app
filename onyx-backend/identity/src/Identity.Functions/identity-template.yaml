@@ -431,12 +431,14 @@ Resources:
             Path: /api/v1/auth/google/login
             Method: GET
             ApiId: !Ref IdentityApi
+            Auth:
+              Authorizer: NONE
   GoogleCallback:
     Type: AWS::Serverless::Function
     Metadata:
       Tool: Amazon.Lambda.Annotations
       SyncedEvents:
-        - RootPost
+        - RootGet
     Properties:
       FunctionName: !Sub GoogleCallback_${Environment}
       Runtime: dotnet8
@@ -449,12 +451,11 @@ Resources:
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_GoogleCallback_Generated::GoogleCallback
       Events:
-        RootPost:
+        RootGet:
           Type: HttpApi
           Properties:
             Path: /api/v1/auth/google/callback
-            Method: POST
-            ApiId: !Ref IdentityApi
+            Method: GET
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment

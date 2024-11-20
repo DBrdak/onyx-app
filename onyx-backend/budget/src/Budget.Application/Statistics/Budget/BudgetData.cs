@@ -53,7 +53,7 @@ public sealed record BudgetData : IStatisticalData
 
             _monthlyData.Add(
                 new BudgetMonthlyData(
-                    month,
+                    MonthModel.FromDomainModel(month), 
                     MoneyModel.FromDomainModel(spentAmount),
                     MoneyModel.FromDomainModel(earnedAmount)));
         }

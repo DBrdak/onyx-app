@@ -13,8 +13,8 @@ internal sealed class GoogleCallbackCommandHandler : ICommandHandler<GoogleCallb
     private readonly IConfiguration _configuration;
     private readonly IJwtService _jwtService;
     private readonly IUserRepository _userRepository;
-    private string Secret => _configuration["authentication/google/secret"];
-    private string ClientId => _configuration["authentication/google/id"];
+    private string Secret => _configuration["authentication:google:secret"];
+    private string ClientId => _configuration["authentication:google:id"];
     private const string TokenUrl = "https://oauth2.googleapis.com/token";
 
     public GoogleCallbackCommandHandler(IConfiguration configuration, IJwtService jwtService, IUserRepository userRepository)

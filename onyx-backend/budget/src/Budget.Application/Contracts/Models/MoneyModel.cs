@@ -5,8 +5,8 @@ namespace Budget.Application.Contracts.Models;
 
 public sealed record MoneyModel
 {
-    public decimal Amount { get; private set; }
-    public string Currency { get; private set; }
+    public decimal Amount { get; set; }
+    public string Currency { get; set; }
 
     [System.Text.Json.Serialization.JsonConstructor]
     [Newtonsoft.Json.JsonConstructor]

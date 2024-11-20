@@ -2,4 +2,4 @@
 
 namespace Budget.Application.Statistics.Accounts;
 
-public sealed record AccountMonthlyData(string AccountName, MoneyModel SpentAmount, MoneyModel EarnedAmount);
+public sealed record AccountMonthlyData(MonthModel Month, MoneyModel SpentAmount, MoneyModel EarnedAmount);

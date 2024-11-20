@@ -1,16 +1,18 @@
 ﻿using Budget.Application.Contracts.Models;
+using Budget.Application.Statistics.Categories;
 using Budget.Application.Statistics.Shared;
 using Budget.Domain.Accounts;
 using Budget.Domain.Transactions;
 using Models.Primitives;
+using System.Security.Principal;
 
 namespace Budget.Application.Statistics.Accounts;
 
 public sealed record AccountsData : IStatisticalData
 {
-    public IReadOnlyCollection<AccountsMonthlyData> MonthlyData => _monthlyData;
+    public IReadOnlyDictionary<string, IEnumerable<AccountMonthlyData>> Data => _data;
 
-    private readonly List<AccountsMonthlyData> _monthlyData = new();
+    private readonly Dictionary<string, IEnumerable<AccountMonthlyData>> _data = [];
     private readonly IEnumerable<Account> _accounts;
     private readonly IEnumerable<Transaction> _transactions;
     private readonly Domain.Budgets.Budget _budget;
@@ -24,46 +26,54 @@ public sealed record AccountsData : IStatisticalData
 
     public void Calculate()
     {
-        if (!_accounts.Any() || !_transactions.Any())
+        foreach (var account in _accounts)
         {
-            return;
-        }
-
-        var chronologigalDates = _transactions
-            .Select(t => t.TransactedAt)
-            .OrderBy(date => date)
-            .ToList();
-
-        var periodCreateResult = MonthPeriod.Create(chronologigalDates.First(), chronologigalDates.Last());
-
-        if (periodCreateResult.IsFailure)
-        {
-            return;
-        }
-
-        var period = periodCreateResult.Value;
-
-        foreach (var month in period.ToMonthsArray())
-        {
-            var accountsMonthlyData = (from account in _accounts
-                                       let name = account.Name.Value
-                                       let transactions = _transactions.Where(
-                                           t => t.AccountId == account.Id && t.TransactedAt.Month == month.Month)
-                                       let spentAmount = new Money(
-                                           transactions.Where(t => t.Amount < 0)
-                                               .Sum(t => t.Amount.Amount),
-                                           _budget.BaseCurrency)
-                                       let earnedAmount = new Money(
-                                           transactions.Where(t => t.Amount > 0)
-                                               .Sum(t => t.Amount.Amount),
-                                           _budget.BaseCurrency)
-                                       select new AccountMonthlyData(
-                                           name,
-                                           MoneyModel.FromDomainModel(spentAmount),
-                                           MoneyModel.FromDomainModel(earnedAmount)))
+            var groupedTransactions = _transactions
+                .Where(t => t.AccountId == account.Id)
+                .GroupBy(t => MonthDate.FromDateTime(t.TransactedAt).Value)
+                .OrderBy(g => g.Key.BegginingOfTheMonthEpoch)
                 .ToList();
 
-            _monthlyData.Add(new AccountsMonthlyData(month, accountsMonthlyData));
+            if (!groupedTransactions.Any())
+            {
+                continue;
+            }
+
+            var monthlyData = groupedTransactions.Select(
+                group => new AccountMonthlyData(
+                    MonthModel.FromDomainModel(group.Key),
+                    MoneyModel.FromDomainModel(
+                        new Money(group.Sum(t => t.BudgetAmount.Amount), _budget.BaseCurrency)),
+                    MoneyModel.FromDomainModel(
+                        new Money(group.Sum(t => t.BudgetAmount.Amount), _budget.BaseCurrency))))
+                .ToList();
+
+            _data.TryAdd(account.Name.Value, monthlyData);
+        }
+
+        var allGroupedTransactions = _transactions
+            .Where(t => _accounts.Any(a => a.Id == t.AccountId))
+            .GroupBy(t => MonthDate.FromDateTime(t.TransactedAt).Value)
+            .OrderBy(g => g.Key.BegginingOfTheMonthEpoch)
+            .ToList();
+
+        if (!allGroupedTransactions.Any())
+        {
+            return;
+        }
+
+        var allMonthlyData = allGroupedTransactions.Select(
+            group => new AccountMonthlyData(
+                MonthModel.FromDomainModel(group.Key),
+                MoneyModel.FromDomainModel(
+                    new Money(group.Where(t => t.BudgetAmount < 0).Sum(t => t.BudgetAmount.Amount), _budget.BaseCurrency)),
+                MoneyModel.FromDomainModel(
+                    new Money(group.Where(t => t.BudgetAmount > 0).Sum(t => t.BudgetAmount.Amount), _budget.BaseCurrency))))
+            .ToList();
+
+        if (!_data.TryAdd("all", allMonthlyData))
+        {
+            _data.Add($"all_{Guid.NewGuid()}", allMonthlyData);
         }
     }
 }

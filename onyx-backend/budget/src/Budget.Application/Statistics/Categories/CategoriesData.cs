@@ -1,5 +1,6 @@
 ﻿using Budget.Application.Contracts.Models;
 using Budget.Application.Statistics.Shared;
+using Budget.Domain.Accounts;
 using Budget.Domain.Categories;
 using Budget.Domain.Subcategories;
 using Models.Primitives;
@@ -47,9 +48,10 @@ public sealed record CategoriesData : IStatisticalData
                     MoneyModel.FromDomainModel(
                         new Money(group.Sum(a => a.ActualAmount.Amount), _budget.BaseCurrency)),
                     MoneyModel.FromDomainModel(
-                        new Money(group.Sum(a => a.ActualAmount.Amount), _budget.BaseCurrency))));
+                        new Money(group.Sum(a => a.AssignedAmount.Amount), _budget.BaseCurrency))))
+            .ToList();
 
-            _data.Add(category.Name.Value, monthlyData);
+            _data.TryAdd(category.Name.Value, monthlyData);
         }
 
         var allGroupedAssignments = _subcategories
@@ -70,8 +72,12 @@ public sealed record CategoriesData : IStatisticalData
                 MoneyModel.FromDomainModel(
                     new Money(group.Sum(a => a.ActualAmount.Amount), _budget.BaseCurrency)),
                 MoneyModel.FromDomainModel(
-                    new Money(group.Sum(a => a.ActualAmount.Amount), _budget.BaseCurrency))));
+                    new Money(group.Sum(a => a.AssignedAmount.Amount), _budget.BaseCurrency))))
+            .ToList();
 
-        _data.Add("all", allMonthlyData);
+        if (!_data.TryAdd("all", allMonthlyData))
+        {
+            _data.Add($"all_{Guid.NewGuid()}", allMonthlyData);
+        }
     }
 }
