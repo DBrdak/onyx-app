@@ -2,7 +2,6 @@
 using Budget.Application.Statistics.Budget;
 using Budget.Application.Statistics.Categories;
 using Budget.Application.Statistics.Counterparties;
-using Budget.Application.Statistics.Subcategories;
 using Budget.Domain.Accounts;
 using Budget.Domain.Categories;
 using Budget.Domain.Counterparties;
@@ -17,7 +16,7 @@ public sealed record StatisticalData : IStatisticalData
     public BudgetData Budget { get; private set; }
     public CategoriesData Categories { get; private set; }
     public CounterpartiesData Counterparties { get; private set; }
-    public SubcategoriesData Subcategories { get; private set; }
+    //public SubcategoriesData Subcategories { get; private set; }
 
     public StatisticalData(
         List<Account> accounts,
@@ -31,7 +30,7 @@ public sealed record StatisticalData : IStatisticalData
         Categories = new CategoriesData(categories, subcategories, budget);
         Budget = new BudgetData(transactions, budget);
         Counterparties = new CounterpartiesData(counterparties, transactions, budget);
-        Subcategories = new SubcategoriesData(subcategories, budget);
+        //Subcategories = new SubcategoriesData(subcategories, budget);
     }
 
     public void Calculate()
@@ -40,13 +39,13 @@ public sealed record StatisticalData : IStatisticalData
         var calculateBudgetTask = Task.Run(Budget.Calculate);
         var calculateCategoriesTask = Task.Run(Categories.Calculate);
         var calculateCounterpartiesTask = Task.Run(Counterparties.Calculate);
-        var calculateSubcategoriesTask = Task.Run(Subcategories.Calculate);
+        //var calculateSubcategoriesTask = Task.Run(Subcategories.Calculate);
 
         Task.WaitAll(
             calculateAccountsTask,
             calculateBudgetTask,
             calculateCategoriesTask,
-            calculateCounterpartiesTask,
-            calculateSubcategoriesTask);
+            calculateCounterpartiesTask/*,
+            calculateSubcategoriesTask*/);
     }
 }

@@ -3,4 +3,8 @@ using Models.Primitives;
 
 namespace Budget.Application.Statistics.Categories;
 
-public sealed record CategoryMonthlyData(MonthModel Month, MoneyModel SpentAmount, MoneyModel AssignedAmount);
+public sealed record CategoryMonthlyData(
+    MonthModel Month,
+    MoneyModel SpentAmount,
+    MoneyModel AssignedAmount,
+    Dictionary<string, (MoneyModel SpentAmount, MoneyModel AssignedAmount)> Subcategories);
