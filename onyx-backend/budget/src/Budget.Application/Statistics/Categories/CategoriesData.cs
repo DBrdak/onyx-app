@@ -47,7 +47,7 @@ public sealed record CategoriesData : IStatisticalData
             }
 
             var subcategoriesMonthlyRawData = subcategories.Select(
-                    s => new SubcategoryMonthlyData(
+                    s => new SubcategoryTempData(
                         s.Name.Value,
                         MoneyModel.FromDomainModel(
                             new(s.Assignments.Sum(a => a.ActualAmount.Amount), _budget.BaseCurrency)),
@@ -74,7 +74,7 @@ public sealed record CategoriesData : IStatisticalData
 
 
         var allSubcategoriesMonthlyRawData = _subcategories.Select(
-                s => new SubcategoryMonthlyData(
+                s => new SubcategoryTempData(
                     s.Name.Value,
                     MoneyModel.FromDomainModel(
                         new(s.Assignments.Sum(a => a.ActualAmount.Amount), _budget.BaseCurrency)),
