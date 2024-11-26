@@ -85,59 +85,69 @@ const StatisticsDateNavbar: FC = () => {
   };
 
   return (
-    <Card className="space-y-2 p-2 md:flex md:space-x-6 md:space-y-0">
-      <div className="flex w-full items-center space-x-2">
-        <p className="min-w-12 text-sm font-medium tracking-wide md:min-w-fit">
-          Year:
-        </p>
-        <StatisticsDateNavbarYearSelect
-          setTempSelectedYear={onTempYearSelect}
-          tempSelectedYear={tempSelectedYear}
-        />
-      </div>
-      <div className="flex w-full items-center space-x-2">
-        <p className="min-w-12 text-sm font-medium tracking-wide md:min-w-fit">
-          From:
-        </p>
-        <MonthsCalendarPopover
-          ref={tempSelectedMonthFromRef}
-          defaultMonthDate={statisticsDateRangeStart}
-          onSelect={onTempMonthStartSelect}
-          increaseYearDisabled={(nextYear) => nextYear > parseInt(selectedYear)}
-          decreaseYearDisabled={(nextYear) => nextYear < parseInt(selectedYear)}
-          monthSelectDisabled={(selectedMonthIndex, selectedYear) => {
-            const tempYearNum = parseInt(tempSelectedYear);
-            if (tempYearNum !== selectedYear) return true;
-            if (selectedMonthIndex > new Date().getMonth()) return true;
-            if (!tempSelectedMonthEnd) return false;
-            if (selectedMonthIndex >= tempSelectedMonthEnd.getMonth())
-              return true;
-            return false;
-          }}
-        />
-      </div>
-      <div className="flex w-full items-center space-x-2">
-        <p className="min-w-12 text-sm font-medium tracking-wide md:min-w-fit">
-          To:
-        </p>
-        <MonthsCalendarPopover
-          ref={tempSelectedMonthEndRef}
-          onSelect={onTempMonthEndSelect}
-          defaultMonthDate={statisticsDateRangeEnd}
-          increaseYearDisabled={(nextYear) => nextYear > parseInt(selectedYear)}
-          decreaseYearDisabled={(nextYear) => nextYear < parseInt(selectedYear)}
-          monthSelectDisabled={(selectedMonthIndex, selectedYear) => {
-            const tempYearNum = parseInt(tempSelectedYear);
-            if (tempYearNum !== selectedYear) return true;
-            if (selectedMonthIndex > new Date().getMonth()) return true;
-            if (!tempSelectedMonthFrom) return false;
-            if (selectedMonthIndex <= tempSelectedMonthFrom.getMonth())
-              return true;
-            return false;
-          }}
-        />
-      </div>
-    </Card>
+    <div className="lg:px-4">
+      <Card className="space-y-2 p-2 md:flex md:space-x-6 md:space-y-0 ">
+        <div className="flex w-full items-center space-x-2">
+          <p className="min-w-12 text-sm font-medium tracking-wide md:min-w-fit">
+            Year:
+          </p>
+          <StatisticsDateNavbarYearSelect
+            setTempSelectedYear={onTempYearSelect}
+            tempSelectedYear={tempSelectedYear}
+          />
+        </div>
+        <div className="flex w-full items-center space-x-2">
+          <p className="min-w-12 text-sm font-medium tracking-wide md:min-w-fit">
+            From:
+          </p>
+          <MonthsCalendarPopover
+            ref={tempSelectedMonthFromRef}
+            defaultMonthDate={statisticsDateRangeStart}
+            onSelect={onTempMonthStartSelect}
+            increaseYearDisabled={(nextYear) =>
+              nextYear > parseInt(selectedYear)
+            }
+            decreaseYearDisabled={(nextYear) =>
+              nextYear < parseInt(selectedYear)
+            }
+            monthSelectDisabled={(selectedMonthIndex, selectedYear) => {
+              const tempYearNum = parseInt(tempSelectedYear);
+              if (tempYearNum !== selectedYear) return true;
+              if (selectedMonthIndex > new Date().getMonth()) return true;
+              if (!tempSelectedMonthEnd) return false;
+              if (selectedMonthIndex >= tempSelectedMonthEnd.getMonth())
+                return true;
+              return false;
+            }}
+          />
+        </div>
+        <div className="flex w-full items-center space-x-2">
+          <p className="min-w-12 text-sm font-medium tracking-wide md:min-w-fit">
+            To:
+          </p>
+          <MonthsCalendarPopover
+            ref={tempSelectedMonthEndRef}
+            onSelect={onTempMonthEndSelect}
+            defaultMonthDate={statisticsDateRangeEnd}
+            increaseYearDisabled={(nextYear) =>
+              nextYear > parseInt(selectedYear)
+            }
+            decreaseYearDisabled={(nextYear) =>
+              nextYear < parseInt(selectedYear)
+            }
+            monthSelectDisabled={(selectedMonthIndex, selectedYear) => {
+              const tempYearNum = parseInt(tempSelectedYear);
+              if (tempYearNum !== selectedYear) return true;
+              if (selectedMonthIndex > new Date().getMonth()) return true;
+              if (!tempSelectedMonthFrom) return false;
+              if (selectedMonthIndex <= tempSelectedMonthFrom.getMonth())
+                return true;
+              return false;
+            }}
+          />
+        </div>
+      </Card>
+    </div>
   );
 };
 

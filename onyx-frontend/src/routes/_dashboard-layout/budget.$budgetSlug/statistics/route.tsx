@@ -1,17 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { findBudgetBySlug } from "..";
-import { getCategoryStatsQueryOptions } from "@/lib/api/statistics";
 import {
   getBudgetId,
   setBudgetId,
   setBudgetSlug,
 } from "@/store/dashboard/budgetStore";
-import {
-  getStatisticsDateRangeEnd,
-  getStatisticsDateRangeStart,
-} from "@/store/dashboard/statisticsStore";
 import { resetAllDashboardStores } from "@/store/dashboard/resetPersistedDashboardStores";
+import { getStatisticsQueryOptions } from "@/lib/api/statistics";
 
 export const Route = createFileRoute(
   "/_dashboard-layout/budget/$budgetSlug/statistics",
@@ -28,11 +24,7 @@ export const Route = createFileRoute(
   },
   loader: ({ context: { queryClient } }) => {
     const budgetId = getBudgetId();
-    const dateRangeStart = getStatisticsDateRangeStart();
-    const dateRangeEnd = getStatisticsDateRangeEnd();
 
-    queryClient.ensureQueryData(
-      getCategoryStatsQueryOptions(budgetId, { dateRangeEnd, dateRangeStart }),
-    );
+    queryClient.ensureQueryData(getStatisticsQueryOptions(budgetId));
   },
 });
