@@ -20,9 +20,10 @@ import { useUserProfileStore } from "@/store/ui/userProfileStore";
 
 interface UserDropdownProps {
   user: User;
+  isSidebar?: boolean;
 }
 
-const UserDropdown: FC<UserDropdownProps> = ({ user }) => {
+const UserDropdown: FC<UserDropdownProps> = ({ user, isSidebar }) => {
   const isDeletingUser = useUserProfileStore.use.isDeleting();
   const [isLoading, setIsLoading] = useState(false);
   const logout = useLogout();
@@ -54,21 +55,40 @@ const UserDropdown: FC<UserDropdownProps> = ({ user }) => {
   return (
     <Dialog>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="justify-between space-x-2 rounded-full border-none p-0 pr-1 duration-500"
+        {isSidebar ? (
+          <DropdownMenuTrigger
+            asChild
             disabled={!user || isLoading}
+            className="block cursor-pointer rounded-l-full py-2 pl-9 pr-4 transition-all duration-500 hover:bg-accent hover:text-foreground"
           >
-            <UserAvatar />
-            <ChevronDown />
-          </Button>
-        </DropdownMenuTrigger>
+            <span className="flex items-center justify-between">
+              <p className="flex items-center space-x-4">
+                <UserAvatar />
+                <span className="truncate text-sm font-semibold tracking-wide">
+                  {user.username}
+                </span>
+              </p>
+              <ChevronDown className="size-6 shrink-0 -rotate-90 opacity-60" />
+            </span>
+          </DropdownMenuTrigger>
+        ) : (
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="justify-between space-x-2 rounded-full border-none p-0 pr-1 duration-500"
+              disabled={!user || isLoading}
+            >
+              <UserAvatar />
+              <ChevronDown />
+            </Button>
+          </DropdownMenuTrigger>
+        )}
 
         <DropdownMenuContent
-          sideOffset={10}
-          align="end"
           className="max-w-[150px]"
+          align="end"
+          sideOffset={5}
+          side={isSidebar ? "right" : "bottom"}
         >
           <DropdownMenuLabel className="truncate text-center capitalize">
             {user.username}
