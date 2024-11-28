@@ -31,6 +31,7 @@ public sealed record SubcategoriesData : IStatisticalData
 
             if (!groupedAssignments.Any())
             {
+                _data.TryAdd(subcategory.Name.Value.ToLower(), []);
                 continue;
             }
 
@@ -60,31 +61,6 @@ public sealed record SubcategoriesData : IStatisticalData
             }
 
             _data[subcategory.Name.Value.ToLower()] = data;
-        }
-
-        var allGroupedAssignments = _subcategories
-            .SelectMany(s => s.Assignments)
-            .GroupBy(a => a.Month)
-            .OrderBy(g => g.Key.BegginingOfTheMonthEpoch)
-            .ToList();
-
-        if (!allGroupedAssignments.Any())
-        {
-            return;
-        }
-
-        var allMonthlyData = allGroupedAssignments.Select(
-            group => new SubcategoryMonthlyData(
-                MonthModel.FromDomainModel(group.Key),
-                MoneyModel.FromDomainModel(
-                    new Money(group.Sum(a => a.ActualAmount.Amount), _budget.BaseCurrency)),
-                MoneyModel.FromDomainModel(
-                    new Money(group.Sum(a => a.AssignedAmount.Amount), _budget.BaseCurrency))))
-            .ToList();
-
-        if (!_data.TryAdd("all", allMonthlyData))
-        {
-            _data.Add($"all_{Guid.NewGuid()}", allMonthlyData);
         }
     }
 }
