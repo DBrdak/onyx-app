@@ -27,6 +27,7 @@ Resources:
       CorsConfiguration:
         AllowOrigins:
         - http://localhost:5173
+        - https://onyx.dbrdak.com
         AllowHeaders:
         - authorization
         - content-type
@@ -40,8 +41,6 @@ Resources:
         AllowCredentials: true
       DefaultRouteSettings:
         DetailedMetricsEnabled: true
-      StageName:
-        Ref: Environment
       Auth:
         DefaultAuthorizer: LambdaAuthorizer
         Authorizers:
@@ -66,9 +65,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: Login_${Environment}
+        Fn::Sub: Login
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -96,9 +95,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: Register_${Environment}
+        Fn::Sub: Register
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -126,9 +125,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: VerifyEmail_${Environment}
+        Fn::Sub: VerifyEmail
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -156,9 +155,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: ResendEmail_${Environment}
+        Fn::Sub: ResendEmail
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -186,9 +185,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: Refresh_${Environment}
+        Fn::Sub: Refresh
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -216,9 +215,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: ForgotPassword_${Environment}
+        Fn::Sub: ForgotPassword
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -246,9 +245,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: NewPassword_${Environment}
+        Fn::Sub: NewPassword
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -276,9 +275,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: GetUser_${Environment}
+        Fn::Sub: GetUser
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -304,9 +303,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: UpdateUser_${Environment}
+        Fn::Sub: UpdateUser
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -332,9 +331,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: RequestEmailChange_${Environment}
+        Fn::Sub: RequestEmailChange
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -360,9 +359,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: Logout_${Environment}
+        Fn::Sub: Logout
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -388,9 +387,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: RemoveUser_${Environment}
+        Fn::Sub: RemoveUser
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -414,9 +413,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: AddBudgetIdForUser_${Environment}
+        Fn::Sub: AddBudgetIdForUser
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -438,9 +437,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: RemoveBudgetIdForUser_${Environment}
+        Fn::Sub: RemoveBudgetIdForUser
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -462,9 +461,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: LambdaAuthorizer_${Environment}
+        Fn::Sub: LambdaAuthorizer
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -482,9 +481,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: GoogleLogin_${Environment}
+        Fn::Sub: GoogleLogin
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -512,9 +511,9 @@ Resources:
       Tool: Amazon.Lambda.Annotations
     Properties:
       FunctionName:
-        Fn::Sub: GoogleCallback_${Environment}
+        Fn::Sub: GoogleCallback
       Runtime: dotnet8
-      CodeUri: s3://onyx-default/703bce51db81ee462321090a72071195
+      CodeUri: s3://onyx-default/0dcb918559e90d50a8329d3ab305bad1
       MemorySize: 3008
       EphemeralStorage:
         Size: 3008
@@ -529,9 +528,13 @@ Resources:
           Properties:
             Path: /api/v1/auth/google/callback
             Method: GET
+            ApiId:
+              Ref: IdentityApi
+            Auth:
+              Authorizer: NONE
 Outputs:
   ApiURL:
-    Description: API endpoint URL for Prod environment
+    Description: API endpoint URL
     Value:
       Fn::Sub: https://${IdentityApi}.execute-api.${AWS::Region}.amazonaws.com/
   LambdaAuthorizerArn:
