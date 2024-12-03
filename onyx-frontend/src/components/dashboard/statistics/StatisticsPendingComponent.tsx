@@ -26,7 +26,7 @@ const StatisticsPendingComponent = () => {
                   className="h-full w-full origin-bottom animate-grow-bar bg-primary"
                 />
                 <div
-                  key={index}
+                  key={MONTHS.length + index}
                   className="h-[40%] w-full origin-bottom animate-grow-bar bg-primaryDark/40"
                 />
               </>
