@@ -33,7 +33,11 @@ const SidebarAccordion: FC<SidebarAccordionProps> = ({ data }) => {
   return (
     <Accordion type="single" collapsible className="space-y-4">
       {data.map((accData) => (
-        <AccordionItem value={accData.title.label} className="border-b-0">
+        <AccordionItem
+          value={accData.title.label}
+          className="border-b-0"
+          key={accData.title.label}
+        >
           <AccordionTrigger className="rouded-l-full pl-8 pr-4 hover:rounded-l-full hover:text-foreground xl:pl-9">
             <span className="space-x-4 overflow-hidden">
               <accData.title.Icon className="inline-flex size-6 shrink-0" />

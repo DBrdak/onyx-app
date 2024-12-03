@@ -84,12 +84,40 @@ export default {
         blink: {
           "50%": { borderColor: "transparent" },
         },
+        growBar: {
+          "0%, 100%": { transform: "scaleY(0.3)" },
+          "50%": { transform: "scaleY(1)" },
+        },
+        eat: {
+          "0%": {
+            background:
+              "conic-gradient(hsl(var(--primary)/ .7) 55deg, transparent 0 125deg, hsl(var(--primary)/ .7) 0)",
+          },
+          "25%": {
+            background:
+              "conic-gradient(hsl(var(--primary)/ .7) 90deg, transparent 0 90deg, hsl(var(--primary)/ .7) 0)",
+          },
+          "50%": {
+            background:
+              "conic-gradient(hsl(var(--primary)/ .7) 55deg, transparent 0 125deg, hsl(var(--primary)/ .7) 0)",
+          },
+          "75%": {
+            background:
+              "conic-gradient(hsl(var(--primary)/ .7) 90deg, transparent 0 90deg, hsl(var(--primary)/ .7) 0)",
+          },
+          "100%": {
+            background:
+              "conic-gradient(hsl(var(--primary)/ .7) 55deg, transparent 0 125deg, hsl(var(--primary)/ .7) 0)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         typing:
           "typing 3s steps(30) 1s 1 normal both, blink .75s step-end infinite",
+        "grow-bar": "growBar 1.2s ease-in-out infinite",
+        eat: "eat 1s linear infinite",
       },
       height: {
         "900px": "900px",

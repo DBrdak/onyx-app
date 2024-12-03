@@ -114,3 +114,13 @@ export const createInitialChartData = <Labels extends string[]>(
 
   return result;
 };
+
+export const darkenColor = (hsl: string, percent: number): string => {
+  const [hue, saturation, lightness] = hsl
+    .split(" ")
+    .map((v, i) => (i === 0 ? parseInt(v) : parseFloat(v)));
+
+  const newLightness = Math.max(0, lightness - lightness * (percent / 100));
+
+  return `${hue} ${saturation}% ${newLightness.toFixed(1)}%`;
+};

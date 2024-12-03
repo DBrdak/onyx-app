@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 
 import { type TStatisticsValueSchema } from "@/lib/validation/statistics";
 import DropdownStatisticsBarChart from "../statisticsBarChart/DropdownStatisticsBarChart";
@@ -7,6 +7,7 @@ import {
   useStatisticsDateRangeStart,
 } from "@/store/dashboard/statisticsStore";
 import { Card } from "@/components/ui/card";
+import StatisticsSharedPieCharts from "../statisticsPieChart/StatisticsSharedPieCharts";
 
 interface StatisticsCategoryChartsProps {
   statistics: TStatisticsValueSchema;
@@ -18,9 +19,13 @@ const StatisticsCategoryCharts: FC<StatisticsCategoryChartsProps> = ({
   const categories = statistics.categories.data;
   const subcategories = statistics.subcategories.data;
 
-  const [subcategoriesKeys, setSubcategoriesKeys] = useState(
-    Object.keys(subcategories),
+  const categoriesKeys = useMemo(
+    () => Object.keys(categories).filter((c) => c.toLowerCase() !== "all"),
+    [categories],
   );
+  const allSubcategoriesKeys = Object.keys(subcategories);
+  const [subcategoriesKeys, setSubcategoriesKeys] =
+    useState(allSubcategoriesKeys);
 
   const statisticsDateStart = useStatisticsDateRangeStart();
   const statisticsDateRangeEnd = useStatisticsDateRangeEnd();
@@ -48,10 +53,19 @@ const StatisticsCategoryCharts: FC<StatisticsCategoryChartsProps> = ({
           toDate={statisticsDateRangeEnd}
           header="Category:"
           onSelectedChange={onSelectCategoryDropdown}
-          customLegendContent={currency && { currency }}
-          customTooltipContent={currency && { currency }}
+          unit={currency}
         />
       </Card>
+
+      <StatisticsSharedPieCharts
+        statistics={categories}
+        fromDate={statisticsDateStart}
+        toDate={statisticsDateRangeEnd}
+        pieKeys={["spentAmount", "assignedAmount"]}
+        statisticsKeys={categoriesKeys}
+        title="Categories"
+      />
+
       <Card className="px-2 py-4">
         <DropdownStatisticsBarChart
           statistics={subcategories}
@@ -60,10 +74,18 @@ const StatisticsCategoryCharts: FC<StatisticsCategoryChartsProps> = ({
           toDate={statisticsDateRangeEnd}
           header="Subcategory:"
           customDropdownKeys={subcategoriesKeys}
-          customLegendContent={currency && { currency }}
-          customTooltipContent={currency && { currency }}
+          unit={currency}
         />
       </Card>
+
+      <StatisticsSharedPieCharts
+        statistics={subcategories}
+        fromDate={statisticsDateStart}
+        toDate={statisticsDateRangeEnd}
+        pieKeys={["spentAmount", "assignedAmount"]}
+        statisticsKeys={allSubcategoriesKeys}
+        title="Subcategories"
+      />
     </div>
   );
 };

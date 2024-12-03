@@ -18,9 +18,5 @@ function StatisticsCategories() {
     getStatisticsQueryOptions(budgetId),
   );
 
-  return (
-    <>
-      <StatisticsCategoryCharts statistics={statistics} />
-    </>
-  );
+  return <StatisticsCategoryCharts statistics={statistics} />;
 }

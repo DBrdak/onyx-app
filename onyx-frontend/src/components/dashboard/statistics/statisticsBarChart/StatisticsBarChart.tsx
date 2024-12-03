@@ -22,7 +22,7 @@ interface StatisticsBarChartProps {
   chartData: Record<string, string | number>[];
   xAxisKey: string;
   barKeys: string[];
-  customTooltipContent?: Record<string, string>;
+  unit?: string;
   customLegendContent?: Record<string, string>;
 }
 
@@ -32,7 +32,7 @@ const StatisticsBarChart: FC<StatisticsBarChartProps> = ({
   xAxisKey,
   barKeys,
   customLegendContent,
-  customTooltipContent,
+  unit,
 }) => {
   return (
     <ChartContainer
@@ -49,9 +49,7 @@ const StatisticsBarChart: FC<StatisticsBarChartProps> = ({
           tickFormatter={(value) => value.slice(0, 3)}
         />
         <YAxis />
-        <ChartTooltip
-          content={<ChartTooltipContent custom={customTooltipContent} />}
-        />
+        <ChartTooltip content={<ChartTooltipContent unit={unit} />} />
         <ChartLegend
           content={<ChartLegendContent custom={customLegendContent} />}
         />

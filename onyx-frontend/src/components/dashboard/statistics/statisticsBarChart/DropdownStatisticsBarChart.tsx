@@ -26,7 +26,7 @@ interface DropdownStatisticsBarChartProps {
   barKeys: string[];
   header: string;
   customLegendContent?: Record<string, string>;
-  customTooltipContent?: Record<string, string>;
+  unit?: string;
   customDropdownKeys?: string[];
   onSelectedChange?: (value: string) => void;
 }
@@ -38,7 +38,7 @@ const DropdownStatisticsBarChart: FC<DropdownStatisticsBarChartProps> = ({
   barKeys,
   header,
   customLegendContent,
-  customTooltipContent,
+  unit,
   customDropdownKeys,
   onSelectedChange,
 }) => {
@@ -140,7 +140,7 @@ const DropdownStatisticsBarChart: FC<DropdownStatisticsBarChartProps> = ({
         barKeys={barKeys}
         xAxisKey="monthName"
         customLegendContent={customLegendContent}
-        customTooltipContent={customTooltipContent}
+        unit={unit}
       />
     </div>
   );

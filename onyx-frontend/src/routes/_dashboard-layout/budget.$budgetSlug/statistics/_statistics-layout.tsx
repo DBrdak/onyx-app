@@ -9,6 +9,7 @@ import {
 import { resetAllDashboardStores } from "@/store/dashboard/resetPersistedDashboardStores";
 import { getStatisticsQueryOptions } from "@/lib/api/statistics";
 import { getAccountsQueryOptions } from "@/lib/api/account";
+import StatisticsPendingComponent from "@/components/dashboard/statistics/StatisticsPendingComponent";
 
 export const Route = createFileRoute(
   "/_dashboard-layout/budget/$budgetSlug/statistics/_statistics-layout",
@@ -29,4 +30,5 @@ export const Route = createFileRoute(
     queryClient.ensureQueryData(getAccountsQueryOptions(budgetId));
     queryClient.ensureQueryData(getStatisticsQueryOptions(budgetId));
   },
+  pendingComponent: () => <StatisticsPendingComponent />,
 });
