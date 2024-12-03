@@ -40,12 +40,12 @@ public sealed record AccountsData : IStatisticalData
             }
 
             var monthlyData = groupedTransactions.Select(
-                group => new AccountMonthlyData(
-                    MonthModel.FromDomainModel(group.Key),
-                    MoneyModel.FromDomainModel(
-                        new Money(group.Sum(t => t.BudgetAmount.Amount), _budget.BaseCurrency)),
-                    MoneyModel.FromDomainModel(
-                        new Money(group.Sum(t => t.BudgetAmount.Amount), _budget.BaseCurrency))))
+                    group => new AccountMonthlyData(
+                        MonthModel.FromDomainModel(group.Key),
+                        MoneyModel.FromDomainModel(
+                            new Money(group.Where(t => t.BudgetAmount < 0).Sum(t => t.BudgetAmount.Amount), _budget.BaseCurrency)),
+                        MoneyModel.FromDomainModel(
+                            new Money(group.Where(t => t.BudgetAmount > 0).Sum(t => t.BudgetAmount.Amount), _budget.BaseCurrency))))
                 .ToList();
 
             _data.TryAdd(account.Name.Value, monthlyData);

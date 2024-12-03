@@ -127,7 +127,6 @@ public sealed class AuthFunctions : BaseFunction
             };
     }
 
-
     [LambdaFunction(ResourceName = nameof(GoogleCallback))]
     [HttpApi(LambdaHttpMethod.Get, $"{authBaseRoute}/google/callback")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GoogleCallback(APIGatewayHttpApiV2ProxyRequest request)
