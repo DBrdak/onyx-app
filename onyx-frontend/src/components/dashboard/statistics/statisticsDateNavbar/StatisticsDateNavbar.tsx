@@ -1,4 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
+import { useIsFetching } from "@tanstack/react-query";
 
 import StatisticsDateNavbarYearSelect from "@/components/dashboard/statistics/statisticsDateNavbar/StatisticsDateNavbarYearSelect";
 import MonthsCalendarPopover, {
@@ -11,6 +12,8 @@ import {
   useStatisticsDateRangeStart,
   useStatisticsStore,
 } from "@/store/dashboard/statisticsStore";
+import { getStatisticsQueryOptions } from "@/lib/api/statistics";
+import { useBudgetStore } from "@/store/dashboard/budgetStore";
 
 const StatisticsDateNavbar: FC = () => {
   const statisticsDateRangeStart = useStatisticsDateRangeStart();
@@ -20,6 +23,7 @@ const StatisticsDateNavbar: FC = () => {
     useStatisticsStore.use.setStatisticsDateRangeEnd();
   const setStatisticsDateRangeStart =
     useStatisticsStore.use.setStatisticsDateRangeStart();
+  const budgetId = useBudgetStore.use.budgetId();
 
   const [tempSelectedYear, setTempSelectedYear] = useState(selectedYear);
   const [tempSelectedMonthFrom, setTempSelectedMonthFrom] = useState<
@@ -62,7 +66,9 @@ const StatisticsDateNavbar: FC = () => {
     setTempSelectedMonthFrom(undefined);
     if (tempSelectedMonthFromRef.current && tempSelectedMonthEndRef.current) {
       tempSelectedMonthFromRef.current.removeSelectedDate();
+      tempSelectedMonthFromRef.current.setDisplayYear(parseInt(newYear));
       tempSelectedMonthEndRef.current.removeSelectedDate();
+      tempSelectedMonthEndRef.current.setDisplayYear(parseInt(newYear));
     }
   };
 
@@ -84,6 +90,11 @@ const StatisticsDateNavbar: FC = () => {
     }
   };
 
+  const isFetching = useIsFetching({
+    queryKey: getStatisticsQueryOptions(budgetId).queryKey,
+  });
+  const isDisabled = isFetching > 0;
+
   return (
     <div className="lg:px-4">
       <Card className="space-y-2 p-2 md:flex md:space-x-6 md:space-y-0 ">
@@ -94,6 +105,7 @@ const StatisticsDateNavbar: FC = () => {
           <StatisticsDateNavbarYearSelect
             setTempSelectedYear={onTempYearSelect}
             tempSelectedYear={tempSelectedYear}
+            disabled={isDisabled}
           />
         </div>
         <div className="flex w-full items-center space-x-2">
@@ -101,6 +113,8 @@ const StatisticsDateNavbar: FC = () => {
             From:
           </p>
           <MonthsCalendarPopover
+            disabled={isDisabled}
+            hideYearsButtons
             ref={tempSelectedMonthFromRef}
             defaultMonthDate={statisticsDateRangeStart}
             onSelect={onTempMonthStartSelect}
@@ -126,6 +140,8 @@ const StatisticsDateNavbar: FC = () => {
             To:
           </p>
           <MonthsCalendarPopover
+            disabled={isDisabled}
+            hideYearsButtons
             ref={tempSelectedMonthEndRef}
             onSelect={onTempMonthEndSelect}
             defaultMonthDate={statisticsDateRangeEnd}

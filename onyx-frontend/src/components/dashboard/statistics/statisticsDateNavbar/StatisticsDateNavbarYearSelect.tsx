@@ -11,11 +11,12 @@ import {
 interface StatisticsDateNavbarYearSelectProps {
   tempSelectedYear: string;
   setTempSelectedYear: (newYear: string) => void;
+  disabled: boolean;
 }
 
 const StatisticsDateNavbarYearSelect: FC<
   StatisticsDateNavbarYearSelectProps
-> = ({ tempSelectedYear, setTempSelectedYear }) => {
+> = ({ tempSelectedYear, setTempSelectedYear, disabled }) => {
   const availableYears = useMemo(
     () =>
       Array.from({ length: 5 }, (_, i) =>
@@ -25,7 +26,11 @@ const StatisticsDateNavbarYearSelect: FC<
   );
 
   return (
-    <Select value={tempSelectedYear} onValueChange={setTempSelectedYear}>
+    <Select
+      value={tempSelectedYear}
+      onValueChange={setTempSelectedYear}
+      disabled={disabled}
+    >
       <SelectTrigger className="w-full bg-transparent">
         <SelectValue />
       </SelectTrigger>

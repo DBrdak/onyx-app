@@ -23,14 +23,17 @@ interface MonthsCalendarPopoverProps {
     selectedMonthIndex: number,
     currentYear: number,
   ) => boolean;
+  hideYearsButtons?: boolean;
   onSelect: (newMonthDate: Date) => void;
   triggerClassname?: string;
+  disabled?: boolean;
 }
 
 export interface MonthsCalendarPopoverHandle {
   increaseMonth: () => void;
   decreaseMonth: () => void;
   removeSelectedDate: () => void;
+  setDisplayYear: (year: number) => void;
 }
 
 const MonthsCalendarPopover = forwardRef<
@@ -46,6 +49,8 @@ const MonthsCalendarPopover = forwardRef<
       monthSelectDisabled,
       onSelect,
       triggerClassname,
+      hideYearsButtons,
+      disabled,
     },
     ref,
   ) => {
@@ -90,6 +95,7 @@ const MonthsCalendarPopover = forwardRef<
       increaseMonth: () => changeMonth(1),
       decreaseMonth: () => changeMonth(-1),
       removeSelectedDate: () => setSelectedDate(undefined),
+      setDisplayYear: (year: number) => setDisplayYear(year),
     }));
 
     const goToPreviousYear = () => {
@@ -118,6 +124,7 @@ const MonthsCalendarPopover = forwardRef<
             variant="outline"
             className={cn("w-full pl-3 text-left", triggerClassname)}
             onClick={() => setOpen(true)}
+            disabled={disabled}
           >
             <span className="pr-2">
               {selectedDate
@@ -130,7 +137,7 @@ const MonthsCalendarPopover = forwardRef<
         <PopoverContent className="w-auto p-4" align="start">
           <div className="mb-2 grid grid-cols-3 place-items-center gap-1">
             <div>
-              {previousYear && (
+              {!hideYearsButtons && previousYear && (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -146,7 +153,7 @@ const MonthsCalendarPopover = forwardRef<
             </div>
             <span className="text-lg font-medium">{displayYear}</span>
             <div>
-              {nextYear && (
+              {!hideYearsButtons && nextYear && (
                 <Button
                   variant="ghost"
                   size="sm"
