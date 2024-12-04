@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 
 import { Account } from "@/lib/validation/account";
 import { useCreateTransactionForm } from "@/lib/hooks/useCreateTransactionForm";
-import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import CurrencyCombobox from "../../CurrencyCombobox";
 
 interface TransactionsTableCreateFormProps {
@@ -37,19 +36,15 @@ const TransactionsTableCreateForm: FC<TransactionsTableCreateFormProps> = ({
     selectedCurrency,
     isPending,
     selectedSubcategoryName,
-    clearErrors,
     budgetId,
     onSubcategoryChange,
   } = useCreateTransactionForm({ account });
-
-  const formRef = useClickOutside<HTMLFormElement>(() => clearErrors());
 
   return (
     <Form {...form}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-table-layout gap-x-6 py-1"
-        ref={formRef}
       >
         <Button className="h-9 w-9" type="submit" disabled={isPending}>
           <Plus className="shrink-0" />

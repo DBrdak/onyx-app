@@ -189,7 +189,7 @@ export const useCreateTransactionForm = ({ account }: Props) => {
   );
 
   const onSubcategoryChange = (value: string, label: string) => {
-    setValue("subcategoryId", value);
+    setValue("subcategoryId", value, { shouldValidate: true });
     setValue("subcategoryName", label, { shouldValidate: true });
   };
 
