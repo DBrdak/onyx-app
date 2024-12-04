@@ -438,7 +438,7 @@ Resources:
     Metadata:
       Tool: Amazon.Lambda.Annotations
       SyncedEvents:
-        - RootGet
+        - RootPost
     Properties:
       FunctionName: !Sub GoogleCallback
       Runtime: dotnet8
@@ -451,11 +451,11 @@ Resources:
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_GoogleCallback_Generated::GoogleCallback
       Events:
-        RootGet:
+        RootPost:
           Type: HttpApi
           Properties:
             Path: /api/v1/auth/google/callback
-            Method: GET
+            Method: POST
             ApiId: !Ref IdentityApi
             Auth:
               Authorizer: NONE

@@ -14,5 +14,5 @@ public interface IJwtService
 
     Result<string> GetBudgetsIdsFromToken(string token);
 
-    string GetEmailFromGoogleToken(string googleToken);
+    string? GetFieldFromGoogleToken(string fieldName, string googleToken);
 }

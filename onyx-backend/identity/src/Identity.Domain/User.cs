@@ -116,8 +116,49 @@ public sealed class User : Entity<UserId>
         return user;
     }
 
+    public static Result<User> RegisterOAuth(string email, string username)
+    {
+        var emailCreateResult = Email.Create(email);
+
+        if (emailCreateResult.IsFailure)
+        {
+            return Result.Failure<User>(emailCreateResult.Error);
+        }
+
+        var usernameCreateResult = Username.Create(username);
+
+        if (usernameCreateResult.IsFailure)
+        {
+            return Result.Failure<User>(usernameCreateResult.Error);
+        }
+
+        var password = Password.CreateOAuth();
+
+        var user = new User(
+            emailCreateResult.Value,
+            usernameCreateResult.Value,
+            password,
+            DateTime.UtcNow,
+            DateTime.UtcNow,
+            Currency.Usd,
+            false,
+            false,
+            false,
+            null,
+            LoggingGuard.Create(),
+            null,
+            []);
+
+        return user;
+    }
+
     public Result LogIn(string passwordPlainText, string longLivedToken)
     {
+        if (string.IsNullOrWhiteSpace(PasswordHash.Hash))
+        {
+            return UserErrors.UserIsOAuth;
+        }
+
         var passwordVerifyResult = PasswordHash.VerifyPassword(passwordPlainText);
 
         if (passwordVerifyResult.IsFailure)

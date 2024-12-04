@@ -21,6 +21,9 @@ public sealed record Password
         Hash = hash;
     }
 
+    internal static Password CreateOAuth() => 
+        new(string.Empty);
+
     internal static Result<Password> Create(string plainTextPassword)
     {
         if (!Regex.IsMatch(plainTextPassword, passwordPattern))

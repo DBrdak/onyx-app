@@ -1,4 +1,5 @@
 using Abstractions.Messaging;
+using Extensions;
 using Microsoft.Extensions.Configuration;
 using Models.Responses;
 using static System.Formats.Asn1.AsnWriter;
@@ -9,8 +10,7 @@ internal sealed class GoogleLoginQueryHandler : IQueryHandler<GoogleLoginQuery, 
 {
     private readonly IConfiguration _configuration;
     private const string AuthUrl = "https://accounts.google.com/o/oauth2/v2/auth";
-    private const string RedirectUri = "https://13nq38cpog.execute-api.eu-central-1.amazonaws.com/api/v1/auth/google/callback";
-    private const string Scope = "https://www.googleapis.com/auth/userinfo.email";
+    private const string Scope = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
     private string ClientId => _configuration["authentication:google:id"];
 
     public GoogleLoginQueryHandler(IConfiguration configuration)
@@ -18,6 +18,16 @@ internal sealed class GoogleLoginQueryHandler : IQueryHandler<GoogleLoginQuery, 
         _configuration = configuration;
     }
 
-    public async Task<Result<string>> Handle(GoogleLoginQuery request, CancellationToken cancellationToken) =>
-        $"{AuthUrl}?client_id={ClientId}&redirect_uri={RedirectUri}&response_type=code&scope={Scope}";
+    public async Task<Result<string>> Handle(GoogleLoginQuery request, CancellationToken cancellationToken)
+    {
+        var origin = request.Origin;
+
+        if (string.IsNullOrWhiteSpace(origin) || !origin.IsUrl())
+        {
+            return GoogleLoginErrors.InvalidHost;
+        }
+
+        return await Task.FromResult(
+            new Uri($"{AuthUrl}?client_id={ClientId}&redirect_uri={origin}/login/google&response_type=code&scope={Scope}").AbsolutePath);
+    }
 }

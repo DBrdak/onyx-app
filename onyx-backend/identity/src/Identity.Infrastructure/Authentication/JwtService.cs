@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Amazon.Lambda.Core;
 using Identity.Application.Abstractions.Authentication;
 using Identity.Domain;
 using Identity.Infrastructure.Authentication.Models;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Models.Responses;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Identity.Infrastructure.Authentication;
@@ -137,14 +139,19 @@ internal sealed class JwtService : IJwtService
         }
     }
 
-    public string GetEmailFromGoogleToken(string googleToken)
+    public string? GetFieldFromGoogleToken(string fieldName, string googleToken)
     {
         var handler = new JwtSecurityTokenHandler();
         var jwtToken = handler.ReadJwtToken(googleToken);
 
-        var emailClaim = jwtToken.Claims.FirstOrDefault(c => c.Type.ToLower() == "email");
+        LambdaLogger.Log(JsonConvert.SerializeObject(jwtToken.Claims));
 
-        return emailClaim?.Value;
+        return fieldName.ToLower() switch
+        {
+            "email" => jwtToken.Claims.FirstOrDefault(c => c.Type.ToLower() == "email")?.Value,
+            "given_name" => jwtToken.Claims.FirstOrDefault(c => c.Type.ToLower() == "given_name")?.Value,
+            _ => null
+        };
     }
 
     public Result<string> GetUserIdFromToken(string encodedToken)

@@ -29,6 +29,7 @@ internal static class UserErrors
     internal static readonly Error BudgetAlreadyAdded = new(
         "User.BudgetIds.BudgetAlreadyAdded",
         "User is already a member of this budget");
+    public static Error UserIsOAuth => new ("User.OAuth", "Please log in using OAuth");
 
     internal static Error UserLocked(int seconds) => new (
         "User.Locked",

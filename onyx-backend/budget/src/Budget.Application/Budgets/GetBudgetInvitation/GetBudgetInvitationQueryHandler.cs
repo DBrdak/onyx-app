@@ -22,7 +22,7 @@ internal sealed class GetBudgetInvitationQueryHandler : IQueryHandler<GetBudgetI
     {
         var clientUrl = request.BaseUrl;
 
-        if (!string.IsNullOrWhiteSpace(clientUrl) && clientUrl.IsUrl())
+        if (string.IsNullOrWhiteSpace(clientUrl) || !clientUrl.IsUrl())
         {
             return GetBudgetInvitationErrors.InvalidHost;
         }

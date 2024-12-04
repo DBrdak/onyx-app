@@ -112,9 +112,10 @@ public sealed class AuthFunctions : BaseFunction
 
     [LambdaFunction(ResourceName = nameof(GoogleLogin))]
     [HttpApi(LambdaHttpMethod.Get, $"{authBaseRoute}/google/login")]
-    public async Task<APIGatewayHttpApiV2ProxyResponse> GoogleLogin()
+    public async Task<APIGatewayHttpApiV2ProxyResponse> GoogleLogin(APIGatewayHttpApiV2ProxyRequest request)
     {
-        var query = new GoogleLoginQuery();
+        _ = request.Headers.TryGetValue("origin", out var origin);
+        var query = new GoogleLoginQuery(origin);
 
         var result = await Sender.Send(query);
 
@@ -128,12 +129,13 @@ public sealed class AuthFunctions : BaseFunction
     }
 
     [LambdaFunction(ResourceName = nameof(GoogleCallback))]
-    [HttpApi(LambdaHttpMethod.Get, $"{authBaseRoute}/google/callback")]
+    [HttpApi(LambdaHttpMethod.Post, $"{authBaseRoute}/google/callback")]
     public async Task<APIGatewayHttpApiV2ProxyResponse> GoogleCallback(APIGatewayHttpApiV2ProxyRequest request)
     {
         _ = request.QueryStringParameters.TryGetValue("code", out var code);
+        _ = request.Headers.TryGetValue("origin", out var origin);
 
-        var command = new GoogleCallbackCommand(code);
+        var command = new GoogleCallbackCommand(code, origin);
 
         var result = await Sender.Send(command);
 

@@ -1,12 +1,16 @@
 using Abstractions.Messaging;
 using Amazon.Lambda.Core;
+using Extensions;
 using Identity.Application.Abstractions.Authentication;
+using Identity.Application.Auth.GoogleLogin;
 using Identity.Application.Contracts.Models;
 using Identity.Domain;
 using Microsoft.Extensions.Configuration;
+using Models.Primitives;
 using Models.Responses;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Xml.Linq;
 
 namespace Identity.Application.Auth.GoogleCallback;
 
@@ -28,15 +32,22 @@ internal sealed class GoogleCallbackCommandHandler : ICommandHandler<GoogleCallb
 
     public async Task<Result<UserModel>> Handle(GoogleCallbackCommand request, CancellationToken cancellationToken)
     {
-        var googleToken = await GetGoogleToken(request.Code);
+        var origin = request.Origin;
+
+        if (string.IsNullOrWhiteSpace(origin) || !origin.IsUrl())
+        {
+            return GoogleLoginErrors.InvalidHost;
+        }
+
+        var googleToken = await GetGoogleToken(request.Code, origin);
 
         if (googleToken is null)
         {
             return new Error("Google.InvalidCode", "Invalid Google code has been provided");
         }
 
-        var email = _jwtService.GetEmailFromGoogleToken(googleToken);
-        var userEmailCreateResult = Email.Create(email);
+        var email = _jwtService.GetFieldFromGoogleToken("email", googleToken);
+        var userEmailCreateResult = Email.Create(email ?? "");
 
         if (userEmailCreateResult.IsFailure)
         {
@@ -46,9 +57,18 @@ internal sealed class GoogleCallbackCommandHandler : ICommandHandler<GoogleCallb
         var userEmail = userEmailCreateResult.Value;
         var userGetResult = await _userRepository.GetByEmailAsync(userEmail, cancellationToken);
 
+        userGetResult = userGetResult.IsFailure ?
+            Domain.User.RegisterOAuth(
+                email ?? string.Empty,
+                _jwtService.GetFieldFromGoogleToken(
+                    "given_name",
+                    googleToken) ??
+                string.Empty) :
+            userGetResult;
+
         if (userGetResult.IsFailure)
         {
-            return UserModel.CreateUnregistered(userEmail);
+            return userGetResult.Error;
         }
 
         var user = userGetResult.Value;
@@ -83,7 +103,7 @@ internal sealed class GoogleCallbackCommandHandler : ICommandHandler<GoogleCallb
         return UserModel.FromDomainModel(user, new AuthorizationToken(jwt, longLivedToken));
     }
 
-    private async Task<string?> GetGoogleToken(string? code)
+    private async Task<string?> GetGoogleToken(string? code, string origin)
     {
         if(string.IsNullOrWhiteSpace(code))
         {
@@ -96,17 +116,12 @@ internal sealed class GoogleCallbackCommandHandler : ICommandHandler<GoogleCallb
             ["code"] = code,
             ["client_id"] = ClientId,
             ["client_secret"] = Secret,
-            ["redirect_uri"] = "https://13nq38cpog.execute-api.eu-central-1.amazonaws.com/api/v1/auth/google/callback",
+            ["redirect_uri"] = $"{origin}/google/login",
             ["grant_type"] = "authorization_code"
         }));
 
         var content = await response.Content.ReadAsStringAsync();
         var tokenData = JObject.Parse(content);
-
-        LambdaLogger.Log($"code: {code}");
-        LambdaLogger.Log($"response content: {content}");
-        LambdaLogger.Log($"token: {JsonConvert.SerializeObject(tokenData)}");
-        LambdaLogger.Log($"retireved token_id: {JsonConvert.SerializeObject(tokenData["id_token"])}");
 
         return tokenData["id_token"]?.ToString();
     }
