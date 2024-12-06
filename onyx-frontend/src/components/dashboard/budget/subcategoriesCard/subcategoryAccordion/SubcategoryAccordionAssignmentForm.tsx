@@ -9,6 +9,8 @@ import { FormAssignment, assign } from "@/lib/api/subcategory";
 import useAmountForm from "@/lib/hooks/useAmountForm";
 import { formatToDotDecimal } from "@/lib/utils";
 import { useBudgetStore } from "@/store/dashboard/budgetStore";
+import { invalidateDependencies } from "@/lib/api/queryKeys";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface SubcategoryAccordionAssignmentFormProps {
   defaultAmount: number | undefined;
@@ -20,6 +22,7 @@ interface SubcategoryAccordionAssignmentFormProps {
 const SubcategoryAccordionAssignmentForm: FC<
   SubcategoryAccordionAssignmentFormProps
 > = ({ defaultAmount, currencyToDisplay, subcategoryId, disabled }) => {
+  const queryClient = useQueryClient();
   const selectedBudget = useBudgetStore.use.budgetId();
   const month = useBudgetStore.use.budgetMonth();
   const year = useBudgetStore.use.budgetYear();
@@ -28,8 +31,13 @@ const SubcategoryAccordionAssignmentForm: FC<
     defaultAmount: defaultAmount || 0,
     mutationFn: assign,
     budgetId: selectedBudget,
-    month,
-    year,
+    onMutationSuccess: () =>
+      invalidateDependencies(
+        queryClient,
+        "categories",
+        { budgetId: selectedBudget },
+        true,
+      ),
   });
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {

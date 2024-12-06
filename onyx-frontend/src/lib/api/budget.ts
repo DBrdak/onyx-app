@@ -10,6 +10,7 @@ import {
 } from "@/lib/validation/budget";
 import { ToAssignSchema } from "@/lib/validation/subcategory";
 import { Money } from "@/lib/validation/base";
+import { queryBudgetKeys } from "./queryKeys";
 
 interface GetToAssign {
   month: string | number;
@@ -23,7 +24,7 @@ const getBudgets = async () => {
 };
 
 export const getBudgetsQueryOptions = queryOptions({
-  queryKey: ["budgets"],
+  queryKey: queryBudgetKeys.budget,
   queryFn: getBudgets,
 });
 
@@ -68,7 +69,7 @@ export const getToAssignQueryOptions = ({
   budgetId,
 }: GetToAssign) =>
   queryOptions({
-    queryKey: ["toAssign", budgetId],
+    queryKey: queryBudgetKeys.toAssign(budgetId),
     queryFn: () => getToAssign({ month, year, budgetId }),
   });
 

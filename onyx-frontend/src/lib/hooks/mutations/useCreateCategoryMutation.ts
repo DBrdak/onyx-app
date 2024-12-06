@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { createCategory, getCategoriesQueryOptions } from "@/lib/api/category";
+import { invalidateDependencies } from "@/lib/api/queryKeys";
 
 interface CategoryMutationProps {
   budgetId: string;
@@ -53,6 +54,7 @@ export const useCreateCategoryMutation = ({
       onMutationError(err);
     },
     onSuccess: () => {
+      invalidateDependencies(queryClient, "categories", { budgetId }, true);
       onMutationSuccess();
     },
   });

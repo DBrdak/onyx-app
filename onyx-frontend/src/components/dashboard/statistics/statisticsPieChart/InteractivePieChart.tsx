@@ -58,8 +58,6 @@ const InteractivePieChart: FC<InteractivePieChartProps> = ({
 
   if (filteredData.length === 0) return null;
 
-  console.log(filteredData, active, activeIndex);
-
   return (
     <Card data-chart={id} className="flex w-full flex-col">
       <ChartStyle id={id} config={config} />

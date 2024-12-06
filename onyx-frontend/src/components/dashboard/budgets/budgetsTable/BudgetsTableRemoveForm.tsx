@@ -18,6 +18,7 @@ import { RequiredString } from "@/lib/validation/base";
 import { BudgetMember } from "@/lib/validation/user";
 import { getBudgetsQueryOptions, removeBudgetMember } from "@/lib/api/budget";
 import { getErrorMessage } from "@/lib/utils";
+import { invalidateDependencies } from "@/lib/api/queryKeys";
 
 interface BudgetsTableRemoveFormProps {
   member: BudgetMember | null;
@@ -63,6 +64,7 @@ const BudgetsTableRemoveForm: FC<BudgetsTableRemoveFormProps> = ({
       });
     },
     onSuccess: () => {
+      invalidateDependencies(queryClient, "budget", {}, true);
       setSelectedMember(null);
     },
   });

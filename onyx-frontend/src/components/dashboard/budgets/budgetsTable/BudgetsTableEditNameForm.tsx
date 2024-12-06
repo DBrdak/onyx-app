@@ -11,6 +11,7 @@ import { NameInputSchema, type TNameInputSchema } from "@/lib/validation/base";
 import { type Budget } from "@/lib/validation/budget";
 import { editBudgetName, getBudgetsQueryOptions } from "@/lib/api/budget";
 import { getErrorMessage } from "@/lib/utils";
+import { invalidateDependencies } from "@/lib/api/queryKeys";
 
 interface BudgetsTableEditNameFormProps {
   budget: Budget;
@@ -51,6 +52,9 @@ const BudgetsTableEditNameForm: FC<BudgetsTableEditNameFormProps> = ({
       setError("name", {
         message,
       });
+    },
+    onSuccess: () => {
+      invalidateDependencies(queryClient, "budget", {}, true);
     },
   });
 

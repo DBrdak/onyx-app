@@ -4,19 +4,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { formatToDecimalString, getErrorMessage } from "@/lib/utils";
-import { getToAssignQueryOptions } from "../api/budget";
 
 const useAmountForm = ({
   defaultAmount,
   budgetId,
   mutationFn,
-  month,
-  year,
+  onMutationSuccess,
 }: {
   defaultAmount: number;
   budgetId: string;
-  month: string | number;
-  year: string | number;
+  onMutationSuccess?: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mutationFn: (args: any) => Promise<any>;
 }) => {
@@ -40,13 +37,8 @@ const useAmountForm = ({
 
   const { mutate, isError } = useMutation({
     mutationFn,
-    onSettled: async () => {
-      return Promise.all([
-        queryClient.invalidateQueries(getCategoriesQueryOptions(budgetId)),
-        queryClient.invalidateQueries(
-          getToAssignQueryOptions({ month, year, budgetId }),
-        ),
-      ]);
+    onSettled: () => {
+      queryClient.invalidateQueries(getCategoriesQueryOptions(budgetId));
     },
     onError: (error) => {
       console.error("Mutation error:", error);
@@ -55,6 +47,11 @@ const useAmountForm = ({
         title: "Error",
         description,
       });
+    },
+    onSuccess: () => {
+      if (onMutationSuccess) {
+        onMutationSuccess();
+      }
     },
   });
 

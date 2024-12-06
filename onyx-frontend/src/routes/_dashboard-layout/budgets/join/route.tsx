@@ -8,6 +8,7 @@ import { JoinBudgetParamsSchema } from "@/lib/validation/searchParams";
 import { getBudgetsQueryOptions, joinBudget } from "@/lib/api/budget";
 import { getErrorMessage } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
+import { invalidateDependencies } from "@/lib/api/queryKeys";
 
 export const Route = createFileRoute("/_dashboard-layout/budgets/join")({
   component: Invitation,
@@ -26,6 +27,7 @@ function Invitation() {
       await queryClient.invalidateQueries(getBudgetsQueryOptions);
     },
     onSuccess: async () => {
+      invalidateDependencies(queryClient, "budget", {}, true);
       await navigate({ to: "/budget" });
     },
     onError: (err) => {

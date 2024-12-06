@@ -6,6 +6,7 @@ import {
   StatisticsSchemaResult,
   TStatisticsValueSchema,
 } from "@/lib/validation/statistics";
+import { queryBudgetKeys } from "./queryKeys";
 
 export const getStatistics = async (budgetId: string) => {
   const { data } = await budgetApi.get(`/${budgetId}/stats`);
@@ -19,6 +20,6 @@ export const getStatistics = async (budgetId: string) => {
 
 export const getStatisticsQueryOptions = (budgetId: string) =>
   queryOptions({
-    queryKey: ["statistics", budgetId],
+    queryKey: queryBudgetKeys.statistics(budgetId),
     queryFn: () => getStatistics(budgetId),
   });

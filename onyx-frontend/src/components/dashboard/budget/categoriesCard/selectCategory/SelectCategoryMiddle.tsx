@@ -25,6 +25,7 @@ import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { cn, getErrorMessage } from "@/lib/utils";
 import { type SelectCategorySectionProps } from "@/components/dashboard/budget/categoriesCard/selectCategory/SelectCategory";
 import { useBudgetStore } from "@/store/dashboard/budgetStore";
+import { invalidateDependencies } from "@/lib/api/queryKeys";
 
 const SelectCategoryMiddle: FC<SelectCategorySectionProps> = ({
   isEdit,
@@ -71,6 +72,9 @@ const SelectCategoryMiddle: FC<SelectCategorySectionProps> = ({
       return queryClient.invalidateQueries({
         queryKey: getCategoriesQueryOptions(budgetId).queryKey,
       });
+    },
+    onSuccess: () => {
+      invalidateDependencies(queryClient, "categories", { budgetId }, true);
     },
   });
 

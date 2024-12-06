@@ -16,6 +16,7 @@ import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { getErrorMessage } from "@/lib/utils";
 import { useBudgetStore } from "@/store/dashboard/budgetStore";
+import { invalidateDependencies } from "@/lib/api/queryKeys";
 
 interface SubcategoryAccordionNameFormProps {
   subcategory: Subcategory;
@@ -61,6 +62,9 @@ const SubcategoryAccordionNameForm: FC<SubcategoryAccordionNameFormProps> = ({
         description,
       });
       setTimeout(() => setFocus("name"), 0);
+    },
+    onSuccess: () => {
+      invalidateDependencies(queryClient, "categories", { budgetId }, true);
     },
   });
 

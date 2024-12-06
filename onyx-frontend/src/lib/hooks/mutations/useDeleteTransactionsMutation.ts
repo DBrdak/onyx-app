@@ -2,11 +2,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   deleteMultipleTransactions,
   getTransactionsQueryKey,
-  getTransactionsQueryOptions,
 } from "@/lib/api/transaction";
-import { getAccountsQueryOptions } from "@/lib/api/account";
-import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { Transaction } from "@/lib/validation/transaction";
+import { invalidateDependencies } from "@/lib/api/queryKeys";
 
 interface Props {
   accountId: string;
@@ -45,15 +43,15 @@ export const useDeleteTransactionsMutation = ({
       }
     },
     onSettled: () => {
-      Promise.all([
-        queryClient.invalidateQueries(
-          getTransactionsQueryOptions(budgetId, accountId, {
-            accountId,
-          }),
-        ),
-        queryClient.invalidateQueries(getAccountsQueryOptions(budgetId)),
-        queryClient.invalidateQueries(getCategoriesQueryOptions(budgetId)),
-      ]);
+      queryClient.invalidateQueries({ queryKey: transactionsQueryKey });
+    },
+    onSuccess: () => {
+      invalidateDependencies(
+        queryClient,
+        "transactions",
+        { budgetId, accountId },
+        true,
+      );
     },
   });
 };

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { createBudget, getBudgetsQueryOptions } from "@/lib/api/budget";
+import { invalidateDependencies } from "@/lib/api/queryKeys";
 
 interface CreateBudgetMutationProps {
   onMutationError: (error: Error) => void;
@@ -61,6 +62,7 @@ export const useCreateBudgetMutation = ({
       onMutationError(err);
     },
     onSuccess: () => {
+      invalidateDependencies(queryClient, "budget", {}, true);
       onMutationSuccess();
     },
   });
