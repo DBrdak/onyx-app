@@ -31,6 +31,7 @@ interface InteractivePieChartProps {
   title?: string;
   description?: string;
   total: string;
+  unit?: string;
 }
 
 const InteractivePieChart: FC<InteractivePieChartProps> = ({
@@ -40,6 +41,7 @@ const InteractivePieChart: FC<InteractivePieChartProps> = ({
   config,
   dataKey,
   total,
+  unit,
 }) => {
   const filteredData = useMemo(
     () => data.filter((d) => (d[dataKey] as number) > 0),
@@ -110,7 +112,7 @@ const InteractivePieChart: FC<InteractivePieChartProps> = ({
           <PieChart>
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel unit="%" />}
+              content={<ChartTooltipContent hideLabel unit={unit} />}
             />
             <Pie
               data={filteredData}

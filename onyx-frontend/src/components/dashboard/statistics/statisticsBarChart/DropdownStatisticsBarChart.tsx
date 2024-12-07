@@ -81,7 +81,7 @@ const DropdownStatisticsBarChart: FC<DropdownStatisticsBarChartProps> = ({
       barKeys.forEach((barKey) => {
         const money = stat[barKey as keyof typeof stat];
         if (money && typeof money === "object" && "amount" in money) {
-          value[barKey] = (value[barKey] || 0) + (money.amount || 0);
+          value[barKey] = Math.abs((value[barKey] || 0) + (money.amount || 0));
         }
       });
     });

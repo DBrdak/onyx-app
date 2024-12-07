@@ -21,11 +21,8 @@ type Total = {
 } & Record<DynamicPieKeys, number>;
 
 type PieData = {
-  sumSpentAmount: number;
   spentAmount: number;
-  sumAssignedAmount?: number;
   assignedAmount?: number;
-  sumEarnedAmount?: number;
   earnedAmount?: number;
   fill: string;
   label: string;
@@ -51,14 +48,6 @@ const StatisticsSharedPieCharts: FC<StatisticsSharedPieChartsProps> = ({
   toDate,
   title,
 }) => {
-  const [sumPieKey, sharePieKey]: [
-    "sumAssignedAmount" | "sumEarnedAmount",
-    "assignedAmount" | "earnedAmount",
-  ] =
-    pieKeys[1] === "assignedAmount"
-      ? ["sumAssignedAmount", "assignedAmount"]
-      : ["sumEarnedAmount", "earnedAmount"];
-
   const { pieData, config, total } = useMemo(() => {
     const total: Total = {
       spentAmount: 0,
@@ -75,12 +64,12 @@ const StatisticsSharedPieCharts: FC<StatisticsSharedPieChartsProps> = ({
     const maxSelectedMonth = toDate.getMonth() + 1;
     const selectedYear = fromDate.getFullYear();
 
+    console.log(statistics);
+
     statisticsKeys.forEach((statKey) => {
       const current: PieData = {
-        sumSpentAmount: 0,
         spentAmount: 0,
-        [sharePieKey]: 0,
-        [sumPieKey]: 0,
+        [pieKeys[1]]: 0,
         fill: `hsl(${color})`,
         label: statKey,
       };
@@ -93,18 +82,20 @@ const StatisticsSharedPieCharts: FC<StatisticsSharedPieChartsProps> = ({
           month.month >= minSelectedMonth &&
           month.month <= maxSelectedMonth
         ) {
-          current.sumSpentAmount += spentAmount.amount;
-          total.spentAmount += spentAmount.amount;
+          const absSpentAmount = Math.abs(spentAmount.amount);
+          current.spentAmount += absSpentAmount;
+          total.spentAmount += absSpentAmount;
 
-          const pieKeyAmount =
+          const pieKeyAmount = Math.abs(
             pieKeys[1] === "assignedAmount" && "assignedAmount" in stat
               ? stat.assignedAmount.amount
               : pieKeys[1] === "earnedAmount" && "earnedAmount" in stat
                 ? stat.earnedAmount.amount
-                : 0;
+                : 0,
+          );
 
           if (pieKeyAmount) {
-            current[sumPieKey] = (current[sumPieKey] ?? 0) + pieKeyAmount;
+            current[pieKeys[1]] = (current[pieKeys[1]] ?? 0) + pieKeyAmount;
             total[pieKeys[1]] += pieKeyAmount;
           }
         }
@@ -114,15 +105,7 @@ const StatisticsSharedPieCharts: FC<StatisticsSharedPieChartsProps> = ({
       color = darkenColor(color, 15);
     });
 
-    const totalSpent = total.spentAmount;
-    const totalShare = total[pieKeys[1]];
-
     pieData.forEach((data) => {
-      data.spentAmount = Math.round((data.sumSpentAmount * 100) / totalSpent);
-      data[sharePieKey] = Math.round(
-        ((data[sumPieKey] || 0) * 100) / totalShare,
-      );
-
       config[data.label] = {
         color: data.fill,
         label: data.label,
@@ -130,24 +113,18 @@ const StatisticsSharedPieCharts: FC<StatisticsSharedPieChartsProps> = ({
     });
 
     return { pieData, total, config };
-  }, [
-    fromDate,
-    pieKeys,
-    statistics,
-    statisticsKeys,
-    toDate,
-    sharePieKey,
-    sumPieKey,
-  ]);
+  }, [fromDate, pieKeys, statistics, statisticsKeys, toDate]);
 
   const [formattedDateFrom, formattedDateTo] = useMemo(
     () => [format(fromDate, "MMMM"), format(toDate, "MMMM yyyy")],
     [fromDate, toDate],
   );
 
+  console.log(pieData);
+
   return (
     <div className="md:flex md:space-x-4">
-      {[sharePieKey, "spentAmount"].map((pieKey) => (
+      {[pieKeys[1], "spentAmount"].map((pieKey) => (
         <InteractivePieChart
           key={pieKey}
           config={config}
@@ -156,6 +133,7 @@ const StatisticsSharedPieCharts: FC<StatisticsSharedPieChartsProps> = ({
           total={`${total[pieKey as keyof Total]} ${total.currency}`}
           title={`${title ? title + " - " : ""}${pieKey.replace("Amount", "")} amount`}
           description={`${formattedDateFrom} - ${formattedDateTo}`}
+          unit={total.currency}
         />
       ))}
     </div>

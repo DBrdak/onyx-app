@@ -31,7 +31,7 @@ export type Currency = z.infer<typeof CurrencySchema>;
 
 export const MoneySchema = z.object({
   currency: CurrencySchema,
-  amount: z.number(),
+  amount: z.number().transform((value) => Math.round(value * 100) / 100),
 });
 
 export type Money = z.infer<typeof MoneySchema>;
