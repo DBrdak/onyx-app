@@ -8,6 +8,7 @@ import { queryOptions } from "@tanstack/react-query";
 import { Money } from "@/lib/validation/base";
 import { Row } from "@tanstack/react-table";
 import { formatDateToValidString } from "../dates";
+import { queryBudgetKeys } from "./queryKeys";
 
 interface TransactionBudget {
   budgetId: string;
@@ -124,7 +125,7 @@ export const getTransactionsQueryOptions = (
   search: QueryParams,
 ) =>
   queryOptions({
-    queryKey: ["transactions", accountId],
+    queryKey: queryBudgetKeys.transactions(accountId),
     queryFn: () => getTransactions(budgetId, search),
   });
 

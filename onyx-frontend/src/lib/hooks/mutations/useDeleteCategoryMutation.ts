@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { deleteCategory, getCategoriesQueryOptions } from "@/lib/api/category";
-import { getToAssignQueryKey } from "@/lib/api/budget";
+import { invalidateDependencies } from "@/lib/api/queryKeys";
 
 interface CategoryMutationProps {
   budgetId: string;
@@ -14,7 +14,6 @@ export const useDeleteCategoryMutation = ({
 }: CategoryMutationProps) => {
   const queryClient = useQueryClient();
   const queryKey = getCategoriesQueryOptions(budgetId).queryKey;
-  const toAssignQueryKey = getToAssignQueryKey(budgetId);
 
   return useMutation({
     mutationKey: ["deleteCategory"],
@@ -42,18 +41,16 @@ export const useDeleteCategoryMutation = ({
       return previousCategories;
     },
     onSettled: () => {
-      Promise.all([
-        queryClient.invalidateQueries({
-          queryKey,
-        }),
-        queryClient.invalidateQueries({
-          queryKey: toAssignQueryKey,
-        }),
-      ]);
+      queryClient.invalidateQueries({
+        queryKey,
+      });
     },
     onError: (_err, _newTodo, context) => {
       queryClient.setQueryData(queryKey, context);
       onMutationError();
+    },
+    onSuccess: () => {
+      invalidateDependencies(queryClient, "categories", { budgetId }, true);
     },
   });
 };

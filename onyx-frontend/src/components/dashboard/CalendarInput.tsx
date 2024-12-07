@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ControllerRenderProps, FieldValues, Path } from "react-hook-form";
-import { format } from "date-fns";
+import { format, subYears } from "date-fns";
 
 import { CalendarIcon } from "lucide-react";
 import {
@@ -10,17 +10,15 @@ import {
 } from "@/components/ui/popover";
 import { FormControl } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar, CalendarProps } from "@/components/ui/calendar";
 
 import { cn } from "@/lib/utils";
-import { isInPastRange } from "@/lib/dates";
 
 interface CalendarInputProps<
   TFieldValues extends FieldValues,
   TName extends Path<TFieldValues>,
-> {
+> extends Omit<CalendarProps, "selected" | "onSelect" | "mode"> {
   field: ControllerRenderProps<TFieldValues, TName>;
-
   className?: string;
 }
 const CalendarInput = <
@@ -29,6 +27,7 @@ const CalendarInput = <
 >({
   field,
   className,
+  ...props
 }: CalendarInputProps<TFieldValues, TName>) => {
   const [open, setOpen] = useState(false);
 
@@ -63,11 +62,12 @@ const CalendarInput = <
             field.onChange(date);
             setOpen(false);
           }}
-          disabled={(date) => !isInPastRange(date, 5)}
           initialFocus
-          disableNavigation
-          defaultMonth={field.value}
           weekStartsOn={1}
+          disabled={(date) => date > new Date()}
+          toDate={new Date()}
+          fromDate={subYears(new Date(), 5)}
+          {...props}
         />
       </PopoverContent>
     </Popover>

@@ -25,15 +25,12 @@ import {
   ImportTransactionsSubmitStageArraySchema,
 } from "@/lib/validation/transaction";
 import { useTransactionsDataTable } from "@/lib/hooks/useTransactionsDataTable";
-import {
-  createTransactions,
-  getTransactionsQueryKey,
-} from "@/lib/api/transaction";
+import { createTransactions } from "@/lib/api/transaction";
 import LoadingButton from "@/components/LoadingButton";
-import { getAccountsQueryOptions } from "@/lib/api/account";
 import { VARIANTS } from "../TransactionsTable";
 import { useBudgetStore } from "@/store/dashboard/budgetStore";
 import { useAccountStore } from "@/store/dashboard/accountStore";
+import { invalidateDependencies } from "@/lib/api/queryKeys";
 
 interface ImportTableSubmitStageProps {
   data: ImportTransactionsPresubmitState[];
@@ -67,12 +64,10 @@ const ImportTableSubmitStage: FC<ImportTableSubmitStageProps> = ({
         description,
       });
     },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: getTransactionsQueryKey(accountId),
-      });
-      await queryClient.invalidateQueries({
-        queryKey: getAccountsQueryOptions(budgetId).queryKey,
+    onSuccess: () => {
+      invalidateDependencies(queryClient, "transactions", {
+        accountId,
+        budgetId,
       });
       setDefaultTableVariant();
     },

@@ -25,6 +25,7 @@ import { RequiredString } from "@/lib/validation/base";
 import { type Budget } from "@/lib/validation/budget";
 import { deleteBudget, getBudgetsQueryOptions } from "@/lib/api/budget";
 import { getErrorMessage } from "@/lib/utils";
+import { invalidateDependencies } from "@/lib/api/queryKeys";
 
 interface BudgetsTableDeleteDialogContentProps {
   setDialogOpen: Dispatch<SetStateAction<boolean>>;
@@ -68,6 +69,9 @@ const BudgetsTableDeleteDialogContent: FC<
       setError("name", {
         message,
       });
+    },
+    onSuccess: () => {
+      invalidateDependencies(queryClient, "budget", {}, true);
     },
   });
 

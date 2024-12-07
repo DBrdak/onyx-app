@@ -7,6 +7,7 @@ import {
   SingleAccountResultSchema,
 } from "@/lib/validation/account";
 import { AccountType, Money } from "@/lib/validation/base";
+import { queryBudgetKeys } from "./queryKeys";
 
 export interface CreateAccountPayload {
   name: string;
@@ -39,7 +40,7 @@ export const getAccounts = async (budgetId: string) => {
 
 export const getAccountsQueryOptions = (budgetId: string) =>
   queryOptions({
-    queryKey: ["accounts", budgetId],
+    queryKey: queryBudgetKeys.accounts(budgetId),
     queryFn: () => getAccounts(budgetId),
   });
 

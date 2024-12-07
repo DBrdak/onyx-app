@@ -5,6 +5,15 @@ import { USER_LOCALE } from "./constants/locale";
 import { AxiosError } from "axios";
 import { ZodSchema } from "zod";
 import { ExtendedResult } from "./validation/base";
+import { MONTHS } from "./constants/date";
+
+type ChartDataItem<Labels extends string[]> = {
+  monthName: string;
+  month: number;
+  year: number;
+} & {
+  [key in Labels[number]]: number;
+};
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -75,4 +84,43 @@ export const formatToDotDecimal = (str: string): string => {
 
 export const formatToDecimalString = (num: number) => {
   return num.toFixed(2);
+};
+
+export const createInitialChartData = <Labels extends string[]>(
+  fromDate: Date,
+  toDate: Date,
+  labels: Labels,
+): ChartDataItem<Labels>[] => {
+  const startMonth = fromDate.getMonth() + 1;
+  const endMonth = toDate.getMonth() + 1;
+
+  const labelsData = labels.reduce(
+    (acc, label) => ({ ...acc, [label]: 0 }),
+    {} as Record<Labels[number], number>,
+  );
+
+  const year = fromDate.getFullYear();
+
+  const result: ChartDataItem<Labels>[] = [];
+
+  for (let month = startMonth; month <= endMonth; month++) {
+    result.push({
+      monthName: MONTHS[month - 1],
+      month,
+      year,
+      ...labelsData,
+    });
+  }
+
+  return result;
+};
+
+export const darkenColor = (hsl: string, percent: number): string => {
+  const [hue, saturation, lightness] = hsl
+    .split(" ")
+    .map((v, i) => (i === 0 ? parseInt(v) : parseFloat(v)));
+
+  const newLightness = Math.max(0, lightness - lightness * (percent / 100));
+
+  return `${hue} ${saturation}% ${newLightness.toFixed(1)}%`;
 };

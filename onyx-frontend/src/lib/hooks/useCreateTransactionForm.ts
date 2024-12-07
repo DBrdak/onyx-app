@@ -12,8 +12,6 @@ import {
   CreateTransactionPayload,
   getTransactionsQueryOptions,
 } from "@/lib/api/transaction";
-import { getAccountsQueryOptions } from "@/lib/api/account";
-import { getCategoriesQueryOptions } from "@/lib/api/category";
 import { formatToDotDecimal, getErrorMessage } from "@/lib/utils";
 import { type Account } from "@/lib/validation/account";
 import {
@@ -23,6 +21,7 @@ import {
 } from "@/store/dashboard/accountStore";
 import { useToast } from "@/components/ui/use-toast";
 import { useBudgetStore } from "@/store/dashboard/budgetStore";
+import { invalidateDependencies } from "../api/queryKeys";
 
 interface Props {
   account: Account;
@@ -70,19 +69,15 @@ export const useCreateTransactionForm = ({ account }: Props) => {
     }));
   }, [reset, account.balance.currency]);
 
-  const [
-    transtactionsQueryOptions,
-    accountsQueryOptions,
-    categoriesQueryOptions,
-  ] = [
-    getTransactionsQueryOptions(budgetId, accountId, {
+  const transtactionsQueryOptions = getTransactionsQueryOptions(
+    budgetId,
+    accountId,
+    {
       accountId,
       dateRangeStart,
       dateRangeEnd,
-    }),
-    getAccountsQueryOptions(budgetId),
-    getCategoriesQueryOptions(budgetId),
-  ];
+    },
+  );
   const transactionsQueryKey = transtactionsQueryOptions.queryKey;
 
   const { mutate, isPending } = useMutation({
@@ -137,12 +132,16 @@ export const useCreateTransactionForm = ({ account }: Props) => {
         description,
       });
     },
-    onSettled: () => {
-      Promise.all([
-        queryClient.invalidateQueries(transtactionsQueryOptions),
-        queryClient.invalidateQueries(accountsQueryOptions),
-        queryClient.invalidateQueries(categoriesQueryOptions),
-      ]);
+    onSettled: async () => {
+      await queryClient.invalidateQueries(transtactionsQueryOptions);
+    },
+    onSuccess: () => {
+      invalidateDependencies(
+        queryClient,
+        "transactions",
+        { budgetId, accountId },
+        true,
+      );
     },
   });
 
@@ -189,7 +188,7 @@ export const useCreateTransactionForm = ({ account }: Props) => {
   );
 
   const onSubcategoryChange = (value: string, label: string) => {
-    setValue("subcategoryId", value);
+    setValue("subcategoryId", value, { shouldValidate: true });
     setValue("subcategoryName", label, { shouldValidate: true });
   };
 

@@ -15,6 +15,7 @@ import { editAccountName, getAccountsQueryOptions } from "@/lib/api/account";
 import { getErrorMessage } from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
 import { useBudgetStore } from "@/store/dashboard/budgetStore";
+import { invalidateDependencies } from "@/lib/api/queryKeys";
 
 interface AccountCardNameFormProps {
   defaultName: string;
@@ -59,6 +60,7 @@ const AccountCardNameForm: FC<AccountCardNameFormProps> = ({
       setTimeout(() => setFocus("name"), 0);
     },
     onSuccess: async (res) => {
+      invalidateDependencies(queryClient, "accounts", { budgetId }, true);
       await queryClient.fetchQuery(getAccountsQueryOptions(budgetId));
       await navigate({
         to: "/budget/$budgetSlug/accounts/$accountSlug",

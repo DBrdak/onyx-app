@@ -5,11 +5,10 @@ import {
   useLocation,
 } from "@tanstack/react-router";
 
-import { AreaChart, HelpCircle, Undo2, Wallet } from "lucide-react";
+import { Undo2, Wallet } from "lucide-react";
 import Logo from "@/components/Logo";
 import UserDropdown from "@/components/userDropdown/UserDropdown";
 import MobileNavigation from "@/components/dashboard/MobileNavigation";
-import AccountsLinksAccordion from "@/components/dashboard/AccountsLinksAccordion";
 
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
@@ -19,6 +18,9 @@ import { getAccountsQueryOptions } from "@/lib/api/account";
 import { Account } from "@/lib/validation/account";
 import { useAuthStore } from "@/store/auth/authStore";
 import { useBudgetStore } from "@/store/dashboard/budgetStore";
+import SidebarAccordion from "@/components/dashboard/dashboard-layout/SidebarAccordion";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useSidebarAccordionData } from "@/lib/hooks/useSidebarAccordionData";
 
 export const Route = createLazyFileRoute("/_dashboard-layout")({
   component: Layout,
@@ -43,6 +45,8 @@ function Layout() {
     enabled: false,
   });
 
+  const accordionData = useSidebarAccordionData({ accounts, budgetSlug });
+
   if (!isDesktop)
     return <MobileLayout linksAvailable={linksAvailable} accounts={accounts} />;
 
@@ -51,13 +55,12 @@ function Layout() {
       <aside className="sticky left-0 h-full w-[250px] bg-primaryDark py-10 text-primaryDark-foreground lg:w-[300px]">
         <div className="flex h-full flex-col space-y-6 pb-8 pl-6">
           <div className="flex h-full flex-col">
-            <div className="h-full flex-grow">
-              <div className="mb-14 mt-6 flex justify-center">
-                <Link to="/">
-                  <Logo />
-                </Link>
-              </div>
-
+            <div className="mb-14 mt-6 flex justify-center">
+              <Link to="/">
+                <Logo />
+              </Link>
+            </div>
+            <ScrollArea className="h-full flex-grow">
               <div className="space-y-4">
                 <Link
                   to="/budget"
@@ -102,73 +105,19 @@ function Layout() {
                   )}
                 >
                   <div className="overflow-hidden">
-                    <AccountsLinksAccordion accountsLength={accounts.length}>
-                      {accounts.map((account) => (
-                        <Link
-                          key={account.id}
-                          to="/budget/$budgetSlug/accounts/$accountSlug"
-                          params={{ budgetSlug, accountSlug: account.slug }}
-                          className="w-full rounded-l-full py-4 pl-9 text-sm font-semibold transition-all duration-300 hover:bg-accent hover:text-foreground"
-                          activeProps={{
-                            className: "bg-background text-foreground",
-                          }}
-                          preload={false}
-                        >
-                          {account.name}
-                        </Link>
-                      ))}
-                    </AccountsLinksAccordion>
+                    <SidebarAccordion data={accordionData} />
                   </div>
                 </div>
-
-                <Link
-                  to="/budget/$budgetSlug/statistics"
-                  params={{ budgetSlug }}
-                  className={cn(
-                    "grid grid-rows-[0fr] rounded-l-full pl-9 text-sm font-semibold transition-all duration-500 ease-in-out hover:bg-accent hover:text-foreground",
-                    linksAvailable && "grid-rows-[1fr] py-4",
-                  )}
-                  activeProps={{
-                    className: "bg-background text-foreground",
-                  }}
-                  preload="intent"
-                  activeOptions={{ exact: true }}
-                >
-                  <span className="space-x-4 overflow-hidden">
-                    <AreaChart className="inline-flex size-6 shrink-0" />
-                    <span className="inline-flex text-sm font-semibold tracking-wide">
-                      Statistics
-                    </span>
-                  </span>
-                </Link>
               </div>
-            </div>
+            </ScrollArea>
             <div className="pt-4">
-              <Link
-                to="/help"
-                className="block rounded-l-full py-4 pl-9 transition-all duration-500 ease-in-out hover:bg-accent hover:text-foreground"
-                activeProps={{
-                  className: "bg-background text-foreground",
-                }}
-                preload={false}
-                activeOptions={{ exact: true }}
-              >
-                <span className="space-x-4 overflow-hidden">
-                  <HelpCircle className="inline-flex size-6 shrink-0" />
-                  <span className="inline-flex text-sm font-semibold tracking-wide">
-                    Help
-                  </span>
-                </span>
-              </Link>
+              <UserDropdown user={user!} isSidebar />
             </div>
           </div>
         </div>
       </aside>
 
-      <main className="mx-auto flex h-screen w-full max-w-screen-xl flex-col space-y-8 px-12 pb-4 pt-8">
-        <nav className="text-end">
-          <UserDropdown user={user!} />
-        </nav>
+      <main className="mx-auto flex h-screen w-full max-w-screen-xl flex-col px-12 pb-4 pt-12">
         <Outlet />
       </main>
     </div>

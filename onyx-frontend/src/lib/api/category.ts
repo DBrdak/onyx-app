@@ -1,8 +1,9 @@
 import { queryOptions } from "@tanstack/react-query";
 
 import { budgetApi } from "@/lib/axios";
-import { getErrorMessage } from "@/lib/utils";
-import { CategoryResultSchema } from "@/lib/validation/category";
+import { validateResponse } from "@/lib/utils";
+import { Category, CategoryResultSchema } from "@/lib/validation/category";
+import { queryBudgetKeys } from "./queryKeys";
 
 export interface CreateCategoryProps {
   budgetId: string;
@@ -10,29 +11,13 @@ export interface CreateCategoryProps {
 }
 
 export const getCategories = async (budgetId: string) => {
-  try {
-    const { data } = await budgetApi.get(`/${budgetId}/categories`);
-    const validatedData = CategoryResultSchema.safeParse(data);
-    if (!validatedData.success) {
-      console.log(validatedData.error?.issues);
-      throw new Error("Invalid data type.");
-    }
-
-    const { value, isFailure, error } = validatedData.data;
-    if (isFailure) {
-      throw new Error(error.message);
-    }
-
-    return value;
-  } catch (error) {
-    console.error(getErrorMessage(error));
-    throw new Error(getErrorMessage(error));
-  }
+  const { data } = await budgetApi.get(`/${budgetId}/categories`);
+  return validateResponse<Category[]>(CategoryResultSchema, data);
 };
 
 export const getCategoriesQueryOptions = (budgetId: string) =>
   queryOptions({
-    queryKey: ["categories", budgetId],
+    queryKey: queryBudgetKeys.categories(budgetId),
     queryFn: () => getCategories(budgetId),
   });
 

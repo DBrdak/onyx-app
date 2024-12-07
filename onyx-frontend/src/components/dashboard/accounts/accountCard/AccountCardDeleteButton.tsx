@@ -14,6 +14,8 @@ import {
 import { useDeleteAccountMutation } from "@/lib/hooks/mutations/useDeleteAccountMutation";
 import DialogFooterWithErrorHandle from "@/components/DialogFooterWithErrorHandle";
 import { useBudgetStore } from "@/store/dashboard/budgetStore";
+import { useQueryClient } from "@tanstack/react-query";
+import { invalidateDependencies } from "@/lib/api/queryKeys";
 
 interface AccountCardDeleteButtonProps {
   accountId: string;
@@ -24,10 +26,12 @@ const AccountCardDeleteButton: FC<AccountCardDeleteButtonProps> = ({
   accountId,
   disabled,
 }) => {
+  const queryClient = useQueryClient();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const budgetId = useBudgetStore.use.budgetId();
 
   const onMutationSuccess = () => {
+    invalidateDependencies(queryClient, "accounts", { budgetId }, true);
     setIsDeleteDialogOpen(false);
   };
 

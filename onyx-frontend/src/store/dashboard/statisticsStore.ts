@@ -5,20 +5,24 @@ import { startOfYear } from "date-fns";
 
 import { createSelectors } from "@/store/createSelectors";
 
+type StatisticsSelector = "categories" | "accounts" | "counterparties";
 interface State {
   statisticsDateRangeStart: Date;
   statisticsDateRangeEnd: Date;
+  statisticsSelector: StatisticsSelector;
 }
 
 interface Actions {
   reset: () => void;
   setStatisticsDateRangeStart: (statisticsDateRangeStart: Date) => void;
   setStatisticsDateRangeEnd: (statisticsDateRangeEnd: Date) => void;
+  setStatisticsSelector: (statisticsSelector: StatisticsSelector) => void;
 }
 
 const DEFAULT_STATISTICS_STATE: State = {
   statisticsDateRangeStart: startOfYear(new Date()),
   statisticsDateRangeEnd: new Date(),
+  statisticsSelector: "categories",
 };
 
 const statisticsStore = create<State & Actions>()(
@@ -33,6 +37,8 @@ const statisticsStore = create<State & Actions>()(
         set({ statisticsDateRangeEnd }),
       setStatisticsDateRangeStart: (statisticsDateRangeStart) =>
         set({ statisticsDateRangeStart }),
+      setStatisticsSelector: (statisticsSelector) =>
+        set({ statisticsSelector }),
     }),
     {
       name: "statisticsStore",
