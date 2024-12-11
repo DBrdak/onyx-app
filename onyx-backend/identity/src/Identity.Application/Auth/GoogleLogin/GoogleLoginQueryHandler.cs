@@ -22,12 +22,12 @@ internal sealed class GoogleLoginQueryHandler : IQueryHandler<GoogleLoginQuery, 
     {
         var origin = request.Origin;
 
-        if (string.IsNullOrWhiteSpace(origin) || !origin.IsUrl())
+        if (string.IsNullOrWhiteSpace(origin) || !Uri.TryCreate(origin, UriKind.Absolute, out _))
         {
             return GoogleLoginErrors.InvalidHost;
         }
 
         return await Task.FromResult(
-            new Uri($"{AuthUrl}?client_id={ClientId}&redirect_uri={origin}/login/google&response_type=code&scope={Scope}").AbsolutePath);
+            $"{AuthUrl}?client_id={ClientId}&redirect_uri={origin}/login/google&response_type=code&scope={Scope}");
     }
 }
