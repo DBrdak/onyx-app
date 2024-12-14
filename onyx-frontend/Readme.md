@@ -31,6 +31,7 @@ VITE_AUTH_URL=      # The authentication URL for your app
 VITE_SCOPE=         # The scope of permissions required
 VITE_CLIENT_ID=     # The client ID for authentication
 VITE_ORIGIN=        # The origin URL for your application
+````
 
 ## Setup
 Instructions to set up the project on a local machine.
@@ -50,7 +51,7 @@ Instructions to set up the project on a local machine.
 Instructions on how to run the project.
 1. **Start the development server:**
     ```bash
-    npm start
+    npm run dev
     ```
    This will run the app in development mode. Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
 
@@ -83,7 +84,7 @@ onyx-frontend/
 ├── vite.config.ts
 ├── README.md
 └── ...
-````
+```
 
 ## Contributing
 
