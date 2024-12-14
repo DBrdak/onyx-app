@@ -23,8 +23,13 @@ const FormFooter: FC<FormFooterProps> = ({ disabled, className }) => {
           className="w-full"
           type="button"
           disabled={disabled}
+          asChild
         >
-          Continue with Google
+          <a
+            href={`${import.meta.env.VITE_AUTH_URL}?client_id=${import.meta.env.VITE_CLIENT_ID}&redirect_uri=${import.meta.env.VITE_ORIGIN}/login/google&response_type=code&scope=${import.meta.env.VITE_SCOPE}`}
+          >
+            Continue with Google
+          </a>
         </Button>
       </div>
       <p className="mx-auto w-full max-w-md text-xs">

@@ -35,6 +35,7 @@ const BudgetsTableRemoveMembers: FC<BudgetsTableRemoveMembersProps> = ({
       <ul className="grid grid-cols-1 gap-2 md:grid-cols-3">
         {budget.budgetMembers.map((member) => (
           <li
+            key={member.id}
             className={cn(
               "w-fit cursor-pointer rounded-full",
               selectedMember?.id === member.id && "bg-destructive/60",

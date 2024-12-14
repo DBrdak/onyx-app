@@ -1,13 +1,16 @@
 # ONYX Frontend
 
 ## Table of Contents
+
 1. [Technologies](#technologies)
+2. [Environment Variables](#environment-variables)
 3. [Setup](#setup)
 4. [Usage](#usage)
 5. [Folder Structure](#folder-structure)
 6. [Contributing](#contributing)
 
 ## Technologies
+
 List of the major technologies and frameworks used in the project.
 
 - **React**: Version 18.2.0
@@ -18,6 +21,17 @@ List of the major technologies and frameworks used in the project.
 - **tanstack/react-query**
 - **zod**
 - ...
+
+## Environment Variables
+
+To run this project, you will need to set up the following environment variables in a `.env` file at the root of the project:
+
+````plaintext
+VITE_AUTH_URL=      # The authentication URL for your app
+VITE_SCOPE=         # The scope of permissions required
+VITE_CLIENT_ID=     # The client ID for authentication
+VITE_ORIGIN=        # The origin URL for your application
+````
 
 ## Setup
 Instructions to set up the project on a local machine.
@@ -35,22 +49,9 @@ Instructions to set up the project on a local machine.
 
 ## Usage
 Instructions on how to run the project.
-
-**Since the frontend part needs an ONYX backend connection to fetch necessary data, and the backend has to be run locally (temporarily), the frontend part contains a server proxy in `vite.config.ts` (to satisfy CORS), configured to run with the backend API opened as a Docker container.**
-
-To set up the backend as Docker container, follow the ONYX-backend README or use the following steps:
-
-#### Download the file for running the API with Docker
-[run-script.ps1](https://github.com/DBrdak/onyx-app/blob/penny-migration/onyx-backend/run-script.ps1)
-
-#### Run the file
-You'll need to log in to `docker.io` and provide the Azure CosmosDB instance key that has the 'budget' database created.
-
-####Then:
-
 1. **Start the development server:**
     ```bash
-    npm start
+    npm run dev
     ```
    This will run the app in development mode. Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
 
@@ -86,6 +87,7 @@ onyx-frontend/
 ```
 
 ## Contributing
+
 Guidelines for contributing to the project.
 
 1. Fork the repository.

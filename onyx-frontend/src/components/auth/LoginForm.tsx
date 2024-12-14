@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 
 import { LoginSchema, TLoginSchema } from "@/lib/validation/user";
 import { getErrorMessage } from "@/lib/utils";
-import { FormVariant } from "@/routes/_auth/login.lazy";
+import { FormVariant } from "@/routes/_auth/login/route.lazy";
 import { useLogin } from "@/lib/hooks/auth/useLogin";
 
 interface LoginFormProps {

@@ -14,3 +14,7 @@ export const LoginPageParamsSchema = z.object({
 export const BudgetsPageParamsSchema = z.object({
   message: z.string().optional(),
 });
+
+export const GoogleAuthSchema = z.object({
+  code: RequiredString,
+});

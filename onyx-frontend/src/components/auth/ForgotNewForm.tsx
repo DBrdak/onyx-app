@@ -25,8 +25,8 @@ import {
   type TForgotPasswordNewSchema,
 } from "@/lib/validation/user";
 import { forgotPasswordNew, ForgotPasswordNewPayload } from "@/lib/api/user";
-import { FormVariant } from "@/routes/_auth/login.lazy";
 import { getErrorMessage } from "@/lib/utils";
+import { FormVariant } from "@/routes/_auth/login/route.lazy";
 
 interface ForgotNewFormProps {
   defaultEmail: string;

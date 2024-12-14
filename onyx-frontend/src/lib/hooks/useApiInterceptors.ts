@@ -1,5 +1,4 @@
 import { useLayoutEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 
 import { refreshAccessToken } from "@/lib/api/user";
 import { useLongLivedTokenStore } from "@/store/auth/longLivedTokenStore";
@@ -12,12 +11,13 @@ import type {
   AxiosError,
   InternalAxiosRequestConfig,
 } from "axios";
+import { type QueryClient } from "@tanstack/react-query";
 
 export const useApiInterceptors = (
   api: AxiosInstance,
   accessToken: string | null,
+  queryClient: QueryClient,
 ) => {
-  const queryClient = useQueryClient();
   const longLivedToken = useLongLivedTokenStore.use.longLivedToken();
   const setLongLivedToken = useLongLivedTokenStore.use.setLongLivedToken();
   const setAccessToken = useAuthStore.use.setAccessToken();

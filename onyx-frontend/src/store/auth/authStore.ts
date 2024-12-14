@@ -33,3 +33,5 @@ const authStore = create<AuthState & AuthActions>()((set) => ({
 export const useAuthStore = createSelectors(authStore);
 
 export const resetAuthStore = () => authStore.getState().reset();
+export const getAccessToken = () => authStore.getState().accessToken;
+export const getIsInitialized = () => authStore.getState().isInitialized;
