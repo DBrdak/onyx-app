@@ -1,5 +1,7 @@
 import { identityApi, userApi } from "@/lib/axios";
 import {
+  GoogleLoginResultSchema,
+  TGoogleLoginSchema,
   Token,
   TokenResultSchema,
   User,
@@ -115,3 +117,11 @@ export const forgotVerify = (email: string): Promise<void> =>
     email,
     messageType: "EmailVerification",
   });
+
+export const loginWithGoogle = async (code: string) => {
+  const searchParams = new URLSearchParams({ code });
+  const { data } = await identityApi.post(
+    `/auth/google/callback?${searchParams}`,
+  );
+  return validateResponse<TGoogleLoginSchema>(GoogleLoginResultSchema, data);
+};

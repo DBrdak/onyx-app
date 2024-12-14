@@ -19,7 +19,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 import { RegisterSchema, type TRegisterSchema } from "@/lib/validation/user";
 import { register } from "@/lib/api/user";
-import { FormVariant } from "@/routes/_auth/login.lazy";
+import { FormVariant } from "@/routes/_auth/login/route.lazy";
 import { getErrorMessage } from "@/lib/utils";
 
 interface RegisterFormProps {

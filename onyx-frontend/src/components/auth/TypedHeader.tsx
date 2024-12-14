@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils";
-import { FormVariant } from "@/routes/_auth/login.lazy";
+import { FormVariant } from "@/routes/_auth/login/route.lazy";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
 interface TypedHeaderProps {

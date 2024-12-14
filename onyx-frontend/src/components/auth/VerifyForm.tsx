@@ -22,7 +22,7 @@ import {
 
 import { VerifySchema, type TVerifySchema } from "@/lib/validation/user";
 import { verifyEmail } from "@/lib/api/user";
-import { FormVariant } from "@/routes/_auth/login.lazy";
+import { FormVariant } from "@/routes/_auth/login/route.lazy";
 import { getErrorMessage } from "@/lib/utils";
 
 interface VerifyFormProps {

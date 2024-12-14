@@ -95,3 +95,13 @@ export const EditEmailSchema = z
   });
 
 export type TEditEmailSchema = z.infer<typeof EditEmailSchema>;
+
+const GoogleLoginSchema = UserSchema.extend({
+  authorizationToken: TokenSchema,
+});
+
+export type TGoogleLoginSchema = z.infer<typeof GoogleLoginSchema>;
+
+export const GoogleLoginResultSchema = ResultSchema.extend({
+  value: GoogleLoginSchema,
+});
