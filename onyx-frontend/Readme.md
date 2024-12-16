@@ -31,6 +31,8 @@ VITE_AUTH_URL=      # The authentication URL for your app
 VITE_SCOPE=         # The scope of permissions required
 VITE_CLIENT_ID=     # The client ID for authentication
 VITE_ORIGIN=        # The origin URL for your application
+VITE_ID_URL=        # Api identity url
+VITE_BUDGET_URL=    # Apu budget url
 
 ## Setup
 Instructions to set up the project on a local machine.
