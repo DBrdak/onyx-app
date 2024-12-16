@@ -26,43 +26,51 @@ List of the major technologies and frameworks used in the project.
 
 To run this project, you will need to set up the following environment variables in a `.env` file at the root of the project:
 
-````plaintext
+```plaintext
 VITE_AUTH_URL=      # The authentication URL for your app
 VITE_SCOPE=         # The scope of permissions required
 VITE_CLIENT_ID=     # The client ID for authentication
 VITE_ORIGIN=        # The origin URL for your application
 VITE_ID_URL=        # Api identity url
 VITE_BUDGET_URL=    # Apu budget url
+```
 
 ## Setup
+
 Instructions to set up the project on a local machine.
 
 1. **Clone the repository:**
-    ```bash
-    git clone https://github.com/dbrdak/onyx-app
-    cd <ProjectPath>/onyx-frontend
-    ```
+
+   ```bash
+   git clone https://github.com/dbrdak/onyx-app
+   cd <ProjectPath>/onyx-frontend
+   ```
 
 2. **Install dependencies:**
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
 ## Usage
+
 Instructions on how to run the project.
+
 1. **Start the development server:**
-    ```bash
-    npm start
-    ```
+
+   ```bash
+   npm run dev
+   ```
+
    This will run the app in development mode. Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
 
 2. **Build for production:**
-    ```bash
-    npm run build
-    ```
+   ```bash
+   npm run build
+   ```
    This will create an optimized production build in the `build` folder.
 
 ## Folder Structure
+
 Explanation of the project's folder structure and what each folder/file represents.
 
 ```plaintext
@@ -85,7 +93,7 @@ onyx-frontend/
 ├── vite.config.ts
 ├── README.md
 └── ...
-````
+```
 
 ## Contributing
 
