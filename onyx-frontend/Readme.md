@@ -32,7 +32,7 @@ VITE_SCOPE=         # The scope of permissions required
 VITE_CLIENT_ID=     # The client ID for authentication
 VITE_ORIGIN=        # The origin URL for your application
 VITE_ID_URL=        # Api identity url
-VITE_BUDGET_URL=    # Apu budget url
+VITE_BUDGET_URL=    # Api budget url
 ```
 
 ## Setup
