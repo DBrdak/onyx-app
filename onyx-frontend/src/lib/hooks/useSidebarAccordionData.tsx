@@ -3,8 +3,8 @@ import { useMemo } from "react";
 import { AreaChart, CreditCard } from "lucide-react";
 import CreateAccountButton from "@/components/dashboard/accounts/CreateAccountButton";
 
-import { type AccorionData } from "@/components/dashboard/dashboard-layout/SidebarAccordion";
 import { type Account } from "../validation/account";
+import { AccordionData } from "@/components/dashboard/dashboard-layout/types";
 
 interface Props {
   accounts: Account[];
@@ -13,7 +13,7 @@ interface Props {
 
 export const useSidebarAccordionData = ({ accounts, budgetSlug }: Props) => {
   return useMemo(() => {
-    const data: AccorionData[] = [
+    const data: AccordionData[] = [
       {
         title: {
           label: "Accounts",
