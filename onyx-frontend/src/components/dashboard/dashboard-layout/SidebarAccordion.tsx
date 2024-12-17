@@ -1,5 +1,5 @@
-import { FC, ReactNode } from "react";
-import { Link, LinkProps } from "@tanstack/react-router";
+import { FC } from "react";
+import { Link } from "@tanstack/react-router";
 
 import {
   Accordion,
@@ -7,26 +7,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
-import { type LucideIcon } from "lucide-react";
-
-type AccordionTitle = {
-  label: string;
-  Icon: LucideIcon;
-};
-
-interface LinkWithLabel extends LinkProps {
-  label: string;
-}
-
-export type AccorionData = {
-  title: AccordionTitle;
-  links: LinkWithLabel[];
-  additionalContent?: ReactNode;
-};
+import { AccordionData } from "./types";
 
 interface SidebarAccordionProps {
-  data: AccorionData[];
+  data: AccordionData[];
 }
 
 const SidebarAccordion: FC<SidebarAccordionProps> = ({ data }) => {

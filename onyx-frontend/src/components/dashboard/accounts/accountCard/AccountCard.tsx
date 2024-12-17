@@ -86,10 +86,6 @@ const AccountCard: FC<AccountCardProps> = ({
         >
           <Link
             to={`/budget/${budgetSlug}/accounts/${nextAccountSlug}`}
-            search={(prev) => prev}
-            mask={{
-              to: `/budget/${budgetSlug}/accounts/${nextAccountSlug}`,
-            }}
             preload={false}
           >
             <ArrowRight />
@@ -106,10 +102,6 @@ const AccountCard: FC<AccountCardProps> = ({
         >
           <Link
             to={`/budget/${budgetSlug}/accounts/${prevAccountSlug}`}
-            search={(prev) => prev}
-            mask={{
-              to: `/budget/${budgetSlug}/accounts/${prevAccountSlug}`,
-            }}
             preload={false}
           >
             <ArrowLeft />
