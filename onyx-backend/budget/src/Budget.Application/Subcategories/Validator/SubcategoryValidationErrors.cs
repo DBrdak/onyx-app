@@ -4,7 +4,7 @@ namespace Budget.Application.Subcategories.Validator;
 
 internal sealed class SubcategoryValidationErrors
 {
-    public static Error IsUnknownSubcategoryError =>
+    public static Error UnknownSubcategoryError =>
         new(
             "Subcategory.UnknownSubcategoryCannotBeEdited",
             "Unknown subcategory is immutable");

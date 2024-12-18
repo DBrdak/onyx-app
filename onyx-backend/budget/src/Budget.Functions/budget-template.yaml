@@ -26,6 +26,7 @@ Resources:
       CorsConfiguration:
         AllowOrigins:
           - "http://localhost:5173"
+          - "https://onyx.dbrdak.com"
         AllowHeaders:
           - authorization
           - content-type
@@ -39,7 +40,6 @@ Resources:
         AllowCredentials: true
       DefaultRouteSettings:
         DetailedMetricsEnabled: true
-      StageName: !Ref Environment
       Auth:
         DefaultAuthorizer: LambdaAuthorizer
         Authorizers:
@@ -57,7 +57,7 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
-      FunctionName: !Sub AccountsGetAll_${Environment}
+      FunctionName: AccountsGetAll
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -81,7 +81,7 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
-      FunctionName: !Sub AccountsAdd_${Environment}
+      FunctionName: AccountsAdd
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -105,7 +105,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub AccountsUpdate_${Environment}
+      FunctionName: AccountsUpdate
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -129,7 +129,7 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
-      FunctionName: !Sub AccountsRemove_${Environment}
+      FunctionName: AccountsRemove
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -153,7 +153,7 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
-      FunctionName: !Sub AccountsBulkAddTransactions_${Environment}
+      FunctionName: AccountsBulkAddTransactions
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -177,7 +177,7 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
-      FunctionName: !Sub BudgetsGetAll_${Environment}
+      FunctionName: BudgetsGetAll
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -201,7 +201,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub BudgetsGetInvitation_${Environment}
+      FunctionName: BudgetsGetInvitation
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -225,7 +225,7 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
-      FunctionName: !Sub BudgetsAdd_${Environment}
+      FunctionName: BudgetsAdd
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -249,7 +249,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub BudgetsRemoveUser_${Environment}
+      FunctionName: BudgetsRemoveUser
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -273,7 +273,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub BudgetsJoin_${Environment}
+      FunctionName: BudgetsJoin
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -297,7 +297,7 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
-      FunctionName: !Sub BudgetsRemove_${Environment}
+      FunctionName: BudgetsRemove
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -321,7 +321,7 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
-      FunctionName: !Sub CategoriesGetAll_${Environment}
+      FunctionName: CategoriesGetAll
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -345,7 +345,7 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
-      FunctionName: !Sub CategoriesAdd_${Environment}
+      FunctionName: CategoriesAdd
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -369,7 +369,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub CategoriesUpdate_${Environment}
+      FunctionName: CategoriesUpdate
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -393,7 +393,7 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
-      FunctionName: !Sub CategoriesRemove_${Environment}
+      FunctionName: CategoriesRemove
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -417,7 +417,7 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
-      FunctionName: !Sub CounterpartiesAdd_${Environment}
+      FunctionName: CounterpartiesAdd
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -441,7 +441,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub CounterpartiesUpdate_${Environment}
+      FunctionName: CounterpartiesUpdate
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -465,7 +465,7 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
-      FunctionName: !Sub CounterpartiesRemove_${Environment}
+      FunctionName: CounterpartiesRemove
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -489,7 +489,7 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
-      FunctionName: !Sub TransactionsGet_${Environment}
+      FunctionName: TransactionsGet
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -513,7 +513,7 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
-      FunctionName: !Sub TransactionsAdd_${Environment}
+      FunctionName: TransactionsAdd
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -537,7 +537,7 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
-      FunctionName: !Sub TransactionsRemove_${Environment}
+      FunctionName: TransactionsRemove
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -554,30 +554,6 @@ Resources:
             Path: /api/v1/{budgetId}/transactions/{transactionId}
             Method: DELETE
             ApiId: !Ref BudgetApi
-  TransactionsBulkRemove:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-      SyncedEvents:
-        - RootDelete
-    Properties:
-      FunctionName: !Sub TransactionsBulkRemove_${Environment}
-      Runtime: dotnet8
-      CodeUri: .
-      MemorySize: 3008
-      EphemeralStorage:
-        Size: 3008
-      Timeout: 30
-      Role: !Ref FullAccessRoleArn
-      PackageType: Zip
-      Handler: Budget.Functions::Budget.Functions.Functions.Transactions.TransactionFunctions_BulkRemove_Generated::BulkRemove
-      Events:
-        RootDelete:
-          Type: HttpApi
-          Properties:
-            Path: /api/v1/{budgetId}/transactions/bulk
-            Method: DELETE
-            ApiId: !Ref BudgetApi
   SubcategoriesGetToAssign:
     Type: AWS::Serverless::Function
     Metadata:
@@ -585,7 +561,7 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
-      FunctionName: !Sub SubcategoriesGetToAssign_${Environment}
+      FunctionName: SubcategoriesGetToAssign
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -609,7 +585,7 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
-      FunctionName: !Sub SubcategoriesAdd_${Environment}
+      FunctionName: SubcategoriesAdd
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -633,7 +609,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub SubcategoriesUpdate_${Environment}
+      FunctionName: SubcategoriesUpdate
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -657,7 +633,7 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
-      FunctionName: !Sub SubcategoriesRemove_${Environment}
+      FunctionName: SubcategoriesRemove
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -681,7 +657,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub SubcategoriesUpdateAssignment_${Environment}
+      FunctionName: SubcategoriesUpdateAssignment
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -705,7 +681,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub SubcategoriesUpdateTarget_${Environment}
+      FunctionName: SubcategoriesUpdateTarget
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -729,7 +705,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub SubcategoriesRemoveTarget_${Environment}
+      FunctionName: SubcategoriesRemoveTarget
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -753,7 +729,7 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
-      FunctionName: !Sub CounterpartiesGetAll_${Environment}
+      FunctionName: CounterpartiesGetAll
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -777,7 +753,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub BudgetsEdit_${Environment}
+      FunctionName: BudgetsEdit
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -801,7 +777,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub TransactionsSetSubcategory_${Environment}
+      FunctionName: TransactionsSetSubcategory
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -825,7 +801,7 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
-      FunctionName: !Sub BudgetsGetByInvitationToken_${Environment}
+      FunctionName: BudgetsGetByInvitationToken
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -847,7 +823,7 @@ Resources:
     Metadata:
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: !Sub PurgeUserBudgetData_${Environment}
+      FunctionName: PurgeUserBudgetData
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -862,8 +838,56 @@ Resources:
           Type: SQS
           Properties:
             Queue: !Ref RemoveUserQueueArn
+  AccountsBulkRemoveTransactions:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootDelete
+    Properties:
+      FunctionName: AccountsBulkRemoveTransactions
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: !Ref FullAccessRoleArn
+      PackageType: Zip
+      Handler: Budget.Functions::Budget.Functions.Functions.Accounts.AccountFunctions_BulkRemoveTransactions_Generated::BulkRemoveTransactions
+      Events:
+        RootDelete:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/{budgetId}/accounts/{accountId}/transactions/bulk
+            Method: DELETE
+            ApiId: !Ref BudgetApi
+  GetStatisticalData:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootGet
+    Properties:
+      FunctionName: GetStatisticalData
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: !Ref FullAccessRoleArn
+      PackageType: Zip
+      Handler: Budget.Functions::Budget.Functions.Functions.Statistics.StatsFunctions_GetStatisticalData_Generated::GetStatisticalData
+      Events:
+        RootGet:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/{budgetId}/stats
+            Method: GET
+            ApiId: !Ref BudgetApi
 Outputs:
   ApiURL:
-    Description: API endpoint URL for Prod environment
+    Description: API endpoint URL
     Value:
       Fn::Sub: https://${BudgetApi}.execute-api.${AWS::Region}.amazonaws.com/

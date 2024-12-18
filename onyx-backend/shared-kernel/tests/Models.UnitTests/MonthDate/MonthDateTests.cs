@@ -7,7 +7,7 @@ public sealed class MonthDateTests
     {
         // Act
         var monthDatesCreateResult =
-            MonthDateData.ValidMonthsYears.Select(x => DataTypes.MonthDate.Create(x.Month, x.Year));
+            MonthDateData.ValidMonthsYears.Select(x => Primitives.MonthDate.Create(x.Month, x.Year));
         var isFailure = monthDatesCreateResult.Any(result => result.IsFailure);
 
         // Assert
@@ -18,7 +18,7 @@ public sealed class MonthDateTests
     public void Create_Should_Fail()
     {
         // Act
-        var monthDatesCreateResult = MonthDateData.InvalidMonthsYears.Select(x => DataTypes.MonthDate.Create(x.Month, x.Year));
+        var monthDatesCreateResult = MonthDateData.InvalidMonthsYears.Select(x => Primitives.MonthDate.Create(x.Month, x.Year));
         var isSuccess = monthDatesCreateResult.Any(result => result.IsSuccess);
 
         // Assert
@@ -29,10 +29,10 @@ public sealed class MonthDateTests
     public void MonthsInterval_Should_Success()
     {
         // Act
-        var positiveInterval = DataTypes.MonthDate.MonthsInterval(
+        var positiveInterval = Primitives.MonthDate.MonthsInterval(
             MonthDateData.ExampleLater,
             MonthDateData.ExampleEarlier);
-        var negativeInterval = DataTypes.MonthDate.MonthsInterval(
+        var negativeInterval = Primitives.MonthDate.MonthsInterval(
             MonthDateData.ExampleEarlier,
             MonthDateData.ExampleLater);
 

@@ -4,7 +4,10 @@ using Budget.Domain.Accounts;
 using Budget.Domain.Counterparties;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
+using Models.Primitives;
 using Models.Responses;
+using System.Globalization;
+using Amazon.Lambda.Core;
 using Transaction = Budget.Domain.Transactions.Transaction;
 
 namespace Budget.Application.Transactions.GetTransactions;
@@ -16,7 +19,11 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
     private readonly IAccountRepository _accountRepository;
     private readonly ICounterpartyRepository _counterpartyRepository;
 
-    public GetTransactionsQueryHandler(ITransactionRepository transactionRepository, ICounterpartyRepository counterpartyRepository, ISubcategoryRepository subcategoryRepository, IAccountRepository accountRepository)
+    public GetTransactionsQueryHandler(
+        ITransactionRepository transactionRepository,
+        ICounterpartyRepository counterpartyRepository,
+        ISubcategoryRepository subcategoryRepository,
+        IAccountRepository accountRepository)
     {
         _transactionRepository = transactionRepository;
         _counterpartyRepository = counterpartyRepository;
@@ -26,47 +33,60 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
 
     public async Task<Result<IEnumerable<TransactionModel>>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(request.Period) || string.IsNullOrWhiteSpace(request.Date))
+        if (string.IsNullOrWhiteSpace(request.DateRangeStart) ||
+            string.IsNullOrWhiteSpace(request.DateRangeEnd))
         {
             return GetTransactionErrors.NullFilters;
         }
+        LambdaLogger.Log($"DateRangeStart: {request.DateRangeStart}");
+        var isValidStartDate = DateTimeOffset.TryParseExact(
+            request.DateRangeStart,
+            "yyyy-MM-dd'T'HH:mm:sszzzz",
+            null,
+            DateTimeStyles.None,
+            out var startDate);
+        var isValidEndDate = DateTimeOffset.TryParseExact(
+            request.DateRangeEnd,
+            "yyyy-MM-dd'T'HH:mm:sszzzz",
+            null,
+            DateTimeStyles.None,
+            out var endDate);
 
-        var queryCreateResult = GetTransactionQueryRequest.FromRequest(request);
-
-        if (queryCreateResult.IsFailure)
+        if (!isValidStartDate || !isValidEndDate)
         {
-            return Result.Failure<IEnumerable<TransactionModel>>(queryCreateResult.Error);
+            return GetTransactionErrors.InvalidDate;
         }
 
-        var query = queryCreateResult.Value;
+        var dateRangeCreateResult = Period.Create(
+            startDate,
+            endDate,
+            TimeSpan.TicksPerDay * 365);
 
-        var isRequestValid = IsQueryValid(query, request);
-
-        if (!isRequestValid)
+        if (dateRangeCreateResult.IsFailure)
         {
-            return Result.Failure<IEnumerable<TransactionModel>>(GetTransactionErrors.InvalidQueryValues);
+            return dateRangeCreateResult.Error;
         }
 
-        _transactionRepository.AddPagingParameters(query.Period.ToDateTimeTicksSearchFrom(query.Date));
+        var dateRange = dateRangeCreateResult.Value;
+        
+        _transactionRepository.AddPagingParameters(dateRange);
 
-        var transactionsGetTask = query switch
+        var transactionsGetTask = request switch
         {
-            _ when query.Entity == GetTransactionQueryRequest.AllEntity =>
-                _transactionRepository.GetAllAsync(cancellationToken),
-            _ when query.Entity == GetTransactionQueryRequest.AccountEntity =>
+            _ when request.AccountId is not null =>
                 _transactionRepository.GetByAccountAsync(new (request.AccountId!.Value), cancellationToken),
-            _ when query.Entity == GetTransactionQueryRequest.SubcategoryEntity =>
-                _transactionRepository.GetBySubcategoryAsync(new(request.AccountId!.Value), cancellationToken),
-            _ when query.Entity == GetTransactionQueryRequest.CounterpartyEntity =>
-                _transactionRepository.GetByCounterpartyAsync(new(request.AccountId!.Value), cancellationToken),
-            _ => Task.FromResult(Result.Failure<IEnumerable<Transaction>>(Error.None))
+            _ when request.SubcategoryId is not null  =>
+                _transactionRepository.GetBySubcategoryAsync(new(request.SubcategoryId!.Value), cancellationToken),
+            _ when request.CounterpartyId is not null =>
+                _transactionRepository.GetByCounterpartyAsync(new(request.CounterpartyId!.Value), cancellationToken),
+            _ => _transactionRepository.GetAllPagedAsync(cancellationToken)
         };
 
         var transactionsGetResult = await transactionsGetTask;
 
         if (transactionsGetResult.IsFailure)
         {
-            return Result.Failure<IEnumerable<TransactionModel>>(transactionsGetResult.Error);
+            return transactionsGetResult.Error;
         }
 
         var transactions = transactionsGetResult.Value;
@@ -78,7 +98,7 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
 
         if (transactionModelsGetResults.FirstOrDefault(r => r.IsFailure) is not null and var failureResult)
         {
-            return Result.Failure<IEnumerable<TransactionModel>>(failureResult.Error);
+            return failureResult.Error;
         }
 
         var transactionModels = transactionModelsGetResults.Select(r => r.Value);
@@ -135,18 +155,4 @@ internal sealed class GetTransactionsQueryHandler : IQueryHandler<GetTransaction
 
         return tasks;
     }
-
-    private static bool IsQueryValid(GetTransactionQueryRequest query, GetTransactionsQuery request) =>
-        query switch
-        {
-            _ when query.Entity == GetTransactionQueryRequest.AllEntity =>
-                true,
-            _ when query.Entity == GetTransactionQueryRequest.AccountEntity =>
-                request.AccountId is not null,
-            _ when query.Entity == GetTransactionQueryRequest.SubcategoryEntity =>
-                request.SubcategoryId is not null,
-            _ when query.Entity == GetTransactionQueryRequest.CounterpartyEntity =>
-                request.CounterpartyId is not null,
-            _ => false
-        };
 }

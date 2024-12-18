@@ -5,7 +5,7 @@ namespace Messanger.Lambda.Models;
 
 public sealed record EmailData
 {
-    private const string baseSender = "Onyx <notify@onyxapp.tech>";
+    private const string baseSender = "Onyx <onyx@dbrdak.com>";
 
     [JsonPropertyName("from")]
     public string From { get; init; }

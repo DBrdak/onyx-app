@@ -64,6 +64,15 @@ public sealed class LoggingBehavior<TRequest, TResponse>
     private void LogHandleStart()
     {
         LambdaLogger.Log(
-            $"{JsonConvert.SerializeObject(_requestAccessor.Claims.Select(c => c.Value))} requested {typeof(TRequest).Name}");
+            $"""
+             {GetUserModel} 
+             requested {typeof(TRequest).Name}
+             using path {_requestAccessor.Method} {_requestAccessor.Path}
+             with body {JsonConvert.SerializeObject(_requestAccessor.Body)}
+             with query params {JsonConvert.SerializeObject(_requestAccessor.QueryParams)}
+             """);
     }
+
+    private string GetUserModel => 
+        _requestAccessor.Claims.FirstOrDefault(c => c.Type.ToLower() == "email")?.Value ?? "Unknown user";
 }

@@ -2,6 +2,8 @@
 using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.APIGatewayEvents;
 using Identity.Application.Auth.ForgotPassword;
+using Identity.Application.Auth.GoogleCallback;
+using Identity.Application.Auth.GoogleLogin;
 using Identity.Application.Auth.LoginUser;
 using Identity.Application.Auth.NewPassword;
 using Identity.Application.Auth.RefreshAccessToken;
@@ -12,6 +14,7 @@ using Identity.Functions.Functions.Auth.Requests;
 using Identity.Functions.Functions.Shared;
 using LambdaKernel;
 using MediatR;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Identity.Functions.Functions.Auth;
 
@@ -105,5 +108,39 @@ public sealed class AuthFunctions : BaseFunction
         var result = await Sender.Send(command);
 
         return result.ReturnAPIResponse();
+    }
+
+    [LambdaFunction(ResourceName = nameof(GoogleLogin))]
+    [HttpApi(LambdaHttpMethod.Get, $"{authBaseRoute}/google/login")]
+    public async Task<APIGatewayHttpApiV2ProxyResponse> GoogleLogin(APIGatewayHttpApiV2ProxyRequest request)
+    {
+        _ = request.Headers.TryGetValue("origin", out var origin) 
+            || request.Headers.TryGetValue("referer", out origin);
+        var query = new GoogleLoginQuery(origin);
+
+        var result = await Sender.Send(query);
+
+        return result.IsFailure ?
+            result.ReturnAPIResponse(200, 400) :
+            new APIGatewayHttpApiV2ProxyResponse
+            {
+                StatusCode = 301,
+                Headers = new Dictionary<string, string> { { "Location", result.Value } }
+            };
+    }
+
+    [LambdaFunction(ResourceName = nameof(GoogleCallback))]
+    [HttpApi(LambdaHttpMethod.Post, $"{authBaseRoute}/google/callback")]
+    public async Task<APIGatewayHttpApiV2ProxyResponse> GoogleCallback(APIGatewayHttpApiV2ProxyRequest request)
+    {
+        _ = request.QueryStringParameters.TryGetValue("code", out var code);
+        _ = request.Headers.TryGetValue("origin", out var origin)
+            || request.Headers.TryGetValue("referer", out origin);
+
+        var command = new GoogleCallbackCommand(code, origin);
+
+        var result = await Sender.Send(command);
+
+        return result.ReturnAPIResponse(200, 400);
     }
 }

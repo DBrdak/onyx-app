@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Amazon.DynamoDBv2.DocumentModel;
 using Identity.Domain;
-using Models.DataTypes;
+using Models.Primitives;
 using SharedDAL.DataModels;
 using SharedDAL.DataModels.Abstractions;
 using SharedDAL.Extensions;

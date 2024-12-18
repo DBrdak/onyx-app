@@ -26,6 +26,7 @@ Resources:
       CorsConfiguration:
         AllowOrigins:
           - "http://localhost:5173"
+          - "https://onyx.dbrdak.com"
         AllowHeaders:
           - authorization
           - content-type
@@ -39,7 +40,6 @@ Resources:
         AllowCredentials: true
       DefaultRouteSettings:
         DetailedMetricsEnabled: true
-      StageName: !Ref Environment
       Auth:
         DefaultAuthorizer: LambdaAuthorizer
         Authorizers:
@@ -57,7 +57,7 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
-      FunctionName: !Sub Login_${Environment}
+      FunctionName: !Sub Login
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -83,7 +83,7 @@ Resources:
       SyncedEvents:
         - RootPost
     Properties:
-      FunctionName: !Sub Register_${Environment}
+      FunctionName: !Sub Register
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -109,7 +109,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub VerifyEmail_${Environment}
+      FunctionName: !Sub VerifyEmail
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -135,7 +135,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub ResendEmail_${Environment}
+      FunctionName: !Sub ResendEmail
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -161,7 +161,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub Refresh_${Environment}
+      FunctionName: !Sub Refresh
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -187,7 +187,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub ForgotPassword_${Environment}
+      FunctionName: !Sub ForgotPassword
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -213,7 +213,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub NewPassword_${Environment}
+      FunctionName: !Sub NewPassword
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -239,7 +239,7 @@ Resources:
       SyncedEvents:
         - RootGet
     Properties:
-      FunctionName: !Sub GetUser_${Environment}
+      FunctionName: !Sub GetUser
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -263,7 +263,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub UpdateUser_${Environment}
+      FunctionName: !Sub UpdateUser
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -287,7 +287,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub RequestEmailChange_${Environment}
+      FunctionName: !Sub RequestEmailChange
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -311,7 +311,7 @@ Resources:
       SyncedEvents:
         - RootPut
     Properties:
-      FunctionName: !Sub Logout_${Environment}
+      FunctionName: !Sub Logout
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -335,7 +335,7 @@ Resources:
       SyncedEvents:
         - RootDelete
     Properties:
-      FunctionName: !Sub RemoveUser_${Environment}
+      FunctionName: !Sub RemoveUser
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -357,7 +357,7 @@ Resources:
     Metadata:
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: !Sub AddBudgetIdForUser_${Environment}
+      FunctionName: !Sub AddBudgetIdForUser
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -377,7 +377,7 @@ Resources:
     Metadata:
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: !Sub RemoveBudgetIdForUser_${Environment}
+      FunctionName: !Sub RemoveBudgetIdForUser
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -397,7 +397,7 @@ Resources:
     Metadata:
       Tool: Amazon.Lambda.Annotations
     Properties:
-      FunctionName: !Sub LambdaAuthorizer_${Environment}
+      FunctionName: !Sub LambdaAuthorizer
       Runtime: dotnet8
       CodeUri: .
       MemorySize: 3008
@@ -407,9 +407,61 @@ Resources:
       Role: !Ref FullAccessRoleArn
       PackageType: Zip
       Handler: Identity.Functions::Identity.Functions.Functions.Access.AccessFunction_FunctionHandler_Generated::FunctionHandler
+  GoogleLogin:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootGet
+    Properties:
+      FunctionName: !Sub GoogleLogin
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: !Ref FullAccessRoleArn
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_GoogleLogin_Generated::GoogleLogin
+      Events:
+        RootGet:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/auth/google/login
+            Method: GET
+            ApiId: !Ref IdentityApi
+            Auth:
+              Authorizer: NONE
+  GoogleCallback:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+        - RootPost
+    Properties:
+      FunctionName: !Sub GoogleCallback
+      Runtime: dotnet8
+      CodeUri: .
+      MemorySize: 3008
+      EphemeralStorage:
+        Size: 3008
+      Timeout: 30
+      Role: !Ref FullAccessRoleArn
+      PackageType: Zip
+      Handler: Identity.Functions::Identity.Functions.Functions.Auth.AuthFunctions_GoogleCallback_Generated::GoogleCallback
+      Events:
+        RootPost:
+          Type: HttpApi
+          Properties:
+            Path: /api/v1/auth/google/callback
+            Method: POST
+            ApiId: !Ref IdentityApi
+            Auth:
+              Authorizer: NONE
 Outputs:
   ApiURL:
-    Description: API endpoint URL for Prod environment
+    Description: API endpoint URL
     Value:
       Fn::Sub: https://${IdentityApi}.execute-api.${AWS::Region}.amazonaws.com/
   LambdaAuthorizerArn:

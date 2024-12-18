@@ -8,7 +8,7 @@ namespace Budget.Domain.Counterparties;
 public sealed record CounterpartyName : ValueObject
 {
     public string Value { get; init; }
-    private static readonly Regex valuePattern = new(@"^[a-zA-Z0-9\s.-]{1,50}$");
+    private static readonly Regex valuePattern = new(@"^.{1,50}$");
 
     [Newtonsoft.Json.JsonConstructor]
     [System.Text.Json.Serialization.JsonConstructor]

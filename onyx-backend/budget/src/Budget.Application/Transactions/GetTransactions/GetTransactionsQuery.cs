@@ -7,5 +7,5 @@ public sealed record GetTransactionsQuery(
     Guid? CounterpartyId,
     Guid? AccountId,
     Guid? SubcategoryId,
-    string? Date,
-    string? Period) : IQuery<IEnumerable<TransactionModel>>;
+    string? DateRangeStart,
+    string? DateRangeEnd) : IQuery<IEnumerable<TransactionModel>>;

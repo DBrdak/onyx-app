@@ -1,5 +1,5 @@
 ﻿using Budget.Domain.Subcategories;
-using Models.DataTypes;
+using Models.Primitives;
 
 namespace Budget.Domain.Tests.Subcategories;
 

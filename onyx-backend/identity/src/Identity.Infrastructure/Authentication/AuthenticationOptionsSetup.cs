@@ -12,7 +12,7 @@ public sealed class AuthenticationOptionsSetup : IConfigureOptions<Authenticatio
 
     public AuthenticationOptionsSetup(IConfiguration configuration)
     {
-            _configuration = configuration;
+        _configuration = configuration;
     }
 
     public void Configure(AuthenticationOptions options)

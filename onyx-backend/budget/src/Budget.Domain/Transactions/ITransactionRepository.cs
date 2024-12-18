@@ -1,6 +1,7 @@
 ﻿using Budget.Domain.Accounts;
 using Budget.Domain.Counterparties;
 using Budget.Domain.Subcategories;
+using Models.Primitives;
 using Models.Responses;
 
 namespace Budget.Domain.Transactions;
@@ -27,6 +28,7 @@ public interface ITransactionRepository
 
     Task<Result> UpdateRangeAsync(IEnumerable<Transaction> transactions, CancellationToken cancellationToken = default);
 
+    Task<Result<IEnumerable<Transaction>>> GetAllPagedAsync(CancellationToken cancellationToken);
     Task<Result<IEnumerable<Transaction>>> GetByAccountAsync(AccountId accountId, CancellationToken cancellationToken);
 
     Task<Result<IEnumerable<Transaction>>> GetByCounterpartyAsync(CounterpartyId counterpartyId, CancellationToken cancellationToken);
@@ -39,5 +41,7 @@ public interface ITransactionRepository
 
     Task<Result<Transaction>> UpdateAsync(Transaction transaction, CancellationToken cancellationToken);
 
-    void AddPagingParameters(long fromDateTimeTicks);
+    void AddPagingParameters(Period pagingPeriod);
+
+    Task<Result<IEnumerable<Transaction>>> GetForPeriodAsync(Period period, CancellationToken cancellationToken);
 }

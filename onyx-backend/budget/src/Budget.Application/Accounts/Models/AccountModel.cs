@@ -8,6 +8,7 @@ public sealed record AccountModel : EntityBusinessModel
 {
     public Guid Id { get; init; }
     public string Name { get; init; }
+    public string Slug { get; init; }
     public MoneyModel Balance { get; init; }
     public string Type { get; init; }
 
@@ -18,6 +19,7 @@ public sealed record AccountModel : EntityBusinessModel
     {
         Id = id;
         Name = name;
+        Slug = Name.ToLower().Replace(" ", "-");
         Balance = balance;
         Type = type;
     }

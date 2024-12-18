@@ -23,7 +23,7 @@ internal sealed class GetCategoriesQueryHandler : IQueryHandler<GetCategoriesQue
 
         if(categoriesGetResult.IsFailure)
         {
-            return Result.Failure<IEnumerable<CategoryModel>>(categoriesGetResult.Error);
+            return new List<CategoryModel>();
         }
 
         var categories = categoriesGetResult.Value.ToList();

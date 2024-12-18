@@ -22,9 +22,14 @@ internal sealed class GetBudgetInvitationQueryHandler : IQueryHandler<GetBudgetI
     {
         var clientUrl = request.BaseUrl;
 
-        if (!string.IsNullOrWhiteSpace(clientUrl) && clientUrl.IsUrl())
+        if (string.IsNullOrWhiteSpace(clientUrl) || !Uri.TryCreate(clientUrl, UriKind.Absolute, out _))
         {
             return GetBudgetInvitationErrors.InvalidHost;
+        }
+
+        if (clientUrl.EndsWith("/"))
+        {
+            clientUrl = clientUrl[..^1];
         }
 
         var getBudgetResult = await _budgetRepository.GetByIdAsync(new BudgetId(request.BudgetId), cancellationToken);

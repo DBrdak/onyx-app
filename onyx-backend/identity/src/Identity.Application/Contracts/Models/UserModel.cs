@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Identity.Domain;
+using Newtonsoft.Json;
 
 namespace Identity.Application.Contracts.Models;
 
@@ -31,4 +32,7 @@ public sealed record UserModel
             domainModel.Currency.Code,
             domainModel.IsEmailVerified,
             authorizationToken);
+
+    public static UserModel CreateUnregistered(Email email) =>
+            new(Guid.Empty, email.Value, string.Empty, string.Empty, false, null);
 }

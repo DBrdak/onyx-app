@@ -1,6 +1,6 @@
 ﻿using Abstractions.DomainBaseTypes;
 using Budget.Domain.Transactions;
-using Models.DataTypes;
+using Models.Primitives;
 using Models.Responses;
 
 namespace Budget.Domain.Subcategories;
@@ -22,7 +22,7 @@ public sealed record Assignment : ValueObject
 
     internal static Result<Assignment> Create(MonthDate month, Money assignedAmount)
     {
-        if (assignedAmount <= 0)
+        if (assignedAmount < 0)
         {
             return Result.Failure<Assignment>(SubcategoryErrors.AssignmentAmountMustBePositive);
         }

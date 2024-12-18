@@ -2,9 +2,9 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Models.DataTypes;
+namespace Models.Primitives;
 
-public record Money
+public sealed record Money
 {    
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal Amount { get; init; }

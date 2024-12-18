@@ -1,12 +1,12 @@
-﻿using Models.DataTypes;
+﻿using Models.Primitives;
 using Models.Responses;
 
 namespace Budget.Application.Contracts.Models;
 
 public sealed record MoneyModel
 {
-    public decimal Amount { get; private set; }
-    public string Currency { get; private set; }
+    public decimal Amount { get; set; }
+    public string Currency { get; set; }
 
     [System.Text.Json.Serialization.JsonConstructor]
     [Newtonsoft.Json.JsonConstructor]
@@ -20,7 +20,7 @@ public sealed record MoneyModel
 
     internal Result<Money> ToDomainModel()
     {
-        var currencyCreateResult = global::Models.DataTypes.Currency.FromCode(Currency);
+        var currencyCreateResult = global::Models.Primitives.Currency.FromCode(Currency);
 
         if (currencyCreateResult.IsFailure)
         {

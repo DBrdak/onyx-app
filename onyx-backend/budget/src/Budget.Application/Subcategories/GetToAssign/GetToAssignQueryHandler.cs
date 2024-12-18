@@ -5,7 +5,7 @@ using Budget.Application.Contracts.Models;
 using Budget.Domain.Accounts;
 using Budget.Domain.Budgets;
 using Budget.Domain.Subcategories;
-using Models.DataTypes;
+using Models.Primitives;
 using Models.Responses;
 
 namespace Budget.Application.Subcategories.GetToAssign;

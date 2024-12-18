@@ -6,9 +6,6 @@ using Models.Responses;
 
 namespace Identity.Application.User.UpdateUser;
 
-//TODO: Implement with event grid, to change currency in all places
-//TODO: Implement with event grid, to change password with email code
-//TODO: Implement with event grid, to change email with email action (old email) then email code (new email)
 internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand, UserModel>
 {
     private readonly IUserRepository _userRepository;
@@ -50,7 +47,7 @@ internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserComma
                 user.ChangeUsername(request.NewUsername),
             _ when !string.IsNullOrWhiteSpace(request.NewEmail) &&
                    !string.IsNullOrWhiteSpace(request.VerificationCode) =>
-                user.ChangeEmail(request.NewEmail, request.VerificationCode),
+                await UpdateEmail(request.NewEmail, request.VerificationCode, user),
             _ => new Error("UpdateUserCommand.InvalidInput", "Invalid input for user update")
         };
 
@@ -96,5 +93,24 @@ internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserComma
         user = userUpdateResult.Value;
 
         return UserModel.FromDomainModel(userUpdateResult.Value, new(token, longLivedToken));
+    }
+
+    private async Task<Result> UpdateEmail(string email, string verificationCode, Domain.User user)
+    {
+        var emailCreateResult = Email.Create(email);
+
+        if (emailCreateResult.IsFailure)
+        {
+            return emailCreateResult.Error;
+        }
+
+        var emailValue = emailCreateResult.Value;
+
+        var userGetResult = await _userRepository.GetByEmailAsync(emailValue, CancellationToken.None);
+        var isEmailUnique = userGetResult.IsFailure || user.Id == userGetResult.Value.Id;
+
+        return isEmailUnique ? 
+            user.ChangeEmail(email, verificationCode) :
+            new Error("UpdateUserCommand.EmailNotUnique", "User with this email address already exitst");
     }
 }

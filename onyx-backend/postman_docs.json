@@ -66,6 +66,126 @@
 							"response": []
 						},
 						{
+							"name": "Google Callback",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const token = pm.response.json().value\r",
+											"\r",
+											"pm.collectionVariables.set(\"TOKEN\", token.accessToken);\r",
+											"pm.collectionVariables.set(\"REFRESH_TOKEN\", token.longLivedToken);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"tontav8@gmail.com\",\r\n    \"password\": \"Pa$$w0rd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ID_URL}}/auth/google/callback?code=dfgsag",
+									"host": [
+										"{{ID_URL}}"
+									],
+									"path": [
+										"auth",
+										"google",
+										"callback"
+									],
+									"query": [
+										{
+											"key": "code",
+											"value": "dfgsag"
+										}
+									]
+								},
+								"description": "### Login Authentication\n\nThis endpoint allows users to authenticate by providing their email and password.\n\n#### Request Body\n\n- `email` (string, required): The email of the user.\n    \n- `password` (string, required): The password of the user.\n    \n\n#### Response\n\n``` json\n{\n    \"accessToken\": \"string\",\n    \"longLivedToken\": \"string\"\n}\n\n ```"
+							},
+							"response": []
+						},
+						{
+							"name": "Google Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const token = pm.response.json().value\r",
+											"\r",
+											"pm.collectionVariables.set(\"TOKEN\", token.accessToken);\r",
+											"pm.collectionVariables.set(\"REFRESH_TOKEN\", token.longLivedToken);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"tontav8@gmail.com\",\r\n    \"password\": \"Pa$$w0rd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ID_URL}}/auth/google/login",
+									"host": [
+										"{{ID_URL}}"
+									],
+									"path": [
+										"auth",
+										"google",
+										"login"
+									]
+								},
+								"description": "### Login Authentication\n\nThis endpoint allows users to authenticate by providing their email and password.\n\n#### Request Body\n\n- `email` (string, required): The email of the user.\n    \n- `password` (string, required): The password of the user.\n    \n\n#### Response\n\n``` json\n{\n    \"accessToken\": \"string\",\n    \"longLivedToken\": \"string\"\n}\n\n ```"
+							},
+							"response": []
+						},
+						{
 							"name": "Register",
 							"event": [
 								{
@@ -119,7 +239,7 @@
 							"response": []
 						},
 						{
-							"name": "Forgot Password - Request",
+							"name": "Forgot Password - New",
 							"request": {
 								"method": "PUT",
 								"header": [],
@@ -133,14 +253,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{ID_URL}}/auth/forgot-password/request",
+									"raw": "{{ID_URL}}/auth/forgot-password/new",
 									"host": [
 										"{{ID_URL}}"
 									],
 									"path": [
 										"auth",
 										"forgot-password",
-										"request"
+										"new"
 									]
 								},
 								"description": "This endpoint allows users to request resetting their password.\n\n### Request Body\n\n- `email` (string) - The email address associated with the user's account.\n    \n- `newPassword` (string) - The new password to be set for the user's account.\n    \n- `verificationCode` (string) - The verification code sent to the user for password reset\n    \n\n### Response  \nVoid"
@@ -148,7 +268,7 @@
 							"response": []
 						},
 						{
-							"name": "Forgot Password - New",
+							"name": "Forgot Password - Request",
 							"event": [
 								{
 									"listen": "test",
@@ -179,7 +299,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"string\"\r\n}",
+									"raw": "{\r\n    \"email\": \"tontav8@gmail.com\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -187,14 +307,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{ID_URL}}/auth/forgot-password/new",
+									"raw": "{{ID_URL}}/auth/forgot-password/request",
 									"host": [
 										"{{ID_URL}}"
 									],
 									"path": [
 										"auth",
 										"forgot-password",
-										"new"
+										"request"
 									]
 								},
 								"description": "### New Password\n\nThis endpoint is used to update the password after a user has requested a password reset.\n\n#### Request Body\n\n- email (string, required): The email address of the user requesting the password reset.\n    \n\n### Response\n\n``` json\n{\n    \"accessToken\": \"string\",\n    \"longLivedToken\": \"string\"\n}\n\n ```"
@@ -261,7 +381,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"tontav8@gmail.com\",\r\n    \"verificationCode\": \"907093\"\r\n}",
+									"raw": "{\r\n    \"email\": \"tontav8@gmail.com\",\r\n    \"verificationCode\": \"307357\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -438,12 +558,12 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "{{ID_URL}}/auth/logout",
+									"raw": "{{ID_URL}}/user/logout",
 									"host": [
 										"{{ID_URL}}"
 									],
 									"path": [
-										"auth",
+										"user",
 										"logout"
 									]
 								}
@@ -484,7 +604,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "08e2cad0-d381-48ba-9a24-82b9ca932f48",
+											"value": "92da6482-7df7-4171-9077-ac55b0f65fff",
 											"description": "(Required) "
 										}
 									]
@@ -689,7 +809,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"name\": \"<string>\",\n  \"balance\": {\n    \"amount\": \"<double>\",\n    \"currency\": \"<string>\"\n  },\n  \"accountType\": \"<string>\"\n}",
+									"raw": "{\n  \"name\": \"acc00\",\n  \"balance\": {\n    \"amount\": 500,\n    \"currency\": \"GBP\"\n  },\n  \"accountType\": \"Checking\"\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -711,7 +831,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "<uuid>",
+											"value": "92da6482-7df7-4171-9077-ac55b0f65fff",
 											"description": "(Required) "
 										}
 									]
@@ -1286,12 +1406,12 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "<uuid>",
+											"value": "92da6482-7df7-4171-9077-ac55b0f65fff",
 											"description": "(Required) "
 										},
 										{
 											"key": "accountId",
-											"value": "<uuid>",
+											"value": "a0d949d5-60cb-4708-af31-7fd66de292f0",
 											"description": "(Required) "
 										}
 									]
@@ -1503,7 +1623,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"transactions\": [\r\n        {\r\n            \"amount\": {\r\n                \"amount\": \"decimal\",\r\n                \"currency\": \"string\"\r\n            },\r\n            \"transactedAd\": \"dateTime\",\r\n            \"counterpartyName\": \"string\",\r\n            \"subcategoryId\": \"guid?\" //Not Required\r\n        }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"transactions\": [\r\n        {\r\n            \"amount\": {\r\n                \"currency\": \"PLN\",\r\n                \"amount\": -200.02\r\n            },\r\n            \"transactedAt\": \"2023-12-16T08:11:41+00:00\",\r\n            \"counterpartyName\": \"Orlen\"\r\n        },\r\n        {\r\n            \"amount\": {\r\n                \"currency\": \"PLN\",\r\n                \"amount\": -202.02\r\n            },\r\n            \"transactedAt\": \"2023-12-16T08:11:41+00:00\",\r\n            \"counterpartyName\": \"Orlen\"\r\n        }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1527,11 +1647,53 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": ""
+											"value": "92da6482-7df7-4171-9077-ac55b0f65fff"
 										},
 										{
 											"key": "accountId",
-											"value": ""
+											"value": "a0d949d5-60cb-4708-af31-7fd66de292f0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Bulk Remove Transactions",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"TransactionsId\": [\r\n        \"7dd03b1e-472e-4d3d-afe3-ee9772d2e6e3\",\r\n        \"09eebb10-cfcf-4c52-a86f-bea89417e67f\"\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/accounts/:accountId/transactions/bulk",
+									"host": [
+										"{{BUDGET_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										":budgetId",
+										"accounts",
+										":accountId",
+										"transactions",
+										"bulk"
+									],
+									"variable": [
+										{
+											"key": "budgetId",
+											"value": "92da6482-7df7-4171-9077-ac55b0f65fff"
+										},
+										{
+											"key": "accountId",
+											"value": "1ff83b17-99b3-4f38-b7c6-c6c5736a8d71"
 										}
 									]
 								}
@@ -1567,7 +1729,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "08e2cad0-d381-48ba-9a24-82b9ca932f48",
+											"value": "92da6482-7df7-4171-9077-ac55b0f65fff",
 											"description": "(Required) "
 										}
 									]
@@ -1794,7 +1956,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "08e2cad0-d381-48ba-9a24-82b9ca932f48",
+											"value": "92da6482-7df7-4171-9077-ac55b0f65fff",
 											"description": "(Required) "
 										}
 									]
@@ -3671,7 +3833,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"parentCategoryId\": \"813845a3-0c10-4af0-ad79-55f169458238\",\n  \"subcategoryName\": \"Meat\"\n}",
+									"raw": "{\n  \"parentCategoryId\": \"494b0423-4ff0-4134-bfb5-c506f543b2ad\",\n  \"subcategoryName\": \"test\"\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -3693,7 +3855,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "08e2cad0-d381-48ba-9a24-82b9ca932f48",
+											"value": "92da6482-7df7-4171-9077-ac55b0f65fff",
 											"description": "(Required) "
 										}
 									]
@@ -3949,7 +4111,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/subcategories/to-assign?month=8&year=2024",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/subcategories/to-assign?month=12&year=2023",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
@@ -3963,17 +4125,17 @@
 									"query": [
 										{
 											"key": "month",
-											"value": "8"
+											"value": "12"
 										},
 										{
 											"key": "year",
-											"value": "2024"
+											"value": "2023"
 										}
 									],
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "08e2cad0-d381-48ba-9a24-82b9ca932f48",
+											"value": "92da6482-7df7-4171-9077-ac55b0f65fff",
 											"description": "(Required) "
 										}
 									]
@@ -5933,6 +6095,32 @@
 					"item": [
 						{
 							"name": "Get Transactions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const x = pm.response.json()\r",
+											"const transactions = x.value\r",
+											"\r",
+											"const am = transactions.sum(t => t.amount.amount)\r",
+											"console.log(am)"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [
@@ -5942,7 +6130,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/transactions",
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/transactions?accountId=1ff83b17-99b3-4f38-b7c6-c6c5736a8d71&dateRangeStart=2024-09-25T00:00:00%2B02:00&dateRangeEnd=2024-10-25T23:59:59%2B02:00",
 									"host": [
 										"{{BUDGET_URL}}"
 									],
@@ -5960,8 +6148,7 @@
 										},
 										{
 											"key": "accountId",
-											"value": "<uuid>",
-											"disabled": true
+											"value": "1ff83b17-99b3-4f38-b7c6-c6c5736a8d71"
 										},
 										{
 											"key": "subcategoryId",
@@ -5969,22 +6156,20 @@
 											"disabled": true
 										},
 										{
-											"key": "date",
-											"value": null,
-											"description": "date in iso format",
-											"disabled": true
+											"key": "dateRangeStart",
+											"value": "2024-09-25T00:00:00%2B02:00",
+											"description": "date in iso format"
 										},
 										{
-											"key": "period",
-											"value": null,
-											"description": "day / week / month / last7days / last30days",
-											"disabled": true
+											"key": "dateRangeEnd",
+											"value": "2024-10-25T23:59:59%2B02:00",
+											"description": "date in iso format"
 										}
 									],
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "097716c2-68b1-406f-9dd7-df3b88062736",
+											"value": "92da6482-7df7-4171-9077-ac55b0f65fff",
 											"description": "(Required) "
 										}
 									]
@@ -6245,7 +6430,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"accountId\": \"<uuid>\",\n  \"amount\": {\n    \"amount\": \"<double>\",\n    \"currency\": \"<string>\"\n  },\n  \"transactedAt\": \"<dateTime>\",\n  \"counterpartyName\": \"<string>\",\n  \"subcategoryId\": \"<uuid>\"\n}",
+									"raw": "{\n  \"accountId\": \"1ff83b17-99b3-4f38-b7c6-c6c5736a8d71\",\n  \"amount\": {\n    \"amount\": -20.37,\n    \"currency\": \"PLN\"\n  },\n  \"transactedAt\": \"2024-10-11T01:00:00.714942+02:00\",\n  \"counterpartyName\": \"Lidl111111\",\n  \"subcategoryId\": \"5b36bf93-c02e-4c74-9c16-8de8cc10bad8\"\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -6267,7 +6452,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "<uuid>",
+											"value": "92da6482-7df7-4171-9077-ac55b0f65fff",
 											"description": "(Required) "
 										}
 									]
@@ -6513,247 +6698,6 @@
 							]
 						},
 						{
-							"name": "Bulk Remove Transactions",
-							"request": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "text/plain"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "[\n  \"<uuid>\",\n  \"<uuid>\"\n]",
-									"options": {
-										"raw": {
-											"headerFamily": "json",
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BUDGET_URL}}/bulk",
-									"host": [
-										"{{BUDGET_URL}}"
-									],
-									"path": [
-										"bulk"
-									]
-								}
-							},
-							"response": [
-								{
-									"name": "OK",
-									"originalRequest": {
-										"method": "DELETE",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											},
-											{
-												"key": "Accept",
-												"value": "text/plain"
-											},
-											{
-												"key": "Authorization",
-												"value": "<API Key>",
-												"description": "Added as a part of security scheme: apikey"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "[\n  \"<uuid>\",\n  \"<uuid>\"\n]",
-											"options": {
-												"raw": {
-													"headerFamily": "json",
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{baseUrl}}/bulk",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"bulk"
-											]
-										}
-									},
-									"status": "OK",
-									"code": 200,
-									"_postman_previewlanguage": "json",
-									"header": [
-										{
-											"key": "Content-Type",
-											"value": "application/json"
-										}
-									],
-									"cookie": [],
-									"body": "{\n  \"isSuccess\": \"<boolean>\",\n  \"isFailure\": \"<boolean>\",\n  \"error\": {\n    \"code\": \"<string>\",\n    \"message\": \"<string>\"\n  }\n}"
-								},
-								{
-									"name": "Bad Request",
-									"originalRequest": {
-										"method": "DELETE",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											},
-											{
-												"key": "Accept",
-												"value": "text/plain"
-											},
-											{
-												"key": "Authorization",
-												"value": "<API Key>",
-												"description": "Added as a part of security scheme: apikey"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "[\n  \"<uuid>\",\n  \"<uuid>\"\n]",
-											"options": {
-												"raw": {
-													"headerFamily": "json",
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{baseUrl}}/bulk",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"bulk"
-											]
-										}
-									},
-									"status": "Bad Request",
-									"code": 400,
-									"_postman_previewlanguage": "json",
-									"header": [
-										{
-											"key": "Content-Type",
-											"value": "application/json"
-										}
-									],
-									"cookie": [],
-									"body": "{\n  \"isSuccess\": \"<boolean>\",\n  \"isFailure\": \"<boolean>\",\n  \"error\": {\n    \"code\": \"<string>\",\n    \"message\": \"<string>\"\n  }\n}"
-								},
-								{
-									"name": "Unauthorized",
-									"originalRequest": {
-										"method": "DELETE",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											},
-											{
-												"key": "Accept",
-												"value": "text/plain"
-											},
-											{
-												"key": "Authorization",
-												"value": "<API Key>",
-												"description": "Added as a part of security scheme: apikey"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "[\n  \"<uuid>\",\n  \"<uuid>\"\n]",
-											"options": {
-												"raw": {
-													"headerFamily": "json",
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{baseUrl}}/bulk",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"bulk"
-											]
-										}
-									},
-									"status": "Unauthorized",
-									"code": 401,
-									"_postman_previewlanguage": "json",
-									"header": [
-										{
-											"key": "Content-Type",
-											"value": "application/json"
-										}
-									],
-									"cookie": [],
-									"body": "{\n  \"isSuccess\": \"<boolean>\",\n  \"isFailure\": \"<boolean>\",\n  \"error\": {\n    \"code\": \"<string>\",\n    \"message\": \"<string>\"\n  }\n}"
-								},
-								{
-									"name": "Forbidden",
-									"originalRequest": {
-										"method": "DELETE",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											},
-											{
-												"key": "Accept",
-												"value": "text/plain"
-											},
-											{
-												"key": "Authorization",
-												"value": "<API Key>",
-												"description": "Added as a part of security scheme: apikey"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "[\n  \"<uuid>\",\n  \"<uuid>\"\n]",
-											"options": {
-												"raw": {
-													"headerFamily": "json",
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{baseUrl}}/bulk",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"bulk"
-											]
-										}
-									},
-									"status": "Forbidden",
-									"code": 403,
-									"_postman_previewlanguage": "json",
-									"header": [
-										{
-											"key": "Content-Type",
-											"value": "application/json"
-										}
-									],
-									"cookie": [],
-									"body": "{\n  \"isSuccess\": \"<boolean>\",\n  \"isFailure\": \"<boolean>\",\n  \"error\": {\n    \"code\": \"<string>\",\n    \"message\": \"<string>\"\n  }\n}"
-								}
-							]
-						},
-						{
 							"name": "Remove Transaction",
 							"request": {
 								"method": "DELETE",
@@ -6778,12 +6722,12 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "<uuid>",
+											"value": "92da6482-7df7-4171-9077-ac55b0f65fff",
 											"description": "(Required) "
 										},
 										{
 											"key": "transactionId",
-											"value": "<uuid>",
+											"value": "6ee45da1-e740-4498-b62a-5598d64b5e94",
 											"description": "(Required) "
 										}
 									]
@@ -6991,8 +6935,17 @@
 						{
 							"name": "Set Subcategory",
 							"request": {
-								"method": "GET",
+								"method": "PUT",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"subcategoryId\": \"<uuid>\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/transactions/:transactionId/subcategory",
 									"host": [
@@ -7222,7 +7175,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"budgetName\": \"Budget 1\",\n  \"budgetCurrency\": \"JPY\"\n}",
+									"raw": "{\n  \"budgetName\": \"Budget-1\",\n  \"budgetCurrency\": \"JPY\"\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -7421,9 +7374,8 @@
 										"value": "text/plain"
 									},
 									{
-										"key": "Client",
-										"value": "https://localhost:5173",
-										"description": "REQUIRED",
+										"key": "origin",
+										"value": "http://localhost:5173",
 										"type": "text"
 									}
 								],
@@ -7442,7 +7394,7 @@
 									"variable": [
 										{
 											"key": "budgetId",
-											"value": "08e2cad0-d381-48ba-9a24-82b9ca932f48",
+											"value": "92da6482-7df7-4171-9077-ac55b0f65fff",
 											"description": "(Required) "
 										}
 									]
@@ -8515,6 +8467,37 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Stats",
+					"item": [
+						{
+							"name": "Categories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BUDGET_URL}}/api/v1/:budgetId/stats",
+									"host": [
+										"{{BUDGET_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										":budgetId",
+										"stats"
+									],
+									"variable": [
+										{
+											"key": "budgetId",
+											"value": "92da6482-7df7-4171-9077-ac55b0f65fff"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		}
@@ -8559,12 +8542,12 @@
 		},
 		{
 			"key": "ID_URL",
-			"value": "https://f2tl69hlj1.execute-api.eu-central-1.amazonaws.com/dev/api/v1",
+			"value": "https://onyxidentity.dbrdak.com/api/v1",
 			"type": "string"
 		},
 		{
 			"key": "BUDGET_URL",
-			"value": "https://3ytwgrzbji.execute-api.eu-central-1.amazonaws.com/dev"
+			"value": "https://onyxbudget.dbrdak.com"
 		},
 		{
 			"key": "REFRESH_TOKEN",

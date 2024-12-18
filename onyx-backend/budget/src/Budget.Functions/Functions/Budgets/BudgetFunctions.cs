@@ -17,6 +17,7 @@ using Budget.Functions.Functions.Shared;
 using LambdaKernel;
 using MediatR;
 using Newtonsoft.Json;
+using Amazon.Runtime.Internal;
 
 
 namespace Budget.Functions.Functions.Budgets;
@@ -52,8 +53,10 @@ public sealed class BudgetFunctions : BaseFunction
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
-        requestContext.Headers.TryGetValue("origin", out var clientUrl);
-        var command = new GetBudgetInvitationQuery(Guid.Parse(budgetId), clientUrl);
+        _ = requestContext.Headers.TryGetValue("origin", out var origin)
+            || requestContext.Headers.TryGetValue("referer", out origin);
+
+        var command = new GetBudgetInvitationQuery(Guid.Parse(budgetId), origin);
 
         var result = await Sender.Send(command);
 

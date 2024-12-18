@@ -1,4 +1,5 @@
 ﻿using AWS.Publisher.Configurations;
+using AWS.Publisher.Stacks.Abstractions;
 
 namespace AWS.Publisher.Stacks;
 

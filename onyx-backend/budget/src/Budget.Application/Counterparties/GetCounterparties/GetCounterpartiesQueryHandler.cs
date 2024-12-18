@@ -31,7 +31,7 @@ internal sealed class GetCounterpartiesQueryHandler : IQueryHandler<GetCounterpa
 
         if (counterpartiesGetResult.IsFailure)
         {
-            return counterpartiesGetResult.Error;
+            return new List<CounterpartyModel>();
         }
 
         var counterparties = counterpartiesGetResult.Value;

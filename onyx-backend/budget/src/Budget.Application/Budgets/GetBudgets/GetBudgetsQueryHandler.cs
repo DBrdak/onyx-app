@@ -32,9 +32,9 @@ internal sealed class GetBudgetsQueryHandler : IQueryHandler<GetBudgetsQuery, IE
 
         if (budgetsGetResult.IsFailure)
         {
-            return budgetsGetResult.Error;
+            return new List<BudgetModel>();
         }
 
-        return Result.Create(budgetsGetResult.Value.Select(b => BudgetModel.FromDomainModel(b)));
+        return BudgetModel.FromDomainModels(budgetsGetResult.Value);
     }
 }

@@ -5,7 +5,7 @@ using Budget.Domain.Shared.Abstractions;
 using Budget.Domain.Shared.Constants;
 using Budget.Domain.Shared.Errors;
 using Budget.Domain.Subcategories;
-using Models.DataTypes;
+using Models.Primitives;
 using Models.Responses;
 
 namespace Budget.Domain.Transactions;
@@ -262,6 +262,13 @@ public sealed class Transaction : BudgetOwnedEntity<TransactionId>
         }
 
         return transaction;
+    }
+
+    internal Result SetSubcategory(Subcategory subcategory)
+    {
+        SubcategoryId = subcategory.Id;
+
+        return Result.Success();
     }
 
     public Result RemoveCounterparty()

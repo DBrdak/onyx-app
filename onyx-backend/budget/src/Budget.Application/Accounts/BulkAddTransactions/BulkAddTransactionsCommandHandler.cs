@@ -1,4 +1,5 @@
 using Abstractions.Messaging;
+using Amazon.Lambda.Core;
 using Budget.Application.Abstractions.Currency;
 using Budget.Application.Accounts.Models;
 using Budget.Application.Contracts.Models;
@@ -7,8 +8,9 @@ using Budget.Domain.Budgets;
 using Budget.Domain.Counterparties;
 using Budget.Domain.Subcategories;
 using Budget.Domain.Transactions;
-using Models.DataTypes;
+using Models.Primitives;
 using Models.Responses;
+using Newtonsoft.Json;
 
 namespace Budget.Application.Accounts.BulkAddTransactions;
 
@@ -51,7 +53,7 @@ internal sealed class BulkAddTransactionsCommandHandler : ICommandHandler<BulkAd
 
         var account = accountGetResult.Value;
 
-        var budgetGetResult = await _budgetRepository.GetByIdAsync(budgetId, cancellationToken);
+        var budgetGetResult = await _budgetRepository.GetCurrentBudgetAsync(cancellationToken);
 
         if (budgetGetResult.IsFailure)
         {
@@ -144,8 +146,13 @@ internal sealed class BulkAddTransactionsCommandHandler : ICommandHandler<BulkAd
 
         var createdTransactions = transactionsCreateResults.Select(t => t.Value).ToList();
 
+        //TODO Debug
+        LambdaLogger.Log("transactions: " + JsonConvert.SerializeObject(createdTransactions));
+        LambdaLogger.Log("subcategories: " + JsonConvert.SerializeObject(subcategories));
+        LambdaLogger.Log("account: " + JsonConvert.SerializeObject(account));
+
         var transactionsAddTask = _transactionRepository.AddRangeAsync(createdTransactions, cancellationToken);
-        var subcategoriesUpdateTask = _subcategoryRepository.UpdateRangeAsync(subcategories.Where(s => s is not null)!, cancellationToken);
+        var subcategoriesUpdateTask = _subcategoryRepository.UpdateRangeAsync(subcategories.Where(s => s != null).DistinctBy(s => s.Id)!, cancellationToken);
 
         _ = await Task.WhenAll(transactionsAddTask, subcategoriesUpdateTask);
         var accountUpdateResult = await _accountRepository.UpdateAsync(account, cancellationToken);

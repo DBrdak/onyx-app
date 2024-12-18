@@ -8,6 +8,7 @@ public sealed record BudgetModel
 {
     public Guid Id { get; init; }
     public string Name { get; init; }
+    public string Slug { get; init; }
     public string Currency { get; init; }
     public IEnumerable<BudgetMemberModel> BudgetMembers { get; init; }
     public IEnumerable<AccountModel>? Accounts { get; init; }
@@ -17,6 +18,7 @@ public sealed record BudgetModel
     private BudgetModel(
         Guid id,
         string name,
+        string slug,
         string currency,
         IEnumerable<BudgetMemberModel> budgetMembers,
         IEnumerable<AccountModel>? accounts,
@@ -25,6 +27,7 @@ public sealed record BudgetModel
     {
         Id = id;
         Name = name;
+        Slug = slug;
         Currency = currency;
         BudgetMembers = budgetMembers;
         Accounts = accounts;
@@ -40,9 +43,48 @@ public sealed record BudgetModel
         new(
             domainModel.Id.Value,
             domainModel.Name.Value,
+            domainModel.Name.Value.ToLower().Replace(" ", "-"),
             domainModel.BaseCurrency.Code,
             domainModel.BudgetMembers.Select(BudgetMemberModel.FromDomainModel),
             accountModels,
             categoryModels,
             counterpartyModels);
+
+    private static BudgetModel FromDomainModelWithSlug(
+        Domain.Budgets.Budget domainModel,
+        int slugSuffix,
+        IEnumerable<CategoryModel>? categoryModels = null,
+        IEnumerable<AccountModel>? accountModels = null,
+        IEnumerable<CounterpartyModel>? counterpartyModels = null) =>
+        new(
+            domainModel.Id.Value,
+            domainModel.Name.Value,
+            string.Concat(domainModel.Name.Value.ToLower().Replace(" ", "-"), slugSuffix),
+            domainModel.BaseCurrency.Code,
+            domainModel.BudgetMembers.Select(BudgetMemberModel.FromDomainModel),
+            accountModels,
+            categoryModels,
+            counterpartyModels);
+
+    internal static List<BudgetModel> FromDomainModels(
+        IEnumerable<Domain.Budgets.Budget> domainModels)
+    {
+        var domainBudgets = domainModels.ToList();
+        var budgetModels = new List<BudgetModel>();
+        var slugSuffix = 1;
+
+        foreach (var domainBudget in domainBudgets)
+        {
+            if (budgetModels.Any(bm => bm.Name.ToLower() == domainBudget.Name.Value.ToLower()))
+            {
+                budgetModels.Add(FromDomainModelWithSlug(domainBudget, slugSuffix));
+                slugSuffix++;
+                continue;
+            }
+
+            budgetModels.Add(FromDomainModel(domainBudget));
+        }
+
+        return budgetModels;
+    }
 }

@@ -8,7 +8,6 @@ using Budget.Functions.Functions.Shared;
 using Budget.Functions.Functions.Transactions.Requests;
 using LambdaKernel;
 using MediatR;
-using Budget.Application.Transactions.BulkRemoveTransactions;
 using Budget.Application.Transactions.SetSubcategory;
 
 namespace Budget.Functions.Functions.Transactions;
@@ -29,8 +28,8 @@ public sealed class TransactionFunctions : BaseFunction
         [FromQuery] string? counterpartyId,
         [FromQuery] string? accountId,
         [FromQuery] string? subcategoryId,
-        [FromQuery] string? date,
-        [FromQuery] string? period,
+        [FromQuery] string? dateRangeStart,
+        [FromQuery] string? dateRangeEnd,
         APIGatewayHttpApiV2ProxyRequest requestContext)
     {
         ServiceProvider?.AddRequestContextAccessor(requestContext);
@@ -39,8 +38,8 @@ public sealed class TransactionFunctions : BaseFunction
             counterpartyId is null ? null : Guid.Parse(counterpartyId),
             accountId is null ? null : Guid.Parse(accountId),
             subcategoryId is null ? null : Guid.Parse(subcategoryId),
-            date,
-            period);
+            dateRangeStart?.Replace("%2B", "+"), 
+            dateRangeEnd?.Replace("%2B", "+"));
 
         var result = await Sender.Send(transactionsQuery);
 
@@ -79,24 +78,6 @@ public sealed class TransactionFunctions : BaseFunction
         ServiceProvider?.AddRequestContextAccessor(requestContext);
 
         var command = new RemoveTransactionCommand(Guid.Parse(transactionId), Guid.Parse(budgetId));
-
-        var result = await Sender.Send(command);
-
-        return result.ReturnAPIResponse();
-    }
-
-    [LambdaFunction(ResourceName = $"Transactions{nameof(BulkRemove)}")]
-    [HttpApi(LambdaHttpMethod.Delete, $"{transactionBaseRoute}/bulk")]
-    public async Task<APIGatewayHttpApiV2ProxyResponse> BulkRemove(
-        string budgetId,
-        [FromBody] string[] transactionIds,
-        APIGatewayHttpApiV2ProxyRequest requestContext)
-    {
-        ServiceProvider?.AddRequestContextAccessor(requestContext);
-
-        var command = new BulkRemoveTransactionsCommand(
-            transactionIds.Select(Guid.Parse).ToArray(),
-            Guid.Parse(budgetId));
 
         var result = await Sender.Send(command);
 

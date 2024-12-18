@@ -60,7 +60,7 @@ internal sealed class AddBudgetCommandHandler : ICommandHandler<AddBudgetCommand
         }
 
         var budget = budgetCreateResult.Value;
-
+        
         var budgetAddResult = await _budgetRepository.AddAsync(budget, cancellationToken);
 
         if (budgetAddResult.IsFailure)

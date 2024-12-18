@@ -12,4 +12,6 @@ internal sealed class CounterpartyData
     public const string ValidTypePayer = "Payer";
     public const string InvalidType = "Lol";
     public static Counterparty ExampleCounterparty => Counterparty.Create(ValidName, ValidTypePayee, new BudgetId()).Value;
+    public static Counterparty ExamplePayee => Counterparty.Create(ValidName, ValidTypePayee, new BudgetId()).Value;
+    public static Counterparty ExamplePayer => Counterparty.Create(ValidName, ValidTypePayer, new BudgetId()).Value;
 }

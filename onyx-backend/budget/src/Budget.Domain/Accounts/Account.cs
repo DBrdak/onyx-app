@@ -1,7 +1,7 @@
 ﻿using Budget.Domain.Budgets;
 using Budget.Domain.Shared.Abstractions;
 using Budget.Domain.Transactions;
-using Models.DataTypes;
+using Models.Primitives;
 using Models.Responses;
 
 namespace Budget.Domain.Accounts;

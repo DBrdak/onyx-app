@@ -1,4 +1,4 @@
-﻿using Models.DataTypes;
+﻿using Models.Primitives;
 
 namespace Models.UnitTests.Money;
 

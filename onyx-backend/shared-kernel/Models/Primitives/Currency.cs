@@ -1,6 +1,6 @@
 ﻿using Models.Responses;
 
-namespace Models.DataTypes;
+namespace Models.Primitives;
 
 public sealed record Currency
 {
