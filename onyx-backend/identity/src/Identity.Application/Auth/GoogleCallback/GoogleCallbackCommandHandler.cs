@@ -1,3 +1,4 @@
+using System.Web;
 using Abstractions.Messaging;
 using Amazon.Lambda.Core;
 using Extensions;
@@ -34,12 +35,19 @@ internal sealed class GoogleCallbackCommandHandler : ICommandHandler<GoogleCallb
     {
         var origin = request.Origin;
 
-        if (string.IsNullOrWhiteSpace(origin) || !origin.IsUrl())
+        if (string.IsNullOrWhiteSpace(origin) || !Uri.TryCreate(origin, UriKind.Absolute, out _))
         {
             return GoogleLoginErrors.InvalidHost;
         }
 
-        var googleToken = await GetGoogleToken(request.Code, origin);
+        if(origin.EndsWith("/"))
+        {
+            origin = origin[..^1];
+        }
+
+        var code = HttpUtility.UrlDecode(request.Code);
+
+        var googleToken = await GetGoogleToken(code, origin);
 
         if (googleToken is null)
         {
@@ -116,11 +124,18 @@ internal sealed class GoogleCallbackCommandHandler : ICommandHandler<GoogleCallb
             ["code"] = code,
             ["client_id"] = ClientId,
             ["client_secret"] = Secret,
-            ["redirect_uri"] = $"{origin}/google/login",
+            ["redirect_uri"] = $"{origin}/login/google",
             ["grant_type"] = "authorization_code"
         }));
 
         var content = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            LambdaLogger.Log(
+                $"Google token request failed with status code: {response.StatusCode}, message: {content}");
+        }
+
         var tokenData = JObject.Parse(content);
 
         return tokenData["id_token"]?.ToString();

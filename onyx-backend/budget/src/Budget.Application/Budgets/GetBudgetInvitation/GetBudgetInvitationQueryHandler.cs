@@ -27,6 +27,11 @@ internal sealed class GetBudgetInvitationQueryHandler : IQueryHandler<GetBudgetI
             return GetBudgetInvitationErrors.InvalidHost;
         }
 
+        if (clientUrl.EndsWith("/"))
+        {
+            clientUrl = clientUrl[..^1];
+        }
+
         var getBudgetResult = await _budgetRepository.GetByIdAsync(new BudgetId(request.BudgetId), cancellationToken);
 
         if (getBudgetResult.IsFailure)

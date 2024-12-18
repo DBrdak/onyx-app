@@ -45,7 +45,7 @@ internal sealed class JwtService : IJwtService
             audience: _options.Audience,
             claims: claims,
             notBefore: null,
-            expires: DateTime.UtcNow.AddMinutes(0.5/*_options.ExpireInMinutes*/), //TODO TEMPORARY
+            expires: DateTime.UtcNow.AddMinutes(_options.ExpireInMinutes),
             signingCredentials: signingCredentials);
 
         var tokenValue = new JwtSecurityTokenHandler()

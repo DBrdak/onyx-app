@@ -20,7 +20,7 @@ internal sealed class GetAccountsQueryHandler : IQueryHandler<GetAccountsQuery, 
 
         if (accountsGetResult.IsFailure)
         {
-            return accountsGetResult.Error;
+            return new List<AccountModel>();
         }
 
         var accounts = accountsGetResult.Value;
